@@ -1,0 +1,380 @@
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
+using System.Linq;
+using System.Security;
+using System.Xml.Linq;
+using EdiFabric.Framework.Envelopes;
+
+namespace EdiFabric.Framework.Messages.Segments
+{
+    /// <summary>
+    /// This class parses edi lines or edi xml.
+    /// </summary>
+    class SegmentParser
+    {
+        /// <summary>
+        /// Parses edi line according to a grammar
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="line">The edi line.</param>
+        /// <param name="interchangeContext">The intechange context.</param>
+        /// <returns>The parsed xml.</returns>
+        public static XElement ParseLine<T>(string line, InterchangeContext interchangeContext)
+        {
+            if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
+
+            var systemType = typeof(T);
+
+            if (systemType == null)
+                throw new ParserException(string.Format("Can't find type."));
+
+            return Parse(ParseTree.LoadFrom(systemType, pt => pt.IsSegment || pt.IsComplex), line, interchangeContext);
+        }
+
+        /// <summary>
+        /// Parses edi line according to a grammar
+        /// </summary>
+        /// <param name="grammar">The grammar.</param>
+        /// <param name="line">The edi line.</param>
+        /// <param name="interchangeContext">The intechange context.</param>
+        /// <returns>The parsed xml.</returns>
+        public static XElement ParseLine(ParseTree grammar, string line, InterchangeContext interchangeContext)
+        {
+            if (grammar == null) throw new ArgumentNullException("grammar");
+
+            if (!grammar.Children.Any())
+            {
+                return Parse(ParseTree.LoadFrom(grammar.SystemType, pt => pt.IsSegment || pt.IsComplex)
+                    , line, interchangeContext);
+            }
+
+            return Parse(grammar, line, interchangeContext);
+        }
+
+        /// <summary>
+        /// Parses edi xml according to a grammar
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="xml">The edi xml.</param>
+        /// <param name="interchangeContext">The intechange context.</param>
+        /// <returns>The parsed line.</returns>
+        public static string ParseXml<T>(XElement xml, InterchangeContext interchangeContext)
+        {
+            if (null == xml) throw new ArgumentNullException("xml");
+
+            var systemType = typeof(T);
+
+            if (systemType == null)
+                throw new ParserException(string.Format("Can't find type."));
+
+            return Parse(xml, ParseTree.LoadFrom(systemType, pt => pt.IsSegment || pt.IsComplex), interchangeContext);
+        }
+
+        /// <summary>
+        /// Parses edi xml according to a grammar
+        /// </summary>
+        /// <param name="systemType">The system type.</param>
+        /// <param name="xml">The edi xml.</param>
+        /// <param name="interchangeContext">The intechange context.</param>
+        /// <returns>The parsed line.</returns>
+        public static string ParseXml(Type systemType, XElement xml, InterchangeContext interchangeContext)
+        {
+            // Find the grammar by system type
+            return Parse(xml,
+                ParseTree.LoadFrom(FindType(systemType, xml.Name.LocalName), pt => pt.IsSegment || pt.IsComplex),
+                interchangeContext);
+        }
+
+        /// <summary>
+        /// Parses a segment 
+        /// </summary>
+        /// <param name="line">The segment line.</param>
+        /// <param name="grammar">The segment grammar.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The parsed xml.</returns>
+        private static XElement Parse(ParseTree grammar, string line, InterchangeContext interchangeContext)
+        {
+            if (!grammar.IsSegment) throw new Exception("Not a segment.");
+
+            XNamespace ns = interchangeContext.TargetNamespace;
+            var result = new XElement(ns + grammar.Name);
+
+            // Gets the composite data elements from the segment string
+            var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext).ToList();
+
+            // Index the composite data elements from the class definition
+            var indexedGrammar = grammar.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+            // Index the composite data elements from the edi string
+            var indexedValues = dataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
+
+            // This will try to parse the edi string into the class definition
+            // Load a parse tree against each value
+            // If there are more values in the edi string than in the class definition - they will be ignored
+            // If there are less values in the edi string than in the class definition - it will throw an exception
+            var indexedList = from ig in indexedGrammar
+                              from iv in indexedValues
+                              where ig.Position == iv.Position
+                              select new { ig.Grammar, iv.Value, ig.Position };
+
+            foreach (var dataElement in indexedList)
+            {
+                // Skip the blank elements
+                // This massively reduces the generated XML
+                if (string.IsNullOrEmpty(dataElement.Value))
+                {
+                    if (!grammar.IsEnvelope)
+                        continue;
+                }
+
+                // If the current element is out of the range of elemnts defined in the definition class, then it's a repetition
+                // The repetitions are always for the last defined element
+                var elementGrammar = dataElement.Position >= grammar.Children.Count
+                    ? grammar.Children.Last()
+                    : grammar.Children[dataElement.Position];
+
+                // Handle the repetitions
+                var elementRepetitions = grammar.IsEnvelope
+                    ? new[] { dataElement.Value }
+                    : dataElement.Value.Split(interchangeContext.RepetitionSeparator.ToCharArray());
+
+                // Parse each repetition
+                foreach (var elementRepetition in elementRepetitions)
+                {
+                    result.Add(ParseElement(elementGrammar, elementRepetition, interchangeContext));
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parses a data element
+        /// </summary>
+        /// <param name="parseTree">The dataelement grammar.</param>
+        /// <param name="value">The dataelement line.</param>
+        /// <param name="interchangeContext"></param>
+        /// <returns>The parsed xml.</returns>
+        private static XElement ParseElement(ParseTree parseTree, string value, InterchangeContext interchangeContext)
+        {
+            if (value == null) throw new ArgumentNullException("value");
+            if (!parseTree.IsComplex && !parseTree.IsSimple) throw new Exception("Not a data element.");
+
+            XNamespace ns = interchangeContext.TargetNamespace;
+            var result = new XElement(ns + parseTree.Name);
+
+            if (parseTree.IsComplex)
+            {
+                if (value == string.Empty)
+                {
+                    // Only deal with blank values for envelope headers
+                    if (parseTree.IsEnvelope)
+                    {
+                        foreach (var dataElement in parseTree.Children)
+                        {
+                            var element = new XElement(ns + dataElement.Name);
+                            element.SetValue(string.Empty);
+                            result.Add(element);
+                        }
+                    }
+                }
+                else
+                {
+                    // Get the simple data elements
+                    var componentDataElements =
+                        EdiHelper.GetEdiComponentDataElements(value, interchangeContext).ToList();
+
+                    // Index the composite data elements from the class definition
+                    var indexedGrammar =
+                        parseTree.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+                    // Index the composite data elements from the edi string
+                    var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
+
+                    // This will try to parse the edi string into the class definition
+                    // Load a parse tree against each value
+                    // If there are more values in the edi string than in the class definition - they will be ignored
+                    // If there are less values in the edi string than in the class definition - it will throw an exception
+                    var indexedList = from ig in indexedGrammar
+                                      from iv in indexedValues
+                                      where ig.Position == iv.Position
+                                      select new { ig.Position, iv.Value };
+
+                    // Index the list so we can position each element
+                    //var indexed = componentDataElements.Select((a, i) => new {Item = a, Position = i}).ToList();
+
+                    foreach (var dataElement in indexedList)
+                    {
+                        // Skip blank data elements otherwise this will produce blank XML nodes
+                        if (string.IsNullOrEmpty(dataElement.Value))
+                        {
+                            if (!parseTree.IsEnvelope)
+                                continue;
+                        }
+
+                        // Handle the repetitions
+                        // If the children the the edi straing are more than the class definition,
+                        // Then the diff are considered repetitions of the last child in the class definition
+                        var objectToParse = dataElement.Position >= parseTree.Children.Count
+                                                ? parseTree.Children.Last()
+                                                : parseTree.Children[dataElement.Position];
+
+                        var element = new XElement(ns + objectToParse.Name);
+                        // Set the value and escape to prevent faulty XML
+                        element.SetValue(SecurityElement.Escape(dataElement.Value) ?? string.Empty);
+                        result.Add(element);
+                    }
+                }
+            }
+            else
+            {
+                // Prevent faulty XML
+                result.SetValue(SecurityElement.Escape(value) ?? string.Empty);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parses segment xml
+        /// </summary>
+        /// <param name="segment">The segment xml.</param>
+        /// <param name="parseTree">The segment grammar.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The parsed line.</returns>
+        private static string Parse(XElement segment, ParseTree parseTree, InterchangeContext interchangeContext)
+        {
+            // Start with the segment name
+            // BHT+, etc.
+            var result = parseTree.EdiName + interchangeContext.DataElementSeparator;
+
+            // For all elements in the parse tree - append to the segment name to build the edi string
+            // BHT+88, etc.
+            // Parse according to the parse tree
+            foreach (var element in parseTree.Children)
+            {
+                var currentElement = element;
+                // Find the matching elemtns by name
+                // If > 1 found, then there are repetitions
+                var matchingElements = segment.Elements().Where(e => e.Name.LocalName == currentElement.Name);
+
+                string line = string.Empty;
+                foreach (var matchingElement in matchingElements)
+                {
+                    // Parse the element and split the repetitions
+                    line = line + ParseElement(matchingElement, element, interchangeContext)
+                           + interchangeContext.RepetitionSeparator;
+                }
+
+                // Make sure the trailing repetitions separator is removed
+                // To avoid stripping the default repetitions separator in case there is something like 88:55::
+                // The result should be 88:55:, therefore we can't just strip the trailing separators
+                line = line.EndsWith(interchangeContext.RepetitionSeparator + interchangeContext.RepetitionSeparator)
+                    ? line.Substring(0, line.Length - 1)
+                    : line.TrimEnd(interchangeContext.RepetitionSeparator.ToCharArray());
+
+                // Add to the segment string
+                // BHT+88:55:+
+                result = result + line + interchangeContext.DataElementSeparator;
+            }
+
+            // Remove the trailing data element separator
+            // BHT+88:55:
+            result = result.TrimEnd(interchangeContext.DataElementSeparator.ToCharArray());
+            // Append the segment terminator
+            // BHT+88:55:'
+            result = result + interchangeContext.SegmentTerminator;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Parses data element xml
+        /// </summary>
+        /// <param name="dataElement">The dataelement xml.</param>
+        /// <param name="parseTree">The dataelement grammar.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The parsed line.</returns>
+        private static string ParseElement(XElement dataElement, ParseTree parseTree, InterchangeContext interchangeContext)
+        {
+            if (parseTree.IsComplex)
+            {
+                var line = string.Empty;
+                // If complex data element, build a line from all the children in the parse tree
+                foreach (var element in parseTree.Children)
+                {
+                    // Can be only one match
+                    // If the XML contains data element that is not defined in the class, it will be skipped
+                    // This way only know data elements will be parsed
+                    var matchingElement =
+                        dataElement.Elements().SingleOrDefault(e => e.Name.LocalName == element.Name);
+
+                    // Build the line
+                    line = line +
+                           GetValidDataElementValue(matchingElement, interchangeContext) +
+                           interchangeContext.ComponentDataElementSeparator;
+                }
+
+                // Remove the trailing composite terminator
+                return line.TrimEnd(interchangeContext.ComponentDataElementSeparator.ToCharArray());
+            }
+
+            // If simple just escape the value
+            return GetValidDataElementValue(dataElement, interchangeContext);
+        }
+
+        /// <summary>
+        /// Escapes a string value to be valid in xml
+        /// </summary>
+        /// <param name="dataElement">The xml element.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The valid xml value.</returns>
+        private static string GetValidDataElementValue(XElement dataElement, InterchangeContext interchangeContext)
+        {
+            var dataElementValue = dataElement == null ? string.Empty : dataElement.Value;
+
+            // Secure non valid XML symbols
+            // Currently only &
+            if (dataElementValue.Contains("&"))
+            {
+                var securityElement = SecurityElement.FromString("<parse>" + dataElementValue + "</parse>");
+                if (securityElement == null)
+                {
+                    throw new ParserException("Can't parse value " + dataElementValue);
+                }
+
+                dataElementValue = securityElement.Text;
+            }
+
+            //  Escape all terminator symbols
+            return interchangeContext.EscapeLine(dataElementValue);
+        }
+
+        /// <summary>
+        /// Finds a type from another type
+        /// </summary>
+        /// <param name="source">The source type.</param>
+        /// <param name="segment">The name to search for.</param>
+        /// <returns>The found type.</returns>
+        private static Type FindType(Type source, string segment)
+        {
+            if (source.AssemblyQualifiedName == null)
+                throw new ParserException(string.Format("Can't find assembly for type name = {0}", source.FullName));
+
+            var result = Type.GetType(source.AssemblyQualifiedName.Replace(source.Name, segment));
+
+            if (result == null)
+                throw new ParserException(string.Format("Can't find type for type name = {0}", source.FullName));
+
+            return result;
+        }
+    }
+}
