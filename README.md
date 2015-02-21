@@ -1,5 +1,5 @@
-<h1>One reference to bring them in, One line to parse them,<br>
-One framework to find them all and in object bind them.</h1>
+<h2>One reference to bring them in, One line to parse them,<br>
+One framework to find them all and in object bind them.</h2>
 
 ediFabric is a better way to:
 
