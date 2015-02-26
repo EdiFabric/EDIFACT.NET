@@ -8,3 +8,5 @@ ediFabric is a better way to:
 - Manage or extend EDI formats. We offer classes and XSD for most of the X12, EDIFACT and HIPAA versions or you can handcraft your own.
 
 - Deliver value by alleviating the obscurity of EDI. This way you can carry on with your other tasks and do what you do best.
+
+This project has migrated from CodePlex, for old discussions and issues please go to www.edifabric.com
