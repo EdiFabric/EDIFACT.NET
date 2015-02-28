@@ -9,4 +9,6 @@ ediFabric is a better way to:
 
 - Deliver value by alleviating the obscurity of EDI. This way you can carry on with your other tasks and do what you do best.
 
-This project has migrated from CodePlex, for old discussions and issues please go to www.edifabric.com
+This project has migrated from CodePlex, for old discussions and issues please go to http://edifabric.codeplex.com/
+
+For additional information or to purchase classes\xsd, please visit us at www.edifabric.com
