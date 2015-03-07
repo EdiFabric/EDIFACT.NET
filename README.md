@@ -18,7 +18,9 @@ A guide on how to handcraft a transaction set class can be downloaded from here 
 You can purchase translation packages here:
 
 X12 http://edifabric.com/classes/x12/
+
 EDIFACT http://edifabric.com/classes/edifact/
+
 HIPAA http://edifabric.com/classes/hipaa/
 
 This project has migrated from CodePlex, for old discussions and issues please go to http://edifabric.codeplex.com/
