@@ -23,6 +23,8 @@ EDIFACT http://edifabric.com/classes/edifact/
 
 HIPAA http://edifabric.com/classes/hipaa/
 
+For sample usage, deployment instructions and documentation please go here http://edifabric.com/downloads-features/.
+
 This project has migrated from CodePlex, for old discussions and issues please go to http://edifabric.codeplex.com/
 
 www.edifabric.com
