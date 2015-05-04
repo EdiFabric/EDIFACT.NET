@@ -302,20 +302,20 @@ namespace EdiFabric.Framework.Messages
         /// <summary>
         /// Compare a parse tree to identity
         /// </summary>
-        /// <param name="segmentFullName">The identity</param>
+        /// <param name="segmentContext">The identity</param>
         /// <returns>If equal</returns>
-        public bool IsEqual(SegmentFullName segmentFullName)
+        public bool IsEqual(SegmentContext segmentContext)
         {
             // The names must match
-            if (EdiName == segmentFullName.Name)
+            if (EdiName == segmentContext.Name)
             {
                 // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentFullName.Value))
+                if (string.IsNullOrEmpty(segmentContext.Value))
                     return true;
 
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
-                return !Values.Any() || Values.Contains(segmentFullName.Value);
+                return !Values.Any() || Values.Contains(segmentContext.Value);
             }
 
             return false;
@@ -324,28 +324,39 @@ namespace EdiFabric.Framework.Messages
         /// <summary>
         /// Finds the next segment by full name
         /// </summary>
-        /// <param name="segmentFullName">The segment full name (name + value).</param>
+        /// <param name="segmentContext">The segment full name (name + value).</param>
         /// <returns>
         /// The found segment.
         /// </returns>
-        public ParseTree FindNextSegment(SegmentFullName segmentFullName)
+        public ParseTree FindNextSegment(SegmentContext segmentContext)
         {
             // Look on the same level first
             foreach (var child in Parent.Children.Skip(GetIndex()))
             {
-                if (child.IsSegment && child.IsEqual(segmentFullName))
+                if (child.IsSegment && child.IsEqual(segmentContext))
                     return child;
 
-                if (child.IsGroup && child.Children.First().IsEqual(segmentFullName))
+                if (child.IsGroup && child.Children.First().IsEqual(segmentContext))
                     return child.Children.First();
 
                 // Search a level down
                 if (child.IsAll || child.IsChoice || child.IsLoopOfLoops)
-                    return child.Children.First().FindNextSegment(segmentFullName);
+                    return child.Children.First().FindNextSegment(segmentContext);
             }
 
             // Search a level up
-            return Parent.FindNextSegment(segmentFullName);
+            return Parent.FindNextSegment(segmentContext);
+        }
+
+        public IEnumerable<ParseTree> Descendants()
+        {
+            var nodes = new Stack<ParseTree>(new[] { this });
+            while (nodes.Any())
+            {
+                var node = nodes.Pop();
+                yield return node;
+                foreach (var n in node.Children) nodes.Push(n);
+            }
         }
     }
 }

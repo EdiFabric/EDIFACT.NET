@@ -82,6 +82,11 @@ namespace EdiFabric.Framework
         public const string Gs = "GS";
 
         /// <summary>
+        /// HL
+        /// </summary>
+        public const string Hl = "HL";
+
+        /// <summary>
         /// Groups
         /// </summary>
         public const string Groups = "GROUPS";

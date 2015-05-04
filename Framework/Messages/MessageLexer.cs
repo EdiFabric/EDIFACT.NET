@@ -53,8 +53,30 @@ namespace EdiFabric.Framework.Messages
             {
                 try
                 {
+                    var segmentContext = new SegmentContext(segment, interchangeContext, messageContext.Format);
+                    // Jump back to HL segment if needed
+                    if (segmentContext.IsJump())
+                    {
+                        XElement hlParent;
+                        if (segmentContext.ParentId != null)
+                        {
+                            // Parent HL, start right after it
+                            hlParent = ediXml.Descendants().Single(d => d.Name.LocalName.StartsWith("S_HL") &&
+                                                                      d.Elements().First().Value == segmentContext.ParentId);
+                            var hl = messageGrammar.Descendants().Single(pt => pt.Name == hlParent.Name.LocalName);
+                            lastSegment = hl.Parent.Children[1];
+                        }
+                        else
+                        {
+                            // Root HL, start from it
+                            hlParent = ediXml.Descendants().First(d => d.Name.LocalName.StartsWith("S_HL"));
+                            var hl = messageGrammar.Descendants().Single(pt => pt.Name == hlParent.Name.LocalName);
+                            lastSegment = hl;
+                        }
+                    }
+
                     // Find the next segment grammar
-                    var currSeg = lastSegment.FindNextSegment(new SegmentFullName(segment, interchangeContext, messageContext.Format));
+                    var currSeg = lastSegment.FindNextSegment(segmentContext);
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
@@ -79,6 +101,7 @@ namespace EdiFabric.Framework.Messages
 
                     // Reset the position in the grammar
                     lastSegment = currSeg;
+                    //var lastfound = AttachTree(segmentTree, segment, interchangeContext);
 
                 }
                 catch (Exception ex)
@@ -90,6 +113,26 @@ namespace EdiFabric.Framework.Messages
             return new Message(ediXml, messageContext);
         }
 
+        private static XElement AttachTree(IEnumerable<ParseTree> segmentTree, string segment, InterchangeContext interchangeContext)
+        {
+            XElement result = null;
+            // Attach each bit
+            foreach (var parseTree in segmentTree)
+            {
+                // Parse if a segment, otherwise convert to xml
+                var element = parseTree.IsSegment
+                    ? SegmentParser.ParseLine(parseTree, segment, interchangeContext)
+                    : ToXml(parseTree, interchangeContext);
+
+                // Attach to the xml
+                if(result != null) result.Add(element);
+                // Set the last attached as the attachment point as we iterate from the top parent to the bottom segment
+                result = element;
+            }
+
+            return result;
+        }
+        
         /// <summary>
         /// Convert a parse tree to a root xml node
         /// Without the hierarchy, only the name.

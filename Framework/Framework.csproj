@@ -84,7 +84,7 @@
     <Compile Include="Namespaces.cs" />
     <Compile Include="EdiSegments.cs" />
     <Compile Include="Messages\Message.cs" />
-    <Compile Include="Messages\Segments\SegmentFullName.cs" />
+    <Compile Include="Messages\Segments\SegmentContext.cs" />
     <Compile Include="Messages\MessageContext.cs" />
     <Compile Include="Messages\ParseTree.cs" />
     <Compile Include="Envelopes\InterchangeContext.cs" />

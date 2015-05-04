@@ -17,7 +17,7 @@ namespace EdiFabric.Framework.Messages.Segments
     /// <summary>
     /// Segment full name is segment name + the value of the first data element.
     /// </summary>
-    public class SegmentFullName
+    public class SegmentContext
     {
         /// <summary>
         /// The name of the segment
@@ -30,12 +30,17 @@ namespace EdiFabric.Framework.Messages.Segments
         public string Value { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentFullName"/> class.
+        /// The parent id in case of HL segment
+        /// </summary>
+        public string ParentId { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentContext"/> class.
         /// </summary>
         /// <param name="ediSegment">The edi segment.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <param name="format">The edi format.</param>
-        public SegmentFullName(string ediSegment, InterchangeContext interchangeContext, EdiFormats format)
+        public SegmentContext(string ediSegment, InterchangeContext interchangeContext, EdiFormats format)
         {
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
             if (interchangeContext == null) throw new ArgumentNullException("interchangeContext");
@@ -46,6 +51,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
             Name = splitted[0];
             Value = null;
+            ParentId = null;
 
             // UNA segments don't have values
             if (ediSegment.StartsWith(EdiSegments.Una))
@@ -57,7 +63,19 @@ namespace EdiFabric.Framework.Messages.Segments
             if (format == EdiFormats.Hipaa && !splitted[1].Contains(interchangeContext.ComponentDataElementSeparator))
             {
                 Value = splitted[1];
+                if (ediSegment.StartsWith(EdiSegments.Hl) && !string.IsNullOrEmpty(splitted[2])) ParentId = splitted[2];
             }
+        }
+
+        public bool IsJump()
+        {
+            if(Name == EdiSegments.Hl)
+                if(Value != null)
+                    if(Value != "1")
+                        if (int.Parse(Value) - int.Parse(ParentId ?? "0") > 1)
+                            return true;
+
+            return false;
         }
     }
 }
