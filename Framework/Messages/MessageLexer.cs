@@ -113,26 +113,6 @@ namespace EdiFabric.Framework.Messages
             return new Message(ediXml, messageContext);
         }
 
-        private static XElement AttachTree(IEnumerable<ParseTree> segmentTree, string segment, InterchangeContext interchangeContext)
-        {
-            XElement result = null;
-            // Attach each bit
-            foreach (var parseTree in segmentTree)
-            {
-                // Parse if a segment, otherwise convert to xml
-                var element = parseTree.IsSegment
-                    ? SegmentParser.ParseLine(parseTree, segment, interchangeContext)
-                    : ToXml(parseTree, interchangeContext);
-
-                // Attach to the xml
-                if(result != null) result.Add(element);
-                // Set the last attached as the attachment point as we iterate from the top parent to the bottom segment
-                result = element;
-            }
-
-            return result;
-        }
-        
         /// <summary>
         /// Convert a parse tree to a root xml node
         /// Without the hierarchy, only the name.
