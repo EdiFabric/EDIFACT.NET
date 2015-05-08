@@ -232,7 +232,12 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException("Can't find GS segment.");
             }
 
-            var tag = st.Element(ns + EdiElements.StTag) ?? st.Element(ns + EdiElements.StTagHipaa);
+            XElement tag = null;
+            if (st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTag) != -1).Any()) {
+                tag = st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTag) != -1).First();
+            } else if (st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa) != -1).Any()) {
+                tag = st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa) != -1).First();
+            }
 
             if (tag == null)
             {
