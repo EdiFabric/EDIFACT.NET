@@ -192,6 +192,10 @@ namespace EdiFabric.Framework
                     {
                         // If it not escaped, add the currently built line
                         // and start the next line
+                        // check for escaping the escape character
+                        if (line.EndsWith(new string(new [] {escapeCharacter, escapeCharacter})))
+                            line = line.Remove(line.Length - 1);
+
                         result.Add(line);
                         line = "";
                         previousSymbol = char.MinValue;
@@ -206,7 +210,10 @@ namespace EdiFabric.Framework
                 line = line + symbol;
 
                 // Keep track of the previous character in case it's an escape character
-                previousSymbol = symbol;
+                if (previousSymbol == symbol && previousSymbol == escapeCharacter)
+                    previousSymbol = char.MinValue;
+                else
+                    previousSymbol = symbol;
             }
 
             result.Add(line);

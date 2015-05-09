@@ -448,5 +448,24 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.IsTrue(brokenRules.Any());
         }
+
+        [TestMethod]
+        public void TestToInterchangeWithEscapedEscape()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedEscape.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
     }
 }

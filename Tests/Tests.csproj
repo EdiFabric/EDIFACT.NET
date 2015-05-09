@@ -217,6 +217,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00401_BadSegment.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedEscape.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EscapedEscape.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
