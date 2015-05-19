@@ -16,12 +16,15 @@ namespace EdiFabric.Tests
             //const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
             //EdifactStream es = new EdifactStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
 
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleMessages.txt";
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
             EdiStream es = new EdiStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
             //Message msg = null;
-            //while((var msg = es.GetNextMessage()) != null)
-            var b = es.GetNextMessage();
-            var b1 = es.GetNextMessage();
+            while(es.GetNextMessage())
+            {
+                var b = es.Item;
+            }
+            //var b = es.GetNextMessage();
+            //var b1 = es.GetNextMessage();
         }
     }
 }

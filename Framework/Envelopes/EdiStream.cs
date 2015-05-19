@@ -10,6 +10,8 @@ namespace EdiFabric.Framework.Envelopes
     {
         private readonly InterchangeContext _interchangeContext;
         private readonly StreamReader _streamReader;
+        public Message Item;
+        private readonly List<string> _envelope = new List<string>();
 
         public EdiStream(Stream ediStream)
         {
@@ -19,13 +21,13 @@ namespace EdiFabric.Framework.Envelopes
             _streamReader.DiscardBufferedData();
         }
 
-        public Message GetNextMessage()
+        public bool GetNextMessage()
         {
             var message = new List<string>();
-            var envelope = new List<string>();
-            Message result = null;
+            
+            var result = false;
 
-            while (_streamReader.Peek() >= 0 && result == null)
+            while (_streamReader.Peek() >= 0 && !result)
             {
                 var segment = _streamReader.ReadSegment(_interchangeContext.ReleaseIndicator, _interchangeContext.SegmentTerminator);
                 switch (EdiHelper.GetSegmentName(segment, _interchangeContext))
@@ -41,24 +43,25 @@ namespace EdiFabric.Framework.Envelopes
                     case EdiSegments.Ung:
                         break;
                     case EdiSegments.Gs:
-                        envelope.Add(segment);
+                        _envelope.Add(segment);
                         break;
                     case EdiSegments.Une:
                     case EdiSegments.Ge:
-                        envelope.Clear();
+                        _envelope.Clear();
                         break;
                     case EdiSegments.Unh:
                     case EdiSegments.St:
                         message.Add(segment);
-                        envelope.Add(segment);
+                        _envelope.Add(segment);
                         break;
                     case EdiSegments.Unt:
                     case EdiSegments.Se:
                         message.Add(segment);
-                        result = MessageLexer.Analyze(message, envelope, _interchangeContext);
+                        Item = MessageLexer.Analyze(message, _envelope, _interchangeContext);
+                        result = true;
                         // For X12 the ST segment is included in the headers
                         // Once the message is parsed - it's removed
-                        envelope.Remove(envelope.Last());
+                        _envelope.Remove(_envelope.Last());
                         message.Clear();
                         break;
                     default:
