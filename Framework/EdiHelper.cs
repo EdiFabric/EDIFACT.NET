@@ -89,21 +89,21 @@ namespace EdiFabric.Framework
             if (interchangeContext == null) throw new ArgumentNullException("interchangeContext");
 
             // Handle carriage return\new line separator
-                if (interchangeContext.SegmentTerminator != Environment.NewLine)
-                    contents = contents.Replace(Environment.NewLine, string.Empty);
+            if (interchangeContext.SegmentTerminator != Environment.NewLine)
+                contents = contents.Replace(Environment.NewLine, string.Empty);
 
-                // Handle escape segment separator
-                // Removes blank lines
-                var result = !string.IsNullOrEmpty(interchangeContext.ReleaseIndicator)
-                                 ? contents.EscapeSplit(interchangeContext.ReleaseIndicator[0],
-                                                        interchangeContext.SegmentTerminator[0],
-                                                        StringSplitOptions.RemoveEmptyEntries)
-                                 : contents.Split(interchangeContext.SegmentTerminator.ToCharArray(),
-                                                  StringSplitOptions.RemoveEmptyEntries);
+            // Handle escape segment separator
+            // Removes blank lines
+            var result = !string.IsNullOrEmpty(interchangeContext.ReleaseIndicator)
+                ? contents.EscapeSplit(interchangeContext.ReleaseIndicator[0],
+                    interchangeContext.SegmentTerminator[0],
+                    StringSplitOptions.RemoveEmptyEntries)
+                : contents.Split(interchangeContext.SegmentTerminator.ToCharArray(),
+                    StringSplitOptions.RemoveEmptyEntries);
 
-                result = (from r in result select r.Trim()).ToArray();
-                return result;
-            
+            result = (from r in result select r.Trim()).ToArray();
+            return result;
+
         }
 
         /// <summary>
@@ -225,6 +225,40 @@ namespace EdiFabric.Framework
             }
 
             return result.ToArray();
+        }
+
+        public static string ReadSegment(this TextReader reader, string escapeCharacter, string segmentSeparator)
+        {
+            var line = "";
+            
+            while (reader.Peek() >= 0)
+            {
+                var symbol = (char)reader.Read();
+                line = line + symbol;
+
+                if (line.EndsWith(segmentSeparator))
+                {
+                    if (!string.IsNullOrEmpty(escapeCharacter) &&
+                        line.EndsWith(string.Concat(escapeCharacter, segmentSeparator)))
+                    {
+                        continue;
+                    }
+
+                    if (segmentSeparator != Environment.NewLine)
+                        line = line.Replace(Environment.NewLine, string.Empty);
+
+                    int index = line.LastIndexOf(segmentSeparator, StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        line = line.Remove(index);
+                    }
+                    
+                    if(!string.IsNullOrEmpty(line))
+                        break;
+                }
+            }
+            
+            return line;
         }
 
         /// <summary>

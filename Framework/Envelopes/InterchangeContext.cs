@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace EdiFabric.Framework.Envelopes
@@ -62,6 +63,22 @@ namespace EdiFabric.Framework.Envelopes
         /// </summary>
         public InterchangeContext()
         {
+        }
+
+        public InterchangeContext(TextReader streamReader)
+            : this(ExtractHeader(streamReader))
+        {
+            
+        }
+
+        private static string ExtractHeader(TextReader streamReader)
+        {
+            if (streamReader == null) throw new ArgumentNullException("streamReader");
+            
+            var header = new char[106];
+            streamReader.Read(header, 0, header.Length);
+            return string.Concat(header);
+
         }
 
         /// <summary>

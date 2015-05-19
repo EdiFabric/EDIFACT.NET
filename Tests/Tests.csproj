@@ -60,6 +60,7 @@
     <Compile Include="TestX12.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestEdifact.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A.txt" />
