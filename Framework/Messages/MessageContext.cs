@@ -67,12 +67,7 @@ namespace EdiFabric.Framework.Messages
         /// </param>
         public MessageContext(XElement message)
         {
-            var context = ToContext(message);
-
-            Format = context.Item4;
-            Version = context.Item2;
-            Tag = context.Item1;
-            Origin = context.Item3;
+            ToContext(message);
             _systemType = ToSystemType(Format, Version, Tag, Origin);
         }
 
@@ -87,12 +82,7 @@ namespace EdiFabric.Framework.Messages
         /// </param>
         public MessageContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
-            var context = ToContext(envelopes, interchangeContext);
-
-            Format = context.Item4;
-            Version = context.Item2;
-            Tag = context.Item1;
-            Origin = context.Item3;
+            ToContext(envelopes, interchangeContext);
             _systemType = ToSystemType(Format, Version, Tag, Origin);
         }
 
@@ -106,12 +96,7 @@ namespace EdiFabric.Framework.Messages
         {
             if (systemType == null) throw new ArgumentNullException("systemType");
             
-            var context = ToContext(systemType);
-
-            Format = context.Item4;
-            Version = context.Item2;
-            Tag = context.Item1;
-            Origin = context.Item3;
+            ToContext(systemType);
             _systemType = systemType;
         }
 
@@ -121,10 +106,7 @@ namespace EdiFabric.Framework.Messages
         /// <param name="systemType">
         /// The system type.
         /// </param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContext(Type systemType)
+        private void ToContext(Type systemType)
         {
             var splittedDots = systemType.FullName.Split('.');
             if (splittedDots.Length < 3)
@@ -141,7 +123,10 @@ namespace EdiFabric.Framework.Messages
             if (splittedUnders.Length > 3)
                 origin = splittedUnders[3];
 
-            return new Tuple<string, string, string, EdiFormats>(tag, version, origin, format);
+            Tag = tag;
+            Version = version;
+            Origin = origin;
+            Format = format;
         }
 
         /// <summary>
@@ -182,22 +167,21 @@ namespace EdiFabric.Framework.Messages
         /// <param name="message">
         /// The xml edi.
         /// </param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContext(XElement message)
+        private void ToContext(XElement message)
         {
             if (message == null) throw new ArgumentNullException("message");
 
             switch (message.Name.NamespaceName)
             {
                 case Namespaces.Edifact:
-                    return ToContextEdifact(message);
+                    ToContextEdifact(message);
+                    break;
                 case Namespaces.X12:
-                    return ToContextX12(message);
+                    ToContextX12(message);
+                    break;
+                default:
+                    throw new Exception(string.Format("Unsupported message format = {0}", message.Name.NamespaceName));
             }
-
-            throw new Exception(string.Format("Unsupported message format = {0}", message.Name.NamespaceName));
         }
 
         /// <summary>
@@ -206,10 +190,7 @@ namespace EdiFabric.Framework.Messages
         /// <param name="message">
         /// The xml edi.
         /// </param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContextX12(XElement message)
+        private void ToContextX12(XElement message)
         {
             XNamespace ns = message.Name.NamespaceName;
             var st = message.Element(ns + "S_" + EdiSegments.St);
@@ -262,7 +243,10 @@ namespace EdiFabric.Framework.Messages
                 origin = version.Value.Substring(6, 4);
             var format = HipaaHelper.IsHipaa(versionString + origin) ? EdiFormats.Hipaa : EdiFormats.X12;
 
-            return new Tuple<string, string, string, EdiFormats>(tag.Value, versionString, origin, format);
+            Tag = tag.Value;
+            Version = versionString;
+            Origin = origin;
+            Format = format;
         }
 
         /// <summary>
@@ -271,10 +255,7 @@ namespace EdiFabric.Framework.Messages
         /// <param name="message">
         /// The xml edi.
         /// </param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContextEdifact(XElement message)
+        private void ToContextEdifact(XElement message)
         {
             XNamespace ns = message.Name.NamespaceName;
             var unh = message.Element(ns + "S_" + EdiSegments.Unh);
@@ -312,7 +293,10 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException("Can't find " + EdiElements.UnhRelease);
             }
 
-            return new Tuple<string, string, string, EdiFormats>(tag.Value, edition.Value + release.Value, null, EdiFormats.Edifact);
+            Tag = tag.Value;
+            Version = edition.Value + release.Value;
+            Origin = null;
+            Format = EdiFormats.Edifact;
         }
 
         /// <summary>
@@ -320,22 +304,21 @@ namespace EdiFabric.Framework.Messages
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
+        private void ToContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
             if (envelopes == null) throw new ArgumentNullException("envelopes");
             
             switch (interchangeContext.Format)
             {
                 case EdiFormats.Edifact:
-                    return ToContextEdifact(envelopes, interchangeContext);
+                    ToContextEdifact(envelopes, interchangeContext);
+                    break;
                 case EdiFormats.X12:
-                    return ToContextX12(envelopes, interchangeContext);
+                    ToContextX12(envelopes, interchangeContext);
+                    break;
+                default:
+                    throw new Exception(string.Format("Unsupported message format = {0}", interchangeContext.Format));
             }
-
-            throw new Exception(string.Format("Unsupported message format = {0}", interchangeContext.Format));
         }
 
         /// <summary>
@@ -343,10 +326,7 @@ namespace EdiFabric.Framework.Messages
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContextX12(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
+        private void ToContextX12(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
             var enumerable = envelopes as List<string> ?? envelopes.ToList();
             string version;
@@ -386,7 +366,10 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException("Can't parse ST segment.", ex);
             }
 
-            return new Tuple<string, string, string, EdiFormats>(tag, version, origin, ToFormat(format));
+            Tag = tag;
+            Version = version;
+            Origin = origin;
+            Format = ToFormat(format);
         }
 
         /// <summary>
@@ -394,19 +377,20 @@ namespace EdiFabric.Framework.Messages
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>
-        /// The message context.
-        /// </returns>
-        private Tuple<string, string, string, EdiFormats> ToContextEdifact(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
+        private void ToContextEdifact(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
             try
             {
                 var unh = envelopes.Single(es => es.StartsWith(EdiSegments.Unh));
                 var ediCompositeDataElements = EdiHelper.GetEdiCompositeDataElements(unh, interchangeContext);
-                var ediDataElements = EdiHelper.GetEdiComponentDataElements(ediCompositeDataElements[1], interchangeContext);
+                var ediDataElements = EdiHelper.GetEdiComponentDataElements(ediCompositeDataElements[1],
+                    interchangeContext);
 
-                return new Tuple<string, string, string, EdiFormats>(ediDataElements[0], ediDataElements[1] + ediDataElements[2], null, EdiFormats.Edifact);
-             }
+                Tag = ediDataElements[0];
+                Version = ediDataElements[1] + ediDataElements[2];
+                Origin = null;
+                Format = EdiFormats.Edifact;
+            }
             catch (Exception ex)
             {
                 throw new ParserException("Can't parse UNH segment.", ex);

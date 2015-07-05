@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Xml;
+using System.Xml.XPath;
 using EdiFabric.Definitions.Edifact_D00A_INVOIC;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Envelopes;
@@ -35,7 +37,7 @@ namespace EdiFabric.Tests
             if (message.Context.Tag == "INVOIC")
             {
                 var typedMessage = message.DeserializeItem<M_INVOIC>();
-                
+
                 // ASSERT
                 Assert.IsNotNull(typedMessage);
             }
@@ -466,6 +468,62 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestToEdiWithEscapingTheEscapeGeneration()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapeGen.xml";
+            const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapeGen.txt";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+
+            var reader = new StreamReader(stream);
+            var expectedEdi = new List<string>();
+            while (reader.Peek() >= 0)
+            {
+                expectedEdi.Add(reader.ReadLine());
+            }
+
+            // ACT
+            var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample))).ToEdi();
+
+            // ASSERT
+            Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
+            for (int i = 0; i < parsedEdi.Count; i++)
+            {
+                Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestToEdiWithTrailingSeparator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_TrailingSeparator.xml";
+            const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+
+            var reader = new StreamReader(stream);
+            var expectedEdi = new List<string>();
+            while (reader.Peek() >= 0)
+            {
+                expectedEdi.Add(reader.ReadLine());
+            }
+
+            // ACT
+            var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample))).ToEdi();
+
+            // ASSERT
+            Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
+            for (int i = 0; i < parsedEdi.Count; i++)
+            {
+                Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
+            }
         }
     }
 }

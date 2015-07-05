@@ -74,7 +74,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Envelopes\EdiStream.cs" />
     <Compile Include="Messages\EdiPrefixes.cs" />
     <Compile Include="EdiFormats.cs" />
     <Compile Include="Envelopes\XmlLexer.cs" />

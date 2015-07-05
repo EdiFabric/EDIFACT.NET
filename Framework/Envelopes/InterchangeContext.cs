@@ -305,7 +305,8 @@ namespace EdiFabric.Framework.Envelopes
             return SegmentTerminator.ToCharArray().Contains(value) ||
                    ComponentDataElementSeparator.ToCharArray().Contains(value) ||
                    DataElementSeparator.ToCharArray().Contains(value) ||
-                   RepetitionSeparator.ToCharArray().Contains(value);
+                   RepetitionSeparator.ToCharArray().Contains(value) ||
+                   ReleaseIndicator.ToCharArray().Contains(value);
         }  
     }
 }

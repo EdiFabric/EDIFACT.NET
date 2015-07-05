@@ -132,6 +132,7 @@ namespace EdiFabric.Framework.Messages.Segments
                 // This massively reduces the generated XML
                 if (string.IsNullOrEmpty(dataElement.Value))
                 {
+                    // Don't skip for header segments as they are positional
                     if (!grammar.IsEnvelope)
                         continue;
                 }
@@ -288,7 +289,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
             // Remove the trailing data element separator
             // BHT+88:55:
-            result = result.TrimEnd(interchangeContext.DataElementSeparator.ToCharArray());
+            result = CleanupTrailingSeparators(result, interchangeContext.DataElementSeparator, interchangeContext); //result.TrimEnd(interchangeContext.DataElementSeparator.ToCharArray());
             // Append the segment terminator
             // BHT+88:55:'
             result = result + interchangeContext.SegmentTerminator;
@@ -324,7 +325,8 @@ namespace EdiFabric.Framework.Messages.Segments
                 }
 
                 // Remove the trailing composite terminator
-                return line.TrimEnd(interchangeContext.ComponentDataElementSeparator.ToCharArray());
+                return CleanupTrailingSeparators(line, interchangeContext.ComponentDataElementSeparator, interchangeContext);
+                //return line.TrimEnd(interchangeContext.ComponentDataElementSeparator.ToCharArray());
             }
 
             // If simple just escape the value
@@ -373,6 +375,21 @@ namespace EdiFabric.Framework.Messages.Segments
 
             if (result == null)
                 throw new ParserException(string.Format("Can't find type for type name = {0}", source.FullName));
+
+            return result;
+        }
+
+        private static string CleanupTrailingSeparators(string result, string separator, InterchangeContext interchangeContext)
+        {
+            while (result.EndsWith(separator))
+            {
+                if (!string.IsNullOrEmpty(interchangeContext.ReleaseIndicator) && result.EndsWith(interchangeContext.ReleaseIndicator + separator))
+                {
+                    break;
+                }
+
+                result = result.Substring(0, result.Length - separator.Length);
+            }
 
             return result;
         }
