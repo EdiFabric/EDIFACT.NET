@@ -21,7 +21,7 @@ namespace EdiFabric.Framework.Envelopes.X12
     /// X12 interchange
     /// </summary>
     [XmlRoot("INTERCHANGE", Namespace = Namespaces.X12)]
-    public class Interchange
+    public class Interchange : AbstractInterchange
     {
         /// <summary>
         /// Interchange header
@@ -54,14 +54,15 @@ namespace EdiFabric.Framework.Envelopes.X12
         /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
         /// </summary>
         /// <param name="ediStream">The edi stream.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
         /// <returns>
         /// The interchange instance.
         /// </returns>
-        public static Interchange LoadFrom(Stream ediStream)
+        public static Interchange LoadFrom(Stream ediStream, string definitionsAssemblyName = null)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
 
-            var x12Lexer = new FromEdiLexer(ediStream.ToEdiString());
+            var x12Lexer = new FromEdiLexer(ediStream.ToEdiString(), definitionsAssemblyName);
             x12Lexer.Analyze();
 
             // X12 headers are positional and the blank spaces need to be preserved
@@ -103,23 +104,12 @@ namespace EdiFabric.Framework.Envelopes.X12
         /// <returns>
         /// The edi message.
         /// </returns>
-        public List<string> ToEdi(InterchangeContext context = null)
+        public override List<string> ToEdi(InterchangeContext context = null)
         {
             var x12Lexer = new ToEdiLexer(EdiHelper.Serialize(this), context);
             x12Lexer.Analyze();
 
             return x12Lexer.Result;
-        }
-
-        /// <summary>
-        /// Serialize the interchange into xml
-        /// </summary>
-        /// <returns>
-        /// The serialized xml.
-        /// </returns>
-        public XElement Serialize()
-        {
-            return EdiHelper.Serialize(this);
         }
     }
 }

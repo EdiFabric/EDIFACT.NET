@@ -85,7 +85,7 @@ namespace EdiFabric.Framework.Envelopes
             typedMessage.Descendants().Where(d => string.IsNullOrEmpty(d.Value)).Remove();
             typedMessage.Descendants().Where(d => string.IsNullOrWhiteSpace(d.Value)).Remove();
 
-            var messageContext = new MessageContext(typedMessage);
+            var messageContext = new MessageContext(typedMessage, InterchangeContext);
             // Get all segments, which are not parents of other segments
             foreach (var segment in typedMessage.Descendants().Where(d => d.Name.LocalName.StartsWith("S_")
                 && !d.Elements().Any(e => e.Name.LocalName.StartsWith("S_"))))

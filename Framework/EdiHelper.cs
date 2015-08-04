@@ -150,6 +150,15 @@ namespace EdiFabric.Framework
             return result;
         }
 
+        public static string[] GetRepetitions(string value, InterchangeContext interchangeContext)
+        {
+            if (!string.IsNullOrEmpty(interchangeContext.ReleaseIndicator))
+                return value.EscapeSplit(interchangeContext.ReleaseIndicator[0],
+                    interchangeContext.RepetitionSeparator[0], StringSplitOptions.None);
+              
+            return value.Split(interchangeContext.RepetitionSeparator.ToCharArray());
+        }
+
         /// <summary>
         /// Gets the segment name from a segment line
         /// </summary>

@@ -21,7 +21,7 @@ namespace EdiFabric.Framework.Envelopes.Edifact
     /// Edifact interchange
     /// </summary>
     [XmlRoot("INTERCHANGE", Namespace = Namespaces.Edifact)]
-    public class Interchange
+    public class Interchange : AbstractInterchange
     {
         /// <summary>
         /// Interchange header
@@ -54,14 +54,15 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
         /// </summary>
         /// <param name="ediStream">The edi stream.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
         /// <returns>
         /// The interchange instance.
         /// </returns>
-        public static Interchange LoadFrom(Stream ediStream)
+        public static Interchange LoadFrom(Stream ediStream, string definitionsAssemblyName = null)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
 
-            var edifactLexer = new FromEdiLexer(ediStream.ToEdiString());
+            var edifactLexer = new FromEdiLexer(ediStream.ToEdiString(), definitionsAssemblyName);
             edifactLexer.Analyze();
 
             return edifactLexer.Result;
@@ -93,23 +94,12 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         /// <returns>
         /// The edi message.
         /// </returns>
-        public List<string> ToEdi(InterchangeContext context = null)
+        public override List<string> ToEdi(InterchangeContext context = null)
         {
             var edifactLexer = new ToEdiLexer(EdiHelper.Serialize(this), context);
             edifactLexer.Analyze();
 
             return edifactLexer.Result;
-        }
-
-        /// <summary>
-        /// Serialize the interchange into xml
-        /// </summary>
-        /// <returns>
-        /// The serialized xml.
-        /// </returns>
-        public XElement Serialize()
-        {
-            return EdiHelper.Serialize(this);
-        }
+        } 
     }
 }

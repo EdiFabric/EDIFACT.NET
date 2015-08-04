@@ -65,10 +65,13 @@ namespace EdiFabric.Framework.Messages
         /// <param name="message">
         /// From xml
         /// </param>
-        public MessageContext(XElement message)
+        /// <param name="interchangeContext">
+        /// The interchange context
+        /// </param>
+        public MessageContext(XElement message, InterchangeContext interchangeContext)
         {
             ToContext(message);
-            _systemType = ToSystemType(Format, Version, Tag, Origin);
+            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.ClassesProject);
         }
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace EdiFabric.Framework.Messages
         public MessageContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
             ToContext(envelopes, interchangeContext);
-            _systemType = ToSystemType(Format, Version, Tag, Origin);
+            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.ClassesProject);
         }
 
         /// <summary>
@@ -136,22 +139,23 @@ namespace EdiFabric.Framework.Messages
         /// <param name="version">Message version.</param>
         /// <param name="tag">Message tag.</param>
         /// <param name="origin">Message origin.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
         /// <returns>
         /// The system type.
         /// </returns>
-        private Type ToSystemType(EdiFormats format, string version, string tag, string origin)
+        private Type ToSystemType(EdiFormats format, string version, string tag, string origin, string definitionsAssemblyName)
         {
-            const string definitions = "EdiFabric.Definitions";
+            //const string definitions = "EdiFabric.Definitions";
 
             if (string.IsNullOrEmpty(version)) throw new NullReferenceException("version");
             if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag");
 
-            var typeFullName = definitions + "." + format + "_" + version + "_" + tag;
+            var typeFullName = "EdiFabric.Definitions" + "." + format + "_" + version + "_" + tag;
             if (!string.IsNullOrEmpty(origin))
                 typeFullName = typeFullName + "_" + origin;
 
             typeFullName = typeFullName + ".M_" + tag;
-            typeFullName = typeFullName + ", " + definitions;
+            typeFullName = typeFullName + ", " + definitionsAssemblyName;
 
             var systemType = Type.GetType(typeFullName);
 

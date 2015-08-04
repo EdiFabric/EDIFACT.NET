@@ -145,9 +145,9 @@ namespace EdiFabric.Framework.Messages.Segments
 
                 // Handle the repetitions
                 var elementRepetitions = grammar.IsEnvelope
-                    ? new[] { dataElement.Value }
-                    : dataElement.Value.Split(interchangeContext.RepetitionSeparator.ToCharArray());
-
+                    ? new[] {dataElement.Value}
+                    : EdiHelper.GetRepetitions(dataElement.Value, interchangeContext);
+                  
                 // Parse each repetition
                 foreach (var elementRepetition in elementRepetitions)
                 {

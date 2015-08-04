@@ -32,8 +32,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         /// <param name="ediString">
         /// The edi message.
         /// </param>
-        public FromEdiLexer(string ediString)
-            : base(ediString)
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        public FromEdiLexer(string ediString, string definitionsAssemblyName)
+            : base(ediString, definitionsAssemblyName)
         {
             Result = new Interchange();
         }

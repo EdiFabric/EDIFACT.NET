@@ -59,14 +59,19 @@ namespace EdiFabric.Framework.Envelopes
         public string TargetNamespace { get; set; }
 
         /// <summary>
+        /// The name of the classes project
+        /// </summary>
+        public string ClassesProject { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InterchangeContext"/> class.
         /// </summary>
         public InterchangeContext()
         {
         }
 
-        public InterchangeContext(TextReader streamReader)
-            : this(ExtractHeader(streamReader))
+        public InterchangeContext(TextReader streamReader, string classesProject)
+            : this(ExtractHeader(streamReader), classesProject)
         {
             
         }
@@ -86,9 +91,12 @@ namespace EdiFabric.Framework.Envelopes
         /// This extracts the separators from the contents of the edi message.
         /// </summary>
         /// <param name="contents">The edi message</param>
-        public InterchangeContext(string contents)
+        /// <param name="classesProject"></param>
+        public InterchangeContext(string contents, string classesProject)
         {
             if (contents == null) throw new ArgumentNullException("contents");
+
+            ClassesProject = classesProject ?? "EdiFabric.Definitions";
 
             contents = contents.Replace(Environment.NewLine, string.Empty);
 
@@ -306,7 +314,7 @@ namespace EdiFabric.Framework.Envelopes
                    ComponentDataElementSeparator.ToCharArray().Contains(value) ||
                    DataElementSeparator.ToCharArray().Contains(value) ||
                    RepetitionSeparator.ToCharArray().Contains(value) ||
-                   ReleaseIndicator.ToCharArray().Contains(value);
-        }  
+                   (!string.IsNullOrEmpty(ReleaseIndicator) && ReleaseIndicator.ToCharArray().Contains(value));
+        }
     }
 }

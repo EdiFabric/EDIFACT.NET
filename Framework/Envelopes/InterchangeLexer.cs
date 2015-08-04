@@ -35,10 +35,11 @@ namespace EdiFabric.Framework.Envelopes
         /// <param name="ediString">
         /// The edi message.
         /// </param>
-        protected InterchangeLexer(string ediString)
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        protected InterchangeLexer(string ediString, string definitionsAssemblyName)
         {
             _ediString = ediString;
-            InterchangeContext = new InterchangeContext(ediString);
+            InterchangeContext = new InterchangeContext(ediString, definitionsAssemblyName);
         }
         
         /// <summary>
