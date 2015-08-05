@@ -32,7 +32,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
 
             // ACT
-            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), "EdiFabric.Definitions");
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
             var message = interchange.Groups[0].Messages[0];
 
             if (message.Context.Tag == "INVOIC")

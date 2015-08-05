@@ -51,11 +51,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EF_EFCT_D00A_INVOIC.xsd" />
-    <EmbeddedResource Include="EF_X12_002040_810.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="EF_HIPAA_004010_837_P.xsd" />
+    <EmbeddedResource Include="EF_EFCT_D00A_INVOIC.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EF_HIPAA_004010_837_P.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EF_X12_002040_810.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

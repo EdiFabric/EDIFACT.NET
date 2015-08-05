@@ -83,9 +83,9 @@ namespace EdiFabric.Framework.Messages
         /// <returns>
         /// List of broken rules.
         /// </returns>
-        public IEnumerable<string> Validate()
+        public IEnumerable<string> Validate(string definitionsAssemblyName = null)
         {
-            const string validators = "EdiFabric.Validators";
+            var validators = definitionsAssemblyName ?? "EdiFabric.Validators";
 
             var result = new List<string>();
             var schemas = new XmlSchemaSet();

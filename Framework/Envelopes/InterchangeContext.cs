@@ -23,6 +23,8 @@ namespace EdiFabric.Framework.Envelopes
     /// </summary>
     public class InterchangeContext : IEquatable<InterchangeContext>
     {
+        private const string Definitions = "EdiFabric.Definitions";
+
         /// <summary>
         /// Separator for segments
         /// </summary>
@@ -61,7 +63,7 @@ namespace EdiFabric.Framework.Envelopes
         /// <summary>
         /// The name of the classes project
         /// </summary>
-        public string ClassesProject { get; set; }
+        public string DefinitionsAssemblyName { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InterchangeContext"/> class.
@@ -70,8 +72,8 @@ namespace EdiFabric.Framework.Envelopes
         {
         }
 
-        public InterchangeContext(TextReader streamReader, string classesProject)
-            : this(ExtractHeader(streamReader), classesProject)
+        public InterchangeContext(TextReader streamReader, string definitionsAssemblyName)
+            : this(ExtractHeader(streamReader), definitionsAssemblyName)
         {
             
         }
@@ -91,77 +93,76 @@ namespace EdiFabric.Framework.Envelopes
         /// This extracts the separators from the contents of the edi message.
         /// </summary>
         /// <param name="contents">The edi message</param>
-        /// <param name="classesProject"></param>
-        public InterchangeContext(string contents, string classesProject)
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        public InterchangeContext(string contents, string definitionsAssemblyName)
         {
             if (contents == null) throw new ArgumentNullException("contents");
 
-            ClassesProject = classesProject ?? "EdiFabric.Definitions";
+            DefinitionsAssemblyName = definitionsAssemblyName ?? Definitions;
 
             contents = contents.Replace(Environment.NewLine, string.Empty);
 
-            // X12
-            if (contents.ToUpper().StartsWith(EdiSegments.Isa))
+            var firstSegmentName = contents.ToUpper().Substring(0, 3);
+            switch (firstSegmentName)
             {
-                try
-                {
-                    // Parse X12 separators, they are always contained within the envelope
-                    DataElementSeparator = contents[3].ToString(CultureInfo.InvariantCulture);
-                    var isa = string.Concat(contents.Take(106));
-                    var isaElements = isa.Split(DataElementSeparator[0]);
-                    ComponentDataElementSeparator = string.Concat(isaElements[16].First());
-                    // Repetition is either the defaukt ^ or else if explicitly specified when U is present
-                    RepetitionSeparator = isaElements[11] != "U" ? isaElements[11] : "^";
-                    // Handle carriage return\new line segment terminators
-                    var st = isaElements[16].Skip(1).DefaultIfEmpty('G').First();
-                    SegmentTerminator = st.ToString(CultureInfo.InvariantCulture);
-                    if (SegmentTerminator == " " || string.IsNullOrEmpty(SegmentTerminator)
-                        || SegmentTerminator == "G") SegmentTerminator = Environment.NewLine;
-                    // No release terminator for X12
-                    ReleaseIndicator = "";
-                    Format = EdiFormats.X12;
-                    TargetNamespace = Namespaces.X12;
-                }
-                catch (Exception ex)
-                {
-                    throw new ParserException("Can't find X12 interchange delimiters", ex);
-                }
-            }
-
-            // Edifact
-            if (contents.ToUpper().StartsWith(EdiSegments.Unb))
-            {
-                //  Default Edifact separators
-                ComponentDataElementSeparator = ":";
-                DataElementSeparator = "+";
-                ReleaseIndicator = "?";
-                RepetitionSeparator = "*";
-                SegmentTerminator = "'";
-                Format = EdiFormats.Edifact;
-                TargetNamespace = Namespaces.Edifact;
-            }
-
-            // Edifact with non default separators, set on the UNA segment
-            if (contents.ToUpper().StartsWith(EdiSegments.Una))
-            {
-                try
-                {
-                    //  Parse UNA separators
-                    var una = contents.Replace(EdiSegments.Una, "").Take(6).ToList();
-
-                    ComponentDataElementSeparator = una[0].ToString(CultureInfo.InvariantCulture);
-                    DataElementSeparator = una[1].ToString(CultureInfo.InvariantCulture);
-                    ReleaseIndicator = una[3].ToString(CultureInfo.InvariantCulture);
+                case EdiSegments.Isa:
+                    try
+                    {
+                        // Parse X12 separators, they are always contained within the envelope
+                        DataElementSeparator = contents[3].ToString(CultureInfo.InvariantCulture);
+                        var isa = string.Concat(contents.Take(106));
+                        var isaElements = isa.Split(DataElementSeparator[0]);
+                        ComponentDataElementSeparator = string.Concat(isaElements[16].First());
+                        // Repetition is either the defaukt ^ or else if explicitly specified when U is present
+                        RepetitionSeparator = isaElements[11] != "U" ? isaElements[11] : "^";
+                        // Handle carriage return\new line segment terminators
+                        var st = isaElements[16].Skip(1).DefaultIfEmpty('G').First();
+                        SegmentTerminator = st.ToString(CultureInfo.InvariantCulture);
+                        if (SegmentTerminator == " " || string.IsNullOrEmpty(SegmentTerminator)
+                            || SegmentTerminator == "G") SegmentTerminator = Environment.NewLine;
+                        // No release terminator for X12
+                        ReleaseIndicator = "";
+                        Format = EdiFormats.X12;
+                        TargetNamespace = Namespaces.X12;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ParserException("Can't find X12 interchange delimiters", ex);
+                    }
+                    break;
+                case EdiSegments.Unb:
+                    //  Default Edifact separators
+                    ComponentDataElementSeparator = ":";
+                    DataElementSeparator = "+";
+                    ReleaseIndicator = "?";
                     RepetitionSeparator = "*";
-                    SegmentTerminator = una[5].ToString(CultureInfo.InvariantCulture);
+                    SegmentTerminator = "'";
                     Format = EdiFormats.Edifact;
                     TargetNamespace = Namespaces.Edifact;
-                }
-                catch (Exception ex)
-                {
-                    throw new ParserException("Can't find UNA interchange delimiters", ex);
-                }
+                    break;
+                case EdiSegments.Una:
+                    try
+                    {
+                        //  Parse UNA separators
+                        var una = contents.Replace(EdiSegments.Una, "").Take(6).ToList();
+
+                        ComponentDataElementSeparator = una[0].ToString(CultureInfo.InvariantCulture);
+                        DataElementSeparator = una[1].ToString(CultureInfo.InvariantCulture);
+                        ReleaseIndicator = una[3].ToString(CultureInfo.InvariantCulture);
+                        RepetitionSeparator = "*";
+                        SegmentTerminator = una[5].ToString(CultureInfo.InvariantCulture);
+                        Format = EdiFormats.Edifact;
+                        TargetNamespace = Namespaces.Edifact;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ParserException("Can't find UNA interchange delimiters", ex);
+                    }
+                    break;
+                default:
+                    throw new ParserException("Can't identify format by: " + firstSegmentName);
             }
+            
         }
 
         /// <summary>
@@ -171,6 +172,8 @@ namespace EdiFabric.Framework.Envelopes
         /// <param name="format">The format</param>
         public InterchangeContext(EdiFormats format)
         {
+            DefinitionsAssemblyName = Definitions;
+
             switch (format)
             {
                 case EdiFormats.Edifact:
@@ -227,6 +230,8 @@ namespace EdiFabric.Framework.Envelopes
                     RepetitionSeparator = context.RepetitionSeparator;
                 if (!string.IsNullOrEmpty(context.SegmentTerminator))
                     SegmentTerminator = context.SegmentTerminator;
+                if (!string.IsNullOrEmpty(context.DefinitionsAssemblyName))
+                    SegmentTerminator = context.DefinitionsAssemblyName;
             }
         }
 

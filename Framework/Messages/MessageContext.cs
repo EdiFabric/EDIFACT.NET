@@ -71,7 +71,7 @@ namespace EdiFabric.Framework.Messages
         public MessageContext(XElement message, InterchangeContext interchangeContext)
         {
             ToContext(message);
-            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.ClassesProject);
+            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.DefinitionsAssemblyName);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace EdiFabric.Framework.Messages
         public MessageContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
             ToContext(envelopes, interchangeContext);
-            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.ClassesProject);
+            _systemType = ToSystemType(Format, Version, Tag, Origin, interchangeContext.DefinitionsAssemblyName);
         }
 
         /// <summary>
