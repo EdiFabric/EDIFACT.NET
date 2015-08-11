@@ -153,7 +153,7 @@ namespace EdiFabric.Framework.Messages
                     {
                         var lastFoundParents =
                             lastFoundSegment.GetParents(
-                                s => s.Parent != null && !s.Parent.IsGroup && !s.Parent.IsMessage)
+                                s => s.Parent != null && !s.Parent.IsMessage)
                                 .Where(p => !p.IsChoice)
                                 .ToList();
                         var segmentParents =
