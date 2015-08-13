@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>6.0.3</version>
+    <version>6.0.4</version>
     <title>The Ultimate EDI Parser for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
