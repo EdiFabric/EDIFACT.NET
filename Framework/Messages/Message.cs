@@ -85,7 +85,7 @@ namespace EdiFabric.Framework.Messages
         /// </returns>
         public IEnumerable<string> Validate(string definitionsAssemblyName = null)
         {
-            var validators = definitionsAssemblyName ?? "EdiFabric.Validators";
+            var validators = definitionsAssemblyName ?? GetAssemblyName();
 
             var result = new List<string>();
             var schemas = new XmlSchemaSet();
@@ -109,7 +109,7 @@ namespace EdiFabric.Framework.Messages
             if (stream == null)
                 throw new ValidationException(
                     string.Format(
-                        "Can't find resource {0} in assembly {1}. Please make sure it exists and and its Build Action is set to Embedded Resource.",
+                        "Can't find resource {0} in assembly {1}. Please make sure that it exists, VS default namespace is the same as the assembly name and its Build Action is set to Embedded Resource.",
                         resource, validators));
 
             schemas.Add(Item.Name.Namespace.NamespaceName, XmlReader.Create(stream));
@@ -119,6 +119,19 @@ namespace EdiFabric.Framework.Messages
             xDoc.Validate(schemas, (o, e) => result.Add(e.Message));
 
             return result;
+        }
+
+        public static string GetAssemblyName()
+        {
+            try
+            {
+                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Validators"];
+            }
+            catch
+            {
+                return "EdiFabric.Validators";
+            }
+
         }
     }
 }

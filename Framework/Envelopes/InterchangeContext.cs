@@ -23,8 +23,6 @@ namespace EdiFabric.Framework.Envelopes
     /// </summary>
     public class InterchangeContext : IEquatable<InterchangeContext>
     {
-        private const string Definitions = "EdiFabric.Definitions";
-
         /// <summary>
         /// Separator for segments
         /// </summary>
@@ -98,7 +96,7 @@ namespace EdiFabric.Framework.Envelopes
         {
             if (contents == null) throw new ArgumentNullException("contents");
 
-            DefinitionsAssemblyName = definitionsAssemblyName ?? Definitions;
+            DefinitionsAssemblyName = definitionsAssemblyName ?? GetAssemblyName();
 
             contents = contents.Replace(Environment.NewLine, string.Empty);
 
@@ -172,7 +170,7 @@ namespace EdiFabric.Framework.Envelopes
         /// <param name="format">The format</param>
         public InterchangeContext(EdiFormats format)
         {
-            DefinitionsAssemblyName = Definitions;
+            DefinitionsAssemblyName = GetAssemblyName();
 
             switch (format)
             {
@@ -320,6 +318,19 @@ namespace EdiFabric.Framework.Envelopes
                    DataElementSeparator.ToCharArray().Contains(value) ||
                    RepetitionSeparator.ToCharArray().Contains(value) ||
                    (!string.IsNullOrEmpty(ReleaseIndicator) && ReleaseIndicator.ToCharArray().Contains(value));
+        }
+
+        public static string GetAssemblyName()
+        {
+            try
+            {
+                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Definitions"];
+            }
+            catch 
+            {
+                return "EdiFabric.Definitions";
+            }
+            
         }
     }
 }

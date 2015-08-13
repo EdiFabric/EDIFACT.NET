@@ -8,8 +8,8 @@
     <ProjectGuid>{377D0667-3D3B-4089-B748-F0F4FEDC229F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EdiFabric.Validators</RootNamespace>
-    <AssemblyName>EdiFabric.Validators</AssemblyName>
+    <RootNamespace>EdiFabric.Xsd</RootNamespace>
+    <AssemblyName>EdiFabric.Xsd</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
