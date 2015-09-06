@@ -18,7 +18,7 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// The pasing grammar of edi nodes. 
+    /// The parsing grammar of edi nodes. 
     /// </summary>
     class ParseTree : IEqualityComparer<ParseTree>
     {
@@ -185,10 +185,16 @@ namespace EdiFabric.Framework.Messages
             // This is the first element defined in the segment
             // This is required for Hipaa as the segments are not only identified by name
             // There could be situations where
-            // S_BHT+41 is different segment than S_BHT+88, although both are S_BHT
+            // S_BHT+41 is a different segment than S_BHT+88, although both are S_BHT
             if (result.IsSegment && properties.Any())
             {
-                result.Values.AddRange(properties[0].GetProperyEnumValues());
+                if (properties[0].Name.StartsWith(EdiPrefix.C))
+                {
+                    var complexProperties = properties[0].PropertyType.GetProperties().Sort();
+                    result.Values.AddRange(complexProperties[0].GetProperyEnumValues());
+                }
+                else
+                    result.Values.AddRange(properties[0].GetProperyEnumValues());
             }
 
             // Check if need to go deeper or stop
@@ -333,6 +339,8 @@ namespace EdiFabric.Framework.Messages
             // Look on the same level first
             foreach (var child in Parent.Children.Skip(GetIndex()))
             {
+                Logger.Log(string.Format("Segment to try: {0}", child.Name));
+                
                 if (child.IsSegment && child.IsEqual(segmentContext))
                     return child;
 

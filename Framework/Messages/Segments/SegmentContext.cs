@@ -60,9 +60,10 @@ namespace EdiFabric.Framework.Messages.Segments
             }
 
             // Handle blank segments, e.g. BHT+'
-            if (format == EdiFormats.Hipaa && !splitted[1].Contains(interchangeContext.ComponentDataElementSeparator))
+            if (format == EdiFormats.Hipaa)
             {
-                Value = splitted[1];
+                var splittedElement = splitted[1].Split(interchangeContext.ComponentDataElementSeparator.ToCharArray(), StringSplitOptions.None);
+                Value = splittedElement[0];
                 if (ediSegment.StartsWith(EdiSegments.Hl) && !string.IsNullOrEmpty(splitted[2])) ParentId = splitted[2];
             }
         }
@@ -76,6 +77,11 @@ namespace EdiFabric.Framework.Messages.Segments
                             return true;
 
             return false;
+        }
+
+        public string ToPropertiesString()
+        {
+            return string.Format("Name = {0} Value = {1} ParentId = {2}", Name, Value, ParentId);
         }
     }
 }

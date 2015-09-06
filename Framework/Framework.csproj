@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Envelopes\AbstractInterchange.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Messages\EdiPrefixes.cs" />
     <Compile Include="EdiFormats.cs" />
     <Compile Include="Envelopes\XmlLexer.cs" />

@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework.Envelopes;
@@ -29,7 +30,7 @@ namespace EdiFabric.Framework.Messages
         /// <param name="segments">The edi segments.</param>
         /// <param name="envelopes">The edi envelopes.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>The pased edi message.</returns>
+        /// <returns>The passed Edi message.</returns>
         public static Message Analyze(List<string> segments, List<string> envelopes, InterchangeContext interchangeContext)
         {
             // Read the message context from the envelope headers
@@ -50,10 +51,13 @@ namespace EdiFabric.Framework.Messages
             
             // Iterate trough the segment lines
             foreach (var segment in segments)
-            {
+            {                 
                 try
                 {
                     var segmentContext = new SegmentContext(segment, interchangeContext, messageContext.Format);
+
+                    Logger.Log(string.Format("Segment to find: {0}", segmentContext.ToPropertiesString()));
+                   
                     // Jump back to HL segment if needed
                     if (segmentContext.IsJump())
                     {
@@ -77,23 +81,26 @@ namespace EdiFabric.Framework.Messages
 
                     // Find the next segment grammar
                     var currSeg = lastSegment.FindNextSegment(segmentContext);
+
+                    Logger.Log(string.Format("Segment found: {0}", currSeg.Name));
+                    
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
                     var segmentTree = GetSegmentTree(currSeg, lastSegment);
-                    // Intersect the grammar with the parsed xml.
-                    // The new chunk will be attched to this intersection point.
+                    // Intersect the grammar with the parsed XML.
+                    // The new chunk will be attached to this intersection point.
                     lastXElement = lastXElement.AncestorsAndSelf().Last(xe => xe.Name.LocalName == segmentTree.First().Parent.Name);
 
                     // Attach each bit
                     foreach (var parseTree in segmentTree)
                     {
-                        // Parse if a segment, otherwise convert to xml
+                        // Parse if a segment, otherwise convert to XML
                         var element = parseTree.IsSegment
                             ? SegmentParser.ParseLine(parseTree, segment, interchangeContext)
                             : ToXml(parseTree, interchangeContext);
 
-                        // Attach to the xml
+                        // Attach to the XML
                         lastXElement.Add(element);
                         // Set the last attached as the attachment point as we iterate from the top parent to the bottom segment
                         lastXElement = element;
