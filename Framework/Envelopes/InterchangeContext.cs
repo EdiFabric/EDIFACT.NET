@@ -229,7 +229,7 @@ namespace EdiFabric.Framework.Envelopes
                 if (!string.IsNullOrEmpty(context.SegmentTerminator))
                     SegmentTerminator = context.SegmentTerminator;
                 if (!string.IsNullOrEmpty(context.DefinitionsAssemblyName))
-                    SegmentTerminator = context.DefinitionsAssemblyName;
+                    DefinitionsAssemblyName = context.DefinitionsAssemblyName;
             }
         }
 
