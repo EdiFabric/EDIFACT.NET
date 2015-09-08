@@ -188,13 +188,21 @@ namespace EdiFabric.Framework.Messages
             // S_BHT+41 is a different segment than S_BHT+88, although both are S_BHT
             if (result.IsSegment && properties.Any())
             {
-                if (properties[0].Name.StartsWith(EdiPrefix.C))
+                var values = properties[0].GetProperyEnumValues().ToList();
+                if (properties[0].Name.StartsWith(EdiPrefix.C) && !values.Any())
                 {
-                    var complexProperties = properties[0].PropertyType.GetProperties().Sort();
-                    result.Values.AddRange(complexProperties[0].GetProperyEnumValues());
+                    try
+                    {
+                        var complexProperties = properties[0].PropertyType.GetProperties().Sort();
+                        values = complexProperties[0].GetProperyEnumValues().ToList();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                else
-                    result.Values.AddRange(properties[0].GetProperyEnumValues());
+
+                result.Values.AddRange(values);
             }
 
             // Check if need to go deeper or stop
