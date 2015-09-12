@@ -49,8 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="810.cs" />
-    <Compile Include="210.cs" />
-    <Compile Include="214.cs" />
     <Compile Include="837_P.cs" />
     <Compile Include="INVOIC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
