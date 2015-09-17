@@ -70,6 +70,24 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         /// <summary>
         /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
         /// </summary>
+        /// <param name="ediStream">The edi stream.</param>
+        /// <param name="encoding">The encoding of the edi stream.</param>
+        /// <returns>
+        /// The interchange instance.
+        /// </returns>
+        public static Interchange LoadFrom(Stream ediStream, System.Text.Encoding encoding)
+        {
+            if (ediStream == null) throw new ArgumentNullException("ediStream");
+
+            var edifactLexer = new FromEdiLexer(ediStream.ToEdiString(encoding));
+            edifactLexer.Analyze();
+
+            return edifactLexer.Result;
+        }
+
+        /// <summary>
+        /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
+        /// </summary>
         /// <param name="ediElement">
         /// The edi xml.
         /// </param>
