@@ -40,6 +40,22 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
+        /// Converts a stream into string
+        /// </summary>
+        /// <param name="ediStream">The stream</param>
+        /// <param name="encoding">Encoding of the stream</param>
+        /// <returns>The string</returns>
+        public static string ToEdiString(this Stream ediStream, System.Text.Encoding encoding)
+        {
+            if (ediStream == null) throw new ArgumentNullException("ediStream");
+
+            using (var reader = new StreamReader(ediStream, encoding, false))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
         /// Serializes an instance
         /// </summary>
         /// <typeparam name="T">The type of the instance</typeparam>
