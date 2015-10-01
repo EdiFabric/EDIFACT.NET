@@ -12,7 +12,8 @@ namespace EdiFabric.Framework
             try
             {
                 LogFile = ConfigurationManager.AppSettings["EdiFabric.LogFile"];
-                File.Delete(LogFile);
+                if (!String.IsNullOrWhiteSpace(LogFile))
+                    File.Delete(LogFile);
             }
             catch
             {
@@ -24,7 +25,8 @@ namespace EdiFabric.Framework
         {
             try
             {
-                File.AppendAllText(LogFile, text + Environment.NewLine);
+                if (!String.IsNullOrWhiteSpace(LogFile))
+                    File.AppendAllText(LogFile, text + Environment.NewLine);
             }
             catch
             {
