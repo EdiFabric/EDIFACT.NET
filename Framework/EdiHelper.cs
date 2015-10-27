@@ -260,6 +260,40 @@ namespace EdiFabric.Framework
             return result.ToArray();
         }
 
+        public static string ReadSegment(this TextReader reader, string escapeCharacter, string segmentSeparator)
+        {
+            var line = "";
+
+            while (reader.Peek() >= 0)
+            {
+                var symbol = (char)reader.Read();
+                line = line + symbol;
+
+                if (line.EndsWith(segmentSeparator))
+                {
+                    if (!string.IsNullOrEmpty(escapeCharacter) &&
+                        line.EndsWith(string.Concat(escapeCharacter, segmentSeparator)))
+                    {
+                        continue;
+                    }
+
+                    if (segmentSeparator != Environment.NewLine)
+                        line = line.Replace(Environment.NewLine, string.Empty);
+
+                    int index = line.LastIndexOf(segmentSeparator, StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        line = line.Remove(index);
+                    }
+
+                    if (!string.IsNullOrEmpty(line))
+                        break;
+                }
+            }
+
+            return line;
+        }
+
         /// <summary>
         /// Gets the target namespace from a type.
         /// The namespace is defined in the XmlRoot attribute for every class.

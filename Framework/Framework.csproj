@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EdiStream.cs" />
     <Compile Include="Envelopes\AbstractInterchange.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Messages\EdiPrefixes.cs" />

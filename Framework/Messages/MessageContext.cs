@@ -243,7 +243,7 @@ namespace EdiFabric.Framework.Messages
 
             var versionString = version.Value.Substring(0, 6);
             string origin = null;
-            if (version.Value.Count() > 10)
+            if (version.Value.Count() >= 10)
                 origin = version.Value.Substring(6, 4);
             var format = HipaaHelper.IsHipaa(versionString + origin) ? EdiFormats.Hipaa : EdiFormats.X12;
 
