@@ -50,7 +50,10 @@ namespace EdiFabric.Framework.Messages
                 "005010X222",
                 "005010X223",
                 "005010X224",
-                "005010X231"
+                "005010X231",
+                "005010X298",
+                "005010X299",
+                "005010X300"
             };
         }
 
@@ -81,12 +84,15 @@ namespace EdiFabric.Framework.Messages
         {
             switch (origin)
             {
+                case "X298":
                 case "X222":
                 case "X098":
                     return "P";
+                case "X299":
                 case "X223":
                 case "X096":
                     return "I";
+                case "X300":
                 case "X224":
                 case "X097":
                     return "D";
