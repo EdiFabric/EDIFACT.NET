@@ -10,6 +10,9 @@ using EdiFabric.Framework.Messages.Segments;
 
 namespace EdiFabric.Framework
 {
+    /// <summary>
+    /// Streaming for large files
+    /// </summary>
     public class EdiStream : IDisposable
     {
         private readonly InterchangeContext _interchangeContext;
