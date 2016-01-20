@@ -145,8 +145,6 @@ namespace EdiFabric.Framework.Messages
         /// </returns>
         private Type ToSystemType(EdiFormats format, string version, string tag, string origin, string definitionsAssemblyName)
         {
-            //const string definitions = "EdiFabric.Definitions";
-
             if (string.IsNullOrEmpty(version)) throw new NullReferenceException("version");
             if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag");
 

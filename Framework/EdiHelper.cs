@@ -291,7 +291,7 @@ namespace EdiFabric.Framework
                 }
             }
 
-            return line;
+            return line.Trim('\r', '\n');
         }
 
         /// <summary>

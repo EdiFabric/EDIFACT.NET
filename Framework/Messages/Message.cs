@@ -125,7 +125,7 @@ namespace EdiFabric.Framework.Messages
         {
             try
             {
-                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Validators"];
+                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Validators"] ?? "EdiFabric.Validators";
             }
             catch
             {

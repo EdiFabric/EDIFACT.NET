@@ -13,7 +13,7 @@ namespace EdiFabric.Tests
         public void TestX12Stream()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroupsBrokenLine.txt";
             var i = 0;
 
             // ACT

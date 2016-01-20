@@ -324,7 +324,7 @@ namespace EdiFabric.Framework.Envelopes
         {
             try
             {
-                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Definitions"];
+                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Definitions"] ?? "EdiFabric.Definitions";
             }
             catch 
             {
