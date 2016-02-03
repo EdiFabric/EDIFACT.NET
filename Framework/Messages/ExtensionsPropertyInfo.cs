@@ -97,7 +97,8 @@ namespace EdiFabric.Framework.Messages
                 Name = propertyInfo.Name,
                 Children = new List<ParseTree>(),
                 SystemType = propertyInfo.GetSystemType(),
-                Values = new List<string>()
+                FirstElementValues = new List<string>(),
+                SecondElementValues = new List<string>()
             };
         }
 

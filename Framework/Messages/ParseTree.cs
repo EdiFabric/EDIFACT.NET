@@ -12,13 +12,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Messages.Segments;
 
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// The parsing grammar of edi nodes. 
+    /// The parsing grammar of Edi nodes. 
     /// </summary>
     class ParseTree : IEqualityComparer<ParseTree>
     {
@@ -46,13 +47,20 @@ namespace EdiFabric.Framework.Messages
 
         /// <summary>
         /// The collection of values defined for that node.
-        /// This is only populated for segmenst and is the enum of values 
-        /// for the first dataelement for that segment.
+        /// This is only populated for segments and is the list of values 
+        /// for the first data element for that segment.
         /// </summary>
-        public List<string> Values { get; set; }
+        public List<string> FirstElementValues { get; set; }
 
         /// <summary>
-        /// One of the edi prefixes
+        /// The collection of values defined for that node.
+        /// This is only populated for segments and is the list of values 
+        /// for the second data element for that segment.
+        /// </summary>
+        public List<string> SecondElementValues { get; set; }
+
+        /// <summary>
+        /// One of the Edi prefixes
         /// </summary>
         public string Prefix
         {
@@ -173,7 +181,8 @@ namespace EdiFabric.Framework.Messages
                 Name = systemType.Name,
                 Children = new List<ParseTree>(),
                 SystemType = systemType,
-                Values = new List<string>()
+                FirstElementValues = new List<string>(),
+                SecondElementValues = new List<string>()
             };
 
             // Get all properties from the class definition, sorted by Order attribute
@@ -181,29 +190,13 @@ namespace EdiFabric.Framework.Messages
             // GetProperties method is not supposed to return all properties in the order they are declared in the class file.
             var properties = systemType.GetProperties().Sort();
 
-            // Always populate the enum list for a segment, e.g.
-            // This is the first element defined in the segment
+            // Always populate the list for a segment, e.g.
+            // This is the first&second element defined in the segment
             // This is required for Hipaa as the segments are not only identified by name
             // There could be situations where
             // S_BHT+41 is a different segment than S_BHT+88, although both are S_BHT
-            if (result.IsSegment && properties.Any())
-            {
-                var values = properties[0].GetProperyEnumValues().ToList();
-                if (properties[0].Name.StartsWith(EdiPrefix.C) && !values.Any())
-                {
-                    try
-                    {
-                        var complexProperties = properties[0].PropertyType.GetProperties().Sort();
-                        values = complexProperties[0].GetProperyEnumValues().ToList();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-
-                result.Values.AddRange(values);
-            }
+            result.FirstElementValues.AddRange(GetElementValues(result, properties, 0));
+            result.SecondElementValues.AddRange(GetElementValues(result, properties, 1));
 
             // Check if need to go deeper or stop
             if (!limit(result)) return result;
@@ -324,12 +317,14 @@ namespace EdiFabric.Framework.Messages
             if (EdiName == segmentContext.Name)
             {
                 // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentContext.Value))
+                if (string.IsNullOrEmpty(segmentContext.FirstValue))
                     return true;
 
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
-                return !Values.Any() || Values.Contains(segmentContext.Value);
+                return !FirstElementValues.Any() ||
+                       (FirstElementValues.Contains(segmentContext.FirstValue) &&
+                        (!SecondElementValues.Any() || SecondElementValues.Contains(segmentContext.SecondValue)));
             }
 
             return false;
@@ -373,6 +368,29 @@ namespace EdiFabric.Framework.Messages
                 yield return node;
                 foreach (var n in node.Children) nodes.Push(n);
             }
+        }
+
+        private static List<string> GetElementValues(ParseTree result, List<PropertyInfo> properties, int index)
+        {
+            var values = new List<string>();
+            if (result.IsSegment && properties.Count >= index + 1)
+            {
+                values = properties[index].GetProperyEnumValues().ToList();
+                if (properties[index].Name.StartsWith(EdiPrefix.C) && !values.Any())
+                {
+                    try
+                    {
+                        var complexProperties = properties[index].PropertyType.GetProperties().Sort();
+                        values = complexProperties[index].GetProperyEnumValues().ToList();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+
+            return values;
         }
     }
 }

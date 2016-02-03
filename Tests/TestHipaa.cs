@@ -137,7 +137,7 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_BadSegment.txt";
-            const string expectedErrorMessage = "Instance validation error: '01' is not a valid value for S_BHT_BeginningOfHierarchicalTransaction_TS837Q1D_BHT02_TransactionSetPurposeCode.";
+            const string expectedErrorMessage = "Instance validation error: 'CL' is not a valid value for S_BHT_BeginningOfHierarchicalTransaction_TS837Q1D_BHT06_ClaimOrEncounterIdentifier.";
 
             // ACT
             try

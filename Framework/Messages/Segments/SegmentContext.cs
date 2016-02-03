@@ -27,7 +27,12 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <summary>
         /// The value of the first data element of that segment
         /// </summary>
-        public string Value { get; private set; }
+        public string FirstValue { get; private set; }
+
+        /// <summary>
+        /// The value of the second data element of that segment
+        /// </summary>
+        public string SecondValue { get; private set; }
 
         /// <summary>
         /// The parent id in case of HL segment
@@ -50,7 +55,8 @@ namespace EdiFabric.Framework.Messages.Segments
             if (splitted.Length < 2) throw new Exception("Segment is blank.");
 
             Name = splitted[0];
-            Value = null;
+            FirstValue = null;
+            SecondValue = null;
             ParentId = null;
 
             // UNA segments don't have values
@@ -63,7 +69,12 @@ namespace EdiFabric.Framework.Messages.Segments
             if (format == EdiFormats.Hipaa)
             {
                 var splittedElement = splitted[1].Split(interchangeContext.ComponentDataElementSeparator.ToCharArray(), StringSplitOptions.None);
-                Value = splittedElement[0];
+                FirstValue = splittedElement[0];
+                if (splitted.Length > 2)
+                {
+                    var splittedSecondElement = splitted[2].Split(interchangeContext.ComponentDataElementSeparator.ToCharArray(), StringSplitOptions.None);
+                    SecondValue = splittedSecondElement[0];
+                }
                 if (ediSegment.StartsWith(EdiSegments.Hl) && !string.IsNullOrEmpty(splitted[2])) ParentId = splitted[2];
             }
         }
@@ -71,9 +82,9 @@ namespace EdiFabric.Framework.Messages.Segments
         public bool IsJump()
         {
             if(Name == EdiSegments.Hl)
-                if(Value != null)
-                    if(Value != "1")
-                        if (int.Parse(Value) - int.Parse(ParentId ?? "0") > 1)
+                if(FirstValue != null)
+                    if(FirstValue != "1")
+                        if (int.Parse(FirstValue) - int.Parse(ParentId ?? "0") > 1)
                             return true;
 
             return false;
@@ -81,7 +92,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
         public string ToPropertiesString()
         {
-            return string.Format("Name = {0} Value = {1} ParentId = {2}", Name, Value, ParentId);
+            return string.Format("Name = {0} FirstValue = {1} SecondValue = {2} ParentId = {3}", Name, FirstValue, SecondValue, ParentId);
         }
     }
 }
