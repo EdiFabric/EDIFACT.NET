@@ -185,5 +185,43 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.IsTrue(brokenRules.Any());
         }
+
+        [TestMethod]
+        public void TestToInterchangeWithSecondaryValue()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_SecondaryValue1.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00401_Secondary1.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), "EdiFabric.Tests");
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestToInterchangeWithSecondaryValueOnly()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_SecondaryValue2.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00401_Secondary2.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), "EdiFabric.Tests");
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
     }
 }
