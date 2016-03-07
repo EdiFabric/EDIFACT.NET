@@ -45,6 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\EdiFabric.Framework.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -96,7 +97,6 @@
     <Compile Include="Envelopes\Edifact\Interchange.cs" />
     <Compile Include="Envelopes\Edifact\Segments.cs" />
     <Compile Include="Envelopes\X12\Segments.cs" />
-    <Compile Include="Messages\ValidationException.cs" />
     <Compile Include="ParserException.cs" />
     <Compile Include="EdiHelper.cs" />
     <Compile Include="Messages\ExtensionsPropertyInfo.cs" />

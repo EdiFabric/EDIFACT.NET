@@ -15,18 +15,18 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Envelopes.X12
 {
     /// <summary>
-    /// This is the x12 lexer for Xml edi
+    /// This is the X12 lexer for converting XML into EDI.
     /// </summary>
     class ToEdiLexer : XmlLexer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlLexer"/> class.
+        /// Initializes a new instance of the <see cref="ToEdiLexer"/> class.
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi as Xml
+        /// EDI as XML.
         /// </param>
         /// <param name="context">
-        /// The interchange context
+        /// The interchange context.
         /// </param>
         public ToEdiLexer(XElement xmlEdi, InterchangeContext context)
             : base(xmlEdi)
@@ -46,10 +46,10 @@ namespace EdiFabric.Framework.Envelopes.X12
         }
 
         /// <summary>
-        /// Parses interchange header 
+        /// Parses the interchange header. 
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected override void CreateInterchangeHeader(XElement xmlEdi)
         {
@@ -57,10 +57,10 @@ namespace EdiFabric.Framework.Envelopes.X12
         }
 
         /// <summary>
-        /// Parses group header
+        /// Parses the group header.
         /// </summary>
         /// <param name="group">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected override void CreateGroupHeader(XElement group)
         {
@@ -68,10 +68,10 @@ namespace EdiFabric.Framework.Envelopes.X12
         }
 
         /// <summary>
-        /// Parses group trailer
+        /// Parses the group trailer.
         /// </summary>
         /// <param name="group">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected override void CreateGroupTrailer(XElement group)
         {
@@ -79,10 +79,10 @@ namespace EdiFabric.Framework.Envelopes.X12
         }
 
         /// <summary>
-        /// Parses interchange trailer
+        /// Parses the interchange trailer.
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected override void CreateInterchangeTrailer(XElement xmlEdi)
         {

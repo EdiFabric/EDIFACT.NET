@@ -19,7 +19,8 @@ using System.Xml.Serialization;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// Extensions for PropertyInfo
+    /// Global extensions for .NET PropertyInfo class.
+    /// These are used in conjunction with Parse Tree class and the EDI definitions.
     /// </summary>
     static class ExtensionsPropertyInfo
     {
@@ -28,10 +29,10 @@ namespace EdiFabric.Framework.Messages
         /// Order is only set in XmlElement or XmlArray attributes.
         /// </summary>
         /// <param name="propertyInfos">
-        /// The collection of property infos
+        /// The collection of property infos.
         /// </param>
         /// <returns>
-        /// The sorted collection of property infos
+        /// The sorted collection of property infos.
         /// </returns>
         public static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
@@ -84,11 +85,11 @@ namespace EdiFabric.Framework.Messages
         }
         
         /// <summary>
-        /// Gets a shallow parse tree
+        /// Gets a shallow parse tree.
         /// </summary>
-        /// <param name="propertyInfo">The property</param>
+        /// <param name="propertyInfo">The property.</param>
         /// <returns>
-        /// The parse tree
+        /// The parse tree.
         /// </returns>
         public static ParseTree GetParseTreeRoot(this PropertyInfo propertyInfo)
         {
@@ -103,10 +104,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Checks if a property is choice
+        /// Checks if a property is choice.
         /// </summary>
-        /// <param name="propertyInfo">The property</param>
-        /// <returns>If it's a choice</returns>
+        /// <param name="propertyInfo">The property.</param>
+        /// <returns>If it's a choice.</returns>
         public static bool IsChoice(this PropertyInfo propertyInfo)
         {
             return propertyInfo.Name.StartsWith(EdiPrefix.I) &&
@@ -115,10 +116,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Extracts the enum values from a property
+        /// Extracts the enum values from a property.
         /// </summary>
-        /// <param name="propertyInfo">The property</param>
-        /// <returns>The list of enum values</returns>
+        /// <param name="propertyInfo">The property.</param>
+        /// <returns>The list of enum values.</returns>
         public static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType.IsEnum)
@@ -140,10 +141,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Gets the type name from a property info
+        /// Gets the type name from a property info.
         /// </summary>
-        /// <param name="propertyInfo">The property info</param>
-        /// <returns>The type</returns>
+        /// <param name="propertyInfo">The property info.</param>
+        /// <returns>The type.</returns>
         public static Type GetSystemType(this PropertyInfo propertyInfo)
         {
             if (typeof(IList).IsAssignableFrom(propertyInfo.PropertyType)

@@ -18,26 +18,32 @@ using System.Xml.Serialization;
 namespace EdiFabric.Framework.Envelopes.X12
 {
     /// <summary>
-    /// X12 interchange
+    /// This class represents the X12 interchange.
     /// </summary>
+    /// <example>
+    /// Parse EDI with classes in the default assembly EdiFabric.Definitions.dll.
+    /// <code lang="C#">
+    /// var interchange = Interchange.LoadFrom(File.OpenRead(@"c:\test.edi"));
+    /// </code>
+    /// </example>
     [XmlRoot("INTERCHANGE", Namespace = Namespaces.X12)]
     public class Interchange : AbstractInterchange
     {
         /// <summary>
-        /// Interchange header
+        /// Interchange header.
         /// </summary>
         [XmlElement("S_ISA", Order = 0)]
         public S_ISA Isa { get; set; }
 
         /// <summary>
-        /// Groups
+        /// Groups.
         /// </summary>
         [XmlArray("GROUPS", Order = 1)]
         [XmlArrayItem("GROUP", IsNullable = false)]
         public List<Group> Groups { get; set; }
 
         /// <summary>
-        /// Interchange trailer
+        /// Interchange trailer.
         /// </summary>
         [XmlElement("S_IEA", Order = 2)]
         public S_IEA Iea { get; set; }
@@ -53,11 +59,17 @@ namespace EdiFabric.Framework.Envelopes.X12
         /// <summary>
         /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
         /// </summary>
-        /// <param name="ediStream">The edi stream.</param>
-        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        /// <param name="ediStream">The EDI stream.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes.</param>
         /// <returns>
         /// The interchange instance.
         /// </returns>
+        /// <example>
+        /// Parse EDI with classes in a custom assembly MyAssembly.MyProject.dll.
+        /// <code lang="C#">
+        /// var interchange = Interchange.LoadFrom(File.OpenRead(@"c:\test.edi"), "MyAssembly.MyProject");
+        /// </code>
+        /// </example>
         public static Interchange LoadFrom(Stream ediStream, string definitionsAssemblyName = null)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
@@ -76,11 +88,19 @@ namespace EdiFabric.Framework.Envelopes.X12
         /// Factory to initialize a new instance of the <see cref="Interchange"/> class.
         /// </summary>
         /// <param name="ediElement">
-        /// The edi xml.
+        /// The EDI XML.
         /// </param>
         /// <returns>
         /// The interchange instance.
         /// </returns>
+        /// <example>
+        /// Interchange to XML.
+        /// <code lang="C#">
+        /// var interchange = Interchange.LoadFrom(File.OpenRead(@"c:\test.edi"));
+        /// XElement xml = interchange.Serialize();
+        /// interchange = Interchange.LoadFrom(xml);
+        /// </code>
+        /// </example>
         public static Interchange LoadFrom(XElement ediElement)
         {
             if (ediElement == null) throw new ArgumentNullException("ediElement");
@@ -95,15 +115,23 @@ namespace EdiFabric.Framework.Envelopes.X12
         }
 
         /// <summary>
-        /// Converts the interchange to edi message.
+        /// Converts the interchange to EDI message.
         /// </summary>
         /// <param name="context">
         /// The interchange context.
         /// This sets the non format default separators.
         /// </param>
         /// <returns>
-        /// The edi message.
+        /// The EDI message.
         /// </returns>
+        /// <example>
+        /// Generate EDI with classes in the default assembly EdiFabric.Definitions.dll.
+        /// <code lang="C#">
+        /// var interchange = new Interchange();
+        /// // Construct the object...
+        /// List&lt;string&gt; segments = interchange.ToEdi();
+        /// </code>
+        /// </example>
         public override List<string> ToEdi(InterchangeContext context = null)
         {
             var x12Lexer = new ToEdiLexer(EdiHelper.Serialize(this), context);

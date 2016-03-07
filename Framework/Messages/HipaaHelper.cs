@@ -14,18 +14,18 @@ using System.Collections.Generic;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// Hipaa identifiers.
+    /// This class holds Hipaa specific identifiers and logic.
     /// Identifier = Version + Industry code
     /// </summary>
     class HipaaHelper
     {
         /// <summary>
-        /// List of identifiers
+        /// List of identifiers.
         /// </summary>
         static readonly List<string> Identifiers;
 
         /// <summary>
-        /// Static constructor to load the list once
+        /// Static constructor to load the list once.
         /// </summary>
         static HipaaHelper()
         {
@@ -55,13 +55,13 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Check if the identifier exists
+        /// Checks if the identifier exists.
         /// </summary>
         /// <param name="identifier">
-        /// The identifier
+        /// The identifier.
         /// </param>
         /// <returns>
-        /// If it exists or not, e.g. if it is Hipaa
+        /// If it exists or not, e.g. if it is Hipaa.
         /// </returns>
         public static bool IsHipaa(string identifier)
         {
@@ -69,14 +69,18 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts Hipaa industry code into Postfix
+        /// Converts Hipaa industry code into Postfix.
         /// Hipaa postfixes are:
-        /// P for Professional
-        /// I for Institutional
-        /// D for Dental
+        /// P for Professional.
+        /// I for Institutional.
+        /// D for Dental.
         /// </summary>
-        /// <param name="origin"></param>
-        /// <returns></returns>
+        /// <param name="origin">
+        /// The origin or subversion.
+        /// </param>
+        /// <returns>
+        /// The corresponding postfix or null.
+        /// </returns>
         public static string GetPostfix(string origin)
         {
             switch (origin)

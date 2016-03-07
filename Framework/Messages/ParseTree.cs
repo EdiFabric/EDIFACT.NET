@@ -19,48 +19,49 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// The parsing grammar of Edi nodes. 
+    /// This class represents the formal grammar as imported from the definitions class. 
+    /// It is a lightweight parent\child relationship structure and is used to define the hierarchy of the EDI as outlined in the standard. 
     /// </summary>
     class ParseTree : IEqualityComparer<ParseTree>
     {
         /// <summary>
-        /// Node name
+        /// Node name.
         /// (Message, Group, Segment, Data Element, etc.)
-        /// Everything is a ParseTree
+        /// Everything is a ParseTree.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// The type in the definitions class representing this node
+        /// The type in the definitions class representing this node.
         /// </summary>
         public Type SystemType { get; set; }
 
         /// <summary>
-        /// The parent node or ParseTree
+        /// The parent node or ParseTree.
         /// </summary>
         public ParseTree Parent { get; set; }
 
         /// <summary>
-        /// The children collection 
+        /// The children collection.
         /// </summary>
         public List<ParseTree> Children { get; set; }
 
         /// <summary>
         /// The collection of values defined for that node.
-        /// This is only populated for segments and is the list of values 
+        /// This is only populated for segments and is the list of values.
         /// for the first data element for that segment.
         /// </summary>
         public List<string> FirstElementValues { get; set; }
 
         /// <summary>
         /// The collection of values defined for that node.
-        /// This is only populated for segments and is the list of values 
+        /// This is only populated for segments and is the list of values. 
         /// for the second data element for that segment.
         /// </summary>
         public List<string> SecondElementValues { get; set; }
 
         /// <summary>
-        /// One of the Edi prefixes
+        /// One of the Edi prefixes.
         /// </summary>
         public string Prefix
         {
@@ -68,7 +69,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// The name without the prefix
+        /// The name without the prefix.
         /// </summary>
         public string EdiName
         {
@@ -76,7 +77,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is message
+        /// If it is message.
         /// </summary>
         public bool IsMessage
         {
@@ -84,7 +85,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is group
+        /// If it is group.
         /// </summary>
         public bool IsGroup
         {
@@ -92,7 +93,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is all
+        /// If it is all.
         /// </summary>
         public bool IsAll
         {
@@ -100,7 +101,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is choice
+        /// If it is choice.
         /// </summary>
         public bool IsChoice
         {
@@ -108,7 +109,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is loop of groups
+        /// If it is loop of groups.
         /// </summary>
         public bool IsLoopOfLoops
         {
@@ -116,7 +117,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is segment
+        /// If it is segment.
         /// </summary>
         public bool IsSegment
         {
@@ -124,7 +125,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is complex element
+        /// If it is complex element.
         /// </summary>
         public bool IsComplex
         {
@@ -132,7 +133,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is data element
+        /// If it is data element.
         /// </summary>
         public bool IsSimple
         {
@@ -140,7 +141,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is trigger, e.g. the first segment in the group
+        /// If it is trigger, e.g. the first segment in the group.
         /// </summary>
         public bool IsTrigger
         {
@@ -156,7 +157,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// If it is envelope segment
+        /// If it is envelope segment.
         /// </summary>
         public bool IsEnvelope
         {
@@ -167,8 +168,8 @@ namespace EdiFabric.Framework.Messages
         /// Factory from system type.
         /// Builds a parse tree from the class definition.
         /// </summary>
-        /// <param name="systemType">The system type</param>
-        /// <param name="limit">How deep to build (segments with data elements or segments without data elements)</param>
+        /// <param name="systemType">The system type.</param>
+        /// <param name="limit">How deep to build (segments with data elements or segments without data elements).</param>
         /// <returns>The parse tree</returns>
         public static ParseTree LoadFrom(Type systemType, Func<ParseTree, bool> limit)
         {
@@ -232,16 +233,16 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Custom equal
+        /// Custom equal.
         /// </summary>
         /// <param name="x">
-        /// Parse tree source
+        /// Parse tree source.
         /// </param>
         /// <param name="y">
-        /// Parse tree target
+        /// Parse tree target.
         /// </param>
         /// <returns>
-        /// If source is equal to target
+        /// If source is equal to target.
         /// </returns>
         public bool Equals(ParseTree x, ParseTree y)
         {
@@ -249,13 +250,13 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Generates hash code
+        /// Generates hash code.
         /// </summary>
         /// <param name="obj">
-        /// The parse tree
+        /// The parse tree.
         /// </param>
         /// <returns>
-        /// The hash code
+        /// The hash code.
         /// </returns>
         public int GetHashCode(ParseTree obj)
         {
@@ -264,13 +265,13 @@ namespace EdiFabric.Framework.Messages
 
         /// <summary>
         /// Gets the parents of a parse tree until a condition.
-        /// The condition is usually the type of parent, e.g. Group or Message
+        /// The condition is usually the type of parent, e.g. Group or Message.
         /// </summary>
         /// <param name="shouldContinue">
         /// The condition to traverse up the hierarchy until.
         /// </param>
         /// <returns>
-        /// A collection of parse trees sorted by parentship.
+        /// A collection of parse trees sorted by parent.
         /// </returns>
         public IEnumerable<ParseTree> GetParents(Func<ParseTree, bool> shouldContinue)
         {
@@ -287,9 +288,9 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Gets the index to start searching from
+        /// Gets the index to start searching from.
         /// </summary>
-        /// <returns>The index</returns>
+        /// <returns>The index.</returns>
         public int GetIndex()
         {
             // If the parent is choice, all or loop of group always start from the beginning
@@ -298,7 +299,7 @@ namespace EdiFabric.Framework.Messages
 
             // If the parse tree is choice, all or loop of group 
             // and the parent is a group, always start from the next parse tree, e.g.
-            // ther can be no repetitions of the same parse tree
+            // there can be no repetitions of the same parse tree
             if (IsChoice || IsAll || IsLoopOfLoops)
                 return Parent.Children.IndexOf(this) + 1;
 
@@ -307,9 +308,9 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Compare a parse tree to identity
+        /// Compare a parse tree to identity.
         /// </summary>
-        /// <param name="segmentContext">The identity</param>
+        /// <param name="segmentContext">The identity.</param>
         /// <returns>If equal</returns>
         public bool IsEqual(SegmentContext segmentContext)
         {
@@ -331,7 +332,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Finds the next segment by full name
+        /// Finds the next segment by full name.
         /// </summary>
         /// <param name="segmentContext">The segment full name (name + value).</param>
         /// <returns>
@@ -359,6 +360,12 @@ namespace EdiFabric.Framework.Messages
             return Parent.FindNextSegment(segmentContext);
         }
 
+        /// <summary>
+        /// Gets all the descendants up to the root including the current.
+        /// </summary>
+        /// <returns>
+        /// The list of descendants.
+        /// </returns>
         public IEnumerable<ParseTree> Descendants()
         {
             var nodes = new Stack<ParseTree>(new[] { this });
@@ -370,10 +377,17 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        private static List<string> GetElementValues(ParseTree result, List<PropertyInfo> properties, int index)
+        /// <summary>
+        /// Gets the values for an element if that element is defined as enum.
+        /// </summary>
+        /// <param name="parseTree">The parse tree.</param>
+        /// <param name="properties">The list of properties.</param>
+        /// <param name="index">The index to the property we need.</param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetElementValues(ParseTree parseTree, IList<PropertyInfo> properties, int index)
         {
             var values = new List<string>();
-            if (result.IsSegment && properties.Count >= index + 1)
+            if (parseTree.IsSegment && properties.Count >= index + 1)
             {
                 values = properties[index].GetProperyEnumValues().ToList();
                 if (properties[index].Name.StartsWith(EdiPrefix.C) && !values.Any())

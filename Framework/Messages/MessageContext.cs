@@ -18,34 +18,50 @@ using EdiFabric.Framework.Envelopes;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// Context of Edi message
+    /// This class represents the context of the EDI message. Every message is identified by its context.
     /// </summary>
+    /// <example>
+    /// Extract message.
+    /// <code lang="C#">
+    /// var interchange = Interchange.LoadFrom(File.OpenRead(@"c:\test.edi"));
+    /// var message = interchange.Groups[0].Messages[0];
+    /// if (message.Context.Tag == "INVOIC" &amp;&amp; message.Context.Version == "D96A")
+    /// {
+    ///     var typedMessage = message.DeserializeItem&lt;EdiFabric.Definitions.Edifact_D96A_INVOIC.M_INVOIC&gt;();
+    /// }
+    /// </code>
+    /// </example>
     public class MessageContext
     {
         /// <summary>
-        /// Edi tag
+        /// EDI tag.
         /// </summary>
         public string Tag { get; set; }
 
         /// <summary>
-        /// Edi version
+        /// EDI version.
         /// </summary>
         public string Version { get; set; }
 
         /// <summary>
-        /// Edi origin
+        /// EDI origin.
+        /// Used for sub formats such as HIPAA.
         /// </summary>
         public string Origin { get; set; }
 
         /// <summary>
-        /// Edi format, this is the message format and can be different than the envelope format
+        /// EDI format, this is the message format and can be different than the envelope format.
+        /// The envelope can be X12 whereas the message can be HIPAA.
         /// </summary>
         public EdiFormats Format { get; set; }
 
         /// <summary>
-        /// The system type
+        /// The system type which represents a valid .NET type.
         /// </summary>
         private readonly Type _systemType;
+        /// <summary>
+        /// The read only system type.
+        /// </summary>
         public Type SystemType
         {
             get { return _systemType; }
@@ -55,6 +71,7 @@ namespace EdiFabric.Framework.Messages
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// Parameterless constructor is needed for serialization\deserialization
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private MessageContext()
         {
         }
@@ -63,10 +80,10 @@ namespace EdiFabric.Framework.Messages
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
         /// <param name="message">
-        /// From xml
+        /// From XML.
         /// </param>
         /// <param name="interchangeContext">
-        /// The interchange context
+        /// The interchange context.
         /// </param>
         public MessageContext(XElement message, InterchangeContext interchangeContext)
         {
@@ -78,10 +95,10 @@ namespace EdiFabric.Framework.Messages
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
         /// <param name="envelopes">
-        /// From interchange headers
+        /// From interchange headers.
         /// </param>
         /// <param name="interchangeContext">
-        /// The interchange context
+        /// The interchange context.
         /// </param>
         public MessageContext(IEnumerable<string> envelopes, InterchangeContext interchangeContext)
         {
@@ -93,7 +110,7 @@ namespace EdiFabric.Framework.Messages
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
         /// <param name="systemType">
-        /// From type
+        /// From type.
         /// </param>
         public MessageContext(Type systemType)
         {
@@ -104,7 +121,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts system type into message context
+        /// Converts a system type into message context.
         /// </summary>
         /// <param name="systemType">
         /// The system type.
@@ -133,13 +150,13 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts message context into system type  
+        /// Converts a message context into system type.  
         /// </summary>
         /// <param name="format">Message format.</param>
         /// <param name="version">Message version.</param>
         /// <param name="tag">Message tag.</param>
         /// <param name="origin">Message origin.</param>
-        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and XSD.</param>
         /// <returns>
         /// The system type.
         /// </returns>
@@ -164,10 +181,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts xml edi into message context
+        /// Converts XML EDI into message context.
         /// </summary>
         /// <param name="message">
-        /// The xml edi.
+        /// The XML EDI.
         /// </param>
         private void ToContext(XElement message)
         {
@@ -187,10 +204,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts xml edi into message context
+        /// Converts XML EDI into message context.
         /// </summary>
         /// <param name="message">
-        /// The xml edi.
+        /// The XML EDI.
         /// </param>
         private void ToContextX12(XElement message)
         {
@@ -216,10 +233,10 @@ namespace EdiFabric.Framework.Messages
             }
 
             XElement tag = null;
-            if (st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTag) != -1).Any()) {
-                tag = st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTag) != -1).First();
-            } else if (st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa) != -1).Any()) {
-                tag = st.Descendants().Where(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa) != -1).First();
+            if (st.Descendants().Any(x => x.Name.LocalName.IndexOf(EdiElements.StTag, StringComparison.Ordinal) != -1)) {
+                tag = st.Descendants().First(x => x.Name.LocalName.IndexOf(EdiElements.StTag, StringComparison.Ordinal) != -1);
+            } else if (st.Descendants().Any(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa, StringComparison.Ordinal) != -1)) {
+                tag = st.Descendants().First(x => x.Name.LocalName.IndexOf(EdiElements.StTagHipaa, StringComparison.Ordinal) != -1);
             }
 
             if (tag == null)
@@ -252,10 +269,10 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts xml edi into message context
+        /// Converts XML EDI into message context.
         /// </summary>
         /// <param name="message">
-        /// The xml edi.
+        /// The XML EDI.
         /// </param>
         private void ToContextEdifact(XElement message)
         {
@@ -302,7 +319,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts edi interchange headers into message context.
+        /// Converts EDI interchange headers into message context.
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
@@ -324,7 +341,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts edi interchange headers into message context.
+        /// Converts EDI interchange headers into message context.
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
@@ -375,7 +392,7 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts edi interchange headers into message context.
+        /// Converts EDI interchange headers into message context.
         /// </summary>
         /// <param name="envelopes">The interchange headers.</param>
         /// <param name="interchangeContext">The interchange context.</param>
@@ -400,11 +417,11 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Converts a string to formtas enum
+        /// Converts a string to enum
         /// </summary>
         /// <param name="value">The format string.</param>
         /// <returns>The format enum.</returns>
-        public static EdiFormats ToFormat(string value)
+        private static EdiFormats ToFormat(string value)
         {
             return (EdiFormats)Enum.Parse(typeof(EdiFormats), value);
         }

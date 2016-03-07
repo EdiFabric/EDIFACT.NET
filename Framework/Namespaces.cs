@@ -12,7 +12,7 @@
 namespace EdiFabric.Framework
 {
     /// <summary>
-    /// Namespaces 
+    /// The target namespaces for the resulting XML. 
     /// </summary>
     internal class Namespaces
     {

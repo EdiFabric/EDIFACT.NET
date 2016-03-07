@@ -12,12 +12,21 @@
 namespace EdiFabric.Framework
 {
     /// <summary>
-    /// Formats enum
+    /// This enumeration holds all of the supported formats. 
     /// </summary>
     public enum EdiFormats
     {
+        /// <summary>
+        /// Edifact
+        /// </summary>
         Edifact,
+        /// <summary>
+        /// X12
+        /// </summary>
         X12,
+        /// <summary>
+        /// Hipaa
+        /// </summary>
         Hipaa
     }
 }

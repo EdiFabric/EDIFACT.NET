@@ -11,88 +11,89 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace EdiFabric.Framework.Envelopes
 {
     /// <summary>
-    /// The context of the interchange
-    /// Contains the separators, the format and the namespace 
+    /// The context of the interchange.
+    /// Contains the separators, the format and the XML target namespace.
     /// </summary>
+    /// <example>
+    /// Generate EDI with classes in a custom assembly MyAssembly.MyProject.dll.
+    /// <code lang="C#">
+    /// var interchange = new Interchange();
+    /// // Construct the object...
+    /// List&lt;string&gt; segments = interchange.ToEdi(new InterchangeContext { DefinitionsAssemblyName = "MyAssembly.MyProject" });
+    /// </code>
+    /// </example>
     public class InterchangeContext : IEquatable<InterchangeContext>
     {
         /// <summary>
-        /// Separator for segments
+        /// Separator for segments.
         /// </summary>
         public string SegmentTerminator { get; set; }
 
         /// <summary>
-        /// Separator for component data elements
+        /// Separator for component data elements.
         /// </summary>
         public string ComponentDataElementSeparator { get; set; }
 
         /// <summary>
-        /// Release indicator for escaping terminators
+        /// Release indicator for escaping terminators.
         /// </summary>
         public string ReleaseIndicator { get; set; }
 
         ///<summary>
-        /// Separator for data elements
+        /// Separator for data elements.
         /// </summary>
         public string DataElementSeparator { get; set; }
 
         /// <summary>
-        /// Separator for repetitions of data elements
+        /// Separator for repetitions of data elements.
         /// </summary>
         public string RepetitionSeparator { get; set; }
 
         /// <summary>
-        /// The format of the interchange, e.g. the format of the envelope
+        /// The format of the interchange, e.g. the format of the envelope.
         /// </summary>
         public EdiFormats Format { get; set; }
 
         /// <summary>
-        /// The target namespace for that format
+        /// The target namespace for that format.
         /// </summary>
         public string TargetNamespace { get; set; }
 
         /// <summary>
-        /// The name of the classes project
+        /// The name of the classes project.
         /// </summary>
         public string DefinitionsAssemblyName { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InterchangeContext"/> class.
         /// </summary>
+        /// <example>
+        /// Generate EDI with custom separators.
+        /// <code lang="C#">
+        /// var interchange = new Interchange();
+        /// // Construct the object...
+        /// var interchangeContext = new InterchangeContext { DataElementSeparator = "|" };
+        /// List&lt;string&gt; segments = interchange.ToEdi(interchangeContext);
+        /// </code>
+        /// </example>
         public InterchangeContext()
         {
         }
 
-        public InterchangeContext(TextReader streamReader, string definitionsAssemblyName)
-            : this(ExtractHeader(streamReader), definitionsAssemblyName)
-        {
-            
-        }
-
-        private static string ExtractHeader(TextReader streamReader)
-        {
-            if (streamReader == null) throw new ArgumentNullException("streamReader");
-            
-            var header = new char[106];
-            streamReader.Read(header, 0, header.Length);
-            return string.Concat(header);
-
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InterchangeContext"/> class.
-        /// This extracts the separators from the contents of the edi message.
+        /// This extracts the separators from the contents of the EDI message.
         /// </summary>
-        /// <param name="contents">The edi message</param>
-        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
-        public InterchangeContext(string contents, string definitionsAssemblyName)
+        /// <param name="contents">The EDI message</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes.</param>
+        internal InterchangeContext(string contents, string definitionsAssemblyName)
         {
             if (contents == null) throw new ArgumentNullException("contents");
 
@@ -111,9 +112,9 @@ namespace EdiFabric.Framework.Envelopes
                         var isa = string.Concat(contents.Take(106));
                         var isaElements = isa.Split(DataElementSeparator[0]);
                         ComponentDataElementSeparator = string.Concat(isaElements[16].First());
-                        // Repetition is either the defaukt ^ or else if explicitly specified when U is present
+                        // Repetition is either the default ^ or else if explicitly specified when U is present
                         RepetitionSeparator = isaElements[11] != "U" ? isaElements[11] : "^";
-                        // Handle carriage return\new line segment terminators
+                        // Handle carriage return \ new line segment terminators
                         var st = isaElements[16].Skip(1).DefaultIfEmpty('G').First();
                         SegmentTerminator = st.ToString(CultureInfo.InvariantCulture);
                         if (SegmentTerminator == " " || string.IsNullOrEmpty(SegmentTerminator)
@@ -196,9 +197,9 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// If the separators are format default.
+        /// If the separators are the default for the format.
         /// </summary>
-        public bool IsDefault
+        internal bool IsDefault
         {
             get
             {
@@ -207,12 +208,12 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Merges the separators of two interchange contexts when the source separator is not empty or null
+        /// Merges the separators of two interchange contexts when the source separator is not empty or null.
         /// </summary>
         /// <param name="context">
-        /// The context to merge from
+        /// The context to merge from.
         /// </param>
-        public void Merge(InterchangeContext context)
+        internal void Merge(InterchangeContext context)
         {
             if (context != null)
             {
@@ -238,7 +239,7 @@ namespace EdiFabric.Framework.Envelopes
         /// Separators must be unique within the interchange context.
         /// </summary>
         /// <returns>If it is valid</returns>
-        public bool IsValid(EdiFormats format)
+        internal bool IsValid(EdiFormats format)
         {
             if(format == EdiFormats.Edifact)
                 if (Format != EdiFormats.Edifact) return false;
@@ -261,14 +262,14 @@ namespace EdiFabric.Framework.Envelopes
         }
         
         /// <summary>
-        /// Custom equal
-        /// Checks if all separators match
+        /// Custom equal.
+        /// Checks if all of the separators match.
         /// </summary>
         /// <param name="other">
-        /// Interchange to compare with
+        /// Interchange to compare with.
         /// </param>
         /// <returns>
-        /// If it is equal, e.g. if all separators match
+        /// If it is equal, e.g. if all separators match.
         /// </returns>
         public bool Equals(InterchangeContext other)
         {
@@ -281,11 +282,11 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Escapes the terminators from a string
+        /// Escapes the terminators from a string.
         /// </summary>
-        /// <param name="line">The string to escape</param>
-        /// <returns>The escaped string</returns>
-        public string EscapeLine(string line)
+        /// <param name="line">The string to escape.</param>
+        /// <returns>The escaped string.</returns>
+        internal string EscapeLine(string line)
         {
             string result = "";
 
@@ -307,10 +308,10 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Checks if a char is a separator
+        /// Checks if a char is a separator.
         /// </summary>
-        /// <param name="value">The char</param>
-        /// <returns>If the char is a separator</returns>
+        /// <param name="value">The char.</param>
+        /// <returns>If the char is a separator.</returns>
         private bool ContainsTerminator(char value)
         {
             return SegmentTerminator.ToCharArray().Contains(value) ||
@@ -320,11 +321,18 @@ namespace EdiFabric.Framework.Envelopes
                    (!string.IsNullOrEmpty(ReleaseIndicator) && ReleaseIndicator.ToCharArray().Contains(value));
         }
 
-        public static string GetAssemblyName()
+        /// <summary>
+        /// Retrieves the definitions assembly name.
+        /// Returns the default if nothing was specified in the config. This is to ensure backwards compatibility with previous versions.
+        /// </summary>
+        /// <returns>
+        /// The assembly name of the definitions project.
+        /// </returns>
+        private static string GetAssemblyName()
         {
             try
             {
-                return System.Configuration.ConfigurationManager.AppSettings["EdiFabric.Definitions"] ?? "EdiFabric.Definitions";
+                return ConfigurationManager.AppSettings["EdiFabric.Definitions"] ?? "EdiFabric.Definitions";
             }
             catch 
             {

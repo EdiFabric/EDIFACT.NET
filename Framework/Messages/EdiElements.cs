@@ -12,42 +12,42 @@
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// Edi references
+    /// This class represents the names EDI data elements important for the parsing process.
     /// </summary>
     class EdiElements
     {
         /// <summary>
-        /// UNH context
+        /// UNH context.
         /// </summary>
         public const string UnhContext = "C_S009";
 
         /// <summary>
-        /// UNH tag
+        /// UNH tag.
         /// </summary>
         public const string UnhTag = "D_0065_1";
 
         /// <summary>
-        /// UNH edition
+        /// UNH edition.
         /// </summary>
         public const string UnhEdition = "D_0052_2";
 
         /// <summary>
-        /// UNH release
+        /// UNH release.
         /// </summary>
         public const string UnhRelease = "D_0054_3";
 
         /// <summary>
-        /// ST tag
+        /// ST tag.
         /// </summary>
         public const string StTag = "D_143_1";
 
         /// <summary>
-        /// ST tag for HIPAA
+        /// ST tag for HIPAA.
         /// </summary>
         public const string StTagHipaa = "D_ST01";
 
         /// <summary>
-        /// GS version
+        /// GS version.
         /// </summary>
         public const string GsVersion = "D_480_8";
     }

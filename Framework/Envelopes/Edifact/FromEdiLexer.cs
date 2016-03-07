@@ -17,12 +17,12 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Envelopes.Edifact
 {
     /// <summary>
-    /// This is the edifact lexer for interchanges
+    /// This is the EDIFACT lexer for converting EDI into XML.
     /// </summary>
     class FromEdiLexer : InterchangeLexer
     {
         /// <summary>
-        /// The interchange being built.
+        /// The interchange that is being built.
         /// </summary>
         public Interchange Result { get; private set; }
 
@@ -30,9 +30,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         /// Initializes a new instance of the <see cref="FromEdiLexer"/> class.
         /// </summary>
         /// <param name="ediString">
-        /// The edi message.
+        /// The EDI message.
         /// </param>
-        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes.</param>
         public FromEdiLexer(string ediString, string definitionsAssemblyName)
             : base(ediString, definitionsAssemblyName)
         {
@@ -40,10 +40,10 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         }
 
         /// <summary>
-        /// Parses interchange header
+        /// Parses the interchange header.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected override void CreateInterchangeHeader(string segment)
         {
@@ -51,10 +51,10 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         }
 
         /// <summary>
-        /// Parses interchange trailer
+        /// Parses the interchange trailer.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected override void CreateInterchangeTrailer(string segment)
         {
@@ -62,10 +62,10 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         }
 
         /// <summary>
-        /// Parses group header
+        /// Parses the group header.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected override void CreateGroupHeader(string segment)
         {
@@ -76,10 +76,10 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         }
 
         /// <summary>
-        /// Parses group trailer
+        /// Parses the group trailer.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected override void CreateGroupTrailer(string segment)
         {
@@ -87,10 +87,10 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         }
 
         /// <summary>
-        /// Parses an edi message
+        /// Parses the EDI message.
         /// </summary>
-        /// <param name="segments">The message segments</param>
-        /// <param name="headers">The interchange headers</param>
+        /// <param name="segments">The message segments.</param>
+        /// <param name="headers">The interchange headers.</param>
         protected override void CreateMessage(List<string> segments, List<string> headers)
         {
             if (Result.Groups.Count == 0)

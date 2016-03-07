@@ -11,26 +11,83 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework
 {
     /// <summary>
-    /// Streaming for large files
+    /// Parses the messages in the EDI envelope sequentially one by one by reading a single segment at a time.
+    /// Can be used for parsing of large files.
     /// </summary>
+    /// <example>
+    /// Streaming for large files.
+    /// <code lang="C#">
+    /// using(var es = new EdiStream(File.OpenRead(@"c:\verylarge.edi")))
+    /// {
+    ///     while (es.GetNextMessage())
+    ///     {
+    ///         var message = es.Message;
+    ///         var header = es.InterchangeHeader;
+    ///         var group = es.InterchangeGroup;
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
     public class EdiStream : IDisposable
     {
+        /// <summary>
+        /// The interchange context.
+        /// </summary>
         private readonly InterchangeContext _interchangeContext;
+        /// <summary>
+        /// The stream reader.
+        /// </summary>
         private readonly StreamReader _streamReader;
+        /// <summary>
+        /// The current envelope headers.
+        /// Includes the interchange header and the current group header.
+        /// </summary>
         private readonly List<string> _envelope = new List<string>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdiStream"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream.</param>
+        /// <param name="definitionsAssemblyName">The optional assembly name for the class definitions.</param>
         public EdiStream(Stream ediStream, string definitionsAssemblyName = null)
         {
             _streamReader = new StreamReader(ediStream);
-            _interchangeContext = new InterchangeContext(_streamReader, definitionsAssemblyName);
+            _interchangeContext = new InterchangeContext(ExtractHeader(), definitionsAssemblyName);
             ediStream.Position = 0;
             _streamReader.DiscardBufferedData();
         }
 
+        /// <summary>
+        /// The current message
+        /// </summary>
         public Message Message { get; private set; }
+        /// <summary>
+        /// The interchange header
+        /// </summary>
         public object InterchangeHeader { get; private set; }
+        /// <summary>
+        /// The current group header
+        /// </summary>
         public object InterchangeGroup { get; private set; }
 
+        /// <summary>
+        /// Reads the next message in the EDI stream.
+        /// </summary>
+        /// <returns>If reached the end of the stream.</returns>
+        /// <example>
+        /// This sample shows how to call the <see cref="GetNextMessage"/> method.
+        /// <code lang="C#">
+        /// using(var es = new EdiStream(File.OpenRead(@"c:\verylarge.edi")))
+        /// {
+        ///     while (es.GetNextMessage())
+        ///     {
+        ///         var message = es.Message;
+        ///         var header = es.InterchangeHeader;
+        ///         var group = es.InterchangeGroup;
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
         public bool GetNextMessage()
         {
             var message = new List<string>();
@@ -87,6 +144,22 @@ namespace EdiFabric.Framework
             return result;
         }
 
+        /// <summary>
+        /// Extracts the interchange header from the EDI stream.
+        /// </summary>
+        /// <returns>
+        /// The first 106 chars from the stream.
+        /// </returns>
+        private string ExtractHeader()
+        {
+            var header = new char[106];
+            _streamReader.Read(header, 0, header.Length);
+            return string.Concat(header);
+        }
+
+        /// <summary>
+        /// Disposes the stream.
+        /// </summary>
         public void Dispose()
         {
             if (_streamReader != null)

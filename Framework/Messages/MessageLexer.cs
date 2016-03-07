@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework.Envelopes;
@@ -20,15 +19,15 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// The lexer for edi messages
+    /// The lexer for EDI messages.
     /// </summary>
     class MessageLexer
     {
         /// <summary>
-        /// Lexical analysis of the message
+        /// Lexically analyses a message.
         /// </summary>
-        /// <param name="segments">The edi segments.</param>
-        /// <param name="envelopes">The edi envelopes.</param>
+        /// <param name="segments">The EDI segments.</param>
+        /// <param name="envelopes">The EDI envelopes.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The passed Edi message.</returns>
         public static Message Analyze(List<string> segments, List<string> envelopes, InterchangeContext interchangeContext)
@@ -36,7 +35,7 @@ namespace EdiFabric.Framework.Messages
             // Read the message context from the envelope headers
             var messageContext = new MessageContext(envelopes, interchangeContext);
 
-            // This will read through the grammar and will build an xml
+            // This will read through the grammar and will build an XML
 
             // Get the grammar from the context
             var messageGrammar = ParseTree.LoadFrom(messageContext.SystemType,
@@ -44,20 +43,20 @@ namespace EdiFabric.Framework.Messages
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 
-            // Create the xml root of the parsed edi
+            // Create the XML root of the parsed EDI
             var ediXml = ToXml(messageGrammar, interchangeContext);
-            // Set the position in the xml
+            // Set the position in the XML
             var lastXElement = ediXml;
             
             // Iterate trough the segment lines
             foreach (var segment in segments)
-            {                 
+            {
                 try
                 {
                     var segmentContext = new SegmentContext(segment, interchangeContext, messageContext.Format);
 
                     Logger.Log(string.Format("Segment to find: {0}", segmentContext.ToPropertiesString()));
-                   
+
                     // Jump back to HL segment if needed
                     if (segmentContext.IsJump())
                     {
@@ -66,7 +65,8 @@ namespace EdiFabric.Framework.Messages
                         {
                             // Parent HL, start right after it
                             hlParent = ediXml.Descendants().Single(d => d.Name.LocalName.StartsWith("S_HL") &&
-                                                                      d.Elements().First().Value == segmentContext.ParentId);
+                                                                        d.Elements().First().Value ==
+                                                                        segmentContext.ParentId);
                             var hl = messageGrammar.Descendants().Single(pt => pt.Name == hlParent.Name.LocalName);
                             lastSegment = hl.Parent.Children[1];
                         }
@@ -83,14 +83,15 @@ namespace EdiFabric.Framework.Messages
                     var currSeg = lastSegment.FindNextSegment(segmentContext);
 
                     Logger.Log(string.Format("Segment found: {0}", currSeg.Name));
-                    
+
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
                     var segmentTree = GetSegmentTree(currSeg, lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
-                    lastXElement = lastXElement.AncestorsAndSelf().Last(xe => xe.Name.LocalName == segmentTree.First().Parent.Name);
+                    lastXElement =
+                        lastXElement.AncestorsAndSelf().Last(xe => xe.Name.LocalName == segmentTree.First().Parent.Name);
 
                     // Attach each bit
                     foreach (var parseTree in segmentTree)
@@ -108,8 +109,6 @@ namespace EdiFabric.Framework.Messages
 
                     // Reset the position in the grammar
                     lastSegment = currSeg;
-                    //var lastfound = AttachTree(segmentTree, segment, interchangeContext);
-
                 }
                 catch (Exception ex)
                 {
@@ -121,12 +120,12 @@ namespace EdiFabric.Framework.Messages
         }
 
         /// <summary>
-        /// Convert a parse tree to a root xml node
+        /// Convert a parse tree to a root XML node.
         /// Without the hierarchy, only the name.
         /// </summary>
         /// <param name="parseTree">The parse tree.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>A xml node.</returns>
+        /// <returns>A XML node.</returns>
         private static XElement ToXml(ParseTree parseTree, InterchangeContext interchangeContext)
         {
             XNamespace ns = interchangeContext.TargetNamespace;

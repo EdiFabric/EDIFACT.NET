@@ -4,9 +4,20 @@ using System.IO;
 
 namespace EdiFabric.Framework
 {
-    static class Logger
+    /// <summary>
+    /// Simple logger for dumping the traversal of the parse tree to a file.
+    /// This is intended only for debugging purposes and should be switched off otherwise.
+    /// </summary>
+    internal static class Logger
     {
+        /// <summary>
+        /// The static logger.
+        /// </summary>
         private static readonly string LogFile;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Logger"/> class.
+        /// </summary>
         static Logger()
         {
             try
@@ -21,6 +32,12 @@ namespace EdiFabric.Framework
             }
         }
 
+        /// <summary>
+        /// Thread unsafe logging.
+        /// </summary>
+        /// <param name="text">
+        /// The text to be logged.
+        /// </param>
         public static void Log(string text)
         {
             try

@@ -18,22 +18,22 @@ using EdiFabric.Framework.Messages.Segments;
 namespace EdiFabric.Framework.Envelopes
 {
     /// <summary>
-    /// This is the abstract lexer for Xml edi
+    /// This class is the abstract lexer for parsing XML into EDI.
     /// </summary>
     abstract class XmlLexer
     {
         /// <summary>
-        /// The Xml edi
+        /// The XML EDI.
         /// </summary>
         private readonly XElement _xmlEdi;
 
         /// <summary>
-        /// The interchange context
+        /// The interchange context.
         /// </summary>
         protected InterchangeContext InterchangeContext;
 
         /// <summary>
-        /// The edi being built
+        /// The EDI being built.
         /// </summary>
         public List<string> Result;
 
@@ -41,7 +41,7 @@ namespace EdiFabric.Framework.Envelopes
         /// Initializes a new instance of the <see cref="XmlLexer"/> class.
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi as Xml
+        /// EDI as XML.
         /// </param>
         protected XmlLexer(XElement xmlEdi)
         {
@@ -50,34 +50,34 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Creates interchange settings
+        /// Creates interchange settings.
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected abstract void CreateInterchangeSettings(XElement xmlEdi);
 
         /// <summary>
-        /// Parses interchange header 
+        /// Parses interchange header. 
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected abstract void CreateInterchangeHeader(XElement xmlEdi);
 
         /// <summary>
-        /// Parses group header
+        /// Parses the group header.
         /// </summary>
         /// <param name="group">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected abstract void CreateGroupHeader(XElement group);
 
         /// <summary>
-        /// Parses an edi message
+        /// Parses an EDI message.
         /// </summary>
         /// <param name="typedMessage">
-        /// The Xml edi.
+        /// The XML EDI.
         /// </param>
         protected void CreateSegments(XElement typedMessage)
         {
@@ -95,23 +95,23 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Parses group trailer
+        /// Parses the group trailer.
         /// </summary>
         /// <param name="group">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected abstract void CreateGroupTrailer(XElement group);
 
         /// <summary>
-        /// Parses interchange trailer
+        /// Parses the interchange trailer.
         /// </summary>
         /// <param name="xmlEdi">
-        /// Edi segment
+        /// EDI segment.
         /// </param>
         protected abstract void CreateInterchangeTrailer(XElement xmlEdi);
         
         /// <summary>
-        /// Lexical analysis of the xml
+        /// Lexical analysis of the EDI XML, which builds the EDI message.
         /// </summary>
         public void Analyze()
         {
@@ -178,11 +178,11 @@ namespace EdiFabric.Framework.Envelopes
         }
 
         /// <summary>
-        /// Finds a node in xml by name
+        /// Finds a node in XML by name.
         /// </summary>
-        /// <param name="source">The source xml</param>
-        /// <param name="segment">The name of the node to search for</param>
-        /// <returns>The found node</returns>
+        /// <param name="source">The source XML.</param>
+        /// <param name="segment">The name of the node to search for.</param>
+        /// <returns>The found node.</returns>
         protected XElement FindSegment(XElement source, string segment)
         {
             XNamespace ns = source.Name.NamespaceName;

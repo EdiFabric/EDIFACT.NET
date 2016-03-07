@@ -15,6 +15,9 @@ using EdiFabric.Framework.Messages;
 
 namespace EdiFabric.Framework.Envelopes.Edifact
 {
+    /// <summary>
+    /// This class represents the EDIFACT interchange header.
+    /// </summary>
     [XmlRoot(Namespace = Namespaces.Edifact)]
     public class S_UNB
     {
@@ -52,6 +55,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0035_11 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT interchange header.
+    /// </summary>
     public class C_S001
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -67,6 +73,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0133_4 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT interchange header.
+    /// </summary>
     public class C_S002
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -82,6 +91,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0042_4 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT interchange header.
+    /// </summary>
     public class C_S003
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -97,6 +109,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0046_4 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT interchange header.
+    /// </summary>
     public class C_S004
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -106,6 +121,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0019_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT interchange header.
+    /// </summary>
     public class C_S005
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -115,6 +133,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0025_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a logical group.
+    /// </summary>
     [XmlRoot("GROUP", Namespace = Namespaces.Edifact)]
     public class Group
     {
@@ -129,6 +150,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public S_UNE Une { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the EDIFACT group header.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.Edifact)]
     public class S_UNG
     {
@@ -157,6 +181,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0058_8 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT group header.
+    /// </summary>
     public class C_S006
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -166,6 +193,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0007_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT group header.
+    /// </summary>
     public class C_S007
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -175,6 +205,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0007_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT group header.
+    /// </summary>
     public class C_S004_2
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -184,6 +217,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0019_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a composite data element referenced in the EDIFACT group header.
+    /// </summary>
     public class C_S008
     {
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -196,6 +232,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0057_3 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the EDIFACT group trailer.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.Edifact)]
     public class S_UNE
     {
@@ -206,6 +245,9 @@ namespace EdiFabric.Framework.Envelopes.Edifact
         public string D_0048_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the EDIFACT interchange trailer.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.Edifact)]
     public class S_UNZ
     {

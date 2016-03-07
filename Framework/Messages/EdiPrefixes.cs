@@ -12,47 +12,48 @@
 namespace EdiFabric.Framework.Messages
 {
     /// <summary>
-    /// Edi prefixes
+    /// This class represents all of the internal EDI prefixes.
+    /// These prefixes cover all EDI structures and all XSD node types.
     /// </summary>
     class EdiPrefix
     {
         /// <summary>
-        /// Message
+        /// Message.
         /// </summary>
         public const string M = "M";
 
         /// <summary>
-        /// Group
+        /// Group.
         /// </summary>
         public const string G = "G";
 
         /// <summary>
-        /// Segment
+        /// Segment.
         /// </summary>
         public const string S = "S";
 
         /// <summary>
-        /// Complex element
+        /// Complex element.
         /// </summary>
         public const string C = "C";
 
         /// <summary>
-        /// Data element
+        /// Data element.
         /// </summary>
         public const string D = "D";
 
         /// <summary>
-        /// Choice
+        /// Choice.
         /// </summary>
         public const string I = "I";
 
         /// <summary>
-        /// All
+        /// All.
         /// </summary>
         public const string A = "A";
 
         /// <summary>
-        /// Loop of Groups
+        /// Loop of Groups.
         /// </summary>
         public const string U = "U";
      }

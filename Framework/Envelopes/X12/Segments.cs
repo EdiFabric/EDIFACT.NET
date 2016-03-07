@@ -15,6 +15,9 @@ using EdiFabric.Framework.Messages;
 
 namespace EdiFabric.Framework.Envelopes.X12
 {
+    /// <summary>
+    /// This class represents the X12 interchange header.
+    /// </summary>
     [XmlRoot(Namespace = Namespaces.X12, IsNullable = false)]
     public class S_ISA
     {
@@ -67,6 +70,9 @@ namespace EdiFabric.Framework.Envelopes.X12
         public string D_701_16 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents a logical group.
+    /// </summary>
     [XmlRoot("GROUP", Namespace = Namespaces.X12)]
     public class Group
     {
@@ -88,6 +94,9 @@ namespace EdiFabric.Framework.Envelopes.X12
         public S_GE Ge { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the X12 group header.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.X12, IsNullable = false)]
     public class S_GS
     {
@@ -116,6 +125,9 @@ namespace EdiFabric.Framework.Envelopes.X12
         public string D_480_8 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the X12 group trailer.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.X12, IsNullable = false)]
     public class S_GE
     {
@@ -126,6 +138,9 @@ namespace EdiFabric.Framework.Envelopes.X12
         public string D_28_2 { get; set; }
     }
 
+    /// <summary>
+    /// This class represents the X12 interchange trailer.
+    /// </summary>
     [System.Xml.Serialization.XmlRootAttribute(Namespace = Namespaces.X12, IsNullable = false)]
     public class S_IEA
     {

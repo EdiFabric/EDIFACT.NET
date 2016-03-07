@@ -15,17 +15,17 @@ using System.Linq;
 namespace EdiFabric.Framework.Envelopes
 {
     /// <summary>
-    /// This is the abstract lexer for interchanges
+    /// This class is the abstract lexer for parsing EDI into XML.
     /// </summary>
     abstract class InterchangeLexer
     {
         /// <summary>
-        /// The interchange context
+        /// The interchange context.
         /// </summary>
         protected InterchangeContext InterchangeContext;
 
         /// <summary>
-        /// The edi message
+        /// The EDI message.
         /// </summary>
         private readonly string _ediString;
 
@@ -33,9 +33,9 @@ namespace EdiFabric.Framework.Envelopes
         /// Initializes a new instance of the <see cref="InterchangeLexer"/> class.
         /// </summary>
         /// <param name="ediString">
-        /// The edi message.
+        /// The EDI message.
         /// </param>
-        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes and xsd.</param>
+        /// <param name="definitionsAssemblyName">The assembly name of the project containing the classes.</param>
         protected InterchangeLexer(string ediString, string definitionsAssemblyName)
         {
             _ediString = ediString;
@@ -43,46 +43,46 @@ namespace EdiFabric.Framework.Envelopes
         }
         
         /// <summary>
-        /// Parses interchange header
+        /// Parses interchange header.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected abstract void CreateInterchangeHeader(string segment);
 
         /// <summary>
-        /// Parses interchange trailer
+        /// Parses the interchange trailer.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected abstract void CreateInterchangeTrailer(string segment);
 
         /// <summary>
-        /// Parses group header
+        /// Parses the group header.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected abstract void CreateGroupHeader(string segment);
 
         /// <summary>
-        /// Parses group trailer
+        /// Parses the group trailer.
         /// </summary>
         /// <param name="segment">
-        /// The edi segment
+        /// The EDI segment.
         /// </param>
         protected abstract void CreateGroupTrailer(string segment);
 
         /// <summary>
-        /// Parses an edi message
+        /// Parses the EDI message.
         /// </summary>
-        /// <param name="segments">The message segments</param>
-        /// <param name="headers">The interchange headers</param>
+        /// <param name="segments">The message segments.</param>
+        /// <param name="headers">The interchange headers.</param>
         protected abstract void CreateMessage(List<string> segments, List<string> headers);
 
         /// <summary>
-        /// Lexical analysis of the segments
+        /// Lexical analysis of the EDI segments, which builds the EDI XML.
         /// </summary>
         public void Analyze()
         {

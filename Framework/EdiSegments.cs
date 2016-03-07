@@ -12,7 +12,7 @@
 namespace EdiFabric.Framework
 {
     /// <summary>
-    /// Edi segments
+    /// The names of all the EDI segments required for the parsing.
     /// </summary>
     internal class EdiSegments
     {

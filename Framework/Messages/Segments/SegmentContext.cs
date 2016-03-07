@@ -15,36 +15,36 @@ using EdiFabric.Framework.Envelopes;
 namespace EdiFabric.Framework.Messages.Segments
 {
     /// <summary>
-    /// Segment full name is segment name + the value of the first data element.
+    /// This class represents the context of a segment.
     /// </summary>
-    public class SegmentContext
+    internal class SegmentContext
     {
         /// <summary>
-        /// The name of the segment
+        /// The name of the segment.
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// The value of the first data element of that segment
+        /// The value of the first data element of that segment.
         /// </summary>
         public string FirstValue { get; private set; }
 
         /// <summary>
-        /// The value of the second data element of that segment
+        /// The value of the second data element of that segment.
         /// </summary>
         public string SecondValue { get; private set; }
 
         /// <summary>
-        /// The parent id in case of HL segment
+        /// The parent id in case it is HL segment (Hipaa specific).
         /// </summary>
         public string ParentId { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentContext"/> class.
         /// </summary>
-        /// <param name="ediSegment">The edi segment.</param>
+        /// <param name="ediSegment">The EDI segment.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <param name="format">The edi format.</param>
+        /// <param name="format">The EDI format.</param>
         public SegmentContext(string ediSegment, InterchangeContext interchangeContext, EdiFormats format)
         {
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
@@ -79,6 +79,12 @@ namespace EdiFabric.Framework.Messages.Segments
             }
         }
 
+        /// <summary>
+        /// Checks if it is a "jump" segment, e.g. if it the parsing process needs to go back in the hierarchy.
+        /// EDI parsing is always forward going apart from some HL jumps in Hipaa.
+        /// This is Hipaa specific.
+        /// </summary>
+        /// <returns></returns>
         public bool IsJump()
         {
             if(Name == EdiSegments.Hl)
@@ -90,6 +96,13 @@ namespace EdiFabric.Framework.Messages.Segments
             return false;
         }
 
+        /// <summary>
+        /// Represents the segment context as a string.
+        /// Used for logging.
+        /// </summary>
+        /// <returns>
+        /// The formated string denoting the segment context.
+        /// </returns>
         public string ToPropertiesString()
         {
             return string.Format("Name = {0} FirstValue = {1} SecondValue = {2} ParentId = {3}", Name, FirstValue, SecondValue, ParentId);

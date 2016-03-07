@@ -1,7 +1,7 @@
 ﻿//---------------------------------------------------------------------
-// This file is part of ediFabric
+// This file is part of EDIFabric
 //
-// Copyright (c) ediFabric. All rights reserved.
+// Copyright (c) EDIFabric. All rights reserved.
 //
 // THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
 // KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -18,17 +18,18 @@ using EdiFabric.Framework.Envelopes;
 namespace EdiFabric.Framework.Messages.Segments
 {
     /// <summary>
-    /// This class parses edi lines or edi xml.
+    /// This class is used to parse EDI segments into XML and vice verse.
     /// </summary>
     class SegmentParser
     {
         /// <summary>
-        /// Parses edi line according to a grammar
+        /// Parses EDI line according to a grammar.
+        /// The grammar is loaded from the specified .NET type.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="line">The edi line.</param>
-        /// <param name="interchangeContext">The intechange context.</param>
-        /// <returns>The parsed xml.</returns>
+        /// <param name="line">The EDI line.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The parsed XML.</returns>
         public static XElement ParseLine<T>(string line, InterchangeContext interchangeContext)
         {
             if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
@@ -42,12 +43,12 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses edi line according to a grammar
+        /// Parses EDI line according to a grammar.
         /// </summary>
         /// <param name="grammar">The grammar.</param>
-        /// <param name="line">The edi line.</param>
-        /// <param name="interchangeContext">The intechange context.</param>
-        /// <returns>The parsed xml.</returns>
+        /// <param name="line">The EDI line.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The parsed XML.</returns>
         public static XElement ParseLine(ParseTree grammar, string line, InterchangeContext interchangeContext)
         {
             if (grammar == null) throw new ArgumentNullException("grammar");
@@ -62,11 +63,12 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses edi xml according to a grammar
+        /// Parses EDI XML according to a grammar.
+        /// The grammar is loaded from the specified .NET type.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
-        /// <param name="xml">The edi xml.</param>
-        /// <param name="interchangeContext">The intechange context.</param>
+        /// <param name="xml">The EDI XML.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
         public static string ParseXml<T>(XElement xml, InterchangeContext interchangeContext)
         {
@@ -81,11 +83,11 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses edi xml according to a grammar
+        /// Parses EDI XML according to a grammar.
         /// </summary>
         /// <param name="systemType">The system type.</param>
-        /// <param name="xml">The edi xml.</param>
-        /// <param name="interchangeContext">The intechange context.</param>
+        /// <param name="xml">The EDI XML.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
         public static string ParseXml(Type systemType, XElement xml, InterchangeContext interchangeContext)
         {
@@ -96,12 +98,12 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses a segment 
+        /// Parses a segment. 
         /// </summary>
         /// <param name="line">The segment line.</param>
         /// <param name="grammar">The segment grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>The parsed xml.</returns>
+        /// <returns>The parsed XML.</returns>
         private static XElement Parse(ParseTree grammar, string line, InterchangeContext interchangeContext)
         {
             if (!grammar.IsSegment) throw new Exception("Not a segment.");
@@ -114,13 +116,13 @@ namespace EdiFabric.Framework.Messages.Segments
 
             // Index the composite data elements from the class definition
             var indexedGrammar = grammar.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
-            // Index the composite data elements from the edi string
+            // Index the composite data elements from the EDI string
             var indexedValues = dataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
 
-            // This will try to parse the edi string into the class definition
+            // This will try to parse the EDI string into the class definition
             // Load a parse tree against each value
-            // If there are more values in the edi string than in the class definition - they will be ignored
-            // If there are less values in the edi string than in the class definition - it will throw an exception
+            // If there are more values in the EDI string than in the class definition - they will be ignored
+            // If there are less values in the EDI string than in the class definition - it will throw an exception
             var indexedList = from ig in indexedGrammar
                               from iv in indexedValues
                               where ig.Position == iv.Position
@@ -137,7 +139,7 @@ namespace EdiFabric.Framework.Messages.Segments
                         continue;
                 }
 
-                // If the current element is out of the range of elemnts defined in the definition class, then it's a repetition
+                // If the current element is out of the range of elements defined in the definition class, then it's a repetition
                 // The repetitions are always for the last defined element
                 var elementGrammar = dataElement.Position >= grammar.Children.Count
                     ? grammar.Children.Last()
@@ -161,10 +163,10 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <summary>
         /// Parses a data element
         /// </summary>
-        /// <param name="parseTree">The dataelement grammar.</param>
-        /// <param name="value">The dataelement line.</param>
+        /// <param name="parseTree">The data element grammar.</param>
+        /// <param name="value">The data element line.</param>
         /// <param name="interchangeContext"></param>
-        /// <returns>The parsed xml.</returns>
+        /// <returns>The parsed XML.</returns>
         private static XElement ParseElement(ParseTree parseTree, string value, InterchangeContext interchangeContext)
         {
             if (value == null) throw new ArgumentNullException("value");
@@ -197,13 +199,13 @@ namespace EdiFabric.Framework.Messages.Segments
                     // Index the composite data elements from the class definition
                     var indexedGrammar =
                         parseTree.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
-                    // Index the composite data elements from the edi string
+                    // Index the composite data elements from the EDI string
                     var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
 
-                    // This will try to parse the edi string into the class definition
+                    // This will try to parse the EDI string into the class definition
                     // Load a parse tree against each value
-                    // If there are more values in the edi string than in the class definition - they will be ignored
-                    // If there are less values in the edi string than in the class definition - it will throw an exception
+                    // If there are more values in the EDI string than in the class definition - they will be ignored
+                    // If there are less values in the EDI string than in the class definition - it will throw an exception
                     var indexedList = from ig in indexedGrammar
                                       from iv in indexedValues
                                       where ig.Position == iv.Position
@@ -222,8 +224,8 @@ namespace EdiFabric.Framework.Messages.Segments
                         }
 
                         // Handle the repetitions
-                        // If the children the the edi straing are more than the class definition,
-                        // Then the diff are considered repetitions of the last child in the class definition
+                        // If the children the EDI string are more than the class definition,
+                        // Then the extra ones are considered repetitions of the last child in the class definition
                         var objectToParse = dataElement.Position >= parseTree.Children.Count
                                                 ? parseTree.Children.Last()
                                                 : parseTree.Children[dataElement.Position];
@@ -245,9 +247,9 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses segment xml
+        /// Parses segment XML
         /// </summary>
-        /// <param name="segment">The segment xml.</param>
+        /// <param name="segment">The segment XML.</param>
         /// <param name="parseTree">The segment grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
@@ -257,13 +259,13 @@ namespace EdiFabric.Framework.Messages.Segments
             // BHT+, etc.
             var result = parseTree.EdiName + interchangeContext.DataElementSeparator;
 
-            // For all elements in the parse tree - append to the segment name to build the edi string
+            // For all elements in the parse tree - append to the segment name to build the EDI string
             // BHT+88, etc.
             // Parse according to the parse tree
             foreach (var element in parseTree.Children)
             {
                 var currentElement = element;
-                // Find the matching elemtns by name
+                // Find the matching elements by name
                 // If > 1 found, then there are repetitions
                 var matchingElements = segment.Elements().Where(e => e.Name.LocalName == currentElement.Name);
 
@@ -298,10 +300,10 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Parses data element xml
+        /// Parses data element XML
         /// </summary>
-        /// <param name="dataElement">The dataelement xml.</param>
-        /// <param name="parseTree">The dataelement grammar.</param>
+        /// <param name="dataElement">The data element XML.</param>
+        /// <param name="parseTree">The data element grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
         private static string ParseElement(XElement dataElement, ParseTree parseTree, InterchangeContext interchangeContext)
@@ -334,11 +336,11 @@ namespace EdiFabric.Framework.Messages.Segments
         }
 
         /// <summary>
-        /// Escapes a string value to be valid in xml
+        /// Escapes a string value to be valid in XML.
         /// </summary>
-        /// <param name="dataElement">The xml element.</param>
+        /// <param name="dataElement">The XML element.</param>
         /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>The valid xml value.</returns>
+        /// <returns>The valid XML value.</returns>
         private static string GetValidDataElementValue(XElement dataElement, InterchangeContext interchangeContext)
         {
             var dataElementValue = dataElement == null ? string.Empty : dataElement.Value;
@@ -379,6 +381,13 @@ namespace EdiFabric.Framework.Messages.Segments
             return result;
         }
 
+        /// <summary>
+        /// Trims a string from trailing chars with escaping.
+        /// </summary>
+        /// <param name="result">The string to trim.</param>
+        /// <param name="separator">The string to be trimmed.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The trimmed string.</returns>
         private static string CleanupTrailingSeparators(string result, string separator, InterchangeContext interchangeContext)
         {
             while (result.EndsWith(separator))

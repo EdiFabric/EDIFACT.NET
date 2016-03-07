@@ -20,15 +20,15 @@ using EdiFabric.Framework.Envelopes;
 namespace EdiFabric.Framework
 {
     /// <summary>
-    /// General helper
+    /// This class contains the general helper methods used throughout the parser.
     /// </summary>
     static class EdiHelper
     {
         /// <summary>
-        /// Converts a stream into string
+        /// Converts a stream into string.
         /// </summary>
-        /// <param name="ediStream">The stream</param>
-        /// <returns>The string</returns>
+        /// <param name="ediStream">The stream.</param>
+        /// <returns>The string.</returns>
         public static string ToEdiString(this Stream ediStream)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
@@ -40,10 +40,10 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Converts a stream into string
+        /// Converts a stream into string with encoding.
         /// </summary>
-        /// <param name="ediStream">The stream</param>
-        /// <param name="encoding">Encoding of the stream</param>
+        /// <param name="ediStream">The stream.</param>
+        /// <param name="encoding">Encoding of the stream.</param>
         /// <returns>The string</returns>
         public static string ToEdiString(this Stream ediStream, System.Text.Encoding encoding)
         {
@@ -56,11 +56,11 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Serializes an instance
+        /// Serializes an instance.
         /// </summary>
-        /// <typeparam name="T">The type of the instance</typeparam>
-        /// <param name="instance">The instance</param>
-        /// <returns>The serialized XML</returns>
+        /// <typeparam name="T">The type of the instance.</typeparam>
+        /// <param name="instance">The instance.</param>
+        /// <returns>The serialized XML.</returns>
         public static XElement Serialize<T>(T instance)
         {
             // Fix: using instance.GetType() instead of typeof(T)
@@ -68,11 +68,10 @@ namespace EdiFabric.Framework
 
             //this throws an error via netFramework because the netFW tries to load the assembly from disc like described in http://edifabric.com/answers/error-edifabric-framework-xmlserializers-can-load/ or in the commit description
             //var serializer = new XmlSerializer(type, GetNamespace(type));
-
             //so it is better to generate the assembly by ourselves because we know the file searched for by the netFW isn't there
-            string defaultNamespace = GetNamespace(type);
-            XmlReflectionImporter importer = new XmlReflectionImporter(defaultNamespace);
-            XmlTypeMapping xmltm = importer.ImportTypeMapping(type, null, defaultNamespace);
+            var defaultNamespace = GetNamespace(type);
+            var importer = new XmlReflectionImporter(defaultNamespace);
+            var xmltm = importer.ImportTypeMapping(type, null, defaultNamespace);
             var serializer = new XmlSerializer(xmltm);
 
             using (var ms = new MemoryStream())
@@ -84,35 +83,34 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Deserializes XML into object
+        /// Deserializes XML into object.
         /// </summary>
-        /// <typeparam name="T">The type of the object</typeparam>
-        /// <param name="xml">The XML</param>
-        /// <returns>The deserialized object</returns>
- 
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The deserialized object.</returns> 
         public static T Deserialize<T>(this XElement xml)
         {
             var serializer = new XmlSerializer(typeof(T), GetNamespace(typeof(T)));
             // This will throw validation exception for invalid enum values
             // If you need to deserialize it at any cost, a new definitions file can be used
-            // where no enums are defined, but instead all element's base calss is string.
-            // The parsing can be done against the calss with enums defined and
-            // the deserialization can be done against the class without enums.
+            // where no enums are defined, but instead all element's base class is string.
+            // The parsing can be done against the class with enums defined and
+            // the deserialization can be done against the class without the enums.
             return (T)serializer.Deserialize(xml.CreateReader());
         }
 
         /// <summary>
-        /// Splits an Edi messages into a collection of segments
+        /// Splits an Edi messages into a collection of segments.
         /// </summary>
-        /// <param name="contents">The edi message</param>
-        /// <param name="interchangeContext">The interchange context containing the separators</param>
-        /// <returns>The collection of segments</returns>
+        /// <param name="contents">The EDI message.</param>
+        /// <param name="interchangeContext">The interchange context containing the separators.</param>
+        /// <returns>The collection of segments.</returns>
         public static string[] GetEdiSegments(string contents, InterchangeContext interchangeContext)
         {
             if (contents == null) throw new ArgumentNullException("contents");
             if (interchangeContext == null) throw new ArgumentNullException("interchangeContext");
 
-            // Handle carriage return\new line separator
+            // Handle carriage return \ new line separator
             if (interchangeContext.SegmentTerminator != Environment.NewLine)
                 contents = contents.Replace(Environment.NewLine, string.Empty);
 
@@ -131,11 +129,11 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Splits a segment line into composite data elements
+        /// Splits a segment line into composite data elements.
         /// </summary>
-        /// <param name="ediSegment">The segment line</param>
-        /// <param name="interchangeContext">The interchange context containing the separators</param>
-        /// <returns>The collection of composite data elements</returns>
+        /// <param name="ediSegment">The segment line.</param>
+        /// <param name="interchangeContext">The interchange context containing the separators.</param>
+        /// <returns>The collection of composite data elements.</returns>
         public static string[] GetEdiCompositeDataElements(string ediSegment, InterchangeContext interchangeContext)
         {
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
@@ -154,11 +152,11 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Splits a segment line into component data elements
+        /// Splits a segment line into component data elements.
         /// </summary>
-        /// <param name="ediCompositeDataElement">The composite data element line</param>
-        /// <param name="interchangeContext">The interchange context containing the separators</param>
-        /// <returns>The collection of data elements</returns>
+        /// <param name="ediCompositeDataElement">The composite data element line.</param>
+        /// <param name="interchangeContext">The interchange context containing the separators.</param>
+        /// <returns>The collection of data elements.</returns>
         public static string[] GetEdiComponentDataElements(string ediCompositeDataElement, InterchangeContext interchangeContext)
         {
             if (interchangeContext == null) throw new ArgumentNullException("interchangeContext");
@@ -174,6 +172,12 @@ namespace EdiFabric.Framework
             return result;
         }
 
+        /// <summary>
+        /// Splits a string by a repetitions separator.
+        /// </summary>
+        /// <param name="value">The string.</param>
+        /// <param name="interchangeContext">The interchange context.</param>
+        /// <returns>The repetitions if any otherwise the original string.</returns>
         public static string[] GetRepetitions(string value, InterchangeContext interchangeContext)
         {
             if (!string.IsNullOrEmpty(interchangeContext.ReleaseIndicator))
@@ -184,11 +188,11 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Gets the segment name from a segment line
+        /// Gets the segment name from a segment line.
         /// </summary>
-        /// <param name="ediSegment">The segment line</param>
-        /// <param name="interchangeContext">The interchange context containing the separators</param>
-        /// <returns>The segment name</returns>
+        /// <param name="ediSegment">The segment line.</param>
+        /// <param name="interchangeContext">The interchange context containing the separators.</param>
+        /// <returns>The segment name.</returns>
         public static string GetSegmentName(string ediSegment, InterchangeContext interchangeContext)
         {
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
@@ -199,13 +203,13 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Escapes characters in a string
+        /// Escapes characters in a string.
         /// </summary>
-        /// <param name="contents">The string to be escaped</param>
-        /// <param name="escapeCharacter">The escape character</param>
-        /// <param name="splitSeparator">The spli separator</param>
-        /// <param name="splitOption">The split option</param>
-        /// <returns>The splitted string</returns>
+        /// <param name="contents">The string to be escaped.</param>
+        /// <param name="escapeCharacter">The escape character.</param>
+        /// <param name="splitSeparator">The split separator.</param>
+        /// <param name="splitOption">The split option.</param>
+        /// <returns>The split string.</returns>
         private static string[] EscapeSplit(this string contents, char escapeCharacter, char splitSeparator, StringSplitOptions splitOption)
         {
             var result = new List<string>();
@@ -260,6 +264,13 @@ namespace EdiFabric.Framework
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Reads a segment from a stream.
+        /// </summary>
+        /// <param name="reader">The stream reader.</param>
+        /// <param name="escapeCharacter">The escape char.</param>
+        /// <param name="segmentSeparator">The segment separator.</param>
+        /// <returns>The segment.</returns>
         public static string ReadSegment(this TextReader reader, string escapeCharacter, string segmentSeparator)
         {
             var line = "";
