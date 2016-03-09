@@ -193,7 +193,7 @@ namespace EdiFabric.Framework.Messages
 
             // Always populate the list for a segment, e.g.
             // This is the first&second element defined in the segment
-            // This is required for Hipaa as the segments are not only identified by name
+            // This is required for HIPAA as the segments are not only identified by name
             // There could be situations where
             // S_BHT+41 is a different segment than S_BHT+88, although both are S_BHT
             result.FirstElementValues.AddRange(GetElementValues(result, properties, 0));
@@ -318,14 +318,21 @@ namespace EdiFabric.Framework.Messages
             if (EdiName == segmentContext.Name)
             {
                 // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentContext.FirstValue))
+                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !FirstElementValues.Any())
                     return true;
 
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
-                return !FirstElementValues.Any() ||
-                       (FirstElementValues.Contains(segmentContext.FirstValue) &&
-                        (!SecondElementValues.Any() || SecondElementValues.Contains(segmentContext.SecondValue)));
+                if (FirstElementValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
+                    FirstElementValues.Contains(segmentContext.FirstValue))
+                {
+                    if (SecondElementValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
+                    {
+                        return SecondElementValues.Contains(segmentContext.SecondValue);
+                    }
+
+                    return true;
+                }
             }
 
             return false;
@@ -340,6 +347,10 @@ namespace EdiFabric.Framework.Messages
         /// </returns>
         public ParseTree FindNextSegment(SegmentContext segmentContext)
         {
+            if (Parent == null)
+                throw new ParserException(string.Format("Can't find a match for segment {0}. Message is invalid.",
+                    segmentContext.ToPropertiesString()));
+
             // Look on the same level first
             foreach (var child in Parent.Children.Skip(GetIndex()))
             {

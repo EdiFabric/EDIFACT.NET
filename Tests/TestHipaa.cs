@@ -223,5 +223,46 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestToInterchangeWithNoSecondaryValue()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_SecondaryValue3.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00401_Secondary3.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), "EdiFabric.Tests");
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestToInterchangeWithInvalidMessage()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_Invalid.txt";
+            const string expectedErrorMessage = "Failed at line: BHP*0019*00*1*20110406*085755*CH";
+            const string expectedInnerErrorMessage = "Can't find a match for segment Name = BHP FirstValue = 0019 SecondValue = 00 ParentId = . Message is invalid.";
+
+            // ACT
+            try
+            {
+                Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+                Assert.Fail();               
+            }
+            catch (Exception ex)
+            {
+                // ASSERT
+                Assert.IsTrue(ex.Message == expectedErrorMessage);
+                Assert.IsTrue(ex.InnerException.Message == expectedInnerErrorMessage);
+            }
+        }
     }
 }

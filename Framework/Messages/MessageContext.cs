@@ -175,7 +175,7 @@ namespace EdiFabric.Framework.Messages
             var systemType = Type.GetType(typeFullName);
 
             if (systemType == null)
-                throw new ParserException(string.Format("Can't find type for type name = {0}", typeFullName));
+                throw new ParserException(string.Format("Can't find type for type name = {0} .Please ensure that the correct class was added to the definitions project and that you pointed to the definitions project in your .config file.", typeFullName));
 
             return systemType;
         }

@@ -371,7 +371,7 @@ namespace EdiFabric.Framework.Messages.Segments
         private static Type FindType(Type source, string segment)
         {
             if (source.AssemblyQualifiedName == null)
-                throw new ParserException(string.Format("Can't find assembly for type name = {0}", source.FullName));
+                throw new ParserException(string.Format("Can't find assembly for type name = {0} .Please ensure that the correct class was added to the definitions project and that you pointed to the definitions project in your .config file.", source.FullName));
 
             var result = Type.GetType(source.AssemblyQualifiedName.Replace(source.Name, segment));
 
