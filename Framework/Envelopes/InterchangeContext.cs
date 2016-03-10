@@ -130,7 +130,7 @@ namespace EdiFabric.Framework.Envelopes
                     }
                     break;
                 case EdiSegments.Unb:
-                    //  Default Edifact separators
+                    //  Default EDIFACT separators
                     ComponentDataElementSeparator = ":";
                     DataElementSeparator = "+";
                     ReleaseIndicator = "?";
@@ -159,7 +159,9 @@ namespace EdiFabric.Framework.Envelopes
                     }
                     break;
                 default:
-                    throw new ParserException("Can't identify format by: " + firstSegmentName);
+                    throw new ParserException(
+                        string.Format("Can't identify EDI by: {0}. It needs to be one of {1}, {2}, {3}",
+                            firstSegmentName, EdiSegments.Una, EdiSegments.Unb, EdiSegments.Isa));
             }
             
         }

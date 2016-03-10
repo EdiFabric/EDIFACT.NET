@@ -1,25 +1,21 @@
-﻿using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Xml.XPath;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using EdiFabric.Definitions.Edifact_D00A_INVOIC;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Envelopes;
 using EdiFabric.Framework.Envelopes.Edifact;
 using EdiFabric.Framework.Messages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml.Schema;
-    using System.Xml.Linq;
-
     [TestClass]
     public class TestEdifact
     {
@@ -533,6 +529,25 @@ namespace EdiFabric.Tests
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
             const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedRepetition.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestToEdiWithBom()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BOM.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
 
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
             Debug.Assert(stream != null, "stream != null");
