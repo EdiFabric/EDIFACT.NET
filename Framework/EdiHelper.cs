@@ -166,7 +166,7 @@ namespace EdiFabric.Framework
             // Retains blank lines
             var result = !string.IsNullOrEmpty(interchangeContext.ReleaseIndicator)
                                       ? ediCompositeDataElement.EscapeSplit(interchangeContext.ReleaseIndicator[0],
-                                                             interchangeContext.ComponentDataElementSeparator[0], StringSplitOptions.None)
+                                                             interchangeContext.ComponentDataElementSeparator[0], StringSplitOptions.None, true)
                                       : ediCompositeDataElement.Split(interchangeContext.ComponentDataElementSeparator.ToCharArray(),
                                                        StringSplitOptions.None);
             return result;
@@ -209,8 +209,9 @@ namespace EdiFabric.Framework
         /// <param name="escapeCharacter">The escape character.</param>
         /// <param name="splitSeparator">The split separator.</param>
         /// <param name="splitOption">The split option.</param>
+        /// <param name="escapeTheEscape">Whether to escape the escape.</param>
         /// <returns>The split string.</returns>
-        private static string[] EscapeSplit(this string contents, char escapeCharacter, char splitSeparator, StringSplitOptions splitOption)
+        private static string[] EscapeSplit(this string contents, char escapeCharacter, char splitSeparator, StringSplitOptions splitOption, bool escapeTheEscape = false)
         {
             var result = new List<string>();
             var line = "";
@@ -230,7 +231,7 @@ namespace EdiFabric.Framework
                         // If it not escaped, add the currently built line
                         // and start the next line
                         // check for escaping the escape character
-                        if (line.EndsWith(new string(new [] {escapeCharacter, escapeCharacter})))
+                        if (line.EndsWith(new string(new[] { escapeCharacter, escapeCharacter })))
                             line = line.Remove(line.Length - 1);
 
                         result.Add(line);
@@ -239,10 +240,14 @@ namespace EdiFabric.Framework
 
                         continue;
                     }
-                    
+
                     // Keep building the line until a separator is reached
                     line = line.TrimEnd(escapeCharacter);
                 }
+
+                // check for escaping the escape character
+                if (escapeTheEscape && line.EndsWith(new string(new[] { escapeCharacter, escapeCharacter })))
+                    line = line.Remove(line.Length - 1);
 
                 line = line + symbol;
 
