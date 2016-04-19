@@ -143,6 +143,25 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
+        public void TestToInterchangeWithLf()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_LF.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
         public void TestToEdiWithSegmentsComparison()
         {
             // ARRANGE

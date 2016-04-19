@@ -106,6 +106,25 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
+        public void TestToInterchangeWithLf()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_LF.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
         public void TestToInterchangeWithSegmentSeparatorIsNewLine()
         {
             // ARRANGE

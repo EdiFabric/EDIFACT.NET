@@ -112,7 +112,7 @@ namespace EdiFabric.Framework
 
             // Handle carriage return \ new line separator
             if (interchangeContext.SegmentTerminator != Environment.NewLine)
-                contents = contents.Replace(Environment.NewLine, string.Empty);
+                contents = contents.Trim('\r', '\n');
 
             // Handle escape segment separator
             // Removes blank lines
