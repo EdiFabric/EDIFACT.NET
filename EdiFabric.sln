@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Framework", "1. Framewor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Definitions", "2. Definitions", "{EBD0D724-FE51-40BC-9323-1845B7F9EE3C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Validatiors", "3. Validatiors", "{8A2314B8-0CBE-4469-8472-6CBC2B48391C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Validators", "3. Validators", "{8A2314B8-0CBE-4469-8472-6CBC2B48391C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Unit Tests", "4. Unit Tests", "{4F00DE22-DF94-45C8-B1D1-37A7C8E7A97C}"
 EndProject
