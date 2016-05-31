@@ -75,7 +75,7 @@ namespace EdiFabric.Framework.Messages.Segments
                     var splittedSecondElement = splitted[2].Split(interchangeContext.ComponentDataElementSeparator.ToCharArray(), StringSplitOptions.None);
                     SecondValue = splittedSecondElement[0];
                 }
-                if (ediSegment.StartsWith(EdiSegments.Hl) && !string.IsNullOrEmpty(splitted[2])) ParentId = splitted[2];
+                if (Name == EdiSegments.Hl && !string.IsNullOrEmpty(splitted[2])) ParentId = splitted[2];
             }
         }
 
@@ -105,7 +105,24 @@ namespace EdiFabric.Framework.Messages.Segments
         /// </returns>
         public string ToPropertiesString()
         {
-            return string.Format("Name = {0} FirstValue = {1} SecondValue = {2} ParentId = {3}", Name, FirstValue, SecondValue, ParentId);
+            var result = string.Format("Name = {0}", Name);
+
+            if (!string.IsNullOrEmpty(FirstValue))
+            {
+                result = result + string.Format(" FirstValue = {0}", FirstValue);
+            }
+
+            if (!string.IsNullOrEmpty(SecondValue))
+            {
+                result = result + string.Format(" SecondValue = {0}", SecondValue);
+            }
+
+            if (!string.IsNullOrEmpty(ParentId))
+            {
+                result = result + string.Format(" ParentId = {0}", ParentId);
+            }
+
+            return result;
         }
     }
 }
