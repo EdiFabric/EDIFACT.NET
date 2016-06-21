@@ -195,6 +195,13 @@ namespace EdiFabric.Framework.Messages
                         }
                     }
 
+                    // I->G->S
+                    if (segment.Parent.Parent != null && segment.Parent.Parent.IsChoice)
+                    {
+                        if (lastFoundSegment.Parent.Name != segment.Parent.Name)
+                            result.Add(segment.Parent.Parent);
+                    }
+
                     // G->S
                     result.Add(segment.Parent);
                 }
