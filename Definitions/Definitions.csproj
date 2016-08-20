@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="810.cs" />
     <Compile Include="837_P.cs" />
+    <Compile Include="837_P_5010.cs" />
     <Compile Include="INVOIC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

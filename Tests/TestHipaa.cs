@@ -42,7 +42,7 @@ namespace EdiFabric.Tests
                 Assert.Fail();
             }
         }
-
+        
         [TestMethod]
         public void TestMessageContextFromType()
         {
@@ -263,6 +263,61 @@ namespace EdiFabric.Tests
                 Assert.IsTrue(ex.Message == expectedErrorMessage);
                 Assert.IsTrue(ex.InnerException.Message == expectedInnerErrorMessage);
             }
+        }
+
+        [TestMethod]
+        public void TestToEdiWithSegmentComparison5010()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Xml.Hipaa_837P_00501.xml";
+            const string expectedResult = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+
+            var reader = new StreamReader(stream);
+            var expectedEdi = new List<string>();
+            while (reader.Peek() >= 0)
+            {
+                expectedEdi.Add(reader.ReadLine());
+            }
+
+            // ACT
+            var parsedEdi =
+                Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
+                           .ToEdi();
+
+            var b = "";
+            foreach (var t in parsedEdi)
+            {
+                b = b + t + Environment.NewLine;
+            }
+
+            // ASSERT
+            Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
+            for (int i = 0; i < parsedEdi.Count; i++)
+            {
+                Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestToInterchangeWithXmlComparison5010()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
     }
 }

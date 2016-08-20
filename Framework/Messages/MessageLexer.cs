@@ -44,7 +44,7 @@ namespace EdiFabric.Framework.Messages
             var lastSegment = messageGrammar.Children.First();
 
             // Create the XML root of the parsed EDI
-            var ediXml = ToXml(messageGrammar, interchangeContext);
+            var ediXml = messageGrammar.ToXml(interchangeContext);
             // Set the position in the XML
             var lastXElement = ediXml;
             
@@ -80,14 +80,17 @@ namespace EdiFabric.Framework.Messages
                     }
 
                     // Find the next segment grammar
-                    var currSeg = lastSegment.FindNextSegment(segmentContext);
-
+                    var currSeg = lastSegment.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segmentContext));
+                    if(currSeg == null)
+                        throw new Exception(string.Format("Segment {0} can't be found after segment {1}. Please check the definition class.", segment, lastSegment.EdiName));
+                    //var currSeg = lastSegment.FindNextSegment(segmentContext);
+                    
                     Logger.Log(string.Format("Segment found: {0}", currSeg.Name));
 
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
-                    var segmentTree = GetSegmentTree(currSeg, lastSegment);
+                    var segmentTree = currSeg.GetSegmentTree(lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
                     lastXElement =
@@ -99,7 +102,7 @@ namespace EdiFabric.Framework.Messages
                         // Parse if a segment, otherwise convert to XML
                         var element = parseTree.IsSegment
                             ? SegmentParser.ParseLine(parseTree, segment, interchangeContext)
-                            : ToXml(parseTree, interchangeContext);
+                            : parseTree.ToXml(interchangeContext);
 
                         // Attach to the XML
                         lastXElement.Add(element);
@@ -117,108 +120,6 @@ namespace EdiFabric.Framework.Messages
             }
 
             return new Message(ediXml, messageContext);
-        }
-
-        /// <summary>
-        /// Convert a parse tree to a root XML node.
-        /// Without the hierarchy, only the name.
-        /// </summary>
-        /// <param name="parseTree">The parse tree.</param>
-        /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>A XML node.</returns>
-        private static XElement ToXml(ParseTree parseTree, InterchangeContext interchangeContext)
-        {
-            XNamespace ns = interchangeContext.TargetNamespace;
-            return new XElement(ns + parseTree.Name);
-        }
-
-        /// <summary>
-        /// Get ancestors of a segment until a group is reached, excluding the parent group.
-        /// </summary>
-        /// <param name="segment">
-        /// The segment grammar.
-        /// </param>
-        /// <param name="lastFoundSegment">
-        /// The last segment that was found.
-        /// </param>
-        /// <returns>
-        /// List of segment ancestors.
-        /// </returns>
-        private static IEnumerable<ParseTree> GetSegmentTree(ParseTree segment, ParseTree lastFoundSegment)
-        {
-            var result = new List<ParseTree>();
-
-            // Do only for segments with parent different than message
-            if (!segment.Parent.IsMessage && segment.IsSegment)
-            {
-                // Trigger segments, e.g. the first segment in a group
-                if (segment.IsTrigger && segment.Parent != null && segment.Parent.IsGroup)
-                {
-                    // A->G->S
-                    if (segment.Parent.Parent != null && segment.Parent.Parent.IsAll)
-                    {
-                        var lastFoundParents =
-                            lastFoundSegment.GetParents(
-                                s => s.Parent != null && !s.Parent.IsMessage)
-                                .Where(p => !p.IsChoice)
-                                .ToList();
-                        var segmentParents =
-                            segment.GetParents(s => s.Parent != null && !s.Parent.IsGroup && !s.Parent.IsMessage)
-                                .Where(p => !p.IsChoice)
-                                .ToList();
-
-                        if (
-                            !lastFoundParents.Where(p => p.IsAll)
-                                .Select(n => n.Name)
-                                .Intersect(segmentParents.Where(p => p.IsAll).Select(n => n.Name))
-                                .Any() &&
-                            !lastFoundParents.Where(p => p.IsGroup)
-                                .Select(n => n.Name)
-                                .Intersect(segmentParents.Where(p => p.IsGroup).Select(n => n.Name))
-                                .Any())
-                        {
-                            result.Add(segment.Parent.Parent);
-                        }
-                    }
-
-                    // A->U->G->S
-                    if (segment.Parent.Parent != null && segment.Parent.Parent.IsLoopOfLoops)
-                    {
-                        var lastFoundGroupName = lastFoundSegment.Parent.IsGroup || lastFoundSegment.Parent.IsMessage
-                            ? lastFoundSegment.Parent.Name
-                            : lastFoundSegment.Parent.Parent.Name;
-
-                        if (lastFoundGroupName != segment.Parent.Name)
-                        {
-                            result.Add(segment.Parent.Parent.Parent);
-                            result.Add(segment.Parent.Parent);
-                        }
-                    }
-
-                    // I->G->S
-                    if (segment.Parent.Parent != null && segment.Parent.Parent.IsChoice)
-                    {
-                        if (lastFoundSegment.Parent.Name != segment.Parent.Name)
-                            result.Add(segment.Parent.Parent);
-                    }
-
-                    // G->S
-                    result.Add(segment.Parent);
-                }
-                else
-                {
-                    // A->S or I->S
-                    if ((segment.Parent.IsAll || segment.Parent.IsChoice) &&
-                        lastFoundSegment.Parent.Name != segment.Parent.Name)
-                    {
-                        result.Add(segment.Parent);
-                    }
-                }
-            }
-            
-            result.Add(segment);
-
-            return result;
-        }
+        } 
     }
 }

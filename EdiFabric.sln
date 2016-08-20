@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Framework\nuget.exe = Framework\nuget.exe
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{9335172B-A6B4-4F59-9010-F1D3D350113E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,16 @@ Global
 		{377D0667-3D3B-4089-B748-F0F4FEDC229F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{377D0667-3D3B-4089-B748-F0F4FEDC229F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{377D0667-3D3B-4089-B748-F0F4FEDC229F}.Release|x86.ActiveCfg = Release|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9335172B-A6B4-4F59-9010-F1D3D350113E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +96,9 @@ Global
 		{D39915C6-DA36-406F-828E-4C8C2E299324} = {5D876523-C9E5-41D6-84B7-FF3E62859114}
 		{42FA4825-8FD8-4F8D-A286-D03E3ADBC385} = {EBD0D724-FE51-40BC-9323-1845B7F9EE3C}
 		{377D0667-3D3B-4089-B748-F0F4FEDC229F} = {8A2314B8-0CBE-4469-8472-6CBC2B48391C}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = EdiFabric.vsmdi
