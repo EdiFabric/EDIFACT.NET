@@ -123,10 +123,6 @@ namespace EdiFabric.Tests
             var parsedEdi =
                 Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
                            .ToEdi();
-            //var b = "";
-            //foreach (var t in parsedEdi)
-            //    b = b + t + Environment.NewLine;
-
             // ASSERT
             Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
             for (int i = 0; i < parsedEdi.Count; i++)
@@ -257,12 +253,6 @@ namespace EdiFabric.Tests
             var parsedEdi =
                 Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
                            .ToEdi();
-
-            //var b = "";
-            //foreach (var t in parsedEdi)
-            //{
-            //    b = b + t + Environment.NewLine;
-            //}
 
             // ASSERT
             Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
