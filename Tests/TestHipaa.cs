@@ -123,6 +123,9 @@ namespace EdiFabric.Tests
             var parsedEdi =
                 Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
                            .ToEdi();
+            //var b = "";
+            //foreach (var t in parsedEdi)
+            //    b = b + t + Environment.NewLine;
 
             // ASSERT
             Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
@@ -131,39 +134,7 @@ namespace EdiFabric.Tests
                 Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
             }
         }
-
-        [TestMethod]
-        public void TestToInterchangeWithInvalidEnum()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_BadSegment.txt";
-            const string expectedErrorMessage = "Instance validation error: 'CL' is not a valid value for S_BHT_BeginningOfHierarchicalTransaction_TS837Q1D_BHT06_ClaimOrEncounterIdentifier.";
-
-            // ACT
-            try
-            {
-                var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-                var message = interchange.Groups[0].Messages[0];
-
-                if (message.Context.Tag == "837" && message.Context.Origin == "X098")
-                {
-                    message.DeserializeItem<M_837>();
-
-                    // ASSERT
-                    Assert.Fail();
-                }
-                else
-                {
-                    Assert.Fail();
-                }
-            }
-            catch (Exception ex)
-            {
-                // ASSERT
-                Assert.IsTrue(ex.InnerException.Message == expectedErrorMessage);
-            }
-        }
-
+        
         [TestMethod]
         public void TestToInterchangeWithValidation()
         {
@@ -249,7 +220,7 @@ namespace EdiFabric.Tests
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401_Invalid.txt";
             const string expectedErrorMessage = "Failed at line: BHP*0019*00*1*20110406*085755*CH";
-            const string expectedInnerErrorMessage = "Can't find a match for segment Name = BHP FirstValue = 0019 SecondValue = 00 ParentId = . Message is invalid.";
+            const string expectedInnerErrorMessage = "Segment BHP*0019*00*1*20110406*085755*CH can't be found after segment ST. Please check the definition class.";
 
             // ACT
             try
@@ -287,11 +258,11 @@ namespace EdiFabric.Tests
                 Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
                            .ToEdi();
 
-            var b = "";
-            foreach (var t in parsedEdi)
-            {
-                b = b + t + Environment.NewLine;
-            }
+            //var b = "";
+            //foreach (var t in parsedEdi)
+            //{
+            //    b = b + t + Environment.NewLine;
+            //}
 
             // ASSERT
             Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);

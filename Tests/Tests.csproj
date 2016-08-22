@@ -217,9 +217,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Hipaa_837P_00401_BadSegment.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedEscape.txt" />
   </ItemGroup>
   <ItemGroup>

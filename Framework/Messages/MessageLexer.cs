@@ -83,15 +83,13 @@ namespace EdiFabric.Framework.Messages
                     var currSeg = lastSegment.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segmentContext));
                     if(currSeg == null)
                         throw new Exception(string.Format("Segment {0} can't be found after segment {1}. Please check the definition class.", segment, lastSegment.EdiName));
-                    //var currSeg = lastSegment.FindNextSegment(segmentContext);
                     
                     Logger.Log(string.Format("Segment found: {0}", currSeg.Name));
 
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
-                    //var segmentTree = currSeg.GetSegmentTree(lastSegment);
-                    var segmentTree = currSeg.GetSegmentTree2(lastSegment);
+                    var segmentTree = currSeg.GetSegmentTree(lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
                     lastXElement =
