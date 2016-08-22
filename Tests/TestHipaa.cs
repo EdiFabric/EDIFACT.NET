@@ -280,5 +280,53 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestToEdiWithSegmentComparison5010Hl()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Xml.Hipaa_837P_00501_HL.xml";
+            const string expectedResult = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+
+            var reader = new StreamReader(stream);
+            var expectedEdi = new List<string>();
+            while (reader.Peek() >= 0)
+            {
+                expectedEdi.Add(reader.ReadLine());
+            }
+
+            // ACT
+            var parsedEdi =
+                Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
+                           .ToEdi();
+            // ASSERT
+            Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
+            for (int i = 0; i < parsedEdi.Count; i++)
+            {
+                Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestToInterchangeWithXmlComparison5010Hl()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_HL.xml";
+
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
+            Debug.Assert(stream != null, "stream != null");
+            var expectedXml = XElement.Load(stream, LoadOptions.PreserveWhitespace);
+
+            // ACT
+            var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+            var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
+
+            // ASSERT
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
     }
 }
