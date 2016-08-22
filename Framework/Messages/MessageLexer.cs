@@ -90,7 +90,8 @@ namespace EdiFabric.Framework.Messages
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
-                    var segmentTree = currSeg.GetSegmentTree(lastSegment);
+                    //var segmentTree = currSeg.GetSegmentTree(lastSegment);
+                    var segmentTree = currSeg.GetSegmentTree2(lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
                     lastXElement =

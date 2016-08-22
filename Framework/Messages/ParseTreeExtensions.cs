@@ -72,36 +72,6 @@ namespace EdiFabric.Framework.Messages
             result.AddRange(node.Children);
             result.Add(node.Parent);
 
-            //if (exclusion.Contains(node))
-            //{
-            //    var index = node.GetIndexOfExcludedChild(exclusion);
-            //    var children =
-            //        node.Children.Where(c => c.Parent.Children.IndexOf(c) >= index);
-            //    result.AddRange(children);
-                
-            //    if (node.IsGroup)
-            //        result.Add(node.Children.First());
-                
-            //    if (!node.IsMessage)
-            //        result.Add(node.Parent);
-
-
-            //}
-            //else
-            //{
-            //    if (node.IsGroup)
-            //    {
-            //        result.Add(node.Children.First());
-            //        result.Add(node.Parent);
-            //    }
-            //    else
-            //    {
-            //        result.AddRange(node.Children);
-            //        result.Add(node.Parent);
-            //    }
-            //}
-
-
             return result;
         }
 
@@ -216,25 +186,11 @@ namespace EdiFabric.Framework.Messages
                         }
                     }
 
-                    // I->G->S
-                    if (segment.Parent.Parent != null && segment.Parent.Parent.IsChoice)
-                    {
-                        if (lastFoundSegment.Parent.Name != segment.Parent.Name)
-                            result.Add(segment.Parent.Parent);
-                    }
-
                     // G->S
                     result.Add(segment.Parent);
                 }
                 else
                 {
-                    // I->S
-                    if ((segment.Parent.IsChoice) &&
-                        lastFoundSegment.Parent.Name != segment.Parent.Name)
-                    {
-                        result.Add(segment.Parent);
-                    }
-
                     // A->S
                     if ((segment.Parent.IsAll || segment.Parent.IsChoice) &&
                         lastFoundSegment.Parent.Name != segment.Parent.Name)
@@ -271,6 +227,24 @@ namespace EdiFabric.Framework.Messages
 
             result.Add(segment);
 
+            return result;
+        }
+
+        public static IEnumerable<ParseTree> GetSegmentTree2(this ParseTree segment, ParseTree lastFoundSegment)
+        {
+            if(!segment.IsSegment)
+                throw new ParserException("Not a segment " + segment.Name);
+
+            var lastParents = lastFoundSegment.GetParents(s => s.Parent != null);
+            var parents = segment.GetParents(s => s.Parent != null).ToList();
+            var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
+            var result = parents.TakeWhile(parent => parent.Name != intersect.First()).Reverse().ToList();
+
+            if (!result.Any() && segment.IsTrigger)
+                result.Add(segment.Parent);
+            
+            result.Add(segment);
+                   
             return result;
         }
 
