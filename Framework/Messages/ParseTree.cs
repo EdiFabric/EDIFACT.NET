@@ -11,10 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Xml.Serialization;
-using EdiFabric.Framework.Messages.Segments;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -22,400 +18,84 @@ namespace EdiFabric.Framework.Messages
     /// This class represents the formal grammar as imported from the definitions class. 
     /// It is a lightweight parent\child relationship structure and is used to define the hierarchy of the EDI as outlined in the standard. 
     /// </summary>
-    class ParseTree : IEqualityComparer<ParseTree>
+    class ParseTree
     {
-        /// <summary>
-        /// Node name.
-        /// (Message, Group, Segment, Data Element, etc.)
-        /// Everything is a ParseTree.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The type in the definitions class representing this node.
-        /// </summary>
-        public Type SystemType { get; set; }
-
-        /// <summary>
-        /// The parent node or ParseTree.
-        /// </summary>
-        public ParseTree Parent { get; set; }
-
-        /// <summary>
-        /// The children collection.
-        /// </summary>
-        public List<ParseTree> Children { get; set; }
-
-        /// <summary>
-        /// The collection of values defined for that node.
-        /// This is only populated for segments and is the list of values.
-        /// for the first data element for that segment.
-        /// </summary>
-        public List<string> FirstElementValues { get; set; }
-
-        /// <summary>
-        /// The collection of values defined for that node.
-        /// This is only populated for segments and is the list of values. 
-        /// for the second data element for that segment.
-        /// </summary>
-        public List<string> SecondElementValues { get; set; }
-
-        /// <summary>
-        /// One of the Edi prefixes.
-        /// </summary>
-        public string Prefix
-        {
-            get { return Name.Split('_')[0]; }
-        }
-
-        /// <summary>
-        /// The name without the prefix.
-        /// </summary>
-        public string EdiName
-        {
-            get { return Name.Split('_')[1]; }
-        }
-
-        /// <summary>
-        /// If it is message.
-        /// </summary>
+        public Type SystemType { get; private set; }
+        public string Name { get; private set; }
+        public string EdiName { get; private set; }
+        public EdiPrefix Prefix { get; private set; }
+        public ParseTree Parent { get; private set; }
+        public IList<ParseTree> Children { get; private set; }
+        public IList<string> FirstChildValues { get; private set; }
+        public IList<string> SecondChildValues { get; private set; }
+        public bool IsEnvelope { get; private set; }
+        
         public bool IsMessage
         {
             get { return Prefix == EdiPrefix.M; }
         }
-
-        /// <summary>
-        /// If it is group.
-        /// </summary>
         public bool IsGroup
         {
             get { return Prefix == EdiPrefix.G; }
         }
-
-        /// <summary>
-        /// If it is all.
-        /// </summary>
         public bool IsAll
         {
             get { return Prefix == EdiPrefix.A; }
         }
-
-        /// <summary>
-        /// If it is choice.
-        /// </summary>
-        public bool IsChoice
-        {
-            get { return Prefix == EdiPrefix.I; }
-        }
-
-        /// <summary>
-        /// If it is loop of groups.
-        /// </summary>
         public bool IsLoopOfLoops
         {
             get { return Prefix == EdiPrefix.U; }
         }
-
-        /// <summary>
-        /// If it is segment.
-        /// </summary>
         public bool IsSegment
         {
             get { return Prefix == EdiPrefix.S; }
         }
-
-        /// <summary>
-        /// If it is complex element.
-        /// </summary>
         public bool IsComplex
         {
             get { return Prefix == EdiPrefix.C; }
         }
-
-        /// <summary>
-        /// If it is data element.
-        /// </summary>
         public bool IsSimple
         {
             get { return Prefix == EdiPrefix.D; }
         }
 
-        /// <summary>
-        /// If it is trigger, e.g. the first segment in the group.
-        /// </summary>
         public bool IsTrigger
         {
-            get
-            {
-                if (Parent != null && Parent.Prefix == EdiPrefix.G)
-                {
-                    return Parent.Children.IndexOf(this) == 0;
-                }
-
-                return false;
-            }
+            get { return Parent != null && Parent.Prefix == EdiPrefix.G && Parent.Children.IndexOf(this) == 0; }
         }
-
-        /// <summary>
-        /// If it is envelope segment.
-        /// </summary>
-        public bool IsEnvelope
-        {
-            get { return SystemType.FullName.Contains("EdiFabric.Framework.Envelopes"); }
-        }
-
-        /// <summary>
-        /// Factory from system type.
-        /// Builds a parse tree from the class definition.
-        /// </summary>
-        /// <param name="systemType">The system type.</param>
-        /// <param name="limit">How deep to build (segments with data elements or segments without data elements).</param>
-        /// <returns>The parse tree</returns>
-        public static ParseTree LoadFrom(Type systemType, Func<ParseTree, bool> limit)
+        
+        public ParseTree(Type systemType, Func<ParseTree, bool> limit) : this(systemType.Name)
         {
             if (systemType == null) throw new ArgumentNullException("systemType");
             if (limit == null) throw new ArgumentNullException("limit");
 
-            // Build the parse tree root
-            var result = new ParseTree
-            {
-                Name = systemType.Name,
-                Children = new List<ParseTree>(),
-                SystemType = systemType,
-                FirstElementValues = new List<string>(),
-                SecondElementValues = new List<string>()
-            };
-
-            // Get all properties from the class definition, sorted by Order attribute
-            // This is required as .NET can scramble the properties in the class declaration
-            // GetProperties method is not supposed to return all properties in the order they are declared in the class file.
             var properties = systemType.GetProperties().Sort();
 
-            // Always populate the list for a segment, e.g.
-            // This is the first&second element defined in the segment
-            // This is required for HIPAA as the segments are not only identified by name
-            // There could be situations where
-            // S_BHT+41 is a different segment than S_BHT+88, although both are S_BHT
-            result.FirstElementValues.AddRange(GetElementValues(result, properties, 0));
-            result.SecondElementValues.AddRange(GetElementValues(result, properties, 1));
+            SystemType = systemType;
+            IsEnvelope = SystemType.FullName.Contains("EdiFabric.Framework.Envelopes");
+            FirstChildValues = IsSegment && properties.Count > 0 ? properties[0].GetProperyValues(0) : null;
+            SecondChildValues = IsSegment && properties.Count > 1 ? properties[1].GetProperyValues(1) : null;
+            
+            if (!limit(this)) return;
 
-            // Check if need to go deeper or stop
-            if (!limit(result)) return result;
-
-            // Drill down the children
             foreach (var propertyInfo in properties)
             {
-                // TODO: refactor to remove the recursion
-                ParseTree parseTree;
-                if (propertyInfo.IsChoice())
-                {
-                    parseTree = propertyInfo.GetParseTreeRoot();
-                    foreach (var attr in propertyInfo.GetCustomAttributes(typeof(XmlArrayItemAttribute), false))
-                    {
-                        var attrChild = LoadFrom(((XmlArrayItemAttribute)attr).Type, limit);
+                var parseTree = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString())
+                    ? new ParseTree(propertyInfo.Name)
+                    : new ParseTree(propertyInfo.GetSystemType(), limit);                    
 
-                        attrChild.Parent = parseTree;
-                        parseTree.Children.Add(attrChild);
-                    }
-                }
-                else
-                {
-                    parseTree = propertyInfo.Name.StartsWith(EdiPrefix.D)
-                        ? new ParseTree { Name = propertyInfo.Name }
-                        : LoadFrom(propertyInfo.GetSystemType(), limit);
-                }
-
-                parseTree.Parent = result;
-                result.Children.Add(parseTree);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Custom equal.
-        /// </summary>
-        /// <param name="x">
-        /// Parse tree source.
-        /// </param>
-        /// <param name="y">
-        /// Parse tree target.
-        /// </param>
-        /// <returns>
-        /// If source is equal to target.
-        /// </returns>
-        public bool Equals(ParseTree x, ParseTree y)
-        {
-            return x.EdiName == y.EdiName;
-        }
-
-        /// <summary>
-        /// Generates hash code.
-        /// </summary>
-        /// <param name="obj">
-        /// The parse tree.
-        /// </param>
-        /// <returns>
-        /// The hash code.
-        /// </returns>
-        public int GetHashCode(ParseTree obj)
-        {
-            return obj.EdiName.GetHashCode();
-        }
-
-        /// <summary>
-        /// Gets the parents of a parse tree until a condition.
-        /// The condition is usually the type of parent, e.g. Group or Message.
-        /// </summary>
-        /// <param name="shouldContinue">
-        /// The condition to traverse up the hierarchy until.
-        /// </param>
-        /// <returns>
-        /// A collection of parse trees sorted by parent.
-        /// </returns>
-        public IEnumerable<ParseTree> GetParents(Func<ParseTree, bool> shouldContinue)
-        {
-            var stack = new Stack<ParseTree>();
-            // Always return at least the immediate parent
-            stack.Push(Parent);
-            while (stack.Count != 0)
-            {
-                var item = stack.Pop();
-                yield return item;
-                if (shouldContinue(item))
-                    stack.Push(item.Parent);
+                parseTree.Parent = this;
+                Children.Add(parseTree);
             }
         }
 
-        /// <summary>
-        /// Gets the index to start searching from.
-        /// </summary>
-        /// <returns>The index.</returns>
-        public int GetIndex()
+        private ParseTree(string name)
         {
-            // If the parent is choice, all or loop of group always start from the beginning
-            if (Parent.IsChoice || Parent.IsAll || Parent.IsLoopOfLoops)
-                return 0;
-
-            // If the parse tree is choice, all or loop of group 
-            // and the parent is a group, always start from the next parse tree, e.g.
-            // there can be no repetitions of the same parse tree
-            if (IsChoice || IsAll || IsLoopOfLoops)
-                return Parent.Children.IndexOf(this) + 1;
-
-            // If it is a segment, start from the same segment as it might be a repetition of the segment
-            return Parent.Children.IndexOf(this);
+            Name = name;
+            EdiName = Name.Split('_')[1];
+            Prefix = (EdiPrefix)Enum.Parse(typeof(EdiPrefix), Name.Split('_')[0]);
+            Children = new List<ParseTree>();            
         }
 
-        /// <summary>
-        /// Compare a parse tree to identity.
-        /// </summary>
-        /// <param name="segmentContext">The identity.</param>
-        /// <returns>If equal</returns>
-        public bool IsEqual(SegmentContext segmentContext)
-        {
-            // The names must match
-            if (EdiName == segmentContext.Name)
-            {
-                // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !FirstElementValues.Any())
-                    return true;
-
-                // Match the value 
-                // This must have been defined in the enum of the first element of the segment.
-                if (FirstElementValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
-                    FirstElementValues.Contains(segmentContext.FirstValue))
-                {
-                    if (SecondElementValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
-                    {
-                        return SecondElementValues.Contains(segmentContext.SecondValue);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Finds the next segment by full name.
-        /// </summary>
-        /// <param name="segmentContext">The segment full name (name + value).</param>
-        /// <returns>
-        /// The found segment.
-        /// </returns>
-        public ParseTree FindNextSegment(SegmentContext segmentContext)
-        {
-            if (Parent == null)
-                throw new ParserException(string.Format("Can't find a match for segment {0}. Message is invalid.",
-                    segmentContext.ToPropertiesString()));
-
-            // Look on the same level first
-            foreach (var child in Parent.Children.Skip(GetIndex()))
-            {
-                Logger.Log(string.Format("Segment to try: {0}", child.Name));
-                
-                if (child.IsSegment && child.IsEqual(segmentContext))
-                    return child;
-
-                if (child.IsGroup && child.Children.First().IsEqual(segmentContext))
-                    return child.Children.First();
-
-                // Search a level down
-                if (child.IsAll || child.IsChoice || child.IsLoopOfLoops)
-                    return child.Children.First().FindNextSegment(segmentContext);
-            }
-
-            // Search a level up
-            return Parent.FindNextSegment(segmentContext);
-        }
-
-        /// <summary>
-        /// Gets all the descendants up to the root including the current.
-        /// </summary>
-        /// <returns>
-        /// The list of descendants.
-        /// </returns>
-        public IEnumerable<ParseTree> Descendants()
-        {
-            var nodes = new Stack<ParseTree>(new[] { this });
-            while (nodes.Any())
-            {
-                var node = nodes.Pop();
-                yield return node;
-                foreach (var n in node.Children) nodes.Push(n);
-            }
-        }
-
-        /// <summary>
-        /// Gets the values for an element if that element is defined as enum.
-        /// </summary>
-        /// <param name="parseTree">The parse tree.</param>
-        /// <param name="properties">The list of properties.</param>
-        /// <param name="index">The index to the property we need.</param>
-        /// <returns></returns>
-        private static IEnumerable<string> GetElementValues(ParseTree parseTree, IList<PropertyInfo> properties, int index)
-        {
-            var values = new List<string>();
-            if (parseTree.IsSegment && properties.Count >= index + 1)
-            {
-                values = properties[index].GetProperyEnumValues().ToList();
-                if (properties[index].Name.StartsWith(EdiPrefix.C) && !values.Any())
-                {
-                    try
-                    {
-                        var complexProperties = properties[index].PropertyType.GetProperties().Sort();
-                        values = complexProperties[index].GetProperyEnumValues().ToList();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-            }
-
-            return values;
-        }
     }
 }

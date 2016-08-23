@@ -85,37 +85,6 @@ namespace EdiFabric.Framework.Messages
         }
         
         /// <summary>
-        /// Gets a shallow parse tree.
-        /// </summary>
-        /// <param name="propertyInfo">The property.</param>
-        /// <returns>
-        /// The parse tree.
-        /// </returns>
-        public static ParseTree GetParseTreeRoot(this PropertyInfo propertyInfo)
-        {
-            return new ParseTree
-            {
-                Name = propertyInfo.Name,
-                Children = new List<ParseTree>(),
-                SystemType = propertyInfo.GetSystemType(),
-                FirstElementValues = new List<string>(),
-                SecondElementValues = new List<string>()
-            };
-        }
-
-        /// <summary>
-        /// Checks if a property is choice.
-        /// </summary>
-        /// <param name="propertyInfo">The property.</param>
-        /// <returns>If it's a choice.</returns>
-        public static bool IsChoice(this PropertyInfo propertyInfo)
-        {
-            return propertyInfo.Name.StartsWith(EdiPrefix.I) &&
-                   typeof (IList).IsAssignableFrom(propertyInfo.PropertyType) &&
-                   propertyInfo.PropertyType.IsGenericType;
-        }
-
-        /// <summary>
         /// Extracts the enum values from a property.
         /// </summary>
         /// <param name="propertyInfo">The property.</param>
@@ -154,6 +123,29 @@ namespace EdiFabric.Framework.Messages
             }
 
             return propertyInfo.PropertyType;
+        }
+
+        /// <summary>
+        /// Gets the values for an element if that element is defined as enum.
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <param name="index">The index to the property we need.</param>
+        /// <returns></returns>
+        public static IList<string> GetProperyValues(this PropertyInfo propertyInfo, int index)
+        {
+            var values = propertyInfo.GetProperyEnumValues().ToList();
+            if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString()) || values.Any()) return values;
+            try
+            {
+                var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
+                values = complexProperties[index].GetProperyEnumValues().ToList();
+            }
+            catch
+            {
+                // ignored
+            }
+            
+            return values;
         }
     }
 }

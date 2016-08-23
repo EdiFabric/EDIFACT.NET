@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework.Envelopes;
+using EdiFabric.Framework.Messages.Segments;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -152,6 +153,56 @@ namespace EdiFabric.Framework.Messages
         {
             XNamespace ns = interchangeContext.TargetNamespace;
             return new XElement(ns + parseTree.Name);
+        }
+
+        /// <summary>
+        /// Compare a parse tree to identity.
+        /// </summary>
+        /// <param name="parseTree">The parse tree.</param>
+        /// <param name="segmentContext">The identity.</param>
+        /// <returns>If equal</returns>
+        public static bool IsEqual(this ParseTree parseTree, SegmentContext segmentContext)
+        {
+            // The names must match
+            if (parseTree.EdiName == segmentContext.Name)
+            {
+                // If no identity match is required, mark this as a match
+                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !parseTree.FirstChildValues.Any())
+                    return true;
+
+                // Match the value 
+                // This must have been defined in the enum of the first element of the segment.
+                if (parseTree.FirstChildValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
+                    parseTree.FirstChildValues.Contains(segmentContext.FirstValue))
+                {
+                    if (parseTree.SecondChildValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
+                    {
+                        return parseTree.SecondChildValues.Contains(segmentContext.SecondValue);
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets all the descendants up to the root including the current.
+        /// </summary>
+        /// <param name="parseTree">The parse tree.</param>
+        /// <returns>
+        /// The list of descendants.
+        /// </returns>
+        public static IEnumerable<ParseTree> Descendants(this ParseTree parseTree)
+        {
+            var nodes = new Stack<ParseTree>(new[] { parseTree });
+            while (nodes.Any())
+            {
+                var node = nodes.Pop();
+                yield return node;
+                foreach (var n in node.Children) nodes.Push(n);
+            }
         }
     }
 }

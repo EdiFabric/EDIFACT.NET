@@ -38,8 +38,8 @@ namespace EdiFabric.Framework.Messages
             // This will read through the grammar and will build an XML
 
             // Get the grammar from the context
-            var messageGrammar = ParseTree.LoadFrom(messageContext.SystemType,
-                pt => pt.IsMessage || pt.IsGroup || pt.IsChoice || pt.IsAll || pt.IsLoopOfLoops);
+            var messageGrammar = new ParseTree(messageContext.SystemType,
+                pt => pt.IsMessage || pt.IsGroup || pt.IsAll || pt.IsLoopOfLoops);
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 

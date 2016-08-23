@@ -39,7 +39,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(ParseTree.LoadFrom(systemType, pt => pt.IsSegment || pt.IsComplex), line, interchangeContext);
+            return Parse(new ParseTree(systemType, pt => pt.IsSegment || pt.IsComplex), line, interchangeContext);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
             if (!grammar.Children.Any())
             {
-                return Parse(ParseTree.LoadFrom(grammar.SystemType, pt => pt.IsSegment || pt.IsComplex)
+                return Parse(new ParseTree(grammar.SystemType, pt => pt.IsSegment || pt.IsComplex)
                     , line, interchangeContext);
             }
 
@@ -79,7 +79,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(xml, ParseTree.LoadFrom(systemType, pt => pt.IsSegment || pt.IsComplex), interchangeContext);
+            return Parse(xml, new ParseTree(systemType, pt => pt.IsSegment || pt.IsComplex), interchangeContext);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace EdiFabric.Framework.Messages.Segments
         {
             // Find the grammar by system type
             return Parse(xml,
-                ParseTree.LoadFrom(FindType(systemType, xml.Name.LocalName), pt => pt.IsSegment || pt.IsComplex),
+                new ParseTree(FindType(systemType, xml.Name.LocalName), pt => pt.IsSegment || pt.IsComplex),
                 interchangeContext);
         }
 
