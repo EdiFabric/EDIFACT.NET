@@ -100,7 +100,7 @@
     <Compile Include="Envelopes\X12\Segments.cs" />
     <Compile Include="ParserException.cs" />
     <Compile Include="EdiHelper.cs" />
-    <Compile Include="Messages\ExtensionsPropertyInfo.cs" />
+    <Compile Include="Messages\PropertyInfoExtensions.cs" />
     <Compile Include="Messages\MessageLexer.cs" />
     <Compile Include="Envelopes\X12\Interchange.cs" />
     <Compile Include="Envelopes\X12\FromEdiLexer.cs" />

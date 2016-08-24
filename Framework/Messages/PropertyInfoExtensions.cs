@@ -22,7 +22,7 @@ namespace EdiFabric.Framework.Messages
     /// Global extensions for .NET PropertyInfo class.
     /// These are used in conjunction with Parse Tree class and the EDI definitions.
     /// </summary>
-    static class ExtensionsPropertyInfo
+    static class PropertyInfoExtensions
     {
         /// <summary>
         /// Sorts a collection of properties by the Order attribute.
