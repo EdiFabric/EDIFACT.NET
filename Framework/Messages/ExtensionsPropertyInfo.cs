@@ -36,54 +36,24 @@ namespace EdiFabric.Framework.Messages
         /// </returns>
         public static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
-            var dictionary = new Dictionary<int, PropertyInfo>();
-            
+            //var dictionary = new Dictionary<int, PropertyInfo>();
+            var dictionary = new SortedDictionary<int, PropertyInfo>();
+
             // Iterate through each property
             foreach (var propertyInfo in propertyInfos)
             {
-                int order;
+                var attributes = Attribute.GetCustomAttributes(propertyInfo);
+                if (attributes.OfType<XmlIgnoreAttribute>().Any())
+                    continue;
 
-                // Skip property if it is decorated with XmlIgnore
-                var ignoreAttribute =
-                    Attribute.GetCustomAttributes(propertyInfo, typeof(XmlIgnoreAttribute), true).FirstOrDefault() as XmlIgnoreAttribute;
-                if (ignoreAttribute != null) continue;
-
-                // Get all XmlElement attributes
-                // Usually there is only one but only for choices there are many
-                var elementAttributes =
-                    Attribute.GetCustomAttributes(propertyInfo, typeof(XmlElementAttribute), true).OfType<XmlElementAttribute>().ToList();
-
-                // Check if any at all
-                // If none is found try to find XmlArray
-                if (!elementAttributes.Any())
-                {
-                    // Gets here only if no XmlElement attribute is found.
-                    var arrayAttribute =
-                    Attribute.GetCustomAttribute(propertyInfo, typeof(XmlArrayAttribute), true) as XmlArrayAttribute;
-
-                    // If no XmlAttribute is found then no Order had been set and the collection can't be sorted
-                    if(arrayAttribute == null)
-                        throw new NullReferenceException("arrayAttribute");
-
-                    order = arrayAttribute.Order;
-                }
-                else
-                {
-                    // In case multiple XmlElement attributes were found, their Order must be the same
-                    // otherwise it becomes ambiguous and throws exception
-                    var firstVal = elementAttributes.First().Order;
-                    if (elementAttributes.Any(ea => ea.Order != firstVal))
-                        throw new Exception("Ambiguous ordering in XmlElementAttribute.");
-                    
-                    order = firstVal;
-                }
-
+                var elementAttributes = attributes.OfType<XmlElementAttribute>();
+                var order = elementAttributes.First().Order;
                 dictionary.Add(order, propertyInfo);
             }
 
-            return dictionary.OrderBy(d => d.Key).Select(v => v.Value).ToList();
+            return dictionary.Select(v => v.Value).ToList();
         }
-        
+
         /// <summary>
         /// Extracts the enum values from a property.
         /// </summary>

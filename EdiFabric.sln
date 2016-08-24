@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Framework\Framework.nuspec = Framework\Framework.nuspec
 		Framework\nuget.exe = Framework\nuget.exe
+		Performance2.psess = Performance2.psess
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{9335172B-A6B4-4F59-9010-F1D3D350113E}"

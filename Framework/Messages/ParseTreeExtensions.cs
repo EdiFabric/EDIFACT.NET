@@ -36,44 +36,34 @@ namespace EdiFabric.Framework.Messages
         {
             var result = new List<ParseTree>();
 
-            if (node.IsSegment)
+            switch (node.Prefix)
             {
-                result.Add(node.Parent);
-                return result;
-            }
-
-            if (node.IsGroup)
-            {
-                result.AddRange(node.GetChildrenWithExclusion(exclusion));
-                result.Add(node.Children.First());
-                result.Add(node.Parent);
-
-                return result;
-            }
-
-            if (node.IsMessage)
-            {
-                result.AddRange(node.GetChildrenWithExclusion(exclusion));
-                if(!result.Any())
-                    result.AddRange(node.Children);
-
-                return result;
-            }
-
-            if (node.IsLoopOfLoops)
-            {
-                result.AddRange(node.GetChildrenWithExclusion(exclusion));
-                if (!result.Any())
+                case EdiPrefix.S:
+                    result.Add(node.Parent);
+                    return result;
+                case EdiPrefix.G:
+                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    result.Add(node.Children.First());
+                    result.Add(node.Parent);
+                    return result;
+                case EdiPrefix.M:
+                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    if(!result.Any())
+                        result.AddRange(node.Children);
+                    return result;
+                case EdiPrefix.U:
+                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    if (!result.Any())
+                        result.AddRange(node.Children);
+                    result.Add(node.Parent);
+                    return result;
+                case EdiPrefix.A:
                     result.AddRange(node.Children);
                 result.Add(node.Parent);
-
                 return result;
+                default:
+                    throw new Exception(string.Format("Unsupported node prefix: {0}", node.Prefix));
             }
-
-            result.AddRange(node.Children);
-            result.Add(node.Parent);
-
-            return result;
         }
 
         public static IEnumerable<ParseTree> TraverseSegmentsDepthFirst(this ParseTree startNode)
@@ -91,7 +81,7 @@ namespace EdiFabric.Framework.Messages
                 if (!visited.Add(current))
                     continue;
 
-                if (current.IsSegment)
+                if (current.Prefix == EdiPrefix.S)
                     yield return current;
 
                 var neighbours = current.GetNeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
@@ -124,9 +114,9 @@ namespace EdiFabric.Framework.Messages
             return result;
         }
 
-        public static IEnumerable<ParseTree> GetSegmentTree(this ParseTree segment, ParseTree lastFoundSegment)
+        public static IEnumerable<ParseTree> GetParentsToIntersection(this ParseTree segment, ParseTree lastFoundSegment)
         {
-            if(!segment.IsSegment)
+            if (segment.Prefix != EdiPrefix.S)
                 throw new ParserException("Not a segment " + segment.Name);
 
             var lastParents = lastFoundSegment.GetParents(s => s.Parent != null);
@@ -161,8 +151,10 @@ namespace EdiFabric.Framework.Messages
         /// <param name="parseTree">The parse tree.</param>
         /// <param name="segmentContext">The identity.</param>
         /// <returns>If equal</returns>
-        public static bool IsEqual(this ParseTree parseTree, SegmentContext segmentContext)
+        public static bool IsSameSegment(this ParseTree parseTree, SegmentContext segmentContext)
         {
+            if(parseTree.Prefix != EdiPrefix.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseTree.Name));
+
             // The names must match
             if (parseTree.EdiName == segmentContext.Name)
             {

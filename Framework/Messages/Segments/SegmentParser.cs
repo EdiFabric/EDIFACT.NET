@@ -39,7 +39,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(new ParseTree(systemType, pt => pt.IsSegment || pt.IsComplex), line, interchangeContext);
+            return Parse(new ParseTree(systemType, false), line, interchangeContext);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
             if (!grammar.Children.Any())
             {
-                return Parse(new ParseTree(grammar.SystemType, pt => pt.IsSegment || pt.IsComplex)
+                return Parse(new ParseTree(grammar.SystemType, false)
                     , line, interchangeContext);
             }
 
@@ -79,7 +79,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(xml, new ParseTree(systemType, pt => pt.IsSegment || pt.IsComplex), interchangeContext);
+            return Parse(xml, new ParseTree(systemType, false), interchangeContext);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace EdiFabric.Framework.Messages.Segments
         {
             // Find the grammar by system type
             return Parse(xml,
-                new ParseTree(FindType(systemType, xml.Name.LocalName), pt => pt.IsSegment || pt.IsComplex),
+                new ParseTree(FindType(systemType, xml.Name.LocalName), false),
                 interchangeContext);
         }
 
@@ -106,7 +106,7 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <returns>The parsed XML.</returns>
         private static XElement Parse(ParseTree grammar, string line, InterchangeContext interchangeContext)
         {
-            if (!grammar.IsSegment) throw new Exception("Not a segment.");
+            if (grammar.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
 
             XNamespace ns = interchangeContext.TargetNamespace;
             var result = new XElement(ns + grammar.Name);
@@ -170,12 +170,12 @@ namespace EdiFabric.Framework.Messages.Segments
         private static XElement ParseElement(ParseTree parseTree, string value, InterchangeContext interchangeContext)
         {
             if (value == null) throw new ArgumentNullException("value");
-            if (!parseTree.IsComplex && !parseTree.IsSimple) throw new Exception("Not a data element.");
+            if (parseTree.Prefix != EdiPrefix.C && parseTree.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
 
             XNamespace ns = interchangeContext.TargetNamespace;
             var result = new XElement(ns + parseTree.Name);
 
-            if (parseTree.IsComplex)
+            if (parseTree.Prefix == EdiPrefix.C)
             {
                 if (value == string.Empty)
                 {
@@ -308,7 +308,7 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <returns>The parsed line.</returns>
         private static string ParseElement(XElement dataElement, ParseTree parseTree, InterchangeContext interchangeContext)
         {
-            if (parseTree.IsComplex)
+            if (parseTree.Prefix == EdiPrefix.C)
             {
                 var line = string.Empty;
                 // If complex data element, build a line from all the children in the parse tree

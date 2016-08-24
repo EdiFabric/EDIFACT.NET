@@ -38,8 +38,7 @@ namespace EdiFabric.Framework.Messages
             // This will read through the grammar and will build an XML
 
             // Get the grammar from the context
-            var messageGrammar = new ParseTree(messageContext.SystemType,
-                pt => pt.IsMessage || pt.IsGroup || pt.IsAll || pt.IsLoopOfLoops);
+            var messageGrammar = new ParseTree(messageContext.SystemType, true);
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 
@@ -80,7 +79,7 @@ namespace EdiFabric.Framework.Messages
                     }
 
                     // Find the next segment grammar
-                    var currSeg = lastSegment.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segmentContext));
+                    var currSeg = lastSegment.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsSameSegment(segmentContext));
                     if(currSeg == null)
                         throw new Exception(string.Format("Segment {0} can't be found after segment {1}. Please check the definition class.", segment, lastSegment.EdiName));
                     
@@ -89,7 +88,7 @@ namespace EdiFabric.Framework.Messages
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
-                    var segmentTree = currSeg.GetSegmentTree(lastSegment);
+                    var segmentTree = currSeg.GetParentsToIntersection(lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
                     lastXElement =
@@ -99,7 +98,7 @@ namespace EdiFabric.Framework.Messages
                     foreach (var parseTree in segmentTree)
                     {
                         // Parse if a segment, otherwise convert to XML
-                        var element = parseTree.IsSegment
+                        var element = parseTree.Prefix == EdiPrefix.S
                             ? SegmentParser.ParseLine(parseTree, segment, interchangeContext)
                             : parseTree.ToXml(interchangeContext);
 

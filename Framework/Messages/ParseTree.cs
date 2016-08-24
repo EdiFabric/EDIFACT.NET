@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -29,73 +31,66 @@ namespace EdiFabric.Framework.Messages
         public IList<string> FirstChildValues { get; private set; }
         public IList<string> SecondChildValues { get; private set; }
         public bool IsEnvelope { get; private set; }
+        public bool IsTrigger { get; private set; }
         
-        public bool IsMessage
-        {
-            get { return Prefix == EdiPrefix.M; }
-        }
-        public bool IsGroup
-        {
-            get { return Prefix == EdiPrefix.G; }
-        }
-        public bool IsAll
-        {
-            get { return Prefix == EdiPrefix.A; }
-        }
-        public bool IsLoopOfLoops
-        {
-            get { return Prefix == EdiPrefix.U; }
-        }
-        public bool IsSegment
-        {
-            get { return Prefix == EdiPrefix.S; }
-        }
-        public bool IsComplex
-        {
-            get { return Prefix == EdiPrefix.C; }
-        }
-        public bool IsSimple
-        {
-            get { return Prefix == EdiPrefix.D; }
-        }
-
-        public bool IsTrigger
-        {
-            get { return Parent != null && Parent.Prefix == EdiPrefix.G && Parent.Children.IndexOf(this) == 0; }
-        }
-        
-        public ParseTree(Type systemType, Func<ParseTree, bool> limit) : this(systemType.Name)
+        public ParseTree(Type systemType, bool lazyLoadSegment) : this(systemType)
         {
             if (systemType == null) throw new ArgumentNullException("systemType");
-            if (limit == null) throw new ArgumentNullException("limit");
 
-            var properties = systemType.GetProperties().Sort();
+            var stack = new Stack<ParseTree>();
+            stack.Push(this);
 
-            SystemType = systemType;
-            IsEnvelope = SystemType.FullName.Contains("EdiFabric.Framework.Envelopes");
-            FirstChildValues = IsSegment && properties.Count > 0 ? properties[0].GetProperyValues(0) : null;
-            SecondChildValues = IsSegment && properties.Count > 1 ? properties[1].GetProperyValues(1) : null;
-            
-            if (!limit(this)) return;
-
-            foreach (var propertyInfo in properties)
+            while (stack.Any())
             {
-                var parseTree = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString())
-                    ? new ParseTree(propertyInfo.Name)
-                    : new ParseTree(propertyInfo.GetSystemType(), limit);                    
+                var currentNode = stack.Pop();
 
-                parseTree.Parent = this;
-                Children.Add(parseTree);
+                if (currentNode.Prefix == EdiPrefix.D) continue;
+                
+                var properties = currentNode.SystemType.GetProperties().Sort();
+
+                if (currentNode.Prefix == EdiPrefix.S)
+                {
+                    currentNode.FirstChildValues = properties.Count > 0
+                        ? properties[0].GetProperyValues(0)
+                        : null;
+                    currentNode.SecondChildValues = properties.Count > 1
+                        ? properties[1].GetProperyValues(1)
+                        : null;
+                    currentNode.IsTrigger = currentNode.Parent != null && currentNode.Parent.Prefix == EdiPrefix.G &&
+                                            currentNode.Parent.Children.IndexOf(currentNode) == 0;
+
+                    if (lazyLoadSegment) continue;
+                }
+
+                foreach (var propertyInfo in properties)
+                {
+                    var childParseTree = new ParseTree(propertyInfo) {Parent = currentNode};
+                    currentNode.Children.Add(childParseTree);
+                    
+                    stack.Push(childParseTree);
+                }
             }
         }
 
-        private ParseTree(string name)
+        private ParseTree(PropertyInfo propertyInfo)
+            : this(
+                propertyInfo.GetSystemType(),
+                propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : null)
         {
-            Name = name;
-            EdiName = Name.Split('_')[1];
-            Prefix = (EdiPrefix)Enum.Parse(typeof(EdiPrefix), Name.Split('_')[0]);
-            Children = new List<ParseTree>();            
         }
 
+        private ParseTree(Type systemType, string name = null)
+        {
+            if (systemType == null) throw new ArgumentNullException("systemType");
+
+            SystemType = systemType;
+            IsEnvelope = SystemType.FullName.Contains("EdiFabric.Framework.Envelopes");
+            Name = string.IsNullOrEmpty(name) ? SystemType.Name : name;
+            var splitName = Name.Split('_');
+            if(splitName.Length < 2) throw new ParserException(string.Format("Invalid node name: {0}", Name));
+            EdiName = splitName[1];
+            Prefix = (EdiPrefix) Enum.Parse(typeof (EdiPrefix), splitName[0]);
+            Children = new List<ParseTree>();
+        }
     }
 }
