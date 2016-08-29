@@ -99,23 +99,17 @@ namespace EdiFabric.Framework.Messages
         /// Gets the values for an element if that element is defined as enum.
         /// </summary>
         /// <param name="propertyInfo"></param>
-        /// <param name="index">The index to the property we need.</param>
         /// <returns></returns>
-        public static IList<string> GetProperyValues(this PropertyInfo propertyInfo, int index)
+        public static IEnumerable<string> GetProperyValues(this PropertyInfo propertyInfo)
         {
-            var values = propertyInfo.GetProperyEnumValues().ToList();
-            if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString()) || values.Any()) return values;
-            try
-            {
-                var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
-                values = complexProperties[index].GetProperyEnumValues().ToList();
-            }
-            catch
-            {
-                // ignored
-            }
+            if (propertyInfo.PropertyType.IsGenericType)
+                return null;
+
+            if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString())) 
+                return propertyInfo.GetProperyEnumValues();
             
-            return values;
+            var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
+            return complexProperties[0].GetProperyEnumValues();
         }
     }
 }
