@@ -55,7 +55,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
             if (!grammar.Children.Any())
             {
-                return Parse(new ParseTree(grammar.SystemType, false)
+                return Parse(new ParseTree(grammar.Type, false)
                     , line, interchangeContext);
             }
 
