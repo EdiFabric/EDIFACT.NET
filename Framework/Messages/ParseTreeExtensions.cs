@@ -18,7 +18,7 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException("Child is in the last position in the parents list.");
             var next = parents[index + 1];
 
-            return node.Children.IndexOf(next);
+            return node.IndexOfChild(next);
         }
 
         public static IEnumerable<ParseTree> GetChildrenWithExclusion(this ParseTree node, IList<ParseTree> exclusion)
@@ -26,7 +26,7 @@ namespace EdiFabric.Framework.Messages
             if (exclusion.Contains(node))
             {
                 var index = node.GetIndexOfImmediateChild(exclusion);
-                return node.Children.Where(c => c.Parent.Children.IndexOf(c) >= index);
+                return node.Children.Where(c => c.Parent.IndexOfChild(c) >= index);
             }
 
             return new List<ParseTree>();

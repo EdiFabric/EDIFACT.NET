@@ -46,7 +46,7 @@ namespace EdiFabric.Framework.Messages
             var ediXml = messageGrammar.ToXml(interchangeContext);
             // Set the position in the XML
             var lastXElement = ediXml;
-            
+
             // Iterate trough the segment lines
             foreach (var segment in segments)
             {
@@ -67,7 +67,7 @@ namespace EdiFabric.Framework.Messages
                                                                         d.Elements().First().Value ==
                                                                         segmentContext.ParentId);
                             var hl = messageGrammar.Descendants().Single(pt => pt.Name == hlParent.Name.LocalName);
-                            lastSegment = hl.Parent.Children[1];
+                            lastSegment = hl.Parent.Children.ElementAt(1);
                         }
                         else
                         {

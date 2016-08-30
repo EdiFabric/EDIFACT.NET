@@ -143,7 +143,7 @@ namespace EdiFabric.Framework.Messages.Segments
                 // The repetitions are always for the last defined element
                 var elementGrammar = dataElement.Position >= grammar.Children.Count
                     ? grammar.Children.Last()
-                    : grammar.Children[dataElement.Position];
+                    : grammar.Children.ElementAt(dataElement.Position);
 
                 // Handle the repetitions
                 var elementRepetitions = grammar.IsEnvelope
@@ -228,7 +228,7 @@ namespace EdiFabric.Framework.Messages.Segments
                         // Then the extra ones are considered repetitions of the last child in the class definition
                         var objectToParse = dataElement.Position >= parseTree.Children.Count
                                                 ? parseTree.Children.Last()
-                                                : parseTree.Children[dataElement.Position];
+                                                : parseTree.Children.ElementAt(dataElement.Position);
 
                         var element = new XElement(ns + objectToParse.Name);
                         // Set the value and escape to prevent faulty XML

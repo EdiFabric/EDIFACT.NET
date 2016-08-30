@@ -100,16 +100,16 @@ namespace EdiFabric.Framework.Messages
         /// </summary>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        public static IEnumerable<string> GetProperyValues(this PropertyInfo propertyInfo)
+        public static List<string> GetProperyValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType.IsGenericType)
-                return null;
+                return new List<string>();
 
             if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString())) 
-                return propertyInfo.GetProperyEnumValues();
+                return propertyInfo.GetProperyEnumValues().ToList();
             
             var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
-            return complexProperties[0].GetProperyEnumValues();
+            return complexProperties[0].GetProperyEnumValues().ToList();
         }
     }
 }
