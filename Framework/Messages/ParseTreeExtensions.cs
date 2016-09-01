@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 using EdiFabric.Framework.Envelopes;
 using EdiFabric.Framework.Messages.Segments;
@@ -94,6 +96,7 @@ namespace EdiFabric.Framework.Messages
         public static IEnumerable<ParseTree> GetParents(this ParseTree node, Func<ParseTree, bool> shouldContinue)
         {
             var stack = new Stack<ParseTree>();
+            if (node.Parent == null) yield break;
             stack.Push(node.Parent);
             while (stack.Count != 0)
             {
@@ -107,8 +110,7 @@ namespace EdiFabric.Framework.Messages
         public static IList<ParseTree> GetParentsAndSelf(this ParseTree node)
         {
             var result = node.GetParents(p => p.Parent != null).Reverse().ToList();
-            if(result.Last() != node.Parent)
-                throw new ParserException("Incorrect parent collection.");
+ 
             result.Add(node);
 
             return result;
@@ -195,6 +197,184 @@ namespace EdiFabric.Framework.Messages
                 yield return node;
                 foreach (var n in node.Children) nodes.Push(n);
             }
+        }
+
+        public static void Parse(this ParseTree result, string line, InterchangeContext interchangeContext)
+        {
+            if (result.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
+
+            ParseTree grammar = new ParseTree(result.Type, false);
+
+            // Gets the composite data elements from the segment string
+            var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext).ToList();
+
+            // Index the composite data elements from the class definition
+            var indexedGrammar = grammar.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+            // Index the composite data elements from the EDI string
+            var indexedValues = dataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
+
+            // This will try to parse the EDI string into the class definition
+            // Load a parse tree against each value
+            // If there are more values in the EDI string than in the class definition - they will be ignored
+            // If there are less values in the EDI string than in the class definition - it will throw an exception
+            var indexedList = from ig in indexedGrammar
+                              from iv in indexedValues
+                              where ig.Position == iv.Position
+                              select new { ig.Grammar, iv.Value, ig.Position };
+
+            foreach (var dataElement in indexedList)
+            {
+                // Skip the blank elements
+                // This massively reduces the generated XML
+                if (string.IsNullOrEmpty(dataElement.Value))
+                {
+                    // Don't skip for header segments as they are positional
+                    if (!grammar.IsEnvelope)
+                        continue;
+                }
+
+                // If the current element is out of the range of elements defined in the definition class, then it's a repetition
+                // The repetitions are always for the last defined element
+                var elementGrammar = dataElement.Position >= grammar.Children.Count
+                    ? grammar.Children.Last()
+                    : grammar.Children.ElementAt(dataElement.Position);
+
+                // Handle the repetitions
+                var elementRepetitions = grammar.IsEnvelope
+                    ? new[] { dataElement.Value }
+                    : EdiHelper.GetRepetitions(dataElement.Value, interchangeContext);
+
+                // Parse each repetition
+                foreach (var elementRepetition in elementRepetitions)
+                {
+                    result.ParseElement(elementGrammar, elementRepetition, interchangeContext);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Parses a data element
+        /// </summary>
+        /// <param name="parseTree">The data element grammar.</param>
+        /// <param name="value">The data element line.</param>
+        /// <param name="interchangeContext"></param>
+        /// <returns>The parsed XML.</returns>
+        private static void ParseElement(this ParseTree segment, ParseTree parseTree, string value, InterchangeContext interchangeContext)
+        {
+            if (value == null) throw new ArgumentNullException("value");
+            if (parseTree.Prefix != EdiPrefix.C && parseTree.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
+
+            if (parseTree.Prefix == EdiPrefix.C)
+            {
+                var result = segment.AddChild(parseTree.Type);
+
+                if (value == string.Empty)
+                {
+                    // Only deal with blank values for envelope headers
+                    if (parseTree.IsEnvelope)
+                    {
+                        foreach (var dataElement in parseTree.Children)
+                        {
+                            result.AddChild(dataElement.Type, dataElement.Name, String.Empty);                            
+                        }
+                    }
+                }
+                else
+                {
+                    // Get the simple data elements
+                    var componentDataElements =
+                        EdiHelper.GetEdiComponentDataElements(value, interchangeContext).ToList();
+
+                    // Index the composite data elements from the class definition
+                    var indexedGrammar =
+                        parseTree.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+                    // Index the composite data elements from the EDI string
+                    var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
+
+                    // This will try to parse the EDI string into the class definition
+                    // Load a parse tree against each value
+                    // If there are more values in the EDI string than in the class definition - they will be ignored
+                    // If there are less values in the EDI string than in the class definition - it will throw an exception
+                    var indexedList = from ig in indexedGrammar
+                                      from iv in indexedValues
+                                      where ig.Position == iv.Position
+                                      select new { ig.Position, iv.Value };
+
+                    // Index the list so we can position each element
+                    //var indexed = componentDataElements.Select((a, i) => new {Item = a, Position = i}).ToList();
+
+                    foreach (var dataElement in indexedList)
+                    {
+                        // Skip blank data elements otherwise this will produce blank XML nodes
+                        if (string.IsNullOrEmpty(dataElement.Value))
+                        {
+                            if (!parseTree.IsEnvelope)
+                                continue;
+                        }
+
+                        // Handle the repetitions
+                        // If the children the EDI string are more than the class definition,
+                        // Then the extra ones are considered repetitions of the last child in the class definition
+                        var objectToParse = dataElement.Position >= parseTree.Children.Count
+                                                ? parseTree.Children.Last()
+                                                : parseTree.Children.ElementAt(dataElement.Position);
+
+                        result.AddChild(objectToParse.Type, objectToParse.Name, dataElement.Value); 
+                    }
+                }
+            }
+            else
+            {
+                // Prevent faulty XML
+                segment.AddChild(parseTree.Type, parseTree.Name, value);
+                //result = new ParseTree(parseTree.Type, parseTree.Name, value); 
+                //result.SetValue(SecurityElement.Escape(value) ?? string.Empty);
+            }
+        }
+
+        public static object ToInstance(this ParseTree parseTree)
+        {
+            var result = Activator.CreateInstance(parseTree.Type);
+            var nodes =
+                new Stack<Tuple<ParseTree, object>>(new[] { Tuple.Create(parseTree, result) });
+            
+            while (nodes.Any())
+            {
+                var node = nodes.Pop();
+
+                foreach (var n in node.Item1.Children)
+                {                    
+                    var prop = node.Item1.Type.GetProperty(n.Name);
+                    if (n.Prefix == EdiPrefix.D)
+                    {
+                        //prop.SetValue(node.Item2, n.Value, null);
+                    }
+                    else
+                    {
+                        if (typeof(IList).IsAssignableFrom(prop.PropertyType) && prop.PropertyType.IsGenericType)
+                        {
+                            var b = prop.GetValue(node.Item2);
+
+                            IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(n.Type));
+                            prop.SetValue(node.Item2, list, null);
+
+                            object obj = Activator.CreateInstance(n.Type);
+                            list.Add(obj);
+
+                            nodes.Push(new Tuple<ParseTree, object>(n, obj));
+                        }
+                        else
+                        {
+                            var child = Activator.CreateInstance(prop.PropertyType);
+                            prop.SetValue(node.Item2, child, null);
+                            nodes.Push(new Tuple<ParseTree, object>(n, child));
+                        }
+                        
+                    }                    
+                }
+            }
+
+            return result;
         }
     }
 }

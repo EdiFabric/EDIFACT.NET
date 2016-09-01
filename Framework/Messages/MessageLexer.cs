@@ -42,6 +42,8 @@ namespace EdiFabric.Framework.Messages
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 
+            var newTree = new ParseTree(messageContext.SystemType);
+
             // Create the XML root of the parsed EDI
             var ediXml = messageGrammar.ToXml(interchangeContext);
             // Set the position in the XML
@@ -93,6 +95,7 @@ namespace EdiFabric.Framework.Messages
                     // The new chunk will be attached to this intersection point.
                     lastXElement =
                         lastXElement.AncestorsAndSelf().Last(xe => xe.Name.LocalName == segmentTree.First().Parent.Name);
+                    newTree = newTree.GetParentsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
 
                     // Attach each bit
                     foreach (var parseTree in segmentTree)
@@ -106,6 +109,14 @@ namespace EdiFabric.Framework.Messages
                         lastXElement.Add(element);
                         // Set the last attached as the attachment point as we iterate from the top parent to the bottom segment
                         lastXElement = element;
+
+                        newTree = newTree.AddChild(parseTree.Type);
+                        if (parseTree.Prefix == EdiPrefix.S)
+                        {
+                            newTree.Parse(segment, interchangeContext);
+                        }
+                       
+                        
                     }
 
                     // Reset the position in the grammar
@@ -117,7 +128,11 @@ namespace EdiFabric.Framework.Messages
                 }
             }
 
+            var b = newTree.Parent.ToInstance();
+
             return new Message(ediXml, messageContext);
         } 
+
+        
     }
 }

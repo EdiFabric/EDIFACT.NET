@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -46,6 +45,9 @@ namespace EdiFabric.Framework.Messages
             get { return _secondChildValues.AsReadOnly(); }
         }
 
+        private readonly string _value;
+        public string Value { get { return _value; } }
+
         public bool IsEnvelope { get; private set; }
         public bool IsTrigger
         {
@@ -55,6 +57,13 @@ namespace EdiFabric.Framework.Messages
         public int IndexOfChild(ParseTree child)
         {
             return _children.IndexOf(child);
+        }
+
+        public ParseTree AddChild(Type type, string name = null, string value = null)
+        {
+            var node = new ParseTree(type, name, value) { Parent = this };
+            _children.Add(node);
+            return node;
         }
         
         public ParseTree(Type type, bool lazyLoadSegment) : this(type)
@@ -84,7 +93,11 @@ namespace EdiFabric.Framework.Messages
 
                 foreach (var propertyInfo in properties)
                 {
-                    var childParseTree = new ParseTree(propertyInfo, currentNode);
+                    var childParseTree = new ParseTree(propertyInfo.GetSystemType(),
+                        propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : null)
+                    {
+                        Parent = currentNode
+                    };
                     currentNode._children.Add(childParseTree);
                     
                     stack.Push(childParseTree);
@@ -92,15 +105,7 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        private ParseTree(PropertyInfo propertyInfo, ParseTree parent)
-            : this(
-                propertyInfo.GetSystemType(),
-                propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : null)
-        {
-            Parent = parent;
-        }
-
-        private ParseTree(Type type, string name = null)
+        public ParseTree(Type type, string name = null, string value = null)
         {
             if (type == null) throw new ArgumentNullException("type");
 
@@ -112,6 +117,7 @@ namespace EdiFabric.Framework.Messages
             EdiName = splitName[1];
             Prefix = (EdiPrefix) Enum.Parse(typeof (EdiPrefix), splitName[0]);
             _children = new List<ParseTree>();
+            _value = value;
         }
     }
 }
