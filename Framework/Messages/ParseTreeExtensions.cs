@@ -337,6 +337,8 @@ namespace EdiFabric.Framework.Messages
             var result = Activator.CreateInstance(parseTree.Type);
             var nodes =
                 new Stack<Tuple<ParseTree, object>>(new[] { Tuple.Create(parseTree, result) });
+
+            var listTypes = new Dictionary<string, IList>();
             
             while (nodes.Any())
             {
@@ -347,17 +349,43 @@ namespace EdiFabric.Framework.Messages
                     var prop = node.Item1.Type.GetProperty(n.Name);
                     if (n.Prefix == EdiPrefix.D)
                     {
-                        //prop.SetValue(node.Item2, n.Value, null);
+                        if (prop.PropertyType.IsEnum)
+                        {
+                            var val = n.Value;
+                            if (n.Value.Length > 0 && char.IsDigit(n.Value[0]))
+                            {
+                                val = string.Format("Item{0}", n.Value);
+
+                                var propS = node.Item1.Type.GetProperty(n.Name + "Specified");
+                            }
+                            prop.SetValue(node.Item2, Enum.Parse(prop.PropertyType, val), null);
+
+                            
+                        }
+                        else
+                        {
+                            prop.SetValue(node.Item2, n.Value, null);
+                        }
+                        
                     }
                     else
                     {
                         if (typeof(IList).IsAssignableFrom(prop.PropertyType) && prop.PropertyType.IsGenericType)
                         {
-                            var b = prop.GetValue(node.Item2);
-
-                            IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(n.Type));
-                            prop.SetValue(node.Item2, list, null);
-
+                            IList list;
+                            var id = n.Id;
+                            if (listTypes.ContainsKey(id))
+                            {
+                                list = listTypes[id];
+                            }
+                            else
+                            {
+                                list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(n.Type));
+                                prop.SetValue(node.Item2, list, null);
+                                
+                                listTypes.Add(id, list);
+                            }
+                            
                             object obj = Activator.CreateInstance(n.Type);
                             list.Add(obj);
 

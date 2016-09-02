@@ -796,9 +796,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public X12_ID_1138 D_SBR01_PayerResponsibilitySequenceNumberCode {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1069 D_SBR02_IndividualRelationshipCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_SBR02_IndividualRelationshipCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_SBR03_SubscriberGrouporPolicyNumber {get; set;}
     [XmlElement(Order=3)]
@@ -844,14 +841,8 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_PAT_PatientInformation {
     [XmlElement(Order=0)]
     public X12_ID_1069_2 D_PAT01_IndividualRelationshipCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_PAT01_IndividualRelationshipCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1384 D_PAT02_PatientLocationCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=3)]
-    public bool D_PAT02_PatientLocationCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_PAT03_EmploymentStatusCode {get; set;}
     [XmlElement(Order=3)]
@@ -2740,9 +2731,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_K302_RecordFormatCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure C_C001_CompositeUnitofMeasure {get; set;}
     }
@@ -2817,9 +2805,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CR1_AmbulanceTransportInformation {
     [XmlElement(Order=0)]
     public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitorBasisforMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -4808,14 +4793,8 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_OI_OtherInsuranceCoverageInformation {
     [XmlElement(Order=0)]
     public X12_ID_1032_2 D_OI01_ClaimFilingIndicatorCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_OI01_ClaimFilingIndicatorCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1383 D_OI02_ClaimSubmissionReasonCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=3)]
-    public bool D_OI02_ClaimSubmissionReasonCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_OI03_BenefitsAssignmentCertificationIndicator {get; set;}
     [XmlElement(Order=3)]
@@ -6067,9 +6046,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CR1_AmbulanceTransportInformation_2 {
     [XmlElement(Order=0)]
     public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitorBasisforMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -6971,9 +6947,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_K302_RecordFormatCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_5 C_C001_CompositeUnitofMeasure_5 {get; set;}
     }
@@ -7229,14 +7202,8 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CTP_DrugQuantity {
     [XmlElement(Order=0)]
     public X12_ID_687 D_CTP01_ClassofTradeCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CTP01_ClassofTradeCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_236 D_CTP02_PriceIdentifierCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=3)]
-    public bool D_CTP02_PriceIdentifierCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_CTP03_UnitPrice {get; set;}
     [XmlElement(Order=3)]
@@ -8413,9 +8380,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_FRM01_QuestionNumber_Letter {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1073_4 D_FRM02_QuestionResponse {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_FRM02_QuestionResponseSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_FRM03_QuestionResponse {get; set;}
     [XmlElement(Order=3)]
@@ -8465,9 +8429,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public X12_ID_1069_4 D_PAT01_IndividualRelationshipCode {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1384 D_PAT02_PatientLocationCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_PAT02_PatientLocationCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_PAT03_EmploymentStatusCode {get; set;}
     [XmlElement(Order=3)]
@@ -9569,9 +9530,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_K302_RecordFormatCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_7 C_C001_CompositeUnitofMeasure_7 {get; set;}
     }
@@ -9625,9 +9583,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CR1_AmbulanceTransportInformation_3 {
     [XmlElement(Order=0)]
     public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitorBasisforMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -11371,14 +11326,8 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_OI_OtherInsuranceCoverageInformation_2 {
     [XmlElement(Order=0)]
     public X12_ID_1032_2 D_OI01_ClaimFilingIndicatorCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_OI01_ClaimFilingIndicatorCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1383 D_OI02_ClaimSubmissionReasonCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=3)]
-    public bool D_OI02_ClaimSubmissionReasonCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_OI03_BenefitsAssignmentCertificationIndicator {get; set;}
     [XmlElement(Order=3)]
@@ -12384,9 +12333,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CR1_AmbulanceTransportInformation_4 {
     [XmlElement(Order=0)]
     public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitorBasisforMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -13142,9 +13088,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_K302_RecordFormatCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_11 C_C001_CompositeUnitofMeasure_11 {get; set;}
     }
@@ -13340,14 +13283,8 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public class S_CTP_DrugQuantity_2 {
     [XmlElement(Order=0)]
     public X12_ID_687 D_CTP01_ClassofTradeCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CTP01_ClassofTradeCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_236 D_CTP02_PriceIdentifierCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=3)]
-    public bool D_CTP02_PriceIdentifierCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_CTP03_UnitPrice {get; set;}
     [XmlElement(Order=3)]
@@ -14258,9 +14195,6 @@ namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
     public string D_FRM01_QuestionNumber_Letter {get; set;}
     [XmlElement(Order=1)]
     public X12_ID_1073_4 D_FRM02_QuestionResponse {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_FRM02_QuestionResponseSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_FRM03_QuestionResponse {get; set;}
     [XmlElement(Order=3)]

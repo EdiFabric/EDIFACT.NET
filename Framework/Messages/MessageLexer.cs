@@ -119,6 +119,17 @@ namespace EdiFabric.Framework.Messages
                         
                     }
 
+                    //foreach (var parseTree in segmentTree.Reverse())
+                    //{
+                    //    newTree = newTree.AddChild(parseTree.Type);
+                    //    if (parseTree.Prefix == EdiPrefix.S)
+                    //    {
+                    //        newTree.Parse(segment, interchangeContext);
+                    //    }
+
+
+                    //}
+
                     // Reset the position in the grammar
                     lastSegment = currSeg;
                 }
@@ -129,8 +140,15 @@ namespace EdiFabric.Framework.Messages
             }
 
             var b = newTree.Parent.ToInstance();
+            var f = EdiHelper.Serialize(b);
 
-            return new Message(ediXml, messageContext);
+            var msg = new Message(b);
+            var de = msg.Validate();
+
+            var df = new Message(ediXml, messageContext);
+            var ded = df.Validate();
+
+            return df;
         } 
 
         

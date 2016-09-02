@@ -275,6 +275,10 @@ namespace EdiFabric.Tests
 
             // ACT
             var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
+
+            var b = interchange.Groups[0].Messages[0].DeserializeItem<Definitions.Hipaa_005010_837_X222.M_837>();
+            var t = TestHelper.Serialize(b, TargetNamespaceX12);
+            
             var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceX12);
 
             // ASSERT

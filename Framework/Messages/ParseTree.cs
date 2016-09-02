@@ -54,6 +54,25 @@ namespace EdiFabric.Framework.Messages
             get { return Parent != null && Parent.Prefix == EdiPrefix.G && Parent.IndexOfChild(this) == 0; }
         }
 
+        public string Id
+        {
+            get
+            {
+                var b = this.GetParents(p => p.Parent != null).Reverse().ToList();
+
+                var d = "";
+                foreach (var c in b)
+                {
+                    d = d + c.Name;
+                    if (c.Parent != null)
+                    d = d + c.Parent.IndexOfChild(c).ToString();
+                }
+                d = d + Name;
+                
+                return d;
+            }
+        }
+
         public int IndexOfChild(ParseTree child)
         {
             return _children.IndexOf(child);
