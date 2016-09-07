@@ -19,78 +19,76 @@ namespace EdiFabric.Framework.Messages
     /// This class represents the formal grammar as imported from the definitions class. 
     /// It is a lightweight parent\child relationship structure and is used to define the hierarchy of the EDI as outlined in the standard. 
     /// </summary>
-    class ParseTree 
+    class ParseNode 
     {
         public Type Type { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
         public EdiPrefix Prefix { get; private set; }
-        public ParseTree Parent { get; private set; }
+        public ParseNode Parent { get; private set; }
+        public string Value { get; private set; }
+        public bool IsEnvelope { get; private set; }
 
-        private readonly List<ParseTree> _children;
-        public IReadOnlyCollection<ParseTree> Children
+        private readonly List<ParseNode> _children = new List<ParseNode>();
+        public IReadOnlyCollection<ParseNode> Children
         {
             get { return _children.AsReadOnly(); }
         }
         
-        private List<string> _firstChildValues;
+        private List<string> _firstChildValues = new List<string>();
         public IReadOnlyCollection<string> FirstChildValues
         {
             get { return _firstChildValues.AsReadOnly(); }
         }
 
-        private List<string> _secondChildValues;
+        private List<string> _secondChildValues = new List<string>();
         public IReadOnlyCollection<string> SecondChildValues
         {
             get { return _secondChildValues.AsReadOnly(); }
         }
-
-        private readonly string _value;
-        public string Value { get { return _value; } }
-
-        public bool IsEnvelope { get; private set; }
+        
         public bool IsTrigger
         {
-            get { return Parent != null && Parent.Prefix == EdiPrefix.G && Parent.IndexOfChild(this) == 0; }
+            get { return Parent != null && Parent.Prefix == EdiPrefix.G && IndexInParent() == 0; }
         }
 
-        public string Id
+        public string Path
         {
             get
             {
-                var b = this.GetParents(p => p.Parent != null).Reverse().ToList();
-
-                var d = "";
-                foreach (var c in b)
-                {
-                    d = d + c.Name;
-                    if (c.Parent != null)
-                    d = d + c.Parent.IndexOfChild(c).ToString();
-                }
-                d = d + Name;
-                
-                return d;
+                return this.AncestorsAndSelf()
+                    .Aggregate("", (current, node) => current + node.Name + node.IndexInParent());
             }
         }
 
-        public int IndexOfChild(ParseTree child)
+        public int IndexOfChild(ParseNode child)
         {
             return _children.IndexOf(child);
         }
 
-        public ParseTree AddChild(Type type, string name = null, string value = null)
+        public int IndexInParent()
         {
-            var node = new ParseTree(type, name, value) { Parent = this };
+            return Parent != null ? Parent.IndexOfChild(this) : -1;
+        }
+
+        public ParseNode AddChild(Type type, string name, string value = null)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+
+            var node = new ParseNode(type, name, this, value);
             _children.Add(node);
             return node;
         }
         
-        public ParseTree(Type type, bool lazyLoadSegment) : this(type)
+        public static ParseNode FromType(Type type, bool lazyLoadSegment) 
         {
             if (type == null) throw new ArgumentNullException("type");
 
-            var stack = new Stack<ParseTree>();
-            stack.Push(this);
+            var root = new ParseNode(type);
+
+            var stack = new Stack<ParseNode>();
+            stack.Push(root);
 
             while (stack.Any())
             {
@@ -112,31 +110,39 @@ namespace EdiFabric.Framework.Messages
 
                 foreach (var propertyInfo in properties)
                 {
-                    var childParseTree = new ParseTree(propertyInfo.GetSystemType(),
-                        propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : null)
-                    {
-                        Parent = currentNode
-                    };
-                    currentNode._children.Add(childParseTree);
-                    
+                    var systemType = propertyInfo.GetSystemType();
+                    var name = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : systemType.Name;
+
+                    var childParseTree = currentNode.AddChild(systemType, name);                   
                     stack.Push(childParseTree);
                 }
             }
+
+            return root;
         }
 
-        public ParseTree(Type type, string name = null, string value = null)
+        public ParseNode(Type type, ParseNode parent = null, string value = null) : this(type, type.Name, parent, value)
+        {
+        }
+
+        private ParseNode(Type type, string name, ParseNode parent = null, string value = null)
         {
             if (type == null) throw new ArgumentNullException("type");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
 
-            Type = type;
-            IsEnvelope = Type.FullName.Contains("EdiFabric.Framework.Envelopes");
-            Name = string.IsNullOrEmpty(name) ? Type.Name : name;
+            Type = type;            
+            Name = name;
+            Parent = parent;
+            Value = value;
             var splitName = Name.Split('_');
-            if(splitName.Length < 2) throw new ParserException(string.Format("Invalid node name: {0}", Name));
+            if (splitName.Length < 2) 
+                throw new ParserException(string.Format("Invalid node name: {0}", Name));
+            EdiPrefix prefix;
+            if (!Enum.TryParse(splitName[0], out prefix))
+                throw new ParserException(string.Format("Can't derive node prefix from: {0}", splitName[0]));
+            Prefix = prefix;
             EdiName = splitName[1];
-            Prefix = (EdiPrefix) Enum.Parse(typeof (EdiPrefix), splitName[0]);
-            _children = new List<ParseTree>();
-            _value = value;
+            IsEnvelope = Type.FullName.Contains("EdiFabric.Framework.Envelopes");           
         }
     }
 }

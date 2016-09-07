@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using EdiFabric.Framework.Envelopes;
 using EdiFabric.Framework.Messages.Segments;
@@ -11,7 +10,7 @@ namespace EdiFabric.Framework.Messages
 {
     static class ParseTreeExtensions
     {
-        public static int GetIndexOfImmediateChild(this ParseTree node, IList<ParseTree> parents)
+        private static int IndexOfImmediateChild(this ParseNode node, IList<ParseNode> parents)
         {
             var index = parents.IndexOf(node);
             if(index == -1)
@@ -23,20 +22,20 @@ namespace EdiFabric.Framework.Messages
             return node.IndexOfChild(next);
         }
 
-        public static IEnumerable<ParseTree> GetChildrenWithExclusion(this ParseTree node, IList<ParseTree> exclusion)
+        private static IEnumerable<ParseNode> ChildrenWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
         {
             if (exclusion.Contains(node))
             {
-                var index = node.GetIndexOfImmediateChild(exclusion);
+                var index = node.IndexOfImmediateChild(exclusion);
                 return node.Children.Where(c => c.Parent.IndexOfChild(c) >= index);
             }
 
-            return new List<ParseTree>();
+            return new List<ParseNode>();
         }
 
-        public static IEnumerable<ParseTree> GetNeighboursWithExclusion(this ParseTree node, IList<ParseTree> exclusion)
+        private static IEnumerable<ParseNode> NeighboursWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
         {
-            var result = new List<ParseTree>();
+            var result = new List<ParseNode>();
 
             switch (node.Prefix)
             {
@@ -44,17 +43,17 @@ namespace EdiFabric.Framework.Messages
                     result.Add(node.Parent);
                     return result;
                 case EdiPrefix.G:
-                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    result.AddRange(node.ChildrenWithExclusion(exclusion));
                     result.Add(node.Children.First());
                     result.Add(node.Parent);
                     return result;
                 case EdiPrefix.M:
-                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    result.AddRange(node.ChildrenWithExclusion(exclusion));
                     if(!result.Any())
                         result.AddRange(node.Children);
                     return result;
                 case EdiPrefix.U:
-                    result.AddRange(node.GetChildrenWithExclusion(exclusion));
+                    result.AddRange(node.ChildrenWithExclusion(exclusion));
                     if (!result.Any())
                         result.AddRange(node.Children);
                     result.Add(node.Parent);
@@ -68,11 +67,11 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        public static IEnumerable<ParseTree> TraverseSegmentsDepthFirst(this ParseTree startNode)
+        public static IEnumerable<ParseNode> TraverseSegmentsDepthFirst(this ParseNode startNode)
         {
-            var visited = new HashSet<ParseTree>();
-            var stack = new Stack<ParseTree>();
-            var parents = startNode.GetParentsAndSelf();
+            var visited = new HashSet<ParseNode>();
+            var stack = new Stack<ParseNode>();
+            var parents = startNode.AncestorsAndSelf();
             
             stack.Push(startNode);
 
@@ -86,43 +85,45 @@ namespace EdiFabric.Framework.Messages
                 if (current.Prefix == EdiPrefix.S)
                     yield return current;
 
-                var neighbours = current.GetNeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
+                var neighbours = current.NeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
 
                 foreach (var neighbour in neighbours.Reverse())
                     stack.Push(neighbour);                
             }
         }
 
-        public static IEnumerable<ParseTree> GetParents(this ParseTree node, Func<ParseTree, bool> shouldContinue)
+        public static IEnumerable<ParseNode> Ancestors(this ParseNode node)
         {
-            var stack = new Stack<ParseTree>();
-            if (node.Parent == null) yield break;
+            var stack = new Stack<ParseNode>();
+            if (node.Parent == null) 
+                yield break;
+            
             stack.Push(node.Parent);
             while (stack.Count != 0)
             {
                 var item = stack.Pop();
                 yield return item;
-                if (shouldContinue(item))
+                
+                if (item.Parent != null)
                     stack.Push(item.Parent);
             }
         }
 
-        public static IList<ParseTree> GetParentsAndSelf(this ParseTree node)
+        public static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
         {
-            var result = node.GetParents(p => p.Parent != null).Reverse().ToList();
- 
+            var result = node.Ancestors().Reverse().ToList(); 
             result.Add(node);
 
             return result;
         }
 
-        public static IEnumerable<ParseTree> GetParentsToIntersection(this ParseTree segment, ParseTree lastFoundSegment)
+        public static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
         {
             if (segment.Prefix != EdiPrefix.S)
                 throw new ParserException("Not a segment " + segment.Name);
 
-            var lastParents = lastFoundSegment.GetParents(s => s.Parent != null);
-            var parents = segment.GetParents(s => s.Parent != null).ToList();
+            var lastParents = lastFoundSegment.Ancestors();
+            var parents = segment.Ancestors().ToList();
             var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
             var result = parents.TakeWhile(parent => parent.Name != intersect.First()).Reverse().ToList();
 
@@ -138,40 +139,40 @@ namespace EdiFabric.Framework.Messages
         /// Convert a parse tree to a root XML node.
         /// Without the hierarchy, only the name.
         /// </summary>
-        /// <param name="parseTree">The parse tree.</param>
+        /// <param name="parseNode">The parse tree.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>A XML node.</returns>
-        public static XElement ToXml(this ParseTree parseTree, InterchangeContext interchangeContext)
+        public static XElement ToXml(this ParseNode parseNode, InterchangeContext interchangeContext)
         {
             XNamespace ns = interchangeContext.TargetNamespace;
-            return new XElement(ns + parseTree.Name);
+            return new XElement(ns + parseNode.Name);
         }
 
         /// <summary>
         /// Compare a parse tree to identity.
         /// </summary>
-        /// <param name="parseTree">The parse tree.</param>
+        /// <param name="parseNode">The parse tree.</param>
         /// <param name="segmentContext">The identity.</param>
         /// <returns>If equal</returns>
-        public static bool IsSameSegment(this ParseTree parseTree, SegmentContext segmentContext)
+        public static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
         {
-            if(parseTree.Prefix != EdiPrefix.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseTree.Name));
+            if(parseNode.Prefix != EdiPrefix.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
 
             // The names must match
-            if (parseTree.EdiName == segmentContext.Name)
+            if (parseNode.EdiName == segmentContext.Name)
             {
                 // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !parseTree.FirstChildValues.Any())
+                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !parseNode.FirstChildValues.Any())
                     return true;
 
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
-                if (parseTree.FirstChildValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
-                    parseTree.FirstChildValues.Contains(segmentContext.FirstValue))
+                if (parseNode.FirstChildValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
+                    parseNode.FirstChildValues.Contains(segmentContext.FirstValue))
                 {
-                    if (parseTree.SecondChildValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
+                    if (parseNode.SecondChildValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
                     {
-                        return parseTree.SecondChildValues.Contains(segmentContext.SecondValue);
+                        return parseNode.SecondChildValues.Contains(segmentContext.SecondValue);
                     }
 
                     return true;
@@ -184,26 +185,27 @@ namespace EdiFabric.Framework.Messages
         /// <summary>
         /// Gets all the descendants up to the root including the current.
         /// </summary>
-        /// <param name="parseTree">The parse tree.</param>
+        /// <param name="parseNode">The parse tree.</param>
         /// <returns>
         /// The list of descendants.
         /// </returns>
-        public static IEnumerable<ParseTree> Descendants(this ParseTree parseTree)
+        public static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
         {
-            var nodes = new Stack<ParseTree>(new[] { parseTree });
+            var nodes = new Stack<ParseNode>(new[] { parseNode });
             while (nodes.Any())
             {
                 var node = nodes.Pop();
                 yield return node;
-                foreach (var n in node.Children) nodes.Push(n);
+                foreach (var n in node.Children) 
+                    nodes.Push(n);
             }
         }
 
-        public static void Parse(this ParseTree result, string line, InterchangeContext interchangeContext)
+        public static void Parse(this ParseNode result, string line, InterchangeContext interchangeContext)
         {
             if (result.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
 
-            ParseTree grammar = new ParseTree(result.Type, false);
+            ParseNode grammar = ParseNode.FromType(result.Type, false);
 
             // Gets the composite data elements from the segment string
             var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext).ToList();
@@ -255,25 +257,25 @@ namespace EdiFabric.Framework.Messages
         /// <summary>
         /// Parses a data element
         /// </summary>
-        /// <param name="parseTree">The data element grammar.</param>
+        /// <param name="parseNode">The data element grammar.</param>
         /// <param name="value">The data element line.</param>
         /// <param name="interchangeContext"></param>
         /// <returns>The parsed XML.</returns>
-        private static void ParseElement(this ParseTree segment, ParseTree parseTree, string value, InterchangeContext interchangeContext)
+        private static void ParseElement(this ParseNode segment, ParseNode parseNode, string value, InterchangeContext interchangeContext)
         {
             if (value == null) throw new ArgumentNullException("value");
-            if (parseTree.Prefix != EdiPrefix.C && parseTree.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
+            if (parseNode.Prefix != EdiPrefix.C && parseNode.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
 
-            if (parseTree.Prefix == EdiPrefix.C)
+            if (parseNode.Prefix == EdiPrefix.C)
             {
-                var result = segment.AddChild(parseTree.Type);
+                var result = segment.AddChild(parseNode.Type, parseNode.Type.Name, null);
 
                 if (value == string.Empty)
                 {
                     // Only deal with blank values for envelope headers
-                    if (parseTree.IsEnvelope)
+                    if (parseNode.IsEnvelope)
                     {
-                        foreach (var dataElement in parseTree.Children)
+                        foreach (var dataElement in parseNode.Children)
                         {
                             result.AddChild(dataElement.Type, dataElement.Name, String.Empty);                            
                         }
@@ -287,7 +289,7 @@ namespace EdiFabric.Framework.Messages
 
                     // Index the composite data elements from the class definition
                     var indexedGrammar =
-                        parseTree.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+                        parseNode.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
                     // Index the composite data elements from the EDI string
                     var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
 
@@ -308,16 +310,16 @@ namespace EdiFabric.Framework.Messages
                         // Skip blank data elements otherwise this will produce blank XML nodes
                         if (string.IsNullOrEmpty(dataElement.Value))
                         {
-                            if (!parseTree.IsEnvelope)
+                            if (!parseNode.IsEnvelope)
                                 continue;
                         }
 
                         // Handle the repetitions
                         // If the children the EDI string are more than the class definition,
                         // Then the extra ones are considered repetitions of the last child in the class definition
-                        var objectToParse = dataElement.Position >= parseTree.Children.Count
-                                                ? parseTree.Children.Last()
-                                                : parseTree.Children.ElementAt(dataElement.Position);
+                        var objectToParse = dataElement.Position >= parseNode.Children.Count
+                                                ? parseNode.Children.Last()
+                                                : parseNode.Children.ElementAt(dataElement.Position);
 
                         result.AddChild(objectToParse.Type, objectToParse.Name, dataElement.Value); 
                     }
@@ -326,17 +328,17 @@ namespace EdiFabric.Framework.Messages
             else
             {
                 // Prevent faulty XML
-                segment.AddChild(parseTree.Type, parseTree.Name, value);
+                segment.AddChild(parseNode.Type, parseNode.Name, value);
                 //result = new ParseTree(parseTree.Type, parseTree.Name, value); 
                 //result.SetValue(SecurityElement.Escape(value) ?? string.Empty);
             }
         }
 
-        public static object ToInstance(this ParseTree parseTree)
+        public static object ToInstance(this ParseNode parseNode)
         {
-            var result = Activator.CreateInstance(parseTree.Type);
+            var result = Activator.CreateInstance(parseNode.Type);
             var nodes =
-                new Stack<Tuple<ParseTree, object>>(new[] { Tuple.Create(parseTree, result) });
+                new Stack<Tuple<ParseNode, object>>(new[] { Tuple.Create(parseNode, result) });
 
             var listTypes = new Dictionary<string, IList>();
             
@@ -373,7 +375,7 @@ namespace EdiFabric.Framework.Messages
                         if (typeof(IList).IsAssignableFrom(prop.PropertyType) && prop.PropertyType.IsGenericType)
                         {
                             IList list;
-                            var id = n.Id;
+                            var id = n.Parent.Path + n.Name;
                             if (listTypes.ContainsKey(id))
                             {
                                 list = listTypes[id];
@@ -389,13 +391,13 @@ namespace EdiFabric.Framework.Messages
                             object obj = Activator.CreateInstance(n.Type);
                             list.Add(obj);
 
-                            nodes.Push(new Tuple<ParseTree, object>(n, obj));
+                            nodes.Push(new Tuple<ParseNode, object>(n, obj));
                         }
                         else
                         {
                             var child = Activator.CreateInstance(prop.PropertyType);
                             prop.SetValue(node.Item2, child, null);
-                            nodes.Push(new Tuple<ParseTree, object>(n, child));
+                            nodes.Push(new Tuple<ParseNode, object>(n, child));
                         }
                         
                     }                    

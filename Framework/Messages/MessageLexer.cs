@@ -38,11 +38,11 @@ namespace EdiFabric.Framework.Messages
             // This will read through the grammar and will build an XML
 
             // Get the grammar from the context
-            var messageGrammar = new ParseTree(messageContext.SystemType, true);
+            var messageGrammar = ParseNode.FromType(messageContext.SystemType, true);
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 
-            var newTree = new ParseTree(messageContext.SystemType);
+            var newTree = new ParseNode(messageContext.SystemType);
 
             // Create the XML root of the parsed EDI
             var ediXml = messageGrammar.ToXml(interchangeContext);
@@ -90,12 +90,12 @@ namespace EdiFabric.Framework.Messages
                     // Build the segment hierarchy
                     // This will move to the required level up for the segment parents: groups, choices, all and loop of loops,
                     // until another group is reached.
-                    var segmentTree = currSeg.GetParentsToIntersection(lastSegment);
+                    var segmentTree = currSeg.AncestorsToIntersection(lastSegment);
                     // Intersect the grammar with the parsed XML.
                     // The new chunk will be attached to this intersection point.
                     lastXElement =
                         lastXElement.AncestorsAndSelf().Last(xe => xe.Name.LocalName == segmentTree.First().Parent.Name);
-                    newTree = newTree.GetParentsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
+                    newTree = newTree.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
 
                     // Attach each bit
                     foreach (var parseTree in segmentTree)
@@ -110,7 +110,7 @@ namespace EdiFabric.Framework.Messages
                         // Set the last attached as the attachment point as we iterate from the top parent to the bottom segment
                         lastXElement = element;
 
-                        newTree = newTree.AddChild(parseTree.Type);
+                        newTree = newTree.AddChild(parseTree.Type, parseTree.Type.Name, null);
                         if (parseTree.Prefix == EdiPrefix.S)
                         {
                             newTree.Parse(segment, interchangeContext);

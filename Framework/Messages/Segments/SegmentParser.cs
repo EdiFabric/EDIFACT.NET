@@ -39,7 +39,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(new ParseTree(systemType, false), line, interchangeContext);
+            return Parse(ParseNode.FromType(systemType, false), line, interchangeContext);
         }
 
         /// <summary>
@@ -49,13 +49,13 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <param name="line">The EDI line.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed XML.</returns>
-        public static XElement ParseLine(ParseTree grammar, string line, InterchangeContext interchangeContext)
+        public static XElement ParseLine(ParseNode grammar, string line, InterchangeContext interchangeContext)
         {
             if (grammar == null) throw new ArgumentNullException("grammar");
 
             if (!grammar.Children.Any())
             {
-                return Parse(new ParseTree(grammar.Type, false)
+                return Parse(ParseNode.FromType(grammar.Type, false)
                     , line, interchangeContext);
             }
 
@@ -79,7 +79,7 @@ namespace EdiFabric.Framework.Messages.Segments
             if (systemType == null)
                 throw new ParserException(string.Format("Can't find type."));
 
-            return Parse(xml, new ParseTree(systemType, false), interchangeContext);
+            return Parse(xml, ParseNode.FromType(systemType, false), interchangeContext);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace EdiFabric.Framework.Messages.Segments
         {
             // Find the grammar by system type
             return Parse(xml,
-                new ParseTree(FindType(systemType, xml.Name.LocalName), false),
+                ParseNode.FromType(FindType(systemType, xml.Name.LocalName), false),
                 interchangeContext);
         }
 
@@ -104,7 +104,7 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <param name="grammar">The segment grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed XML.</returns>
-        private static XElement Parse(ParseTree grammar, string line, InterchangeContext interchangeContext)
+        private static XElement Parse(ParseNode grammar, string line, InterchangeContext interchangeContext)
         {
             if (grammar.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
 
@@ -163,26 +163,26 @@ namespace EdiFabric.Framework.Messages.Segments
         /// <summary>
         /// Parses a data element
         /// </summary>
-        /// <param name="parseTree">The data element grammar.</param>
+        /// <param name="parseNode">The data element grammar.</param>
         /// <param name="value">The data element line.</param>
         /// <param name="interchangeContext"></param>
         /// <returns>The parsed XML.</returns>
-        private static XElement ParseElement(ParseTree parseTree, string value, InterchangeContext interchangeContext)
+        private static XElement ParseElement(ParseNode parseNode, string value, InterchangeContext interchangeContext)
         {
             if (value == null) throw new ArgumentNullException("value");
-            if (parseTree.Prefix != EdiPrefix.C && parseTree.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
+            if (parseNode.Prefix != EdiPrefix.C && parseNode.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
 
             XNamespace ns = interchangeContext.TargetNamespace;
-            var result = new XElement(ns + parseTree.Name);
+            var result = new XElement(ns + parseNode.Name);
 
-            if (parseTree.Prefix == EdiPrefix.C)
+            if (parseNode.Prefix == EdiPrefix.C)
             {
                 if (value == string.Empty)
                 {
                     // Only deal with blank values for envelope headers
-                    if (parseTree.IsEnvelope)
+                    if (parseNode.IsEnvelope)
                     {
-                        foreach (var dataElement in parseTree.Children)
+                        foreach (var dataElement in parseNode.Children)
                         {
                             var element = new XElement(ns + dataElement.Name);
                             element.SetValue(string.Empty);
@@ -198,7 +198,7 @@ namespace EdiFabric.Framework.Messages.Segments
 
                     // Index the composite data elements from the class definition
                     var indexedGrammar =
-                        parseTree.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
+                        parseNode.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
                     // Index the composite data elements from the EDI string
                     var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
 
@@ -219,16 +219,16 @@ namespace EdiFabric.Framework.Messages.Segments
                         // Skip blank data elements otherwise this will produce blank XML nodes
                         if (string.IsNullOrEmpty(dataElement.Value))
                         {
-                            if (!parseTree.IsEnvelope)
+                            if (!parseNode.IsEnvelope)
                                 continue;
                         }
 
                         // Handle the repetitions
                         // If the children the EDI string are more than the class definition,
                         // Then the extra ones are considered repetitions of the last child in the class definition
-                        var objectToParse = dataElement.Position >= parseTree.Children.Count
-                                                ? parseTree.Children.Last()
-                                                : parseTree.Children.ElementAt(dataElement.Position);
+                        var objectToParse = dataElement.Position >= parseNode.Children.Count
+                                                ? parseNode.Children.Last()
+                                                : parseNode.Children.ElementAt(dataElement.Position);
 
                         var element = new XElement(ns + objectToParse.Name);
                         // Set the value and escape to prevent faulty XML
@@ -250,19 +250,19 @@ namespace EdiFabric.Framework.Messages.Segments
         /// Parses segment XML
         /// </summary>
         /// <param name="segment">The segment XML.</param>
-        /// <param name="parseTree">The segment grammar.</param>
+        /// <param name="parseNode">The segment grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
-        private static string Parse(XElement segment, ParseTree parseTree, InterchangeContext interchangeContext)
+        private static string Parse(XElement segment, ParseNode parseNode, InterchangeContext interchangeContext)
         {
             // Start with the segment name
             // BHT+, etc.
-            var result = parseTree.EdiName + interchangeContext.DataElementSeparator;
+            var result = parseNode.EdiName + interchangeContext.DataElementSeparator;
 
             // For all elements in the parse tree - append to the segment name to build the EDI string
             // BHT+88, etc.
             // Parse according to the parse tree
-            foreach (var element in parseTree.Children)
+            foreach (var element in parseNode.Children)
             {
                 var currentElement = element;
                 // Find the matching elements by name
@@ -303,16 +303,16 @@ namespace EdiFabric.Framework.Messages.Segments
         /// Parses data element XML
         /// </summary>
         /// <param name="dataElement">The data element XML.</param>
-        /// <param name="parseTree">The data element grammar.</param>
+        /// <param name="parseNode">The data element grammar.</param>
         /// <param name="interchangeContext">The interchange context.</param>
         /// <returns>The parsed line.</returns>
-        private static string ParseElement(XElement dataElement, ParseTree parseTree, InterchangeContext interchangeContext)
+        private static string ParseElement(XElement dataElement, ParseNode parseNode, InterchangeContext interchangeContext)
         {
-            if (parseTree.Prefix == EdiPrefix.C)
+            if (parseNode.Prefix == EdiPrefix.C)
             {
                 var line = string.Empty;
                 // If complex data element, build a line from all the children in the parse tree
-                foreach (var element in parseTree.Children)
+                foreach (var element in parseNode.Children)
                 {
                     // Can be only one match
                     // If the XML contains data element that is not defined in the class, it will be skipped
