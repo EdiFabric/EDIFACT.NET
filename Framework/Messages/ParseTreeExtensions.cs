@@ -205,7 +205,7 @@ namespace EdiFabric.Framework.Messages
         {
             if (result.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
 
-            ParseNode grammar = ParseNode.FromType(result.Type, false);
+            ParseNode grammar = ParseNode.BuldTree(result.Type, false);
 
             // Gets the composite data elements from the segment string
             var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext).ToList();

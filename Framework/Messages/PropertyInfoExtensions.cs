@@ -36,7 +36,6 @@ namespace EdiFabric.Framework.Messages
         /// </returns>
         public static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
-            //var dictionary = new Dictionary<int, PropertyInfo>();
             var dictionary = new SortedDictionary<int, PropertyInfo>();
 
             // Iterate through each property
@@ -46,10 +45,12 @@ namespace EdiFabric.Framework.Messages
                 if (attributes.OfType<XmlIgnoreAttribute>().Any())
                     continue;
 
-                var elementAttributes = attributes.OfType<XmlElementAttribute>();
-                var order = elementAttributes.First().Order;
-                dictionary.Add(order, propertyInfo);
-            }
+                var elementAttribute = attributes.OfType<XmlElementAttribute>().FirstOrDefault();
+                if (elementAttribute != null)
+                {
+                    dictionary.Add(elementAttribute.Order, propertyInfo);
+                }
+            }               
 
             return dictionary.Select(v => v.Value).ToList();
         }
@@ -86,13 +87,24 @@ namespace EdiFabric.Framework.Messages
         /// <returns>The type.</returns>
         public static Type GetSystemType(this PropertyInfo propertyInfo)
         {
-            if (typeof(IList).IsAssignableFrom(propertyInfo.PropertyType)
-                && propertyInfo.PropertyType.IsGenericType)
+            if (propertyInfo.IsList())
             {
                 return propertyInfo.PropertyType.GetGenericArguments()[0];
             }
 
             return propertyInfo.PropertyType;
+        }
+
+        public static object GetSystemValue(this PropertyInfo propertyInfo, object instance)
+        {
+            if (propertyInfo.IsList())
+            {
+                var typeInstance = propertyInfo.GetValue(instance);
+                var item = propertyInfo.PropertyType.GetProperty("Item");
+                return item.GetValue(typeInstance);
+            }
+
+            return propertyInfo.GetValue(instance);
         }
 
         /// <summary>
@@ -102,7 +114,7 @@ namespace EdiFabric.Framework.Messages
         /// <returns></returns>
         public static List<string> GetProperyValues(this PropertyInfo propertyInfo)
         {
-            if (propertyInfo.PropertyType.IsGenericType)
+            if (propertyInfo.IsList())
                 return new List<string>();
 
             if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString())) 
@@ -110,6 +122,12 @@ namespace EdiFabric.Framework.Messages
             
             var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
             return complexProperties[0].GetProperyEnumValues().ToList();
+        }
+
+        public static bool IsList(this PropertyInfo propertyInfo)
+        {
+            return typeof (IList).IsAssignableFrom(propertyInfo.PropertyType)
+                   && propertyInfo.PropertyType.IsGenericType;
         }
     }
 }

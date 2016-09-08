@@ -10,15 +10,13 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EdiFabric.Framework.Messages
 {
-    /// <summary>
-    /// This class represents the formal grammar as imported from the definitions class. 
-    /// It is a lightweight parent\child relationship structure and is used to define the hierarchy of the EDI as outlined in the standard. 
-    /// </summary>
     class ParseNode 
     {
         public Type Type { get; private set; }
@@ -80,10 +78,34 @@ namespace EdiFabric.Framework.Messages
             _children.Add(node);
             return node;
         }
+
+        public ParseNode AddChild(PropertyInfo propertyInfo, object value = null)
+        {
+            if (propertyInfo == null) throw new ArgumentNullException("propertyInfo");
+
+            var systemType = propertyInfo.GetSystemType();
+            var name = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString())
+                ? propertyInfo.Name
+                : systemType.Name;
+            var val = value as string;
+
+            if (value != null && value.GetType().IsEnum)
+            {
+                val = value.ToString();
+                if (val.StartsWith("Item"))
+                {
+                    val = val.Substring(4);
+                }
+            }
+            
+            return AddChild(systemType, name, val);
+        }
         
-        public static ParseNode FromType(Type type, bool lazyLoadSegment) 
+        public static ParseNode BuldTree(Type type, bool lazyLoadSegment) 
         {
             if (type == null) throw new ArgumentNullException("type");
+            if (type.Name.StartsWith(EdiPrefix.D.ToString()))
+                throw new ParserException(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
 
@@ -94,10 +116,7 @@ namespace EdiFabric.Framework.Messages
             {
                 var currentNode = stack.Pop();
 
-                if (currentNode.Prefix == EdiPrefix.D) continue;
-                
                 var properties = currentNode.Type.GetProperties().Sort();
-
                 if (currentNode.Prefix == EdiPrefix.S)
                 {
                     if (properties.Count > 0)
@@ -110,12 +129,69 @@ namespace EdiFabric.Framework.Messages
 
                 foreach (var propertyInfo in properties)
                 {
-                    var systemType = propertyInfo.GetSystemType();
-                    var name = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString()) ? propertyInfo.Name : systemType.Name;
-
-                    var childParseTree = currentNode.AddChild(systemType, name);                   
+                    var childParseTree = currentNode.AddChild(propertyInfo);                   
                     stack.Push(childParseTree);
                 }
+            }
+
+            return root;
+        }
+
+        public static ParseNode BuldTree(object instance)
+        {
+            if (instance == null) throw new ArgumentNullException("instance");
+
+            var type = instance.GetType();
+            if (type.Name.StartsWith(EdiPrefix.D.ToString()))
+                throw new ParserException(string.Format("DataElement is not supported: {0}", type.Name));
+
+            var root = new ParseNode(type);
+            var instanceLinks = new Dictionary<string, object> {{root.Path, instance}};
+
+            var stack = new Stack<ParseNode>();
+            stack.Push(root);
+
+            while (stack.Any())
+            {
+                var currentNode = stack.Pop();
+
+                var path = currentNode.Path;
+                object currentInstance;
+                if (!instanceLinks.TryGetValue(path, out currentInstance))
+                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
+
+                var properties = currentNode.Type.GetProperties().Sort();
+                foreach (var propertyInfo in properties)
+                {
+                    if (propertyInfo.IsList())
+                    {
+                        var currentList = propertyInfo.GetValue(currentInstance) as IList;
+                        if (currentList == null) continue;
+
+                        foreach (var currentValue in currentList)
+                        {
+                            if (currentValue == null) continue;
+
+                            var currentProperty = propertyInfo.PropertyType.GetProperty("Item");
+                            var childParseTree = currentNode.AddChild(currentProperty, currentValue);
+                            stack.Push(childParseTree);
+
+                            instanceLinks.Add(childParseTree.Path, currentValue);
+                        }
+                    }
+                    else
+                    {
+                        var currentValue = propertyInfo.GetValue(currentInstance);
+                        if (currentValue == null) continue;
+
+                        var childParseTree = currentNode.AddChild(propertyInfo, currentValue);
+                        stack.Push(childParseTree);
+
+                        instanceLinks.Add(childParseTree.Path, currentValue);
+                    }
+                }
+
+                instanceLinks.Remove(path);
             }
 
             return root;
@@ -139,7 +215,7 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException(string.Format("Invalid node name: {0}", Name));
             EdiPrefix prefix;
             if (!Enum.TryParse(splitName[0], out prefix))
-                throw new ParserException(string.Format("Can't derive node prefix from: {0}", splitName[0]));
+                throw new ParserException(string.Format("Cannot derive node prefix from: {0}", splitName[0]));
             Prefix = prefix;
             EdiName = splitName[1];
             IsEnvelope = Type.FullName.Contains("EdiFabric.Framework.Envelopes");           

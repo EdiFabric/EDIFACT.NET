@@ -38,7 +38,7 @@ namespace EdiFabric.Framework.Messages
             // This will read through the grammar and will build an XML
 
             // Get the grammar from the context
-            var messageGrammar = ParseNode.FromType(messageContext.SystemType, true);
+            var messageGrammar = ParseNode.BuldTree(messageContext.SystemType, true);
             // Set the position in the grammar
             var lastSegment = messageGrammar.Children.First();
 
@@ -119,17 +119,6 @@ namespace EdiFabric.Framework.Messages
                         
                     }
 
-                    //foreach (var parseTree in segmentTree.Reverse())
-                    //{
-                    //    newTree = newTree.AddChild(parseTree.Type);
-                    //    if (parseTree.Prefix == EdiPrefix.S)
-                    //    {
-                    //        newTree.Parse(segment, interchangeContext);
-                    //    }
-
-
-                    //}
-
                     // Reset the position in the grammar
                     lastSegment = currSeg;
                 }
@@ -140,6 +129,7 @@ namespace EdiFabric.Framework.Messages
             }
 
             var b = newTree.Parent.ToInstance();
+            var e = ParseNode.BuldTree(b);
             var f = EdiHelper.Serialize(b);
 
             var msg = new Message(b);
