@@ -32,7 +32,7 @@ namespace EdiFabric.Framework.Messages
         {
             get { return _children.AsReadOnly(); }
         }
-        
+
         private List<string> _firstChildValues = new List<string>();
         public IReadOnlyCollection<string> FirstChildValues
         {
@@ -103,7 +103,7 @@ namespace EdiFabric.Framework.Messages
         {
             if (type == null) throw new ArgumentNullException("type");
             if (type.Name.StartsWith(EdiPrefix.D.ToString()))
-                throw new ParserException(string.Format("DataElement is not supported: {0}", type.Name));
+                throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
             var stack = new Stack<ParseNode>(new[] { root }); 
@@ -139,7 +139,7 @@ namespace EdiFabric.Framework.Messages
 
             var type = instance.GetType();
             if (type.Name.StartsWith(EdiPrefix.D.ToString()))
-                throw new ParserException(string.Format("DataElement is not supported: {0}", type.Name));
+                throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
             var instanceLinks = new Dictionary<string, object> {{root.Path, instance}};
@@ -206,10 +206,10 @@ namespace EdiFabric.Framework.Messages
             Value = value;
             var splitName = Name.Split('_');
             if (splitName.Length < 2) 
-                throw new ParserException(string.Format("Invalid node name: {0}", Name));
+                throw new Exception(string.Format("Invalid node name: {0}", Name));
             EdiPrefix prefix;
             if (!Enum.TryParse(splitName[0], out prefix))
-                throw new ParserException(string.Format("Cannot derive node prefix from: {0}", splitName[0]));
+                throw new Exception(string.Format("Cannot derive node prefix from: {0}", splitName[0]));
             Prefix = prefix;
             EdiName = splitName[1];
             IsEnvelope = Type.FullName.Contains("EdiFabric.Framework.Envelopes");           

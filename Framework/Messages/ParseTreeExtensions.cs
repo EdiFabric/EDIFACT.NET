@@ -148,12 +148,6 @@ namespace EdiFabric.Framework.Messages
             return new XElement(ns + parseNode.Name);
         }
 
-        /// <summary>
-        /// Compare a parse tree to identity.
-        /// </summary>
-        /// <param name="parseNode">The parse tree.</param>
-        /// <param name="segmentContext">The identity.</param>
-        /// <returns>If equal</returns>
         public static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
         {
             if(parseNode.Prefix != EdiPrefix.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
@@ -182,13 +176,6 @@ namespace EdiFabric.Framework.Messages
             return false;
         }
 
-        /// <summary>
-        /// Gets all the descendants up to the root including the current.
-        /// </summary>
-        /// <param name="parseNode">The parse tree.</param>
-        /// <returns>
-        /// The list of descendants.
-        /// </returns>
         public static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
         {
             var nodes = new Stack<ParseNode>(new[] { parseNode });
@@ -201,129 +188,41 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        public static void Parse(this ParseNode result, string line, InterchangeContext interchangeContext)
+        public static void Parse(this ParseNode parseNode, string line, InterchangeContext interchangeContext)
         {
-            if (result.Prefix != EdiPrefix.S) throw new Exception("Not a segment.");
+            if (parseNode.Prefix != EdiPrefix.S)
+                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
+            if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
 
-            ParseNode grammar = ParseNode.BuldTree(result.Type, false);
-
-            // Gets the composite data elements from the segment string
-            var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext).ToList();
-
-            // Index the composite data elements from the class definition
-            var indexedGrammar = grammar.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
-            // Index the composite data elements from the EDI string
-            var indexedValues = dataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
-
-            // This will try to parse the EDI string into the class definition
-            // Load a parse tree against each value
-            // If there are more values in the EDI string than in the class definition - they will be ignored
-            // If there are less values in the EDI string than in the class definition - it will throw an exception
-            var indexedList = from ig in indexedGrammar
-                              from iv in indexedValues
-                              where ig.Position == iv.Position
-                              select new { ig.Grammar, iv.Value, ig.Position };
-
-            foreach (var dataElement in indexedList)
+            var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children.ToArray();
+            var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext);
+            for (var deIndex = 0; deIndex < dataElements.Length; deIndex++)
             {
-                // Skip the blank elements
-                // This massively reduces the generated XML
-                if (string.IsNullOrEmpty(dataElement.Value))
+                var currentDataElement = dataElements[deIndex];
+                if (string.IsNullOrEmpty(currentDataElement)) continue;
+                var currentDataElementGrammar = dataElementsGrammar[deIndex];
+                var repetitions = EdiHelper.GetRepetitions(currentDataElement, interchangeContext);
+                foreach (var repetition in repetitions)
                 {
-                    // Don't skip for header segments as they are positional
-                    if (!grammar.IsEnvelope)
-                        continue;
-                }
+                    var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
+                        currentDataElementGrammar.Name,
+                        currentDataElementGrammar.Prefix == EdiPrefix.D ? repetition : null);
 
-                // If the current element is out of the range of elements defined in the definition class, then it's a repetition
-                // The repetitions are always for the last defined element
-                var elementGrammar = dataElement.Position >= grammar.Children.Count
-                    ? grammar.Children.Last()
-                    : grammar.Children.ElementAt(dataElement.Position);
+                    if (currentDataElementGrammar.Prefix != EdiPrefix.C) continue;
 
-                // Handle the repetitions
-                var elementRepetitions = grammar.IsEnvelope
-                    ? new[] { dataElement.Value }
-                    : EdiHelper.GetRepetitions(dataElement.Value, interchangeContext);
-
-                // Parse each repetition
-                foreach (var elementRepetition in elementRepetitions)
-                {
-                    result.ParseElement(elementGrammar, elementRepetition, interchangeContext);
-                }
-            }
-        }
-
-        private static void ParseElement(this ParseNode segment, ParseNode parseNode, string value, InterchangeContext interchangeContext)
-        {
-            if (value == null) throw new ArgumentNullException("value");
-            if (parseNode.Prefix != EdiPrefix.C && parseNode.Prefix != EdiPrefix.D) throw new Exception("Not a data element.");
-
-            if (parseNode.Prefix == EdiPrefix.C)
-            {
-                var result = segment.AddChild(parseNode.Type, parseNode.Type.Name);
-
-                if (value == string.Empty)
-                {
-                    // Only deal with blank values for envelope headers
-                    if (parseNode.IsEnvelope)
+                    var componentDataElementsGrammar = currentDataElementGrammar.Children.ToArray();
+                    var componentDataElements = EdiHelper.GetEdiComponentDataElements(repetition, interchangeContext);
+                    for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
                     {
-                        foreach (var dataElement in parseNode.Children)
-                        {
-                            result.AddChild(dataElement.Type, dataElement.Name, String.Empty);                            
-                        }
+                        var currentComponentDataElement = componentDataElements[cdeIndex];
+                        if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
+                        var currentComponentDataElementGrammar = componentDataElementsGrammar[cdeIndex];
+
+                        childParseNode.AddChild(currentComponentDataElementGrammar.Type,
+                            currentComponentDataElementGrammar.Name,
+                            currentComponentDataElement);
                     }
                 }
-                else
-                {
-                    // Get the simple data elements
-                    var componentDataElements =
-                        EdiHelper.GetEdiComponentDataElements(value, interchangeContext).ToList();
-
-                    // Index the composite data elements from the class definition
-                    var indexedGrammar =
-                        parseNode.Children.Select((g, p) => new { Grammar = g, Position = p }).ToList();
-                    // Index the composite data elements from the EDI string
-                    var indexedValues = componentDataElements.Select((v, p) => new { Value = v, Position = p }).ToList();
-
-                    // This will try to parse the EDI string into the class definition
-                    // Load a parse tree against each value
-                    // If there are more values in the EDI string than in the class definition - they will be ignored
-                    // If there are less values in the EDI string than in the class definition - it will throw an exception
-                    var indexedList = from ig in indexedGrammar
-                                      from iv in indexedValues
-                                      where ig.Position == iv.Position
-                                      select new { ig.Position, iv.Value };
-
-                    // Index the list so we can position each element
-                    //var indexed = componentDataElements.Select((a, i) => new {Item = a, Position = i}).ToList();
-
-                    foreach (var dataElement in indexedList)
-                    {
-                        // Skip blank data elements otherwise this will produce blank XML nodes
-                        if (string.IsNullOrEmpty(dataElement.Value))
-                        {
-                            if (!parseNode.IsEnvelope)
-                                continue;
-                        }
-
-                        // Handle the repetitions
-                        // If the children the EDI string are more than the class definition,
-                        // Then the extra ones are considered repetitions of the last child in the class definition
-                        var objectToParse = dataElement.Position >= parseNode.Children.Count
-                                                ? parseNode.Children.Last()
-                                                : parseNode.Children.ElementAt(dataElement.Position);
-
-                        result.AddChild(objectToParse.Type, objectToParse.Name, dataElement.Value); 
-                    }
-                }
-            }
-            else
-            {
-                // Prevent faulty XML
-                segment.AddChild(parseNode.Type, parseNode.Name, value);
-                //result = new ParseTree(parseTree.Type, parseTree.Name, value); 
-                //result.SetValue(SecurityElement.Escape(value) ?? string.Empty);
             }
         }
 
@@ -383,6 +282,14 @@ namespace EdiFabric.Framework.Messages
             }
 
             return root;
+        }
+
+        public static List<string> GenerateEdi(this ParseNode parseNode)
+        {
+            if (parseNode.Prefix != EdiPrefix.S)
+                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
+
+            throw new NotImplementedException();
         }
     }
 }
