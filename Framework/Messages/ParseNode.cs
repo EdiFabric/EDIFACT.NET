@@ -93,9 +93,7 @@ namespace EdiFabric.Framework.Messages
             {
                 val = value.ToString();
                 if (val.StartsWith("Item"))
-                {
                     val = val.Substring(4);
-                }
             }
             
             return AddChild(systemType, name, val);
@@ -108,10 +106,8 @@ namespace EdiFabric.Framework.Messages
                 throw new ParserException(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
-
-            var stack = new Stack<ParseNode>();
-            stack.Push(root);
-
+            var stack = new Stack<ParseNode>(new[] { root }); 
+            
             while (stack.Any())
             {
                 var currentNode = stack.Pop();
@@ -147,10 +143,8 @@ namespace EdiFabric.Framework.Messages
 
             var root = new ParseNode(type);
             var instanceLinks = new Dictionary<string, object> {{root.Path, instance}};
-
-            var stack = new Stack<ParseNode>();
-            stack.Push(root);
-
+            var stack = new Stack<ParseNode>(new[] { root }); 
+           
             while (stack.Any())
             {
                 var currentNode = stack.Pop();

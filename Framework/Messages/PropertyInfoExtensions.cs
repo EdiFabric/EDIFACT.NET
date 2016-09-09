@@ -94,19 +94,7 @@ namespace EdiFabric.Framework.Messages
 
             return propertyInfo.PropertyType;
         }
-
-        public static object GetSystemValue(this PropertyInfo propertyInfo, object instance)
-        {
-            if (propertyInfo.IsList())
-            {
-                var typeInstance = propertyInfo.GetValue(instance);
-                var item = propertyInfo.PropertyType.GetProperty("Item");
-                return item.GetValue(typeInstance);
-            }
-
-            return propertyInfo.GetValue(instance);
-        }
-
+        
         /// <summary>
         /// Gets the values for an element if that element is defined as enum.
         /// </summary>
@@ -128,6 +116,17 @@ namespace EdiFabric.Framework.Messages
         {
             return typeof (IList).IsAssignableFrom(propertyInfo.PropertyType)
                    && propertyInfo.PropertyType.IsGenericType;
+        }
+
+        public static object GetPropertyValue(this PropertyInfo propertyInfo, string value)
+        {
+            if (!propertyInfo.PropertyType.IsEnum) return value;
+            if (value.Length > 0 && char.IsDigit(value[0]))
+            {
+                return Enum.Parse(propertyInfo.PropertyType, string.Format("Item{0}", value));
+            }
+
+            return Enum.Parse(propertyInfo.PropertyType, value);
         }
     }
 }

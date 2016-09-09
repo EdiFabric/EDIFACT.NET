@@ -254,13 +254,6 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        /// <summary>
-        /// Parses a data element
-        /// </summary>
-        /// <param name="parseNode">The data element grammar.</param>
-        /// <param name="value">The data element line.</param>
-        /// <param name="interchangeContext"></param>
-        /// <returns>The parsed XML.</returns>
         private static void ParseElement(this ParseNode segment, ParseNode parseNode, string value, InterchangeContext interchangeContext)
         {
             if (value == null) throw new ArgumentNullException("value");
@@ -268,7 +261,7 @@ namespace EdiFabric.Framework.Messages
 
             if (parseNode.Prefix == EdiPrefix.C)
             {
-                var result = segment.AddChild(parseNode.Type, parseNode.Type.Name, null);
+                var result = segment.AddChild(parseNode.Type, parseNode.Type.Name);
 
                 if (value == string.Empty)
                 {
@@ -336,75 +329,60 @@ namespace EdiFabric.Framework.Messages
 
         public static object ToInstance(this ParseNode parseNode)
         {
-            var result = Activator.CreateInstance(parseNode.Type);
-            var nodes =
-                new Stack<Tuple<ParseNode, object>>(new[] { Tuple.Create(parseNode, result) });
-
+            var root = Activator.CreateInstance(parseNode.Type);
+            var instanceLinks = new Dictionary<string, object> { { parseNode.Path, root } };
+            var stack = new Stack<ParseNode>(new[] { parseNode });            
             var listTypes = new Dictionary<string, IList>();
             
-            while (nodes.Any())
+            while (stack.Any())
             {
-                var node = nodes.Pop();
+                var currentNode = stack.Pop();
 
-                foreach (var n in node.Item1.Children)
+                var path = currentNode.Path;
+                object currentInstance;
+                if (!instanceLinks.TryGetValue(path, out currentInstance))
+                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
+
+                foreach (var nodeChild in currentNode.Children) 
                 {                    
-                    var prop = node.Item1.Type.GetProperty(n.Name);
-                    if (n.Prefix == EdiPrefix.D)
+                    var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
+                    if (nodeChild.Prefix == EdiPrefix.D)
                     {
-                        if (prop.PropertyType.IsEnum)
-                        {
-                            var val = n.Value;
-                            if (n.Value.Length > 0 && char.IsDigit(n.Value[0]))
-                            {
-                                val = string.Format("Item{0}", n.Value);
-
-                                var propS = node.Item1.Type.GetProperty(n.Name + "Specified");
-                            }
-                            prop.SetValue(node.Item2, Enum.Parse(prop.PropertyType, val), null);
-
-                            
-                        }
-                        else
-                        {
-                            prop.SetValue(node.Item2, n.Value, null);
-                        }
-                        
+                        propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);                                              
                     }
                     else
                     {
-                        if (typeof(IList).IsAssignableFrom(prop.PropertyType) && prop.PropertyType.IsGenericType)
+                        object child;
+                        if (propertyInfo.IsList())
                         {
+                            var repPath = nodeChild.Parent.Path + nodeChild.Name;
                             IList list;
-                            var id = n.Parent.Path + n.Name;
-                            if (listTypes.ContainsKey(id))
+                            if (!listTypes.TryGetValue(repPath, out list))
                             {
-                                list = listTypes[id];
-                            }
-                            else
-                            {
-                                list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(n.Type));
-                                prop.SetValue(node.Item2, list, null);
-                                
-                                listTypes.Add(id, list);
-                            }
-                            
-                            object obj = Activator.CreateInstance(n.Type);
-                            list.Add(obj);
+                                list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(nodeChild.Type));
+                                propertyInfo.SetValue(currentInstance, list, null);
 
-                            nodes.Push(new Tuple<ParseNode, object>(n, obj));
+                                listTypes.Add(repPath, list);
+                            }
+
+                            child = Activator.CreateInstance(nodeChild.Type);
+                            list.Add(child);
                         }
                         else
                         {
-                            var child = Activator.CreateInstance(prop.PropertyType);
-                            prop.SetValue(node.Item2, child, null);
-                            nodes.Push(new Tuple<ParseNode, object>(n, child));
+                            child = Activator.CreateInstance(nodeChild.Type);
+                            propertyInfo.SetValue(currentInstance, child, null);
                         }
-                        
+
+                        instanceLinks.Add(nodeChild.Path, child);
+                        stack.Push(nodeChild);                        
                     }                    
                 }
+
+                instanceLinks.Remove(path);
             }
 
-            return result;
+            return root;
         }
     }
 }
