@@ -113,7 +113,7 @@ namespace EdiFabric.Framework.Messages
                         newTree = newTree.AddChild(parseTree.Type, parseTree.Type.Name, null);
                         if (parseTree.Prefix == EdiPrefix.S)
                         {
-                            newTree.Parse(segment, interchangeContext);
+                            newTree.ParseSegment(segment, interchangeContext);
                         }
                        
                         

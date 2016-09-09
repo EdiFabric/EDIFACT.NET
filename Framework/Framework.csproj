@@ -88,7 +88,7 @@
     <Compile Include="Envelopes\X12\ToEdiLexer.cs" />
     <Compile Include="Messages\HipaaHelper.cs" />
     <Compile Include="Messages\EdiElements.cs" />
-    <Compile Include="Messages\ParseTreeExtensions.cs" />
+    <Compile Include="Messages\ParseNodeExtensions.cs" />
     <Compile Include="Namespaces.cs" />
     <Compile Include="EdiSegments.cs" />
     <Compile Include="Messages\Message.cs" />

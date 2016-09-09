@@ -188,19 +188,19 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        public static void Parse(this ParseNode parseNode, string line, InterchangeContext interchangeContext)
+        public static void ParseSegment(this ParseNode parseNode, string line, InterchangeContext interchangeContext)
         {
             if (parseNode.Prefix != EdiPrefix.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
             if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
 
-            var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children.ToArray();
+            var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children;
             var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext);
             for (var deIndex = 0; deIndex < dataElements.Length; deIndex++)
             {
                 var currentDataElement = dataElements[deIndex];
                 if (string.IsNullOrEmpty(currentDataElement)) continue;
-                var currentDataElementGrammar = dataElementsGrammar[deIndex];
+                var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
                 var repetitions = EdiHelper.GetRepetitions(currentDataElement, interchangeContext);
                 foreach (var repetition in repetitions)
                 {
@@ -210,13 +210,13 @@ namespace EdiFabric.Framework.Messages
 
                     if (currentDataElementGrammar.Prefix != EdiPrefix.C) continue;
 
-                    var componentDataElementsGrammar = currentDataElementGrammar.Children.ToArray();
+                    var componentDataElementsGrammar = currentDataElementGrammar.Children;
                     var componentDataElements = EdiHelper.GetEdiComponentDataElements(repetition, interchangeContext);
                     for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
                     {
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
-                        var currentComponentDataElementGrammar = componentDataElementsGrammar[cdeIndex];
+                        var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
 
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,
                             currentComponentDataElementGrammar.Name,
@@ -284,12 +284,48 @@ namespace EdiFabric.Framework.Messages
             return root;
         }
 
-        public static List<string> GenerateEdi(this ParseNode parseNode)
+        public static string GenerateSegment(this ParseNode parseNode, InterchangeContext interchangeContext)
         {
             if (parseNode.Prefix != EdiPrefix.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
 
-            throw new NotImplementedException();
+            var result = parseNode.EdiName;
+
+            foreach (var element in parseNode.Children)
+            {
+                string value;
+                if (element.Prefix == EdiPrefix.C)
+                {
+                    value = element.Children.ElementAt(0).Value ?? string.Empty;
+                    value = element.Children.Skip(1)
+                        .Aggregate(value,
+                            (current, subElement) =>
+                                current + interchangeContext.ComponentDataElementSeparator +
+                                interchangeContext.EscapeLine(subElement.Value ?? string.Empty));
+                }
+                else
+                {
+                    value = interchangeContext.EscapeLine(element.Value ?? string.Empty);
+                }
+
+                var separator = element.IsRepetition()
+                    ? interchangeContext.RepetitionSeparator
+                    : interchangeContext.DataElementSeparator;
+
+                result = result + separator + value;              
+            }
+
+            result = result + interchangeContext.SegmentTerminator;
+
+            return result;
+        }
+
+        private static bool IsRepetition(this ParseNode parseNode)
+        {
+            var index = parseNode.IndexInParent();
+            if (index <= 0) return false;
+            var previous = parseNode.Children.ElementAt(index - 1);
+            return parseNode.Name == previous.Name;
         }
     }
 }
