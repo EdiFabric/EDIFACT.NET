@@ -8,7 +8,7 @@ using EdiFabric.Framework.Messages.Segments;
 
 namespace EdiFabric.Framework.Messages
 {
-    static class ParseTreeExtensions
+    static class ParseNodeExtensions
     {
         private static int IndexOfImmediateChild(this ParseNode node, IList<ParseNode> parents)
         {
