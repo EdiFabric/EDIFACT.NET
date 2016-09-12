@@ -11,9 +11,18 @@
 
 namespace EdiFabric.Framework.Constants
 {
+    /// <summary>
+    /// The supported EDI formats.
+    /// </summary>
     public enum Formats
     {
+        /// <summary>
+        /// ANSI EDIFACT
+        /// </summary>
         Edifact,
+        /// <summary>
+        /// ASC X12
+        /// </summary>
         X12,
     }
 }

@@ -14,12 +14,137 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Headers;
 
 namespace EdiFabric.Framework
 {
     internal static class HelperExtensions
     {
-        internal static string[] SplitWithEscape(this string contents, string escapeCharacter, string splitSeparator, StringSplitOptions splitOption, bool escapeTheEscape = false)
+        internal static object ParseHeaderSegment(this SegmentContext segmentContext, Separators separators)
+        {
+            Type type;
+            switch (segmentContext.Tag)
+            {
+                case SegmentTags.Unb:
+                    type = typeof (S_UNB);
+                    break;
+                case SegmentTags.Isa:
+                    type = typeof (S_ISA);
+                    break;
+                case SegmentTags.Ung:
+                    type = typeof (S_UNG);
+                    break;
+                case SegmentTags.Gs:
+                    type = typeof (S_GS);
+                    break;
+                default:
+                    throw new ParserException(string.Format("Unsupported header tag {0}", segmentContext.Tag));
+            }
+
+            var parseNode = ParseNode.BuldTree(type, false);
+            parseNode.ParseSegment(segmentContext.Value, separators);
+            return parseNode.ToInstance();
+        }
+
+        internal static string ReadSegment(this TextReader reader, Separators separators)
+        {
+            var line = "";
+
+            while (reader.Peek() >= 0)
+            {
+                var symbol = (char) reader.Read();
+                line = line + symbol;
+
+                if (line.EndsWith(separators.Segment))
+                {
+                    if (separators.Escape.Length != 0 &&
+                        line.EndsWith(string.Concat(separators.Escape, separators.Segment)))
+                    {
+                        continue;
+                    }
+
+                    if (separators.Segment != Environment.NewLine)
+                        line = line.Trim('\r', '\n');
+
+                    int index = line.LastIndexOf(separators.Segment, StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        line = line.Remove(index);
+                    }
+
+                    if (!string.IsNullOrEmpty(line))
+                        break;
+                }
+            }
+
+            return line.Trim('\r', '\n');
+        }
+
+        internal static string EscapeLine(this string line, Separators separators)
+        {
+            return line.ToCharArray()
+                .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
+        }
+
+        internal static SegmentTags ToSegmentTag(this string segment)
+        {
+            var cleanSegment = segment.Replace(Environment.NewLine, string.Empty);
+            SegmentTags tag;
+            return Enum.TryParse(cleanSegment.ToUpper().Substring(0, 3), out tag) ? tag : SegmentTags.Regular;
+        }
+
+        internal static string[] GetSegments(this string message, Separators separators)
+        {
+            if (message == null) throw new ArgumentNullException("message");
+            if (separators == null) throw new ArgumentNullException("separators");
+
+            if (separators.Segment != Environment.NewLine)
+                message = message.Trim('\r', '\n');
+
+            return message.SplitWithEscape(separators.Escape,
+                separators.Segment,
+                StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        internal static string[] GetDataElements(this string segment, Separators separators)
+        {
+            if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
+            if (separators == null) throw new ArgumentNullException("separators");
+
+            return segment.SplitWithEscape(separators.Escape,
+                separators.DataElement, StringSplitOptions.None).Skip(1).ToArray();
+        }
+
+        internal static string[] GetComponentDataElements(this string dataElement, Separators separators)
+        {
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
+
+            return dataElement.SplitWithEscape(separators.Escape,
+                separators.ComponentDataElement, StringSplitOptions.None, true);
+        }
+
+        internal static string[] GetRepetitions(this string value, Separators separators)
+        {
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
+
+            return value.SplitWithEscape(separators.Escape,
+                separators.RepetitionDataElement, StringSplitOptions.None);
+        }
+
+        internal static Stream ToSeekStream(this Stream stream)
+        {
+            if (stream.CanSeek) return stream;
+
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            ms.Position = 0;
+            return ms;
+        }
+
+        private static string[] SplitWithEscape(this string contents, string escapeCharacter, string splitSeparator,
+            StringSplitOptions splitOption, bool escapeTheEscape = false)
         {
             if (string.IsNullOrEmpty(escapeCharacter))
                 return contents.Split(splitSeparator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -80,100 +205,13 @@ namespace EdiFabric.Framework
             return result.ToArray();
         }
 
-        internal static string ReadSegment(this TextReader reader, Separators separators)
-        {
-            var line = "";
-
-            while (reader.Peek() >= 0)
-            {
-                var symbol = (char)reader.Read();
-                line = line + symbol;
-
-                if (line.EndsWith(separators.Segment))
-                {
-                    if (separators.Escape.Length != 0 &&
-                        line.EndsWith(string.Concat(separators.Escape, separators.Segment)))
-                    {
-                        continue;
-                    }
-
-                    if (separators.Segment != Environment.NewLine)
-                        line = line.Trim('\r', '\n');
-
-                    int index = line.LastIndexOf(separators.Segment, StringComparison.Ordinal);
-                    if (index > 0)
-                    {
-                        line = line.Remove(index);
-                    }
-
-                    if (!string.IsNullOrEmpty(line))
-                        break;
-                }
-            }
-
-            return line.Trim('\r', '\n');
-        }
-
-        internal static bool IsSeparator(this char value, Separators separators)
+        private static bool IsSeparator(this char value, Separators separators)
         {
             return separators.ComponentDataElement.Contains(value) ||
                    separators.DataElement.Contains(value) ||
                    separators.Escape.Contains(value) ||
                    separators.RepetitionDataElement.Contains(value) ||
                    separators.Segment.Contains(value);
-        }
-
-        internal static string EscapeLine(this string line, Separators separators)
-        {
-            return line.ToCharArray()
-                .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
-        }
-
-        internal static SegmentTags ToSegmentTag(this string segment)
-        {
-            var cleanSegment = segment.Replace(Environment.NewLine, string.Empty);
-            SegmentTags tag;
-            return Enum.TryParse(cleanSegment.ToUpper().Substring(0, 3), out tag) ? tag : SegmentTags.Regular;
-        }
-
-        public static string[] GetSegments(this string message, Separators separators)
-        {
-            if (message == null) throw new ArgumentNullException("message");
-            if (separators == null) throw new ArgumentNullException("separators");
-
-            if (separators.Segment != Environment.NewLine)
-                message = message.Trim('\r', '\n');
-
-            return message.SplitWithEscape(separators.Escape,
-                separators.Segment,
-                StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public static string[] GetDataElements(this string segment, Separators separators)
-        {
-            if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
-            if (separators == null) throw new ArgumentNullException("separators");
-
-            return segment.SplitWithEscape(separators.Escape,
-                separators.DataElement, StringSplitOptions.None).Skip(1).ToArray();
-        }
-
-        public static string[] GetComponentDataElements(this string dataElement, Separators separators)
-        {
-            if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
-
-            return dataElement.SplitWithEscape(separators.Escape,
-                separators.ComponentDataElement, StringSplitOptions.None, true);
-        }
-
-        public static string[] GetRepetitions(this string value, Separators separators)
-        {
-            if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
-
-            return value.SplitWithEscape(separators.Escape,
-                    separators.RepetitionDataElement, StringSplitOptions.None);
         }
     }
 }

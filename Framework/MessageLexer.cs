@@ -1,11 +1,22 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework
 {
-    internal static class MessageLexer
+    static class MessageLexer
     {
         internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssembly)
         {

@@ -15,6 +15,9 @@ using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework
 {
+    /// <summary>
+    /// EDI separators.
+    /// </summary>
     public class Separators
     {
         /// <summary>
@@ -47,11 +50,6 @@ namespace EdiFabric.Framework
         /// </summary>
         public Formats Format { get; private set; }
         
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Separators"/> class.
-        /// This extracts the separators from the contents of the EDI message.
-        /// </summary>
-        /// <param name="contents">The EDI message</param>
         internal Separators(string contents)
         {
             if (contents == null) throw new ArgumentNullException("contents");
@@ -119,11 +117,6 @@ namespace EdiFabric.Framework
             
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Separators"/> class.
-        /// This gets the default separators per format.
-        /// </summary>
-        /// <param name="format">The format</param>
         internal Separators(Formats format, string segment, string componentDataElement, string dataElement,
             string repetitionDataElement, string escape = null)
         {
@@ -135,6 +128,9 @@ namespace EdiFabric.Framework
             Segment = segment;
         }
 
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
+        /// </summary>
         public static Separators SeparatorsX12(string segment, string componentDataElement, string dataElement,
             string repetitionDataElement)
         {
@@ -142,6 +138,9 @@ namespace EdiFabric.Framework
             repetitionDataElement);
         }
 
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
+        /// </summary>
         public static Separators SeparatorsEdifact(string segment, string componentDataElement, string dataElement,
             string repetitionDataElement, string escape)
         {
@@ -149,11 +148,19 @@ namespace EdiFabric.Framework
             repetitionDataElement);
         }
 
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
+        /// Uses the default X12 separators.
+        /// </summary>
         public static Separators DefaultSeparatorsX12()
         {
             return new Separators(Formats.X12, "~", ":", string.Empty, "*", "^");
         }
 
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
+        /// Uses the default EDIFACT separators.
+        /// </summary>
         public static Separators DefaultSeparatorsEdifact()
         {
             return new Separators(Formats.Edifact, "'", ":", "?", "+", "*");

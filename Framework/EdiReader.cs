@@ -1,4 +1,15 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -6,16 +17,29 @@ using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework
 {
+    /// <summary>
+    /// Parses EDI messages into .NET object.
+    /// </summary>
     public class EdiReader : IDisposable
     {
         private readonly Separators _separators;
         private readonly StreamReader _streamReader;
+        private readonly string _definitionsAssemblyName;
         private SegmentContext _interchangeHeader;
         private SegmentContext _groupHeader;
-        private EdiMessage _message;
-        private string _definitionsAssemblyName;
-        public EdiMessage Message { get { return _message; } }
 
+        /// <summary>
+        /// The EDI message containing the parsed object and the group and interchange headers
+        /// </summary>
+        public EdiMessage Message { get; private set; }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="EdiReader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream.</param>
+        /// <param name="definitionsAssemblyName">The full assembly name of the assembly with the definition classes.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns></returns>
         public static EdiReader Create(Stream ediStream, string definitionsAssemblyName, Encoding encoding = null)
         {
             return new EdiReader(ediStream, definitionsAssemblyName, encoding);
@@ -23,11 +47,15 @@ namespace EdiFabric.Framework
 
         private EdiReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
         {
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, false);
+            _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, false);
             _separators = new Separators(ExtractHeader());
             _definitionsAssemblyName = definitionsAssemblyName;
         }
 
+        /// <summary>
+        /// Reads an EDI message from the stream.
+        /// </summary>
+        /// <returns>If a new message was read.</returns>
         public bool ReadMessage()
         {
             var currentMessage = new List<SegmentContext>();
@@ -59,7 +87,9 @@ namespace EdiFabric.Framework
                         currentMessage.Add(segmentContext);
                         currentMessage.Add(_groupHeader);
                         var msg = currentMessage.Analyze(_separators, _definitionsAssemblyName);
-                        _message = new EdiMessage(msg, _interchangeHeader.Value, _groupHeader.Value);
+                        var iHeader = _interchangeHeader.ParseHeaderSegment(_separators);
+                        var gHeader = _groupHeader.ParseHeaderSegment(_separators);
+                        Message = new EdiMessage(msg, iHeader, gHeader);
                         result = true;
                         currentMessage.Clear();
                         break;
@@ -72,6 +102,10 @@ namespace EdiFabric.Framework
             return result;
         }
 
+        /// <summary>
+        /// Reads the stream to the end.
+        /// </summary>
+        /// <returns>All the messages that were read.</returns>
         public IEnumerable<EdiMessage> ReadAllMessages()
         {
             while (ReadMessage())
@@ -80,12 +114,6 @@ namespace EdiFabric.Framework
             }
         }
 
-        /// <summary>
-        /// Extracts the interchange header from the EDI stream.
-        /// </summary>
-        /// <returns>
-        /// The first 106 chars from the stream.
-        /// </returns>
         private string ExtractHeader()
         {
             var header = new char[106];
@@ -97,7 +125,7 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Disposes the stream.
+        /// Disposes the reader.
         /// </summary>
         public void Dispose()
         {

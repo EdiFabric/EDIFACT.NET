@@ -1,4 +1,15 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Configuration;
 using System.IO;
 
@@ -8,7 +19,7 @@ namespace EdiFabric.Framework
     /// Simple logger for dumping the traversal of the parse tree to a file.
     /// This is intended only for debugging purposes and should be switched off otherwise.
     /// </summary>
-    internal static class Logger
+    static class Logger
     {
         /// <summary>
         /// The static logger.

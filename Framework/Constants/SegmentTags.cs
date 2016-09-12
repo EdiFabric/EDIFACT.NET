@@ -11,7 +11,7 @@
 
 namespace EdiFabric.Framework.Constants
 {
-    internal enum SegmentTags
+    enum SegmentTags
     {
         Una,
         Unb,

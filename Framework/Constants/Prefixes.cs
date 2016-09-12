@@ -11,11 +11,7 @@
 
 namespace EdiFabric.Framework.Constants
 {
-    /// <summary>
-    /// This class represents all of the internal EDI prefixes.
-    /// These prefixes cover all EDI structures and all XSD node types.
-    /// </summary>
-    internal enum Prefixes
+    enum Prefixes
     {
         M,
         G,

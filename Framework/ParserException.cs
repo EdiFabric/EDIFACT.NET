@@ -17,20 +17,6 @@ namespace EdiFabric.Framework
     /// The exception that is thrown for all known parsing failures.
     /// Always includes the line which failed to parse.
     /// </summary>
-    /// <example>
-    /// Catch line parsing exception.
-    /// <code lang="C#">
-    /// try
-    /// {
-    ///     var interchange = Interchange.LoadFrom(File.OpenRead(@"c:\test.edi"));
-    /// }
-    /// catch (ParserException ex)
-    /// {
-    ///     // ex.Message contains the line that failed
-    ///     // ex.InnerException contains the real exception
-    /// }
-    /// </code>
-    /// </example>
     public class ParserException : Exception
     {
         /// <summary>

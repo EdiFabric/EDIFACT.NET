@@ -1,4 +1,15 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +76,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static IEnumerable<ParseNode> TraverseSegmentsDepthFirst(this ParseNode startNode)
+        internal static IEnumerable<ParseNode> TraverseSegmentsDepthFirst(this ParseNode startNode)
         {
             var visited = new HashSet<ParseNode>();
             var stack = new Stack<ParseNode>();
@@ -90,7 +101,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static IEnumerable<ParseNode> Ancestors(this ParseNode node)
+        internal static IEnumerable<ParseNode> Ancestors(this ParseNode node)
         {
             var stack = new Stack<ParseNode>();
             if (node.Parent == null) 
@@ -107,7 +118,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
+        internal static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
         {
             var result = node.Ancestors().Reverse().ToList(); 
             result.Add(node);
@@ -115,7 +126,7 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        public static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
+        internal static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
         {
             if (segment.Prefix != Prefixes.S)
                 throw new ParserException("Not a segment " + segment.Name);
@@ -133,7 +144,7 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        public static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
+        internal static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
         {
             if(parseNode.Prefix != Prefixes.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
 
@@ -161,7 +172,7 @@ namespace EdiFabric.Framework
             return false;
         }
 
-        public static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
+        internal static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
         {
             var nodes = new Stack<ParseNode>(new[] { parseNode });
             while (nodes.Any())
@@ -173,7 +184,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static void ParseSegment(this ParseNode parseNode, string line, Separators separators)
+        internal static void ParseSegment(this ParseNode parseNode, string line, Separators separators)
         {
             if (parseNode.Prefix != Prefixes.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
@@ -211,7 +222,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static object ToInstance(this ParseNode parseNode)
+        internal static object ToInstance(this ParseNode parseNode)
         {
             var root = Activator.CreateInstance(parseNode.Type);
             var instanceLinks = new Dictionary<string, object> { { parseNode.Path, root } };
@@ -269,7 +280,7 @@ namespace EdiFabric.Framework
             return root;
         }
 
-        public static string GenerateSegment(this ParseNode parseNode, Separators separators)
+        internal static string GenerateSegment(this ParseNode parseNode, Separators separators)
         {
             if (parseNode.Prefix != Prefixes.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
@@ -304,7 +315,7 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        private static bool IsRepetition(this ParseNode parseNode)
+        internal static bool IsRepetition(this ParseNode parseNode)
         {
             var index = parseNode.IndexInParent();
             if (index <= 0) return false;
@@ -312,7 +323,7 @@ namespace EdiFabric.Framework
             return parseNode.Name == previous.Name;
         }
 
-        public static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)
+        internal static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)
         {
             ParseNode hlParent;
             if (parentId != null)
@@ -333,7 +344,7 @@ namespace EdiFabric.Framework
             return parseNode.Root().Descendants().Single(pt => pt.Name == hlParent.Name);
         }
 
-        public static ParseNode Root(this ParseNode parseNode)
+        internal static ParseNode Root(this ParseNode parseNode)
         {
             return parseNode.Ancestors().Last(); 
         }

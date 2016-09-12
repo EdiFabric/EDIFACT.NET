@@ -14,7 +14,7 @@ using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework
 {
-    internal class SegmentContext
+    class SegmentContext
     {
         private const string Hl = "HL";
 

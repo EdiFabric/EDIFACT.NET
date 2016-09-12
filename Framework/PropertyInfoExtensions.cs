@@ -21,7 +21,7 @@ namespace EdiFabric.Framework
 {
     static class PropertyInfoExtensions
     {
-        public static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
+        internal static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             var dictionary = new SortedDictionary<int, PropertyInfo>();
 
@@ -41,7 +41,7 @@ namespace EdiFabric.Framework
             return dictionary.Select(v => v.Value).ToList();
         }
 
-        public static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
+        internal static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType.IsEnum)
             {
@@ -61,7 +61,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        public static Type GetSystemType(this PropertyInfo propertyInfo)
+        internal static Type GetSystemType(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsList())
             {
@@ -70,8 +70,8 @@ namespace EdiFabric.Framework
 
             return propertyInfo.PropertyType;
         }
-        
-        public static List<string> GetProperyValues(this PropertyInfo propertyInfo)
+
+        internal static List<string> GetProperyValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsList())
                 return new List<string>();
@@ -83,13 +83,13 @@ namespace EdiFabric.Framework
             return complexProperties[0].GetProperyEnumValues().ToList();
         }
 
-        public static bool IsList(this PropertyInfo propertyInfo)
+        internal static bool IsList(this PropertyInfo propertyInfo)
         {
             return typeof (IList).IsAssignableFrom(propertyInfo.PropertyType)
                    && propertyInfo.PropertyType.IsGenericType;
         }
 
-        public static object GetPropertyValue(this PropertyInfo propertyInfo, string value)
+        internal static object GetPropertyValue(this PropertyInfo propertyInfo, string value)
         {
             if (!propertyInfo.PropertyType.IsEnum) return value;
             if (value.Length > 0 && char.IsDigit(value[0]))
