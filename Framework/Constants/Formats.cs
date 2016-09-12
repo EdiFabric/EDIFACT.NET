@@ -9,21 +9,11 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Constants
 {
-    /// <summary>
-    /// The target namespaces for the resulting XML. 
-    /// </summary>
-    internal class Namespaces
+    public enum Formats
     {
-        /// <summary>
-        /// Edifact
-        /// </summary>
-        public const string Edifact = "www.edifabric.com/edifact";
-
-        /// <summary>
-        /// X12
-        /// </summary>
-        public const string X12 = "www.edifabric.com/x12";
+        Edifact,
+        X12,
     }
 }

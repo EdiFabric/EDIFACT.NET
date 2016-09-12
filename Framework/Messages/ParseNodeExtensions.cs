@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using EdiFabric.Framework.Envelopes;
-using EdiFabric.Framework.Messages.Segments;
+using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -39,26 +37,26 @@ namespace EdiFabric.Framework.Messages
 
             switch (node.Prefix)
             {
-                case EdiPrefix.S:
+                case Prefixes.S:
                     result.Add(node.Parent);
                     return result;
-                case EdiPrefix.G:
+                case Prefixes.G:
                     result.AddRange(node.ChildrenWithExclusion(exclusion));
                     result.Add(node.Children.First());
                     result.Add(node.Parent);
                     return result;
-                case EdiPrefix.M:
+                case Prefixes.M:
                     result.AddRange(node.ChildrenWithExclusion(exclusion));
                     if(!result.Any())
                         result.AddRange(node.Children);
                     return result;
-                case EdiPrefix.U:
+                case Prefixes.U:
                     result.AddRange(node.ChildrenWithExclusion(exclusion));
                     if (!result.Any())
                         result.AddRange(node.Children);
                     result.Add(node.Parent);
                     return result;
-                case EdiPrefix.A:
+                case Prefixes.A:
                     result.AddRange(node.Children);
                 result.Add(node.Parent);
                 return result;
@@ -82,7 +80,7 @@ namespace EdiFabric.Framework.Messages
                 if (!visited.Add(current))
                     continue;
 
-                if (current.Prefix == EdiPrefix.S)
+                if (current.Prefix == Prefixes.S)
                     yield return current;
 
                 var neighbours = current.NeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
@@ -119,7 +117,7 @@ namespace EdiFabric.Framework.Messages
 
         public static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
         {
-            if (segment.Prefix != EdiPrefix.S)
+            if (segment.Prefix != Prefixes.S)
                 throw new ParserException("Not a segment " + segment.Name);
 
             var lastParents = lastFoundSegment.Ancestors();
@@ -135,22 +133,9 @@ namespace EdiFabric.Framework.Messages
             return result;
         }
 
-        /// <summary>
-        /// Convert a parse tree to a root XML node.
-        /// Without the hierarchy, only the name.
-        /// </summary>
-        /// <param name="parseNode">The parse tree.</param>
-        /// <param name="interchangeContext">The interchange context.</param>
-        /// <returns>A XML node.</returns>
-        public static XElement ToXml(this ParseNode parseNode, InterchangeContext interchangeContext)
-        {
-            XNamespace ns = interchangeContext.TargetNamespace;
-            return new XElement(ns + parseNode.Name);
-        }
-
         public static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
         {
-            if(parseNode.Prefix != EdiPrefix.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
+            if(parseNode.Prefix != Prefixes.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
 
             // The names must match
             if (parseNode.EdiName == segmentContext.Name)
@@ -188,30 +173,30 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        public static void ParseSegment(this ParseNode parseNode, string line, InterchangeContext interchangeContext)
+        public static void ParseSegment(this ParseNode parseNode, string line, Separators separators)
         {
-            if (parseNode.Prefix != EdiPrefix.S)
+            if (parseNode.Prefix != Prefixes.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
             if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
 
             var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children;
-            var dataElements = EdiHelper.GetEdiCompositeDataElements(line, interchangeContext);
+            var dataElements = line.GetDataElements(separators);
             for (var deIndex = 0; deIndex < dataElements.Length; deIndex++)
             {
                 var currentDataElement = dataElements[deIndex];
                 if (string.IsNullOrEmpty(currentDataElement)) continue;
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
-                var repetitions = EdiHelper.GetRepetitions(currentDataElement, interchangeContext);
+                var repetitions = currentDataElement.GetRepetitions(separators);
                 foreach (var repetition in repetitions)
                 {
                     var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
                         currentDataElementGrammar.Name,
-                        currentDataElementGrammar.Prefix == EdiPrefix.D ? repetition : null);
+                        currentDataElementGrammar.Prefix == Prefixes.D ? repetition : null);
 
-                    if (currentDataElementGrammar.Prefix != EdiPrefix.C) continue;
+                    if (currentDataElementGrammar.Prefix != Prefixes.C) continue;
 
                     var componentDataElementsGrammar = currentDataElementGrammar.Children;
-                    var componentDataElements = EdiHelper.GetEdiComponentDataElements(repetition, interchangeContext);
+                    var componentDataElements = repetition.GetComponentDataElements(separators);
                     for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
                     {
                         var currentComponentDataElement = componentDataElements[cdeIndex];
@@ -245,7 +230,7 @@ namespace EdiFabric.Framework.Messages
                 foreach (var nodeChild in currentNode.Children) 
                 {                    
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
-                    if (nodeChild.Prefix == EdiPrefix.D)
+                    if (nodeChild.Prefix == Prefixes.D)
                     {
                         propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);                                              
                     }
@@ -284,9 +269,9 @@ namespace EdiFabric.Framework.Messages
             return root;
         }
 
-        public static string GenerateSegment(this ParseNode parseNode, InterchangeContext interchangeContext)
+        public static string GenerateSegment(this ParseNode parseNode, Separators separators)
         {
-            if (parseNode.Prefix != EdiPrefix.S)
+            if (parseNode.Prefix != Prefixes.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
 
             var result = parseNode.EdiName;
@@ -294,28 +279,27 @@ namespace EdiFabric.Framework.Messages
             foreach (var element in parseNode.Children)
             {
                 string value;
-                if (element.Prefix == EdiPrefix.C)
+                if (element.Prefix == Prefixes.C)
                 {
                     value = element.Children.ElementAt(0).Value ?? string.Empty;
                     value = element.Children.Skip(1)
                         .Aggregate(value,
                             (current, subElement) =>
-                                current + interchangeContext.ComponentDataElementSeparator +
-                                interchangeContext.EscapeLine(subElement.Value ?? string.Empty));
+                                current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));                               
                 }
                 else
                 {
-                    value = interchangeContext.EscapeLine(element.Value ?? string.Empty);
+                    value = element.Value != null ? element.Value.EscapeLine(separators) : string.Empty;
                 }
 
                 var separator = element.IsRepetition()
-                    ? interchangeContext.RepetitionSeparator
-                    : interchangeContext.DataElementSeparator;
+                    ? separators.RepetitionDataElement
+                    : separators.DataElement;
 
                 result = result + separator + value;              
             }
 
-            result = result + interchangeContext.SegmentTerminator;
+            result = result + separators.Segment;
 
             return result;
         }
@@ -326,6 +310,32 @@ namespace EdiFabric.Framework.Messages
             if (index <= 0) return false;
             var previous = parseNode.Children.ElementAt(index - 1);
             return parseNode.Name == previous.Name;
+        }
+
+        public static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)
+        {
+            ParseNode hlParent;
+            if (parentId != null)
+            {
+                // Parent HL, start right after it
+                hlParent =
+                    builtNode.Descendants()
+                        .Single(
+                            d =>
+                                d.Name.StartsWith("S_HL") &&
+                                d.Children.First().Value == parentId);
+                var hl = parseNode.Root().Descendants().Single(pt => pt.Name == hlParent.Name);
+                return hl.Parent.Children.ElementAt(1);
+            }
+            
+            // Root HL, start from it
+            hlParent = builtNode.Descendants().First(d => d.Name.StartsWith("S_HL"));
+            return parseNode.Root().Descendants().Single(pt => pt.Name == hlParent.Name);
+        }
+
+        public static ParseNode Root(this ParseNode parseNode)
+        {
+            return parseNode.Ancestors().Last(); 
         }
     }
 }

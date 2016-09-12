@@ -15,30 +15,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
+using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework.Messages
 {
-    /// <summary>
-    /// Global extensions for .NET PropertyInfo class.
-    /// These are used in conjunction with Parse Tree class and the EDI definitions.
-    /// </summary>
     static class PropertyInfoExtensions
     {
-        /// <summary>
-        /// Sorts a collection of properties by the Order attribute.
-        /// Order is only set in XmlElement or XmlArray attributes.
-        /// </summary>
-        /// <param name="propertyInfos">
-        /// The collection of property infos.
-        /// </param>
-        /// <returns>
-        /// The sorted collection of property infos.
-        /// </returns>
         public static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             var dictionary = new SortedDictionary<int, PropertyInfo>();
 
-            // Iterate through each property
             foreach (var propertyInfo in propertyInfos)
             {
                 var attributes = Attribute.GetCustomAttributes(propertyInfo);
@@ -55,11 +41,6 @@ namespace EdiFabric.Framework.Messages
             return dictionary.Select(v => v.Value).ToList();
         }
 
-        /// <summary>
-        /// Extracts the enum values from a property.
-        /// </summary>
-        /// <param name="propertyInfo">The property.</param>
-        /// <returns>The list of enum values.</returns>
         public static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType.IsEnum)
@@ -80,11 +61,6 @@ namespace EdiFabric.Framework.Messages
             }
         }
 
-        /// <summary>
-        /// Gets the type name from a property info.
-        /// </summary>
-        /// <param name="propertyInfo">The property info.</param>
-        /// <returns>The type.</returns>
         public static Type GetSystemType(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsList())
@@ -95,17 +71,12 @@ namespace EdiFabric.Framework.Messages
             return propertyInfo.PropertyType;
         }
         
-        /// <summary>
-        /// Gets the values for an element if that element is defined as enum.
-        /// </summary>
-        /// <param name="propertyInfo"></param>
-        /// <returns></returns>
         public static List<string> GetProperyValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsList())
                 return new List<string>();
 
-            if (!propertyInfo.Name.StartsWith(EdiPrefix.C.ToString())) 
+            if (!propertyInfo.Name.StartsWith(Prefixes.C.ToString())) 
                 return propertyInfo.GetProperyEnumValues().ToList();
             
             var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();

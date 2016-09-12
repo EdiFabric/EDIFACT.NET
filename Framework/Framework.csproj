@@ -78,36 +78,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EdiStream.cs" />
-    <Compile Include="Envelopes\AbstractInterchange.cs" />
+    <Compile Include="Constants\SegmentTags.cs" />
+    <Compile Include="EdiMessage.cs" />
+    <Compile Include="EdiReader.cs" />
+    <Compile Include="HelperExtensions.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Messages\EdiPrefixes.cs" />
-    <Compile Include="EdiFormats.cs" />
+    <Compile Include="Constants\Prefixes.cs" />
+    <Compile Include="Constants\Formats.cs" />
     <Compile Include="Envelopes\XmlLexer.cs" />
-    <Compile Include="Envelopes\Edifact\ToEdiLexer.cs" />
-    <Compile Include="Envelopes\X12\ToEdiLexer.cs" />
-    <Compile Include="Messages\HipaaHelper.cs" />
-    <Compile Include="Messages\EdiElements.cs" />
     <Compile Include="Messages\ParseNodeExtensions.cs" />
-    <Compile Include="Namespaces.cs" />
-    <Compile Include="EdiSegments.cs" />
-    <Compile Include="Messages\Message.cs" />
-    <Compile Include="Messages\Segments\SegmentContext.cs" />
-    <Compile Include="Messages\MessageContext.cs" />
+    <Compile Include="SegmentContext.cs" />
     <Compile Include="Messages\ParseNode.cs" />
-    <Compile Include="Envelopes\InterchangeContext.cs" />
-    <Compile Include="Envelopes\InterchangeLexer.cs" />
-    <Compile Include="Envelopes\Edifact\FromEdiLexer.cs" />
-    <Compile Include="Envelopes\Edifact\Interchange.cs" />
-    <Compile Include="Envelopes\Edifact\Segments.cs" />
-    <Compile Include="Envelopes\X12\Segments.cs" />
+    <Compile Include="MessageLexer.cs" />
+    <Compile Include="Separators.cs" />
+    <Compile Include="Headers\Edifact.cs" />
+    <Compile Include="Headers\X12.cs" />
     <Compile Include="ParserException.cs" />
-    <Compile Include="EdiHelper.cs" />
     <Compile Include="Messages\PropertyInfoExtensions.cs" />
-    <Compile Include="Messages\MessageLexer.cs" />
-    <Compile Include="Envelopes\X12\Interchange.cs" />
-    <Compile Include="Envelopes\X12\FromEdiLexer.cs" />
-    <Compile Include="Messages\Segments\SegmentParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,10 +118,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagramEdifact.cd" />
-    <None Include="ClassDiagramX12.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

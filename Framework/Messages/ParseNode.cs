@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework.Messages
 {
@@ -22,7 +23,7 @@ namespace EdiFabric.Framework.Messages
         public Type Type { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
-        public EdiPrefix Prefix { get; private set; }
+        public Prefixes Prefix { get; private set; }
         public ParseNode Parent { get; private set; }
         public string Value { get; private set; }
         public bool IsEnvelope { get; private set; }
@@ -47,7 +48,7 @@ namespace EdiFabric.Framework.Messages
         
         public bool IsTrigger
         {
-            get { return Parent != null && Parent.Prefix == EdiPrefix.G && IndexInParent() == 0; }
+            get { return Parent != null && Parent.Prefix == Prefixes.G && IndexInParent() == 0; }
         }
 
         public string Path
@@ -84,7 +85,7 @@ namespace EdiFabric.Framework.Messages
             if (propertyInfo == null) throw new ArgumentNullException("propertyInfo");
 
             var systemType = propertyInfo.GetSystemType();
-            var name = propertyInfo.Name.StartsWith(EdiPrefix.D.ToString())
+            var name = propertyInfo.Name.StartsWith(Prefixes.D.ToString())
                 ? propertyInfo.Name
                 : systemType.Name;
             var val = value as string;
@@ -102,7 +103,7 @@ namespace EdiFabric.Framework.Messages
         public static ParseNode BuldTree(Type type, bool lazyLoadSegment) 
         {
             if (type == null) throw new ArgumentNullException("type");
-            if (type.Name.StartsWith(EdiPrefix.D.ToString()))
+            if (type.Name.StartsWith(Prefixes.D.ToString()))
                 throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
@@ -113,7 +114,7 @@ namespace EdiFabric.Framework.Messages
                 var currentNode = stack.Pop();
 
                 var properties = currentNode.Type.GetProperties().Sort();
-                if (currentNode.Prefix == EdiPrefix.S)
+                if (currentNode.Prefix == Prefixes.S)
                 {
                     if (properties.Count > 0)
                         currentNode._firstChildValues = properties[0].GetProperyValues();
@@ -138,7 +139,7 @@ namespace EdiFabric.Framework.Messages
             if (instance == null) throw new ArgumentNullException("instance");
 
             var type = instance.GetType();
-            if (type.Name.StartsWith(EdiPrefix.D.ToString()))
+            if (type.Name.StartsWith(Prefixes.D.ToString()))
                 throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
@@ -207,7 +208,7 @@ namespace EdiFabric.Framework.Messages
             var splitName = Name.Split('_');
             if (splitName.Length < 2) 
                 throw new Exception(string.Format("Invalid node name: {0}", Name));
-            EdiPrefix prefix;
+            Prefixes prefix;
             if (!Enum.TryParse(splitName[0], out prefix))
                 throw new Exception(string.Format("Cannot derive node prefix from: {0}", splitName[0]));
             Prefix = prefix;
