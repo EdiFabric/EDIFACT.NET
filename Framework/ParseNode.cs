@@ -16,7 +16,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Framework.Constants;
 
-namespace EdiFabric.Framework.Messages
+namespace EdiFabric.Framework
 {
     class ParseNode 
     {

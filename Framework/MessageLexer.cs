@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Messages;
 
 namespace EdiFabric.Framework
 {

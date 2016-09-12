@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Constants;
 
-namespace EdiFabric.Framework.Messages
+namespace EdiFabric.Framework
 {
     static class PropertyInfoExtensions
     {
