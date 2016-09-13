@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Headers;
 
 namespace EdiFabric.Framework
 {
@@ -86,10 +87,19 @@ namespace EdiFabric.Framework
                     case SegmentTags.Se:
                         currentMessage.Add(segmentContext);
                         currentMessage.Add(_groupHeader);
-                        var msg = currentMessage.Analyze(_separators, _definitionsAssemblyName);
-                        var iHeader = _interchangeHeader.ParseHeaderSegment(_separators);
-                        var gHeader = _groupHeader.ParseHeaderSegment(_separators);
-                        Message = new EdiMessage(msg, iHeader, gHeader);
+                        var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName);
+                        if (segmentContext.Tag == SegmentTags.Unt)
+                        {
+                            Message = new EdiMessage(messageInstance,
+                                _interchangeHeader.ParseSegment<S_UNB>(_separators),
+                                _groupHeader.ParseSegment<S_UNG>(_separators));
+                        }
+                        else
+                        {
+                            Message = new EdiMessage(messageInstance,
+                                _interchangeHeader.ParseSegment<S_ISA>(_separators),
+                                _groupHeader.ParseSegment<S_GS>(_separators));
+                        }
                         result = true;
                         currentMessage.Clear();
                         break;

@@ -14,34 +14,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Headers;
 
 namespace EdiFabric.Framework
 {
     internal static class HelperExtensions
     {
-        internal static object ParseHeaderSegment(this SegmentContext segmentContext, Separators separators)
+        internal static object ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
         {
-            Type type;
-            switch (segmentContext.Tag)
-            {
-                case SegmentTags.Unb:
-                    type = typeof (S_UNB);
-                    break;
-                case SegmentTags.Isa:
-                    type = typeof (S_ISA);
-                    break;
-                case SegmentTags.Ung:
-                    type = typeof (S_UNG);
-                    break;
-                case SegmentTags.Gs:
-                    type = typeof (S_GS);
-                    break;
-                default:
-                    throw new ParserException(string.Format("Unsupported header tag {0}", segmentContext.Tag));
-            }
-
-            var parseNode = ParseNode.BuldTree(type, false);
+            var parseNode = ParseNode.BuldTree(typeof(T), false);
             parseNode.ParseSegment(segmentContext.Value, separators);
             return parseNode.ToInstance();
         }

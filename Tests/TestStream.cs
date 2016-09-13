@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Envelopes.Edifact;
-using EdiFabric.Framework.Envelopes.X12;
+using EdiFabric.Framework.Headers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
@@ -17,12 +16,12 @@ namespace EdiFabric.Tests
             var i = 0;
 
             // ACT
-            EdiStream es = new EdiStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-            while (es.GetNextMessage())
+            EdiReader es = EdiReader.Create(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), null);
+            while (es.ReadMessage())
             {
-                var message = es.Message;
-                var header = es.InterchangeHeader;
-                var group = es.InterchangeGroup;
+                var message = es.Message.Value;
+                var header = es.Message.InterchangeHeader;
+                var group = es.Message.GroupHeader;
                 i++;
 
                 // ASSERT
@@ -44,12 +43,12 @@ namespace EdiFabric.Tests
             var i = 0;
 
             // ACT
-            EdiStream es = new EdiStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-            while (es.GetNextMessage())
+            EdiReader es = EdiReader.Create(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample), null);
+            while (es.ReadMessage())
             {
-                var message = es.Message;
-                var header = es.InterchangeHeader;
-                var group = es.InterchangeGroup;
+                var message = es.Message.Value;
+                var header = es.Message.InterchangeHeader;
+                var group = es.Message.GroupHeader;
                 i++;
 
                 // ASSERT
