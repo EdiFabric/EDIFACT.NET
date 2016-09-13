@@ -144,7 +144,7 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        internal static bool IsSameSegment(this ParseNode parseNode, SegmentContext segmentContext)
+        internal static bool IsEqual(this ParseNode parseNode, SegmentContext segmentContext)
         {
             if(parseNode.Prefix != Prefixes.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
 

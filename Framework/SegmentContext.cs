@@ -40,7 +40,7 @@ namespace EdiFabric.Framework
             Value = ediSegment;
 
             // UNA segments don't have values
-            if (ediSegment.StartsWith(SegmentTags.Una.ToString())) Name = SegmentTags.Una.ToString();
+            if (ediSegment.StartsWith(SegmentTags.UNA.ToString())) Name = SegmentTags.UNA.ToString();
 
             // Handle blank segments, e.g. BHT+'
             var firstComponentDataElements = dataElements[1].Split(separators.ComponentDataElement.ToCharArray(),
@@ -53,11 +53,12 @@ namespace EdiFabric.Framework
                         StringSplitOptions.None);
                 SecondValue = secondComponentDataElements[0];
             }
-            if (Name == Hl && !string.IsNullOrEmpty(dataElements[2])) ParentId = dataElements[2];
+            if (Name == Hl && !string.IsNullOrEmpty(dataElements[2])) 
+                ParentId = dataElements[2];
             IsJump = Name == Hl && FirstValue != null && FirstValue != "1" &&
                      (int.Parse(FirstValue) - int.Parse(ParentId ?? "0") > 1);
 
-            Tag = ediSegment.ToSegmentTag();
+            Tag = ediSegment.ToSegmentTag(separators);
             IsHeader = Header();
             LogName = ToLogName();
         }
@@ -80,8 +81,8 @@ namespace EdiFabric.Framework
 
         private bool Header()
         {
-            return Tag == SegmentTags.Unb || Tag == SegmentTags.Ung || Tag == SegmentTags.Une || Tag == SegmentTags.Unz ||
-                   Tag == SegmentTags.Isa || Tag == SegmentTags.Gs || Tag == SegmentTags.Ge || Tag == SegmentTags.Iea;
+            return Tag == SegmentTags.UNB || Tag == SegmentTags.UNG || Tag == SegmentTags.UNE || Tag == SegmentTags.UNZ ||
+                   Tag == SegmentTags.ISA || Tag == SegmentTags.GS || Tag == SegmentTags.GE || Tag == SegmentTags.IEA;
         }
     }
 }

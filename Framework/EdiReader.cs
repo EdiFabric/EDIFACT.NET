@@ -69,26 +69,26 @@ namespace EdiFabric.Framework
 
                 switch (segmentContext.Tag)
                 {
-                    case SegmentTags.Una:
-                    case SegmentTags.Unz:
-                    case SegmentTags.Iea:
-                    case SegmentTags.Une:
-                    case SegmentTags.Ge:
+                    case SegmentTags.UNA:
+                    case SegmentTags.UNZ:
+                    case SegmentTags.IEA:
+                    case SegmentTags.UNE:
+                    case SegmentTags.GE:
                         break;
-                    case SegmentTags.Unb:
-                    case SegmentTags.Isa:
+                    case SegmentTags.UNB:
+                    case SegmentTags.ISA:
                         _interchangeHeader = segmentContext;
                         break;
-                    case SegmentTags.Ung:
-                    case SegmentTags.Gs:
+                    case SegmentTags.UNG:
+                    case SegmentTags.GS:
                         _groupHeader = segmentContext;
                         break;
-                    case SegmentTags.Unt:
-                    case SegmentTags.Se:
+                    case SegmentTags.UNT:
+                    case SegmentTags.SE:
                         currentMessage.Add(segmentContext);
                         currentMessage.Add(_groupHeader);
                         var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName);
-                        if (segmentContext.Tag == SegmentTags.Unt)
+                        if (segmentContext.Tag == SegmentTags.UNT)
                         {
                             Message = new EdiMessage(messageInstance,
                                 _interchangeHeader.ParseSegment<S_UNB>(_separators),

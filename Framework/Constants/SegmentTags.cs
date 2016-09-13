@@ -13,19 +13,19 @@ namespace EdiFabric.Framework.Constants
 {
     enum SegmentTags
     {
-        Una,
-        Unb,
-        Ung,
-        Une,
-        Unz,
-        Isa,
-        Iea,
-        Ge,
-        Gs,
-        Unh,
-        Unt,
-        St,
-        Se,
-        Regular
+        Regular,
+        UNA,
+        UNB,
+        UNG,
+        UNE,
+        UNZ,
+        ISA,
+        IEA,
+        GE,
+        GS,
+        UNH,
+        UNT,
+        ST,
+        SE        
     }
 }

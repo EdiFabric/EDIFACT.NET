@@ -54,16 +54,16 @@ namespace EdiFabric.Framework
         {
             if (contents == null) throw new ArgumentNullException("contents");
 
-            switch (contents.ToSegmentTag())
+            switch (contents.ToSegmentTag(null))
             {
-                case SegmentTags.Isa:
+                case SegmentTags.ISA:
                     try
                     {
                         // Parse X12 separators, they are always contained within the envelope
                         DataElement = string.Concat(contents[3]);
                         var isa = string.Concat(contents.Take(106));
                         var isaElements = isa.Split(DataElement.ToCharArray());
-                        ComponentDataElement = isaElements[16];
+                        ComponentDataElement = string.Concat(isaElements[16].First());
                         // Repetition is either the default ^ or else if explicitly specified when U is present
                         RepetitionDataElement = isaElements[11] != "U"
                             ? isaElements[11]
@@ -82,7 +82,7 @@ namespace EdiFabric.Framework
                         throw new ParserException("Unable to extract X12 interchange delimiters", ex);
                     }
                     break;
-                case SegmentTags.Unb:
+                case SegmentTags.UNB:
                     var defaultSeparators = DefaultSeparatorsEdifact();
                     //  Default EDIFACT separators
                     ComponentDataElement = defaultSeparators.ComponentDataElement;
@@ -92,11 +92,11 @@ namespace EdiFabric.Framework
                     Segment = defaultSeparators.Segment;
                     Format = Formats.Edifact;                    
                     break;
-                case SegmentTags.Una:
+                case SegmentTags.UNA:
                     try
                     {
                         //  Parse UNA separators
-                        var una = contents.Replace(SegmentTags.Una.ToString(), "").Take(6).ToArray();
+                        var una = contents.Replace(SegmentTags.UNA.ToString(), "").Take(6).ToArray();
                         ComponentDataElement = string.Concat(una[0]);
                         DataElement = string.Concat(una[1]);
                         Escape = string.Concat(una[3]);
@@ -111,8 +111,8 @@ namespace EdiFabric.Framework
                     break;
                 default:
                     throw new ParserException(
-                        string.Format("No {0} or {1} or {2} found in the beginning of message", SegmentTags.Una,
-                            SegmentTags.Unb, SegmentTags.Isa));
+                        string.Format("No {0} or {1} or {2} found in the beginning of message", SegmentTags.UNA,
+                            SegmentTags.UNB, SegmentTags.ISA));
             }
             
         }

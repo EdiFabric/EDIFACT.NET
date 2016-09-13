@@ -22,44 +22,45 @@ namespace EdiFabric.Framework
         {
             var type = segments.ToType(separators, definitionsAssembly);
             var messageGrammar = ParseNode.BuldTree(type, true);
-            var lastSegment = messageGrammar.Children.First();
-            var newTree = new ParseNode(type);
+            var segmentPosition = messageGrammar.Children.First();
+            var instancePosition = new ParseNode(type);
 
             foreach (var segment in segments)
             {
-                Logger.Log(string.Format("Segment to find: {0}", segment.LogName));
+                if (segment.IsHeader) continue;
+
+                Logger.Log(string.Format("Segment to match: {0}", segment.LogName));
                 try
                 {
                     // Jump back to HL segment if needed
-                    if (segment.IsJump) lastSegment = lastSegment.JumpToHl(newTree, segment.ParentId);
+                    if (segment.IsJump) segmentPosition = segmentPosition.JumpToHl(instancePosition, segment.ParentId);
 
-                    var currSeg =
-                        lastSegment.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsSameSegment(segment));
+                    var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                     if (currSeg == null)
                         throw new Exception(
                             string.Format(
-                                "Segment {0} can't be found after segment {1}. Please check the definition class.",
-                                segment, lastSegment.EdiName));
+                                "Reference to segment {0} was not found in the definition class. Last found segment was {1}.",
+                                segment.Value, segmentPosition.EdiName));
                     
-                    var segmentTree = currSeg.AncestorsToIntersection(lastSegment);
-                    newTree = newTree.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
+                    var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
+                    instancePosition = instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
                     foreach (var parseTree in segmentTree)
                     {
-                        newTree = newTree.AddChild(parseTree.Type, parseTree.Type.Name);
+                        instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
                         if (parseTree.Prefix == Prefixes.S)
-                            newTree.ParseSegment(segment.Value, separators);
+                            instancePosition.ParseSegment(segment.Value, separators);
                     }
 
-                    lastSegment = currSeg;
+                    segmentPosition = currSeg;
                 }
                 catch (Exception ex)
                 {
-                    throw new ParserException("Failed at line: " + segment, ex);
+                    throw new ParserException("Failed at line: " + segment.Value, ex);
                 }
-                Logger.Log(string.Format("Segment found: {0}", lastSegment.Name));
+                Logger.Log(string.Format("Matched segment: {0}", segmentPosition.Name));
             }
 
-            return newTree.Root().ToInstance();
+            return instancePosition.Root().ToInstance();
         }
 
         private static Type ToType(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
@@ -67,22 +68,22 @@ namespace EdiFabric.Framework
             switch (separators.Format)
             {
                 case Formats.Edifact:
-                    return envelopes.ToContextEdifact(separators, definitionsAssembly);
+                    return envelopes.ToEdifactType(separators, definitionsAssembly);
                 case Formats.X12:
-                    return envelopes.ToContextX12(separators, definitionsAssembly);
+                    return envelopes.ToX12Type(separators, definitionsAssembly);
                 default:
                     throw new Exception(string.Format("Unsupported format: {0}", separators.Format));
             }
         }
 
-        private static Type ToContextX12(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
+        private static Type ToX12Type(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
         {
             string version;
             string tag;
 
             try
             {
-                var gs = envelopes.Single(es => es.Value.StartsWith(SegmentTags.Gs.ToString()));
+                var gs = envelopes.Single(es => es.Value.StartsWith(SegmentTags.GS.ToString()));
                 var ediCompositeDataElementsGs = gs.Value.GetDataElements(separators);
                 version = ediCompositeDataElementsGs[7];
             }
@@ -93,7 +94,7 @@ namespace EdiFabric.Framework
 
             try
             {
-                var st = envelopes.Single(es => es.Value.StartsWith(SegmentTags.St.ToString()));
+                var st = envelopes.Single(es => es.Value.StartsWith(SegmentTags.ST.ToString()));
                 var ediCompositeDataElementsSt = st.Value.GetDataElements(separators);
                 tag = ediCompositeDataElementsSt[0];
             }
@@ -102,16 +103,16 @@ namespace EdiFabric.Framework
                 throw new ParserException("Can't parse ST segment.", ex);
             }
 
-            return ToSystemType(separators.Format, version, tag, definitionsAssembly);
+            return ToType(separators.Format, version, tag, definitionsAssembly);
         }
 
-        private static Type ToContextEdifact(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
+        private static Type ToEdifactType(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
         {
             string version;
             string tag;
             try
             {
-                var unh = envelopes.Single(es => es.Value.StartsWith(SegmentTags.Unh.ToString()));
+                var unh = envelopes.Single(es => es.Value.StartsWith(SegmentTags.UNH.ToString()));
                 var ediCompositeDataElements = unh.Value.GetDataElements(separators);
                 var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(separators);
 
@@ -123,13 +124,15 @@ namespace EdiFabric.Framework
                 throw new ParserException("Can't parse UNH segment.", ex);
             }
 
-            return ToSystemType(separators.Format, version, tag, definitionsAssembly);
+            return ToType(separators.Format, version, tag, definitionsAssembly);
         }
 
-        private static Type ToSystemType(Formats format, string version, string tag, string definitionsAssemblyName)
+        private static Type ToType(Formats format, string version, string tag, string definitionsAssemblyName)
         {
             if (string.IsNullOrEmpty(version)) throw new NullReferenceException("version");
             if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag");
+            if (string.IsNullOrEmpty(definitionsAssemblyName))
+                throw new NullReferenceException("definitionsAssemblyName");
 
             var typeFullName = "EdiFabric.Definitions" + "." + format + "_" + version + "_" + tag;
 

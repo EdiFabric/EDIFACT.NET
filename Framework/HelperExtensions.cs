@@ -66,11 +66,14 @@ namespace EdiFabric.Framework
                 .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
         }
 
-        internal static SegmentTags ToSegmentTag(this string segment)
+        internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
         {
-            var cleanSegment = segment.Replace(Environment.NewLine, string.Empty);
+            var segmentTag = separators != null
+                ? segment.Split(separators.DataElement.ToCharArray(), StringSplitOptions.None).FirstOrDefault()
+                : segment.ToUpper().TrimStart().Substring(0, 3);
+
             SegmentTags tag;
-            return Enum.TryParse(cleanSegment.ToUpper().Substring(0, 3), out tag) ? tag : SegmentTags.Regular;
+            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
         }
 
         internal static string[] GetSegments(this string message, Separators separators)
@@ -127,7 +130,7 @@ namespace EdiFabric.Framework
             StringSplitOptions splitOption, bool escapeTheEscape = false)
         {
             if (string.IsNullOrEmpty(escapeCharacter))
-                return contents.Split(splitSeparator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                return contents.Split(splitSeparator.ToCharArray(), splitOption);
 
             var result = new List<string>();
             var line = "";
