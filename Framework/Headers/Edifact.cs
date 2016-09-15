@@ -238,4 +238,43 @@ namespace EdiFabric.Framework.Headers
         [XmlElement(Order = 1)]
         public string D_0020_2 { get; set; }
     }
+
+    /// <summary>
+    /// This class represents an EDI EDIFACT group.
+    /// </summary>
+    /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
+    public class EdifactGroup<T> : EdiContainer<S_UNG, T, S_UNE>, IEdiGroup
+    {
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="EdifactGroup{T}"/> class.
+        /// </summary>
+        /// <param name="header">The group header.</param>
+        public EdifactGroup(S_UNG header)
+            : base(header, (ung, i) => new S_UNE
+            {
+                D_0060_1 = i.ToString(),
+                D_0048_2 = ung.D_0048_5
+            })
+        {
+        }
+    }
+
+    /// <summary>
+    /// This class represents an EDI EDIFACT interchange.
+    /// </summary>
+    public class EdifactInterchange : EdiContainer<S_UNB, IEdiGroup, S_UNZ>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdifactInterchange"/> class.
+        /// </summary>
+        /// <param name="header">The interchange header.</param>
+        public EdifactInterchange(S_UNB header)
+            : base(header, (unb, i) => new S_UNZ
+            {
+                D_0036_1 = i.ToString(),
+                D_0020_2 = unb.D_0020_5
+            })
+        {
+        }
+    }
 }

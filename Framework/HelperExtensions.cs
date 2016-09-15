@@ -19,11 +19,11 @@ namespace EdiFabric.Framework
 {
     internal static class HelperExtensions
     {
-        internal static object ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
+        internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
         {
             var parseNode = ParseNode.BuldTree(typeof(T), false);
             parseNode.ParseSegment(segmentContext.Value, separators);
-            return parseNode.ToInstance();
+            return (T)parseNode.ToInstance();
         }
 
         internal static string ReadSegment(this TextReader reader, Separators separators)

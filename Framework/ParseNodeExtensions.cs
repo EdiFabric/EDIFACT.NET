@@ -319,7 +319,7 @@ namespace EdiFabric.Framework
         {
             var index = parseNode.IndexInParent();
             if (index <= 0) return false;
-            var previous = parseNode.Children.ElementAt(index - 1);
+            var previous = parseNode.Parent.Children.ElementAt(index - 1);
             return parseNode.Name == previous.Name;
         }
 

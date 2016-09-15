@@ -9,6 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EdiFabric.Framework.Headers
@@ -123,5 +124,44 @@ namespace EdiFabric.Framework.Headers
 
         [XmlElement(Order = 1)]
         public string D_709_2 { get; set; }
+    }
+
+    /// <summary>
+    /// This class represents an EDI X12 group.
+    /// </summary>
+    /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
+    public class X12Group<T> : EdiContainer<S_GS, T, S_GE>, IEdiGroup
+    {
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="X12Group{T}"/> class.
+        /// </summary>
+        /// <param name="header">The group header.</param>
+        public X12Group(S_GS header)
+            : base(header, (gs, i) => new S_GE
+            {
+                D_97_1 = i.ToString(),
+                D_28_2 = gs.D_28_6
+            })
+        {
+        }
+    }
+
+    /// <summary>
+    /// This class represents an EDI X12 interchange.
+    /// </summary>
+    public class X12Interchange : EdiContainer<S_ISA, IEdiGroup, S_IEA> 
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X12Interchange"/> class.
+        /// </summary>
+        /// <param name="header">The interchange header.</param>
+        public X12Interchange(S_ISA header)
+            : base(header, (gs, i) => new S_IEA
+            {
+                D_405_1 = i.ToString(),
+                D_709_2 = header.D_709_13
+            })
+        {
+        }
     }
 }

@@ -154,7 +154,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsX12()
         {
-            return new Separators(Formats.X12, "~", ":", string.Empty, "*", "^");
+            return new Separators(Formats.X12, "~", ":", "*", "^");
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsEdifact()
         {
-            return new Separators(Formats.Edifact, "'", ":", "?", "+", "*");
+            return new Separators(Formats.Edifact, "'", ":", "+", "*", "?");
         }
     }
 }

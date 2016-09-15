@@ -14,14 +14,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Headers;
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Readers
 {
     /// <summary>
     /// Parses EDI messages into .NET object.
     /// </summary>
-    public class EdiReader : IDisposable
+    public class EdiReader<T, TU> : IDisposable
     {
         private readonly Separators _separators;
         private readonly StreamReader _streamReader;
@@ -32,21 +31,15 @@ namespace EdiFabric.Framework
         /// <summary>
         /// The EDI message containing the parsed object and the group and interchange headers
         /// </summary>
-        public EdiMessage Message { get; private set; }
-
+        public EdiMessage<T, TU> Message { get; private set; }
+        
         /// <summary>
-        /// Factory method to initialize a new instance of the <see cref="EdiReader"/> class.
+        /// Initializes a new instance of the <see cref="EdiReader{T, TU}"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream.</param>
         /// <param name="definitionsAssemblyName">The full assembly name of the assembly with the definition classes.</param>
         /// <param name="encoding">The encoding.</param>
-        /// <returns></returns>
-        public static EdiReader Create(Stream ediStream, string definitionsAssemblyName, Encoding encoding = null)
-        {
-            return new EdiReader(ediStream, definitionsAssemblyName, encoding);
-        }
-
-        private EdiReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
+        protected EdiReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
         {
             _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, false);
             _separators = new Separators(ExtractHeader());
@@ -88,18 +81,9 @@ namespace EdiFabric.Framework
                         currentMessage.Add(segmentContext);
                         currentMessage.Add(_groupHeader);
                         var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName);
-                        if (segmentContext.Tag == SegmentTags.UNT)
-                        {
-                            Message = new EdiMessage(messageInstance,
-                                _interchangeHeader.ParseSegment<S_UNB>(_separators),
-                                _groupHeader.ParseSegment<S_UNG>(_separators));
-                        }
-                        else
-                        {
-                            Message = new EdiMessage(messageInstance,
-                                _interchangeHeader.ParseSegment<S_ISA>(_separators),
-                                _groupHeader.ParseSegment<S_GS>(_separators));
-                        }
+                        Message = new EdiMessage<T, TU>(messageInstance,
+                            _interchangeHeader.ParseSegment<T>(_separators),
+                            _groupHeader.ParseSegment<TU>(_separators));
                         result = true;
                         currentMessage.Clear();
                         break;
@@ -116,7 +100,7 @@ namespace EdiFabric.Framework
         /// Reads the stream to the end.
         /// </summary>
         /// <returns>All the messages that were read.</returns>
-        public IEnumerable<EdiMessage> ReadAllMessages()
+        public IEnumerable<EdiMessage<T, TU>> ReadAllMessages()
         {
             while (ReadMessage())
             {
