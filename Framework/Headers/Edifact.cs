@@ -9,6 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace EdiFabric.Framework.Headers
@@ -254,7 +255,7 @@ namespace EdiFabric.Framework.Headers
             {
                 D_0060_1 = i.ToString(),
                 D_0048_2 = ung.D_0048_5
-            })
+            }, Separators.DefaultSeparatorsEdifact())
         {
         }
     }
@@ -273,8 +274,23 @@ namespace EdiFabric.Framework.Headers
             {
                 D_0036_1 = i.ToString(),
                 D_0020_2 = unb.D_0020_5
-            })
+            }, Separators.DefaultSeparatorsEdifact())
         {
+        }
+
+        public override IEnumerable<string> GenerateEdi(Separators separators = null)
+        {
+            var result = new List<string>();
+            var currentSeparators = separators ?? Separators.DefaultSeparatorsEdifact();
+
+            result.AddRange(ToEdi(Header, currentSeparators));
+            foreach (var item in Items)
+            {
+                result.AddRange(item.GenerateEdi(currentSeparators));
+            }
+            result.AddRange(ToEdi(Trailer, currentSeparators));
+
+            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
+namespace EdiFabric.Rules.X12004010X098A1837 {
     using System;
     using System.Xml.Serialization;
     using System.Collections.Generic;
@@ -673,9 +673,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public S_SBR_SubscriberInformation_TS837Q1_2000BD_SBR01_PayerResponsibilitySequenceNumberCode D_SBR01_PayerResponsibilitySequenceNumberCode {get; set;}
     [XmlElement(Order=1)]
     public S_SBR_SubscriberInformation_TS837Q1_2000BD_SBR02_IndividualRelationshipCode D_SBR02_IndividualRelationshipCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_SBR02_IndividualRelationshipCodeSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_SBR03_InsuredGroupOrPolicyNumber {get; set;}
     [XmlElement(Order=3)]
@@ -2101,9 +2098,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public class S_CR1_AmbulanceTransportInformation_TS837Q1_2300 {
     [XmlElement(Order=0)]
     public S_CR1_AmbulanceTransportInformation_TS837Q1_2300D_CR101_UnitOrBasisForMeasurementCode D_CR101_UnitOrBasisForMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitOrBasisForMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -2587,9 +2581,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public class S_HSD_HealthCareServicesDelivery_TS837Q1_2305 {
     [XmlElement(Order=0)]
     public S_HSD_HealthCareServicesDelivery_TS837Q1_2305D_HSD01_Visits D_HSD01_Visits {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_HSD01_VisitsSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_HSD02_NumberOfVisits {get; set;}
     [XmlElement(Order=2)]
@@ -4530,9 +4521,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public class S_CR1_AmbulanceTransportInformation_TS837Q1_2400 {
     [XmlElement(Order=0)]
     public S_CR1_AmbulanceTransportInformation_TS837Q1_2400D_CR101_UnitOrBasisForMeasurementCode D_CR101_UnitOrBasisForMeasurementCode {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_CR101_UnitOrBasisForMeasurementCodeSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -5504,9 +5492,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public class S_HSD_HealthCareServicesDelivery_TS837Q1_2400 {
     [XmlElement(Order=0)]
     public S_HSD_HealthCareServicesDelivery_TS837Q1_2400D_HSD01_Visits D_HSD01_Visits {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=1)]
-    public bool D_HSD01_VisitsSpecified {get; set;}
     [XmlElement(Order=1)]
     public string D_HSD02_NumberOfVisits {get; set;}
     [XmlElement(Order=2)]
@@ -6653,9 +6638,6 @@ namespace EdiFabric.Definitions.Hipaa_004010_837_X098 {
     public string D_FRM01_QuestionNumberLetter {get; set;}
     [XmlElement(Order=1)]
     public S_FRM_SupportingDocumentation_TS837Q1_2440D_FRM02_QuestionResponse D_FRM02_QuestionResponse {get; set;}
-    [XmlIgnore]
-    [XmlElementAttribute(Order=2)]
-    public bool D_FRM02_QuestionResponseSpecified {get; set;}
     [XmlElement(Order=2)]
     public string D_FRM03_QuestionResponse {get; set;}
     [XmlElement(Order=3)]

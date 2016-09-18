@@ -141,7 +141,7 @@ namespace EdiFabric.Framework.Headers
             {
                 D_97_1 = i.ToString(),
                 D_28_2 = gs.D_28_6
-            })
+            }, Separators.DefaultSeparatorsX12())
         {
         }
     }
@@ -160,8 +160,23 @@ namespace EdiFabric.Framework.Headers
             {
                 D_405_1 = i.ToString(),
                 D_709_2 = header.D_709_13
-            })
+            }, Separators.DefaultSeparatorsX12())
         {
+        }
+
+        public override IEnumerable<string> GenerateEdi(Separators separators = null)
+        {
+            var result = new List<string>();
+            var currentSeparators = separators ?? Separators.DefaultSeparatorsX12();
+
+            result.AddRange(ToEdi(Header, currentSeparators));
+            foreach (var item in Items)
+            {
+                result.AddRange(item.GenerateEdi(currentSeparators));
+            }
+            result.AddRange(ToEdi(Trailer, currentSeparators));
+
+            return result;
         }
     }
 }

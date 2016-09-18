@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using EdiFabric.Definitions.Edifact_D00A_INVOIC;
+using EdiFabric.Rules;
 using EdiFabric.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

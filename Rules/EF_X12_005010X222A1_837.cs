@@ -1,4 +1,4 @@
-namespace EdiFabric.Definitions.Hipaa_005010_837_X222 {
+namespace EdiFabric.Rules.X12005010X222A1837 {
     using System;
     using System.Xml.Serialization;
     using System.Collections.Generic;

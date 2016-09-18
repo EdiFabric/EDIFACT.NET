@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EdiFabric.Definitions.X12_002040_810;
+using EdiFabric.Rules;
 using EdiFabric.Framework;
 
 namespace EdiFabric.Tests

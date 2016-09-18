@@ -26,8 +26,7 @@ namespace EdiFabric.Framework
         public Prefixes Prefix { get; private set; }
         public ParseNode Parent { get; private set; }
         public string Value { get; private set; }
-        public bool IsEnvelope { get; private set; }
-
+        
         private readonly List<ParseNode> _children = new List<ParseNode>();
         public IReadOnlyCollection<ParseNode> Children
         {
@@ -212,8 +211,7 @@ namespace EdiFabric.Framework
             if (!Enum.TryParse(splitName[0], out prefix))
                 throw new Exception(string.Format("Cannot derive node prefix from: {0}", splitName[0]));
             Prefix = prefix;
-            EdiName = splitName[1];
-            IsEnvelope = Type.FullName.Contains("EdiFabric.Framework.Envelopes");           
+            EdiName = splitName[1];           
         }
     }
 }

@@ -44,6 +44,7 @@ namespace EdiFabric.Framework.Headers
         public T Header { get; private set; }
         private readonly Func<T, int, TV> _trailerSetter;
         private readonly List<TU> _items = new List<TU>();
+        private readonly Separators _defaultSeparators;
         /// <summary>
         /// The items (groups or messages)
         /// </summary>
@@ -55,19 +56,21 @@ namespace EdiFabric.Framework.Headers
         /// The trailer (IEA or UNZ)
         /// </summary>
         public TV Trailer { get; private set; }
-        
+
         /// <summary>
         /// Protected constructor. 
         /// </summary>
         /// <param name="header">The header type.</param>
         /// <param name="trailerSetter">The function to set the trailer.</param>
-        protected EdiContainer(T header, Func<T, int, TV> trailerSetter)
+        /// <param name="defaultSeparators">The default separators.</param>
+        protected EdiContainer(T header, Func<T, int, TV> trailerSetter, Separators defaultSeparators)
         {
             if (header == null) throw new ArgumentNullException("header");
             if (trailerSetter == null) throw new ArgumentNullException("trailerSetter");
 
             Header = header;
             _trailerSetter = trailerSetter;
+            _defaultSeparators = defaultSeparators;
         }
 
         /// <summary>
@@ -99,22 +102,22 @@ namespace EdiFabric.Framework.Headers
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
         /// <returns>The collection of EDI strings.</returns>
-        public IEnumerable<string> GenerateEdi(Separators separators)
+        public virtual IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
+            var currentSeparators = separators ?? _defaultSeparators;
 
-            result.AddRange(ToEdi(Header, separators));
+            result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
-                var group = item as IEdiGroup;
-                result.AddRange(group != null ? group.GenerateEdi(separators) : ToEdi(item, separators));
+                result.AddRange(ToEdi(item, currentSeparators));
             }
-            result.AddRange(ToEdi(Trailer, separators));
+            result.AddRange(ToEdi(Trailer, currentSeparators));
 
             return result;
         }
 
-        private static IEnumerable<string> ToEdi(object item, Separators separators)
+        protected static IEnumerable<string> ToEdi(object item, Separators separators)
         {
             var parseTree = ParseNode.BuldTree(item);
             var segments = parseTree.Descendants().Where(d => d.Prefix == Prefixes.S).Reverse();

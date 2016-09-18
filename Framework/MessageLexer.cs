@@ -18,9 +18,13 @@ namespace EdiFabric.Framework
 {
     static class MessageLexer
     {
-        internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssembly)
+        internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
-            var type = segments.ToType(separators, definitionsAssembly);
+            if (segments == null) throw new ArgumentNullException("segments");
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
+
+            var type = segments.ToType(separators, definitionsAssemblyName);
             var messageGrammar = ParseNode.BuldTree(type, true);
             var segmentPosition = messageGrammar.Children.First();
             var instancePosition = new ParseNode(type);
@@ -63,56 +67,68 @@ namespace EdiFabric.Framework
             return instancePosition.Root().ToInstance();
         }
 
-        private static Type ToType(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
+        private static Type ToType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
+            if (segments == null) throw new ArgumentNullException("segments");
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
+
             switch (separators.Format)
             {
                 case Formats.Edifact:
-                    return envelopes.ToEdifactType(separators, definitionsAssembly);
+                    return segments.ToEdifactType(separators, definitionsAssemblyName);
                 case Formats.X12:
-                    return envelopes.ToX12Type(separators, definitionsAssembly);
+                    return segments.ToX12Type(separators, definitionsAssemblyName);
                 default:
                     throw new Exception(string.Format("Unsupported format: {0}", separators.Format));
             }
         }
 
-        private static Type ToX12Type(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
+        private static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
+            if (segments == null) throw new ArgumentNullException("segments");
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
+
             string version;
             string tag;
 
             try
             {
-                var gs = envelopes.Single(es => es.Value.StartsWith(SegmentTags.GS.ToString()));
+                var gs = segments.Single(es => es.Tag == SegmentTags.GS);
                 var ediCompositeDataElementsGs = gs.Value.GetDataElements(separators);
                 version = ediCompositeDataElementsGs[7];
             }
             catch (Exception ex)
             {
-                throw new ParserException("Can't parse GS segment.", ex);
+                throw new ParserException("Invalid GS segment.", ex);
             }
 
             try
             {
-                var st = envelopes.Single(es => es.Value.StartsWith(SegmentTags.ST.ToString()));
+                var st = segments.Single(es => es.Tag == SegmentTags.ST);
                 var ediCompositeDataElementsSt = st.Value.GetDataElements(separators);
                 tag = ediCompositeDataElementsSt[0];
             }
             catch (Exception ex)
             {
-                throw new ParserException("Can't parse ST segment.", ex);
+                throw new ParserException("Invalid ST segment.", ex);
             }
 
-            return ToType(separators.Format, version, tag, definitionsAssembly);
+            return ToType(separators.Format, version, tag, definitionsAssemblyName);
         }
 
-        private static Type ToEdifactType(this List<SegmentContext> envelopes, Separators separators, string definitionsAssembly)
+        private static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
+            if (segments == null) throw new ArgumentNullException("segments");
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
+
             string version;
             string tag;
             try
             {
-                var unh = envelopes.Single(es => es.Value.StartsWith(SegmentTags.UNH.ToString()));
+                var unh = segments.Single(es => es.Tag == SegmentTags.UNH);
                 var ediCompositeDataElements = unh.Value.GetDataElements(separators);
                 var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(separators);
 
@@ -121,31 +137,28 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParserException("Can't parse UNH segment.", ex);
+                throw new ParserException("Invalid UNH segment.", ex);
             }
 
-            return ToType(separators.Format, version, tag, definitionsAssembly);
+            return ToType(separators.Format, version, tag, definitionsAssemblyName);
         }
 
         private static Type ToType(Formats format, string version, string tag, string definitionsAssemblyName)
         {
-            if (string.IsNullOrEmpty(version)) throw new NullReferenceException("version");
-            if (string.IsNullOrEmpty(tag)) throw new NullReferenceException("tag");
-            if (string.IsNullOrEmpty(definitionsAssemblyName))
-                throw new NullReferenceException("definitionsAssemblyName");
+            if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
+            if (string.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
+            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
 
-            var typeFullName = "EdiFabric.Definitions" + "." + format + "_" + version + "_" + tag;
+            var typeFullName = "EdiFabric.Rules." + format + version + tag;
 
             typeFullName = typeFullName + ".M_" + tag;
-            typeFullName = typeFullName + ", " + definitionsAssemblyName;
-
-            var systemType = Type.GetType(typeFullName);
+            var systemType = Type.GetType(typeFullName + ", " + definitionsAssemblyName);
 
             if (systemType == null)
                 throw new ParserException(
                     string.Format(
-                        "Can't find type for type name = {0} .Please ensure that the correct class was added to the definitions project and that you pointed to the definitions project in your .config file.",
-                        typeFullName));
+                        "Type '{0}' was not found in assembly '{1}'.",
+                        typeFullName, definitionsAssemblyName));
 
             return systemType;
         }
