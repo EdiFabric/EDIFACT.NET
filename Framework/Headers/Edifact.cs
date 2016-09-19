@@ -282,6 +282,10 @@ namespace EdiFabric.Framework.Headers
         {
             var result = new List<string>();
             var currentSeparators = separators ?? Separators.DefaultSeparatorsEdifact();
+            if (separators != null)
+            {
+               result.Add(separators.ToUna()); 
+            }
 
             result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)

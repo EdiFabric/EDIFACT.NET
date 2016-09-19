@@ -82,6 +82,7 @@ namespace EdiFabric.Framework
         private bool Header()
         {
             return Tag == SegmentTags.UNB || Tag == SegmentTags.UNG || Tag == SegmentTags.UNE || Tag == SegmentTags.UNZ ||
+                   Tag == SegmentTags.UNA ||
                    Tag == SegmentTags.ISA || Tag == SegmentTags.GS || Tag == SegmentTags.GE || Tag == SegmentTags.IEA;
         }
     }

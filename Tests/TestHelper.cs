@@ -5,14 +5,19 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EdiFabric.Framework;
+using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Readers;
+using EdiFabric.Rules.EdifactD00AINVOIC;
 
 namespace EdiFabric.Tests
 {
     class TestHelper
     {
+        public const string RulesAssemblyName = "EdiFabric.Rules";
+
         public static XElement Serialize<T>(T instance, string nameSpace)
         {
-            // Fix: using instance.GetType() instead of typeof(T)
             var serializer = new XmlSerializer(instance.GetType(), nameSpace);
             using (var ms = new MemoryStream())
             {
@@ -38,6 +43,25 @@ namespace EdiFabric.Tests
         public static string AsString(IEnumerable<string> list, string postFix)
         {
             return list.Aggregate("", (current, item) => current + item + postFix);
+        }
+
+        public static EdiMessage<S_UNB, S_UNZ> ParseEdifact(string sample, Encoding encoding = null)
+        {
+            using (var ediReader = EdifactReader.Create(Load(sample), RulesAssemblyName, encoding ?? Encoding.Default))
+            {
+                return ediReader.ReadMessage() ? ediReader.Message : null;
+            }
+        }
+
+        public static EdifactInterchange GenerateEdifact(string sample)
+        {
+            var message = ParseEdifact(sample);
+            var group = new EdifactGroup<M_INVOIC>(null);
+            group.AddItem(message.Value as M_INVOIC);
+            var interchange = new EdifactInterchange(message.InterchangeHeader);
+            interchange.AddItem(group);
+
+            return interchange;
         }
     }
 }

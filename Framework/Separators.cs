@@ -134,8 +134,11 @@ namespace EdiFabric.Framework
         public static Separators SeparatorsX12(string segment, string componentDataElement, string dataElement,
             string repetitionDataElement)
         {
-            return new Separators(Formats.X12, segment, componentDataElement, null, dataElement,
-            repetitionDataElement);
+            var deafult = DefaultSeparatorsX12();
+
+            return new Separators(Formats.X12, segment ?? deafult.Segment,
+                componentDataElement ?? deafult.ComponentDataElement, dataElement ?? deafult.DataElement,
+                repetitionDataElement ?? deafult.RepetitionDataElement);
         }
 
         /// <summary>
@@ -144,8 +147,13 @@ namespace EdiFabric.Framework
         public static Separators SeparatorsEdifact(string segment, string componentDataElement, string dataElement,
             string repetitionDataElement, string escape)
         {
-            return new Separators(Formats.Edifact, segment, componentDataElement, escape, dataElement,
-            repetitionDataElement);
+            var deafult = DefaultSeparatorsEdifact();
+
+            return new Separators(Formats.Edifact, segment ?? deafult.Segment,
+                componentDataElement ?? deafult.ComponentDataElement,
+                dataElement ?? deafult.DataElement,
+                repetitionDataElement ?? deafult.RepetitionDataElement,
+                escape ?? deafult.Escape);
         }
 
         /// <summary>
@@ -164,6 +172,15 @@ namespace EdiFabric.Framework
         public static Separators DefaultSeparatorsEdifact()
         {
             return new Separators(Formats.Edifact, "'", ":", "+", "*", "?");
+        }
+
+        /// <summary>
+        /// Creates UNA segment.
+        /// </summary>
+        /// <returns>The separators.</returns>
+        public string ToUna()
+        {
+            return SegmentTags.UNA + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
     }
 }

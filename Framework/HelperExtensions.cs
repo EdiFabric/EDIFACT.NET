@@ -71,6 +71,8 @@ namespace EdiFabric.Framework
 
         internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
         {
+            if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
+
             var segmentTag = separators != null
                 ? segment.Split(separators.DataElement.ToCharArray(), StringSplitOptions.None).FirstOrDefault()
                 : segment.ToUpper().TrimStart().Substring(0, 3);
