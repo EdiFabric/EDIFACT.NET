@@ -9,6 +9,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using EdiFabric.Rules;
 using EdiFabric.Framework;
+using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Readers;
+using EdiFabric.Rules.EdifactD00AINVOIC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
@@ -17,44 +20,7 @@ namespace EdiFabric.Tests
     public class TestEdifact
     {
         public const string TargetNamespaceEdifact = "www.edifabric.com/edifact";
-
-        //[TestMethod]
-        //public void TestMessageDeserialization()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var message = interchange.Groups[0].Messages[0];
-
-        //    if (message.Context.Tag == "INVOIC")
-        //    {
-        //        var typedMessage = message.DeserializeItem<M_INVOIC>();
-
-        //        // ASSERT
-        //        Assert.IsNotNull(typedMessage);
-        //    }
-        //    else
-        //    {
-        //        Assert.Fail();
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void TestMessageContextFromType()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-            
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-
-        //    var systemType = (new MessageContext(interchange.Groups[0].Messages[0].Context.SystemType)).SystemType;
-
-        //    // ASSERT
-        //    Assert.IsNotNull(systemType);
-        //}
+        public const string RulesAssemblyName = "EdiFabric.Rules";
 
         //[TestMethod]
         //public void TestToInterchangeWithEnvelopeSchemaValidation()
@@ -82,24 +48,57 @@ namespace EdiFabric.Tests
         //    Assert.IsFalse(errors);
         //}
 
-        //[TestMethod]
-        //public void TestToInterchangeWithXmlComparison()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+        [TestMethod]
+        public void TestParse()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), RulesAssemblyName))
+            {
+                if (ediReader.ReadMessage())
+                {
+                    // ASSERT
+                    Assert.IsNotNull(ediReader.Message);
+                    Assert.IsNotNull(ediReader.Message.InterchangeHeader);
+                    Assert.IsNotNull(ediReader.Message.Value);
+                    Assert.IsNull(ediReader.Message.GroupHeader);
+                    var parsedXml = TestHelper.Serialize(ediReader.Message.Value, TargetNamespaceEdifact);                    
+                    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+                }
+                else
+                {
+                    Assert.Fail();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestGenerate()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
             
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
-            
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+            EdiMessage<S_UNB, S_UNZ> message;
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), RulesAssemblyName))
+            {
+                ediReader.ReadMessage();
+                message = ediReader.Message;
+            }
+            var group = new EdifactGroup<M_INVOIC>(null);
+            group.AddItem(message.Value as M_INVOIC);
+            var interchange = new EdifactInterchange(message.InterchangeHeader);
+            interchange.AddItem(group);
+
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
+
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
         //[TestMethod]
         //public void TestToInterchangeWithDefaultUna()

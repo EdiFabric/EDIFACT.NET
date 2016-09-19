@@ -65,7 +65,6 @@ namespace EdiFabric.Framework.Headers
         /// <param name="defaultSeparators">The default separators.</param>
         protected EdiContainer(T header, Func<T, int, TV> trailerSetter, Separators defaultSeparators)
         {
-            if (header == null) throw new ArgumentNullException("header");
             if (trailerSetter == null) throw new ArgumentNullException("trailerSetter");
 
             Header = header;
@@ -82,7 +81,8 @@ namespace EdiFabric.Framework.Headers
             if (item == null) throw new ArgumentNullException("item");
 
             _items.Add(item);
-            Trailer = _trailerSetter(Header, _items.Count);
+            if (Header != null)
+                Trailer = _trailerSetter(Header, _items.Count);
         }
 
         /// <summary>
@@ -94,7 +94,8 @@ namespace EdiFabric.Framework.Headers
             if (items == null) throw new ArgumentNullException("items");
 
             _items.AddRange(items);
-            Trailer = _trailerSetter(Header, _items.Count);
+            if (Header != null)
+                Trailer = _trailerSetter(Header, _items.Count);
         }
 
         /// <summary>
@@ -107,12 +108,14 @@ namespace EdiFabric.Framework.Headers
             var result = new List<string>();
             var currentSeparators = separators ?? _defaultSeparators;
 
-            result.AddRange(ToEdi(Header, currentSeparators));
+            if (Header != null)
+                result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
                 result.AddRange(ToEdi(item, currentSeparators));
             }
-            result.AddRange(ToEdi(Trailer, currentSeparators));
+            if (Trailer != null)
+                result.AddRange(ToEdi(Trailer, currentSeparators));
 
             return result;
         }

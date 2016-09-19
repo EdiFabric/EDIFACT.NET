@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -16,6 +20,24 @@ namespace EdiFabric.Tests
                 ms.Position = 0;
                 return XElement.Load(ms, LoadOptions.PreserveWhitespace);
             }
+        }
+
+        public static Stream Load(string qualifiedFileName)
+        {
+            return Assembly.GetExecutingAssembly().GetManifestResourceStream(qualifiedFileName);
+        }
+
+        public static string AsString(string qualifiedFileName)
+        {
+            using (var reader = new StreamReader(Load(qualifiedFileName), Encoding.Default))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        public static string AsString(IEnumerable<string> list, string postFix)
+        {
+            return list.Aggregate("", (current, item) => current + item + postFix);
         }
     }
 }

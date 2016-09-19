@@ -153,34 +153,46 @@ namespace EdiFabric.Framework
                 object currentInstance;
                 if (!instanceLinks.TryGetValue(path, out currentInstance))
                     throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
+                
+                if (currentInstance == null) continue;
 
                 var properties = currentNode.Type.GetProperties().Sort();
                 foreach (var propertyInfo in properties)
                 {
                     if (propertyInfo.IsList())
                     {
+                        var currentProperty = propertyInfo.PropertyType.GetProperty("Item");
                         var currentList = propertyInfo.GetValue(currentInstance) as IList;
-                        if (currentList == null) continue;
 
-                        foreach (var currentValue in currentList)
+                        if (currentList == null && !currentProperty.Name.StartsWith(Prefixes.D.ToString()) &&
+                            !currentProperty.Name.StartsWith(Prefixes.C.ToString())) continue;
+
+                        if (currentList == null || currentList.Count == 0)
                         {
-                            if (currentValue == null) continue;
-
-                            var currentProperty = propertyInfo.PropertyType.GetProperty("Item");
-                            var childParseTree = currentNode.AddChild(currentProperty, currentValue);
-                            stack.Push(childParseTree);
-
-                            instanceLinks.Add(childParseTree.Path, currentValue);
+                            currentNode.AddChild(currentProperty);
                         }
+                        else
+                        {
+                            foreach (var currentValue in currentList)
+                            {
+                                if (currentValue == null) continue;
+
+                                var childParseTree = currentNode.AddChild(currentProperty, currentValue);
+                                stack.Push(childParseTree);
+                                instanceLinks.Add(childParseTree.Path, currentValue);
+                            }
+                        }                       
                     }
                     else
                     {
                         var currentValue = propertyInfo.GetValue(currentInstance);
-                        if (currentValue == null) continue;
+                        if (currentValue == null && !propertyInfo.Name.StartsWith(Prefixes.D.ToString()) &&
+                            !propertyInfo.Name.StartsWith(Prefixes.C.ToString())) continue;
 
                         var childParseTree = currentNode.AddChild(propertyInfo, currentValue);
+                        if (currentValue == null) continue;
+                        
                         stack.Push(childParseTree);
-
                         instanceLinks.Add(childParseTree.Path, currentValue);
                     }
                 }

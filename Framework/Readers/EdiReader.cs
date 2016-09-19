@@ -79,11 +79,12 @@ namespace EdiFabric.Framework.Readers
                     case SegmentTags.UNT:
                     case SegmentTags.SE:
                         currentMessage.Add(segmentContext);
-                        currentMessage.Add(_groupHeader);
+                        if (_groupHeader != null)
+                            currentMessage.Add(_groupHeader);
                         var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName);
                         Message = new EdiMessage<T, TU>(messageInstance,
                             _interchangeHeader.ParseSegment<T>(_separators),
-                            _groupHeader.ParseSegment<TU>(_separators));
+                            _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU));
                         result = true;
                         currentMessage.Clear();
                         break;

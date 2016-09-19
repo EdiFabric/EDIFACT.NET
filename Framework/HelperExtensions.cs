@@ -62,6 +62,9 @@ namespace EdiFabric.Framework
 
         internal static string EscapeLine(this string line, Separators separators)
         {
+            if (string.IsNullOrEmpty(line))
+                return string.Empty;
+
             return line.ToCharArray()
                 .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
         }

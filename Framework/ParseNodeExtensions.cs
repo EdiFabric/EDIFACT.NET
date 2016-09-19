@@ -289,18 +289,22 @@ namespace EdiFabric.Framework
 
             foreach (var element in parseNode.Children)
             {
-                string value;
+                string value = string.Empty;
                 if (element.Prefix == Prefixes.C)
                 {
-                    value = element.Children.ElementAt(0).Value ?? string.Empty;
-                    value = element.Children.Skip(1)
-                        .Aggregate(value,
-                            (current, subElement) =>
-                                current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));                               
+                    if (element.Children.Any())
+                    {
+                        value = element.Children.ElementAt(0).Value ?? string.Empty;
+                        value = element.Children.Skip(1)
+                            .Aggregate(value,
+                                (current, subElement) =>
+                                    current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
+                        value = value.TrimEnd(separators.ComponentDataElement.ToCharArray());
+                    }
                 }
                 else
                 {
-                    value = element.Value != null ? element.Value.EscapeLine(separators) : string.Empty;
+                    value = element.Value.EscapeLine(separators);
                 }
 
                 var separator = element.IsRepetition()
@@ -310,7 +314,7 @@ namespace EdiFabric.Framework
                 result = result + separator + value;              
             }
 
-            result = result + separators.Segment;
+            result = result.TrimEnd(separators.DataElement.ToCharArray()) + separators.Segment;
 
             return result;
         }
