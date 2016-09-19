@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Constants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
@@ -151,99 +148,125 @@ namespace EdiFabric.Tests
             Assert.AreEqual(TestHelper.AsString(expectedResult), TestHelper.AsString(ediSegments, Environment.NewLine));
         }
 
-        //[TestMethod]
-        //public void TestToInterchangeWithFriendlyException()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BadSegment.txt";
-           
-        //    // ACT
-        //    try
-        //    {
-        //        Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // ASSERT
-        //        Assert.IsInstanceOfType(ex, typeof(ParserException));
-        //    }
-        //}
+        [TestMethod]
+        public void TestParseWithError()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BadSegment.txt";
 
-        //[TestMethod]
-        //public void TestToInterchangeWithGroup()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Group.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_Group.xml";
+            // ACT
+            try
+            {
+                TestHelper.ParseEdifact(sample);
+            }
+            catch (Exception ex)
+            {
+                // ASSERT
+                Assert.IsInstanceOfType(ex, typeof(ParserException));
+            }
+        }
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+        [TestMethod]
+        public void TestParseWithGroup()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Group.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
+            // ACT
+            var message = TestHelper.ParseEdifact(sample);
 
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+            // ASSERT
+            Assert.IsNotNull(message);
+            Assert.IsNotNull(message.InterchangeHeader);
+            Assert.IsNotNull(message.Value);
+            Assert.IsNotNull(message.GroupHeader);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
 
-        //[TestMethod]
-        //public void TestToInterchangeWithGroupAndMultipleMessages()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_GroupMultipleMessages.xml";
+        [TestMethod]
+        public void TestParseWithGroupAndMultipleMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            var messages = TestHelper.ParseEdifactMultiple(sample);
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
+            // ASSERT
+            Assert.IsTrue(messages.Count == 2);
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
+                          TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespaceEdifact).ToString() ==
+                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespaceEdifact).ToString());
+            foreach (var message in messages)
+            {
+                Assert.IsNotNull(message);
+                Assert.IsNotNull(message.InterchangeHeader);
+                Assert.IsNotNull(message.Value);
+                Assert.IsNotNull(message.GroupHeader);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            }
+        }
 
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+        [TestMethod]
+        public void TestParseWithMultipleGroups()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //[TestMethod]
-        //public void TestToInterchangeWithMultipleGroups()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_MultipleGroups.xml";
+            // ACT
+            var messages = TestHelper.ParseEdifactMultiple(sample);
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ASSERT
+            Assert.IsTrue(messages.Count == 2);
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
+                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespaceEdifact).ToString() !=
+                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespaceEdifact).ToString());
+            foreach (var message in messages)
+            {
+                Assert.IsNotNull(message);
+                Assert.IsNotNull(message.InterchangeHeader);
+                Assert.IsNotNull(message.Value);
+                Assert.IsNotNull(message.GroupHeader);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            }
+        }
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
+        [TestMethod]
+        public void TestParseWithMultipleMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}      
+            // ACT
+            var messages = TestHelper.ParseEdifactMultiple(sample);
 
-        //[TestMethod]
-        //public void TestToInterchangeWithMultipleMessages()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_MultipleMessages.xml";
-
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
-
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
-
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+            // ASSERT
+            Assert.IsTrue(messages.Count == 2);
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
+                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
+           foreach (var message in messages)
+            {
+                Assert.IsNotNull(message);
+                Assert.IsNotNull(message.InterchangeHeader);
+                Assert.IsNotNull(message.Value);
+                Assert.IsNull(message.GroupHeader);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            }
+        }        
 
         //[TestMethod]
         //public void TestToInterchangeWithEscapedSegmentTerminator()

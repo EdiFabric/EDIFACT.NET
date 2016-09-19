@@ -43,8 +43,8 @@ namespace EdiFabric.Framework
                     if (currSeg == null)
                         throw new Exception(
                             string.Format(
-                                "Reference to segment {0} was not found in the definition class. Last found segment was {1}.",
-                                segment.Value, segmentPosition.EdiName));
+                                "Segment {0} was not found after segment {1} in class {2}.",
+                                segment.Value, segmentPosition.EdiName, type.Name));
                     
                     var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
                     instancePosition = instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);

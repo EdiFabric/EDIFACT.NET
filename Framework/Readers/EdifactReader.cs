@@ -18,7 +18,7 @@ namespace EdiFabric.Framework.Readers
     /// <summary>
     /// Parses EDI messages into .NET object.
     /// </summary>
-    public class EdifactReader : EdiReader<S_UNB, S_UNZ>
+    public class EdifactReader : EdiReader<S_UNB, S_UNG>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EdifactReader"/> class.

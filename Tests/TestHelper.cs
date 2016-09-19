@@ -45,11 +45,19 @@ namespace EdiFabric.Tests
             return list.Aggregate("", (current, item) => current + item + postFix);
         }
 
-        public static EdiMessage<S_UNB, S_UNZ> ParseEdifact(string sample, Encoding encoding = null)
+        public static EdiMessage<S_UNB, S_UNG> ParseEdifact(string sample, Encoding encoding = null)
         {
             using (var ediReader = EdifactReader.Create(Load(sample), RulesAssemblyName, encoding ?? Encoding.Default))
             {
                 return ediReader.ReadMessage() ? ediReader.Message : null;
+            }
+        }
+
+        public static List<EdiMessage<S_UNB, S_UNG>> ParseEdifactMultiple(string sample, Encoding encoding = null)
+        {
+            using (var ediReader = EdifactReader.Create(Load(sample), RulesAssemblyName, encoding ?? Encoding.Default))
+            {
+                return ediReader.ReadAllMessages().ToList();
             }
         }
 
