@@ -202,7 +202,7 @@ namespace EdiFabric.Framework
                 {
                     var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
                         currentDataElementGrammar.Name,
-                        currentDataElementGrammar.Prefix == Prefixes.D ? repetition : null);
+                        currentDataElementGrammar.Prefix == Prefixes.D ? repetition.UnEscapeLine(separators) : null);
 
                     if (currentDataElementGrammar.Prefix != Prefixes.C) continue;
 
@@ -216,7 +216,7 @@ namespace EdiFabric.Framework
 
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,
                             currentComponentDataElementGrammar.Name,
-                            currentComponentDataElement);
+                            currentComponentDataElement.UnEscapeLine(separators));
                     }
                 }
             }
@@ -294,7 +294,9 @@ namespace EdiFabric.Framework
                 {
                     if (element.Children.Any())
                     {
-                        value = element.Children.ElementAt(0).Value ?? string.Empty;
+                        value = element.Children.ElementAt(0).Value != null
+                            ? element.Children.ElementAt(0).Value.EscapeLine(separators)
+                            : string.Empty;
                         value = element.Children.Skip(1)
                             .Aggregate(value,
                                 (current, subElement) =>
@@ -304,14 +306,14 @@ namespace EdiFabric.Framework
                 }
                 else
                 {
-                    value = element.Value.EscapeLine(separators);
+                    value = element.Value.EscapeLine(separators);  
                 }
 
                 var separator = element.IsRepetition()
                     ? separators.RepetitionDataElement
                     : separators.DataElement;
 
-                result = result + separator + value;              
+                result = result + separator + value;
             }
 
             result = result.TrimEnd(separators.DataElement.ToCharArray()) + separators.Segment;

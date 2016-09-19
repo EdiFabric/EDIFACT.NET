@@ -21,9 +21,9 @@ namespace EdiFabric.Framework
     {
         internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
         {
-            var parseNode = ParseNode.BuldTree(typeof(T), false);
+            var parseNode = ParseNode.BuldTree(typeof (T), false);
             parseNode.ParseSegment(segmentContext.Value, separators);
-            return (T)parseNode.ToInstance();
+            return (T) parseNode.ToInstance();
         }
 
         internal static string ReadSegment(this TextReader reader, Separators separators)
@@ -69,6 +69,24 @@ namespace EdiFabric.Framework
                 .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
         }
 
+        internal static string UnEscapeLine(this string line, Separators separators)
+        {
+            if (string.IsNullOrEmpty(line))
+                return string.Empty;
+
+            var result = string.Empty;
+            var temp = line.Split(new[] {separators.Escape + separators.Escape}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var str in temp)
+            {
+                result = result + str.Replace(separators.Escape, string.Empty) + separators.Escape;
+            }
+
+            if (!line.EndsWith(separators.Escape + separators.Escape))
+                result = result.TrimEnd(separators.Escape.ToCharArray());
+
+            return result;
+        }
+
         internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
         {
             if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
@@ -89,9 +107,8 @@ namespace EdiFabric.Framework
             if (separators.Segment != Environment.NewLine)
                 message = message.Trim('\r', '\n');
 
-            return message.SplitWithEscape(separators.Escape,
-                separators.Segment,
-                StringSplitOptions.RemoveEmptyEntries);
+            return message.Split(separators.Escape.ToCharArray()[0],
+                separators.Segment).ToArray();
         }
 
         internal static string[] GetDataElements(this string segment, Separators separators)
@@ -99,8 +116,8 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
             if (separators == null) throw new ArgumentNullException("separators");
 
-            return segment.SplitWithEscape(separators.Escape,
-                separators.DataElement, StringSplitOptions.None).Skip(1).ToArray();
+            return segment.Split(separators.Escape.ToCharArray()[0],
+                separators.DataElement).Skip(1).ToArray();
         }
 
         internal static string[] GetComponentDataElements(this string dataElement, Separators separators)
@@ -108,8 +125,8 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
 
-            return dataElement.SplitWithEscape(separators.Escape,
-                separators.ComponentDataElement, StringSplitOptions.None, true);
+            return dataElement.Split(separators.Escape.ToCharArray()[0],
+                separators.ComponentDataElement).ToArray();
         }
 
         internal static string[] GetRepetitions(this string value, Separators separators)
@@ -117,8 +134,8 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
 
-            return value.SplitWithEscape(separators.Escape,
-                separators.RepetitionDataElement, StringSplitOptions.None);
+            return value.Split(separators.Escape.ToCharArray()[0],
+                separators.RepetitionDataElement).ToArray();
         }
 
         internal static Stream ToSeekStream(this Stream stream)
@@ -131,66 +148,100 @@ namespace EdiFabric.Framework
             return ms;
         }
 
-        private static string[] SplitWithEscape(this string contents, string escapeCharacter, string splitSeparator,
-            StringSplitOptions splitOption, bool escapeTheEscape = false)
+        //private static string[] SplitWithEscape(this string contents, string escapeCharacter, string splitSeparator,
+        //    StringSplitOptions splitOption, bool escapeTheEscape = false)
+        //{
+        //    if (string.IsNullOrEmpty(escapeCharacter))
+        //        return contents.Split(splitSeparator.ToCharArray(), splitOption);
+
+        //    var result = new List<string>();
+        //    var line = "";
+        //    var previousSymbol = char.MinValue;
+
+        //    // Iterate through all chars in the string
+        //    // This builds a line until the split separator is reached
+        //    // Only if the split separator is not escaped, e.g. not preceded by the escape character
+        //    foreach (char symbol in contents)
+        //    {
+        //        // If the current char is the split separator
+        //        if (symbol == splitSeparator[0])
+        //        {
+        //            // Check if the separator is escaped
+        //            if (previousSymbol != escapeCharacter[0])
+        //            {
+        //                // If it not escaped, add the currently built line
+        //                // and start the next line
+        //                // check for escaping the escape character
+        //                if (line.EndsWith(escapeCharacter + escapeCharacter))
+        //                    line = line.Remove(line.Length - 1);
+
+        //                result.Add(line);
+        //                line = "";
+        //                previousSymbol = char.MinValue;
+
+        //                continue;
+        //            }
+
+        //            // Keep building the line until a separator is reached
+        //            line = line.TrimEnd(escapeCharacter.ToCharArray());
+        //        }
+
+        //        // check for escaping the escape character
+        //        if (escapeTheEscape && line.EndsWith(escapeCharacter + escapeCharacter))
+        //            line = line.Remove(line.Length - 1);
+
+        //        line = line + symbol;
+
+        //        // Keep track of the previous character in case it's an escape character
+        //        if (previousSymbol == symbol && previousSymbol == escapeCharacter[0])
+        //            previousSymbol = char.MinValue;
+        //        else
+        //            previousSymbol = symbol;
+        //    }
+
+        //    result.Add(line.Trim());
+
+        //    // Handle blank lines
+        //    if (splitOption == StringSplitOptions.RemoveEmptyEntries)
+        //    {
+        //        result.RemoveAll(string.IsNullOrEmpty);
+        //    }
+
+        //    return result.ToArray();
+        //}
+
+        public static IEnumerable<string> Split(this string input, char escapeCharacter, string separator)
         {
-            if (string.IsNullOrEmpty(escapeCharacter))
-                return contents.Split(splitSeparator.ToCharArray(), splitOption);
-
-            var result = new List<string>();
-            var line = "";
-            var previousSymbol = char.MinValue;
-
-            // Iterate through all chars in the string
-            // This builds a line until the split separator is reached
-            // Only if the split separator is not escaped, e.g. not preceded by the escape character
-            foreach (char symbol in contents)
+            var startOfSegment = 0;
+            var index = 0;
+            while (index < input.Length)
             {
-                // If the current char is the split separator
-                if (symbol == splitSeparator[0])
+                index = input.IndexOf(separator, index, StringComparison.Ordinal);
+                if (index > 0 && input[index - 1] == escapeCharacter)
                 {
-                    // Check if the separator is escaped
-                    if (previousSymbol != escapeCharacter[0])
+                    if (index > 1)
                     {
-                        // If it not escaped, add the currently built line
-                        // and start the next line
-                        // check for escaping the escape character
-                        if (line.EndsWith(escapeCharacter + escapeCharacter))
-                            line = line.Remove(line.Length - 1);
-
-                        result.Add(line);
-                        line = "";
-                        previousSymbol = char.MinValue;
-
-                        continue;
+                        if (input[index - 2] != escapeCharacter)
+                        {
+                            index += separator.Length;
+                            continue;
+                        }
                     }
-
-                    // Keep building the line until a separator is reached
-                    line = line.TrimEnd(escapeCharacter.ToCharArray());
+                    else
+                    {
+                        index += separator.Length;
+                        continue;
+                    }                    
                 }
-
-                // check for escaping the escape character
-                if (escapeTheEscape && line.EndsWith(escapeCharacter + escapeCharacter))
-                    line = line.Remove(line.Length - 1);
-
-                line = line + symbol;
-
-                // Keep track of the previous character in case it's an escape character
-                if (previousSymbol == symbol && previousSymbol == escapeCharacter[0])
-                    previousSymbol = char.MinValue;
-                else
-                    previousSymbol = symbol;
+                if (index == -1)
+                {
+                    break;
+                }
+                yield return input.Substring(startOfSegment, index - startOfSegment);
+                index += separator.Length;
+                startOfSegment = index;
             }
-
-            result.Add(line.Trim());
-
-            // Handle blank lines
-            if (splitOption == StringSplitOptions.RemoveEmptyEntries)
-            {
-                result.RemoveAll(string.IsNullOrEmpty);
-            }
-
-            return result.ToArray();
+            yield return input.Substring(startOfSegment);
         }
 
         private static bool IsSeparator(this char value, Separators separators)

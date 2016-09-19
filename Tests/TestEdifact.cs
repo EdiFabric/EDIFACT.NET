@@ -266,139 +266,70 @@ namespace EdiFabric.Tests
                 var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
-        }        
+        }
 
-        //[TestMethod]
-        //public void TestToInterchangeWithEscapedSegmentTerminator()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedSegmentTerminator.xml";
+        [TestMethod]
+        public void TestParseWithEscapedSegmentTerminator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedSegmentTerminator.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            var message = TestHelper.ParseEdifact(sample);
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact); 
+            // ASSERT
+            Assert.IsNotNull(message);
+            Assert.IsNotNull(message.InterchangeHeader);
+            Assert.IsNotNull(message.Value);
+            Assert.IsNull(message.GroupHeader);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
 
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+        [TestMethod]
+        public void TestGenerateWithEscapedSegmentTerminator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //[TestMethod]
-        //public void TestToEdiWithEscaped()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedSegmentTerminator.xml";
-        //    const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
-        //    var reader = new StreamReader(stream);
-        //    var expectedEdi = new List<string>();
-        //    while (reader.Peek() >= 0)
-        //    {
-        //        expectedEdi.Add(reader.ReadLine());
-        //    }
+        [TestMethod]
+        public void TestGenerateWithEmptyNode()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //    // ACT
-        //    var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
-        //                   .ToEdi();
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //    // ASSERT
-        //    Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
-        //    for (int i = 0; i < parsedEdi.Count; i++)
-        //    {
-        //        Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
-        //    }
-        //}
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
-        //[TestMethod]
-        //public void TestToEdiWithInvalidContext()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedSegmentTerminator.xml";
-        //    var interchangeContext = new Separators
-        //                                 {
-        //                                     DataElement = "|",
-        //                                     ComponentDataElement = "|"
-        //                                 };
+        [TestMethod]
+        public void TestGenerateWithRepeatingSegment()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_RepeatingSegment.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //    // ACT
-        //    try
-        //    {
-        //        Interchange.LoadFrom(
-        //                XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample))).ToEdi(interchangeContext);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // ASSERT
-        //        Assert.IsInstanceOfType(ex, typeof(ParserException));
-        //        Assert.IsTrue(ex.Message.StartsWith("Invalid interchange context"));
-        //    }
-        //}
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //[TestMethod]
-        //public void TestToEdiWithEmptyNode()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EmptyNode.xml";
-        //    const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-
-        //    var reader = new StreamReader(stream);
-        //    var expectedEdi = new List<string>();
-        //    while (reader.Peek() >= 0)
-        //    {
-        //        expectedEdi.Add(reader.ReadLine());
-        //    }
-
-        //    // ACT
-        //    var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
-        //                   .ToEdi();
-
-        //    // ASSERT
-        //    Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
-        //    for (int i = 0; i < parsedEdi.Count; i++)
-        //    {
-        //        Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void TestToEdiWithSegmentList()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_SegmentList.xml";
-        //    const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-
-        //    var reader = new StreamReader(stream);
-        //    var expectedEdi = new List<string>();
-        //    while (reader.Peek() >= 0)
-        //    {
-        //        expectedEdi.Add(reader.ReadLine());
-        //    }
-
-        //    // ACT
-        //    var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample)))
-        //                   .ToEdi();
-
-        //    // ASSERT
-        //    Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
-        //    for (int i = 0; i < parsedEdi.Count; i++)
-        //    {
-        //        Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
-        //    }
-        //}
-
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
+        
         //[TestMethod]
         //public void TestToInterchangeWithValidation()
         //{
@@ -421,24 +352,25 @@ namespace EdiFabric.Tests
         //    Assert.IsTrue(brokenRules.Any());
         //}
 
-        //[TestMethod]
-        //public void TestToInterchangeWithEscapedEscape()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedEscape.xml";
+        [TestMethod]
+        public void TestParseWithEscapedEscape()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedEscape.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            var message = TestHelper.ParseEdifact(sample);
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
-
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+            // ASSERT
+            Assert.IsNotNull(message);
+            Assert.IsNotNull(message.InterchangeHeader);
+            Assert.IsNotNull(message.Value);
+            Assert.IsNull(message.GroupHeader);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
 
         //[TestMethod]
         //public void TestToEdiWithEscapingTheEscapeGeneration()
