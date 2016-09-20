@@ -76,6 +76,68 @@ namespace EdiFabric.Framework
             }
         }
 
+        private static string EscapeLine(this string line, Separators separators)
+        {
+            if (string.IsNullOrEmpty(line))
+                return string.Empty;
+
+            return line.ToCharArray()
+                .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
+        }
+
+        private static string UnEscapeLine(this string line, Separators separators)
+        {
+            if (string.IsNullOrEmpty(line))
+                return string.Empty;
+
+            var result = string.Empty;
+            var temp = line.Split(new[] { separators.Escape + separators.Escape }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var str in temp)
+            {
+                result = result + str.Replace(separators.Escape, string.Empty) + separators.Escape;
+            }
+
+            if (!line.EndsWith(separators.Escape + separators.Escape))
+                result = result.TrimEnd(separators.Escape.ToCharArray());
+
+            return result;
+        }
+
+        private static bool IsSeparator(this char value, Separators separators)
+        {
+            return separators.ComponentDataElement.Contains(value) ||
+                   separators.DataElement.Contains(value) ||
+                   separators.Escape.Contains(value) ||
+                   separators.RepetitionDataElement.Contains(value) ||
+                   separators.Segment.Contains(value);
+        }
+
+        private static string[] GetRepetitions(this string value, Separators separators)
+        {
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
+
+            return value.Split(separators.Escape.ToCharArray()[0],
+                separators.RepetitionDataElement).ToArray();
+        }
+
+        private static string TrimEnd(this string input, string escapeCharacter, string separator)
+        {
+            var result = input.TrimEnd(separator.ToCharArray());
+            if (result.EndsWith(escapeCharacter))
+                result = result + separator;
+
+            return result;
+        }
+
+        private static bool IsRepetition(this ParseNode parseNode)
+        {
+            var index = parseNode.IndexInParent();
+            if (index <= 0) return false;
+            var previous = parseNode.Parent.Children.ElementAt(index - 1);
+            return parseNode.Name == previous.Name;
+        }
+
         internal static IEnumerable<ParseNode> TraverseSegmentsDepthFirst(this ParseNode startNode)
         {
             var visited = new HashSet<ParseNode>();
@@ -241,7 +303,6 @@ namespace EdiFabric.Framework
                 foreach (var nodeChild in currentNode.Children) 
                 {                    
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
-                    var f = currentNode.Type.GetProperties();
                     if (nodeChild.Prefix == Prefixes.D)
                     {
                         propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);                                              
@@ -318,14 +379,6 @@ namespace EdiFabric.Framework
             }
 
             return result.TrimEnd(separators.Escape, separators.DataElement) + separators.Segment;
-        }
-
-        internal static bool IsRepetition(this ParseNode parseNode)
-        {
-            var index = parseNode.IndexInParent();
-            if (index <= 0) return false;
-            var previous = parseNode.Parent.Children.ElementAt(index - 1);
-            return parseNode.Name == previous.Name;
         }
 
         internal static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)

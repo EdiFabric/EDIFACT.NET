@@ -145,5 +145,57 @@ namespace EdiFabric.Framework
 
             return systemType;
         }
+
+        internal static string[] GetDataElements(this string segment, Separators separators)
+        {
+            if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
+            if (separators == null) throw new ArgumentNullException("separators");
+
+            return segment.Split(separators.Escape.ToCharArray()[0],
+                separators.DataElement).Skip(1).ToArray();
+        }
+
+        internal static string[] GetComponentDataElements(this string dataElement, Separators separators)
+        {
+            if (separators == null) throw new ArgumentNullException("separators");
+            if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
+
+            return dataElement.Split(separators.Escape.ToCharArray()[0],
+                separators.ComponentDataElement).ToArray();
+        }
+
+        internal static IEnumerable<string> Split(this string input, char escapeCharacter, string separator)
+        {
+            var startOfSegment = 0;
+            var index = 0;
+            while (index < input.Length)
+            {
+                index = input.IndexOf(separator, index, StringComparison.Ordinal);
+                if (index > 0 && input[index - 1] == escapeCharacter)
+                {
+                    if (index > 1)
+                    {
+                        if (input[index - 2] != escapeCharacter)
+                        {
+                            index += separator.Length;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        index += separator.Length;
+                        continue;
+                    }
+                }
+                if (index == -1)
+                {
+                    break;
+                }
+                yield return input.Substring(startOfSegment, index - startOfSegment);
+                index += separator.Length;
+                startOfSegment = index;
+            }
+            yield return input.Substring(startOfSegment);
+        }
     }
 }

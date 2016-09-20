@@ -11,6 +11,7 @@
 
 using System;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework
 {

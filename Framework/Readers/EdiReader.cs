@@ -28,7 +28,7 @@ namespace EdiFabric.Framework.Readers
         private Separators _separators;
         private SegmentContext _interchangeHeader;
         private SegmentContext _groupHeader;
-        private char[] _trims = new[] { '\r', '\n' };
+        private char[] _trims = { '\r', '\n' };
 
         /// <summary>
         /// The EDI message containing the parsed object and the group and interchange headers
@@ -58,21 +58,7 @@ namespace EdiFabric.Framework.Readers
             
             while (_streamReader.Peek() >= 0 && !result)
             {
-                var first3 = _streamReader.Read(3, _trims);
-                var header = _streamReader.ReadHeader(first3);
-                if (header.Item2 != null && _separators == null)
-                {
-                    _separators = header.Item2;
-                    _trims = _trims.Except(_separators.Segment.ToCharArray()).ToArray();
-                }
-
-                if(_separators == null)
-                    throw new ParserException(
-                        string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.", SegmentTags.UNA,
-                            SegmentTags.UNB, SegmentTags.ISA));               
-
-                var segment = header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
-                var segmentContext = new SegmentContext(segment, _separators);
+                var segmentContext = new SegmentContext(ReadSegment(), _separators);
                 switch (segmentContext.Tag)
                 {
                     case SegmentTags.UNA:
@@ -99,13 +85,7 @@ namespace EdiFabric.Framework.Readers
                         currentMessage.Add(segmentContext);
                         if (_groupHeader != null)
                             currentMessage.Add(_groupHeader);
-                        var type = segmentContext.Tag == SegmentTags.SE
-                            ? currentMessage.ToX12Type(_separators, _definitionsAssemblyName)
-                            : currentMessage.ToEdifactType(_separators, _definitionsAssemblyName);
-                        var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName, type);
-                        Message = new EdiMessage<T, TU>(messageInstance,
-                            _interchangeHeader.ParseSegment<T>(_separators),
-                            _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU));
+                        Message = ReadMessage(segmentContext, currentMessage);
                         result = true;
                         currentMessage.Clear();
                         break;
@@ -128,6 +108,35 @@ namespace EdiFabric.Framework.Readers
             {
                 yield return Message;
             }
+        }
+
+        private string ReadSegment()
+        {
+            var first3 = _streamReader.Read(3, _trims);
+            var header = _streamReader.ReadHeader(first3);
+            if (header.Item2 != null && _separators == null)
+            {
+                _separators = header.Item2;
+                _trims = _trims.Except(_separators.Segment.ToCharArray()).ToArray();
+            }
+
+            if (_separators == null)
+                throw new ParserException(
+                    string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.",
+                        SegmentTags.UNA, SegmentTags.UNB, SegmentTags.ISA));
+
+            return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
+        }
+
+        private EdiMessage<T, TU> ReadMessage(SegmentContext segmentContext, List<SegmentContext> currentMessage)
+        {
+            var type = segmentContext.Tag == SegmentTags.SE
+                ? currentMessage.ToX12Type(_separators, _definitionsAssemblyName)
+                : currentMessage.ToEdifactType(_separators, _definitionsAssemblyName);
+            var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName, type);
+            return new EdiMessage<T, TU>(messageInstance,
+                _interchangeHeader.ParseSegment<T>(_separators),
+                _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU));
         }
 
         /// <summary>
