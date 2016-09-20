@@ -34,7 +34,7 @@
   <S_FTX>
     <D_4451_1>AAI</D_4451_1>
     <C_C108>
-      <D_4440_1>Free text Free text Free text</D_4440_1>
+      <D_4440_1>Can you deliver my order next tuesday? Please!</D_4440_1>
     </C_C108>
   </S_FTX>
   <G_NAD>
@@ -69,6 +69,12 @@
           <D_3413_1>.ERP</D_3413_1>
         </C_C056>
       </S_CTA>
+      <S_COM>
+        <C_C076>
+          <D_3148_1>1</D_3148_1>
+          <D_3155_2>2*3:4</D_3155_2>
+        </C_C076>
+      </S_COM>
     </G_CTA>
     <G_CTA>
       <S_CTA>
@@ -87,14 +93,14 @@
         <D_3055_3>92</D_3055_3>
       </C_C082>
       <C_C058>
-        <D_3124_1>Schoenstrasse D'Or7</D_3124_1>
+        <D_3124_1>Schoenstrasse7</D_3124_1>
         <D_3124_2>81543</D_3124_2>
         <D_3124_3>Munich</D_3124_3>
       </C_C058>
       <C_C080>
         <D_3036_1>Meister</D_3036_1>
       </C_C080>
-      <D_3207_9>DE'</D_3207_9>
+      <D_3207_9>DE</D_3207_9>
     </S_NAD>
     <G_RFF_2>
       <S_RFF_2>

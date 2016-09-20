@@ -386,24 +386,73 @@ namespace EdiFabric.Tests
             Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
         }
 
-        //[TestMethod]
-        //public void TestToEdiWithEscapedRepetitonTerminator()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedRepetition.xml";
+        [TestMethod]
+        public void TestParseWithRepeatingDataElement()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_RepeatingDataElement.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            var message = TestHelper.ParseEdifact(sample);
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
+            // ASSERT
+            Assert.IsNotNull(message);
+            Assert.IsNotNull(message.InterchangeHeader);
+            Assert.IsNotNull(message.Value);
+            Assert.IsNull(message.GroupHeader);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
 
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+        [TestMethod]
+        public void TestGenerateWithRepeatingDataElement()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
+
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
+
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
+
+        [TestMethod]
+        public void TestParseWithEscapedRepetiton()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapedRepetition.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var message = TestHelper.ParseEdifact(sample);
+
+            // ASSERT
+            Assert.IsNotNull(message);
+            Assert.IsNotNull(message.InterchangeHeader);
+            Assert.IsNotNull(message.Value);
+            Assert.IsNull(message.GroupHeader);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestGenerateWithEscapedRepetiton()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
+
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
+
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
         [TestMethod]
         public void TestGenerateWithBom()

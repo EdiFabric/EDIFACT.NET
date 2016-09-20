@@ -1260,7 +1260,7 @@ namespace EdiFabric.Rules.EdifactD00AINVOIC {
     [XmlElement(Order=0)]
     public S_CTA S_CTA {get; set;}
     [XmlElement(Order=1)]
-    public List<S_COM_2> S_COM {get; set;}
+    public List<S_COM> S_COM {get; set;}
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/edifact")]

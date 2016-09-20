@@ -99,7 +99,10 @@ namespace EdiFabric.Framework.Readers
                         currentMessage.Add(segmentContext);
                         if (_groupHeader != null)
                             currentMessage.Add(_groupHeader);
-                        var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName);
+                        var type = segmentContext.Tag == SegmentTags.SE
+                            ? currentMessage.ToX12Type(_separators, _definitionsAssemblyName)
+                            : currentMessage.ToEdifactType(_separators, _definitionsAssemblyName);
+                        var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName, type);
                         Message = new EdiMessage<T, TU>(messageInstance,
                             _interchangeHeader.ParseSegment<T>(_separators),
                             _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU));

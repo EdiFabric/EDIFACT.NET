@@ -241,6 +241,7 @@ namespace EdiFabric.Framework
                 foreach (var nodeChild in currentNode.Children) 
                 {                    
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
+                    var f = currentNode.Type.GetProperties();
                     if (nodeChild.Prefix == Prefixes.D)
                     {
                         propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);                                              

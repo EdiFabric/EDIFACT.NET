@@ -9,8 +9,6 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
-using System.Linq;
 using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework
@@ -45,82 +43,9 @@ namespace EdiFabric.Framework
         /// </summary>
         public string RepetitionDataElement { get; private set; }
 
-        /// <summary>
-        /// The format of the interchange, e.g. the format of the envelope.
-        /// </summary>
-        public Formats Format { get; private set; }
-        
-        internal Separators(string contents)
-        {
-            if (contents == null) throw new ArgumentNullException("contents");
-
-            switch (contents.ToSegmentTag(null))
-            {
-                case SegmentTags.ISA:
-                    try
-                    {
-                        // Parse X12 separators, they are always contained within the envelope
-                        DataElement = string.Concat(contents[3]);
-                        var isa = string.Concat(contents.Take(106));
-                        var isaElements = isa.Split(DataElement.ToCharArray());
-                        ComponentDataElement = string.Concat(isaElements[16].First());
-                        // Repetition is either the default ^ or else if explicitly specified when U is present
-                        RepetitionDataElement = isaElements[11] != "U"
-                            ? isaElements[11]
-                            : DefaultSeparatorsX12().RepetitionDataElement;
-                        // Handle carriage return \ new line segment terminators
-                        var segment = isaElements[16].ToCharArray();
-                        Segment = segment.Length > 1 && !char.IsWhiteSpace(segment[1])
-                            ? string.Concat(segment[1])
-                            : Environment.NewLine;
-                        // No release terminator for X12
-                        Escape = string.Empty;
-                        Format = Formats.X12;                        
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ParserException("Unable to extract X12 interchange delimiters", ex);
-                    }
-                    break;
-                case SegmentTags.UNB:
-                    var defaultSeparators = DefaultSeparatorsEdifact();
-                    //  Default EDIFACT separators
-                    ComponentDataElement = defaultSeparators.ComponentDataElement;
-                    DataElement = defaultSeparators.DataElement;
-                    Escape = defaultSeparators.Escape;
-                    RepetitionDataElement = defaultSeparators.RepetitionDataElement;
-                    Segment = defaultSeparators.Segment;
-                    Format = Formats.Edifact;                    
-                    break;
-                case SegmentTags.UNA:
-                    try
-                    {
-                        //  Parse UNA separators
-                        var una = contents.Replace(SegmentTags.UNA.ToString(), "").Take(6).ToArray();
-                        ComponentDataElement = string.Concat(una[0]);
-                        DataElement = string.Concat(una[1]);
-                        Escape = string.Concat(una[3]);
-                        RepetitionDataElement = DefaultSeparatorsEdifact().RepetitionDataElement;
-                        Segment = string.Concat(una[5]);
-                        Format = Formats.Edifact;                       
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ParserException("Unable to extract UNA interchange delimiters", ex);
-                    }
-                    break;
-                default:
-                    throw new ParserException(
-                        string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.", SegmentTags.UNA,
-                            SegmentTags.UNB, SegmentTags.ISA));
-            }
-            
-        }
-
-        internal Separators(Formats format, string segment, string componentDataElement, string dataElement,
+        internal Separators(string segment, string componentDataElement, string dataElement,
             string repetitionDataElement, string escape = null)
         {
-            Format = format;
             ComponentDataElement = componentDataElement;
             DataElement = dataElement;
             Escape = escape ?? string.Empty;
@@ -136,7 +61,7 @@ namespace EdiFabric.Framework
         {
             var deafult = DefaultSeparatorsX12();
 
-            return new Separators(Formats.X12, segment ?? deafult.Segment,
+            return new Separators(segment ?? deafult.Segment,
                 componentDataElement ?? deafult.ComponentDataElement, dataElement ?? deafult.DataElement,
                 repetitionDataElement ?? deafult.RepetitionDataElement);
         }
@@ -149,7 +74,7 @@ namespace EdiFabric.Framework
         {
             var deafult = DefaultSeparatorsEdifact();
 
-            return new Separators(Formats.Edifact, segment ?? deafult.Segment,
+            return new Separators(segment ?? deafult.Segment,
                 componentDataElement ?? deafult.ComponentDataElement,
                 dataElement ?? deafult.DataElement,
                 repetitionDataElement ?? deafult.RepetitionDataElement,
@@ -162,7 +87,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsX12()
         {
-            return new Separators(Formats.X12, "~", ":", "*", "^");
+            return new Separators("~", ":", "*", "^");
         }
 
         /// <summary>
@@ -171,7 +96,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsEdifact()
         {
-            return new Separators(Formats.Edifact, "'", ":", "+", "*", "?");
+            return new Separators("'", ":", "+", "*", "?");
         }
 
         /// <summary>

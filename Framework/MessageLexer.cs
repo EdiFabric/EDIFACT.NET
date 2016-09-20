@@ -18,13 +18,13 @@ namespace EdiFabric.Framework
 {
     static class MessageLexer
     {
-        internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
+        internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName, Type type)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
+            if (type == null) throw new ArgumentNullException("type");
 
-            var type = segments.ToType(separators, definitionsAssemblyName);
             var messageGrammar = ParseNode.BuldTree(type, true);
             var segmentPosition = messageGrammar.Children.First();
             var instancePosition = new ParseNode(type);
@@ -67,24 +67,7 @@ namespace EdiFabric.Framework
             return instancePosition.Root().ToInstance();
         }
 
-        private static Type ToType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
-        {
-            if (segments == null) throw new ArgumentNullException("segments");
-            if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
-
-            switch (separators.Format)
-            {
-                case Formats.Edifact:
-                    return segments.ToEdifactType(separators, definitionsAssemblyName);
-                case Formats.X12:
-                    return segments.ToX12Type(separators, definitionsAssemblyName);
-                default:
-                    throw new Exception(string.Format("Unsupported format: {0}", separators.Format));
-            }
-        }
-
-        private static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
+        internal static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
@@ -115,10 +98,10 @@ namespace EdiFabric.Framework
                 throw new ParserException("Invalid ST segment.", ex);
             }
 
-            return ToType(separators.Format, version, tag, definitionsAssemblyName);
+            return ToType(Formats.X12, version, tag, definitionsAssemblyName);
         }
 
-        private static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
+        internal static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
@@ -140,7 +123,7 @@ namespace EdiFabric.Framework
                 throw new ParserException("Invalid UNH segment.", ex);
             }
 
-            return ToType(separators.Format, version, tag, definitionsAssemblyName);
+            return ToType(Formats.Edifact, version, tag, definitionsAssemblyName);
         }
 
         private static Type ToType(Formats format, string version, string tag, string definitionsAssemblyName)

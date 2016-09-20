@@ -116,25 +116,10 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Group.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_Group.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_GroupMultipleMessages.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_GroupMultipleMessages.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleGroups.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_MultipleGroups.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_MultipleMessages.txt" />
@@ -156,11 +141,6 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleMessages.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_MultipleMessages.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_PropertiesOrder.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -177,11 +157,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EmptyNode.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Xml\X12_810_00204_EmptyNode.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -193,11 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_RepetitionSeparator.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_SegmentList.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Xml\X12_810_00204_SegmentList.xml">
@@ -224,20 +194,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EscapeGen.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapeGen.txt" />
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_RepeatingDataElement.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_TrailingSeparator.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_TrailingSeparator.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedRepetition.txt" />
@@ -310,6 +270,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_RepeatingSegment.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_RepeatingDataElement.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
