@@ -18,7 +18,7 @@ namespace EdiFabric.Framework
     /// <summary>
     /// EDI separators.
     /// </summary>
-    public class Separators
+    public sealed class Separators
     {
         /// <summary>
         /// Separator for segments.
@@ -111,7 +111,7 @@ namespace EdiFabric.Framework
                     break;
                 default:
                     throw new ParserException(
-                        string.Format("No {0} or {1} or {2} found in the beginning of message", SegmentTags.UNA,
+                        string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.", SegmentTags.UNA,
                             SegmentTags.UNB, SegmentTags.ISA));
             }
             

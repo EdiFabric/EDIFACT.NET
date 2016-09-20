@@ -60,6 +60,98 @@ namespace EdiFabric.Framework
             return line.Trim('\r', '\n');
         }
 
+        internal static string ReadIsa(this StreamReader reader, string dataElementSeparator)
+        {
+            var line = "";
+            var counter = 0;
+
+            while (reader.Peek() >= 0 && counter < 16)
+            {
+                var symbol = (char)reader.Read();
+                line = line + symbol;
+
+                if (dataElementSeparator[0] == symbol)
+                {
+                    counter = counter + 1;
+                }
+            }
+            
+            return line + reader.Read(2);
+        }
+
+        internal static Tuple<string, Separators> ReadHeader(this StreamReader reader, string segmentName)
+        {
+            string dataElement;
+            string componentDataElement;
+            string repetitionDataElement;
+            string segment;
+            string escape;
+            string header = null;
+            Separators separators = null;
+
+            switch (segmentName.ToSegmentTag(null))
+            {
+                case SegmentTags.ISA:
+                    try
+                    {
+                        dataElement = reader.Read(1);
+                        var isa = reader.ReadIsa(dataElement);
+                        var isaElements = isa.Split(dataElement.ToCharArray());
+                        componentDataElement = string.Concat(isaElements[16].First());
+                        repetitionDataElement = isaElements[11] != "U"
+                            ? isaElements[11]
+                            : Separators.DefaultSeparatorsX12().RepetitionDataElement;
+                        var last = isaElements[16].ToCharArray();
+                        segment = last.Length > 1 && !char.IsWhiteSpace(last[1])
+                            ? string.Concat(last[1])
+                            : Environment.NewLine;
+
+                        separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
+                            repetitionDataElement);
+                        header = segmentName + dataElement + isa;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ParserException("Unable to extract X12 interchange delimiters", ex);
+                    }
+                    break;
+                case SegmentTags.UNB:
+                    var defaultSeparators = Separators.DefaultSeparatorsEdifact();
+                    componentDataElement = defaultSeparators.ComponentDataElement;
+                    dataElement = defaultSeparators.DataElement;
+                    escape = defaultSeparators.Escape;
+                    repetitionDataElement = defaultSeparators.RepetitionDataElement;
+                    segment = defaultSeparators.Segment;
+
+                    separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
+                            repetitionDataElement, escape);
+                    header = segmentName + reader.ReadSegment(separators);
+                    break;
+                case SegmentTags.UNA:
+                    try
+                    {
+                        var una = reader.Read(6);
+                        var unaChars = una.ToArray();
+                        componentDataElement = string.Concat(unaChars[0]);
+                        dataElement = string.Concat(unaChars[1]);
+                        escape = string.Concat(unaChars[3]);
+                        repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
+                        segment = string.Concat(unaChars[5]);
+
+                        separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
+                            repetitionDataElement, escape);
+                        header = segmentName + una;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ParserException("Unable to extract UNA interchange delimiters", ex);
+                    }
+                    break;
+            }
+
+            return new Tuple<string, Separators>(header, separators);
+        }
+
         internal static string EscapeLine(this string line, Separators separators)
         {
             if (string.IsNullOrEmpty(line))
@@ -148,67 +240,27 @@ namespace EdiFabric.Framework
             return ms;
         }
 
-        //private static string[] SplitWithEscape(this string contents, string escapeCharacter, string splitSeparator,
-        //    StringSplitOptions splitOption, bool escapeTheEscape = false)
-        //{
-        //    if (string.IsNullOrEmpty(escapeCharacter))
-        //        return contents.Split(splitSeparator.ToCharArray(), splitOption);
+        internal static string Read(this StreamReader reader, int bytes, char[] trims)
+        {
+            string result = null;
+            var counter = 0;
+            while (counter < bytes)
+            {
+                var symbol = reader.Read(1).Trim(trims);
+                if (!string.IsNullOrEmpty(symbol))
+                    counter += 1;
+                result += symbol;
+            }
 
-        //    var result = new List<string>();
-        //    var line = "";
-        //    var previousSymbol = char.MinValue;
+            return result;
+        }
 
-        //    // Iterate through all chars in the string
-        //    // This builds a line until the split separator is reached
-        //    // Only if the split separator is not escaped, e.g. not preceded by the escape character
-        //    foreach (char symbol in contents)
-        //    {
-        //        // If the current char is the split separator
-        //        if (symbol == splitSeparator[0])
-        //        {
-        //            // Check if the separator is escaped
-        //            if (previousSymbol != escapeCharacter[0])
-        //            {
-        //                // If it not escaped, add the currently built line
-        //                // and start the next line
-        //                // check for escaping the escape character
-        //                if (line.EndsWith(escapeCharacter + escapeCharacter))
-        //                    line = line.Remove(line.Length - 1);
-
-        //                result.Add(line);
-        //                line = "";
-        //                previousSymbol = char.MinValue;
-
-        //                continue;
-        //            }
-
-        //            // Keep building the line until a separator is reached
-        //            line = line.TrimEnd(escapeCharacter.ToCharArray());
-        //        }
-
-        //        // check for escaping the escape character
-        //        if (escapeTheEscape && line.EndsWith(escapeCharacter + escapeCharacter))
-        //            line = line.Remove(line.Length - 1);
-
-        //        line = line + symbol;
-
-        //        // Keep track of the previous character in case it's an escape character
-        //        if (previousSymbol == symbol && previousSymbol == escapeCharacter[0])
-        //            previousSymbol = char.MinValue;
-        //        else
-        //            previousSymbol = symbol;
-        //    }
-
-        //    result.Add(line.Trim());
-
-        //    // Handle blank lines
-        //    if (splitOption == StringSplitOptions.RemoveEmptyEntries)
-        //    {
-        //        result.RemoveAll(string.IsNullOrEmpty);
-        //    }
-
-        //    return result.ToArray();
-        //}
+        internal static string Read(this StreamReader reader, int bytes)
+        {
+            var result = new char[bytes];
+            reader.Read(result, 0, result.Length);
+            return string.Concat(result);
+        }
 
         public static IEnumerable<string> Split(this string input, char escapeCharacter, string separator)
         {
@@ -242,6 +294,15 @@ namespace EdiFabric.Framework
                 startOfSegment = index;
             }
             yield return input.Substring(startOfSegment);
+        }
+
+        public static string TrimEnd(this string input, string escapeCharacter, string separator)
+        {
+            var result = input.TrimEnd(separator.ToCharArray());
+            if (result.EndsWith(escapeCharacter))
+                result = result + separator;
+
+            return result;
         }
 
         private static bool IsSeparator(this char value, Separators separators)

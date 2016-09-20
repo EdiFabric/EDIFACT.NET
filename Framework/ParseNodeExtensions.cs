@@ -301,7 +301,7 @@ namespace EdiFabric.Framework
                             .Aggregate(value,
                                 (current, subElement) =>
                                     current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
-                        value = value.TrimEnd(separators.ComponentDataElement.ToCharArray());
+                        value = value.TrimEnd(separators.Escape, separators.ComponentDataElement);                       
                     }
                 }
                 else
@@ -316,9 +316,7 @@ namespace EdiFabric.Framework
                 result = result + separator + value;
             }
 
-            result = result.TrimEnd(separators.DataElement.ToCharArray()) + separators.Segment;
-
-            return result;
+            return result.TrimEnd(separators.Escape, separators.DataElement) + separators.Segment;
         }
 
         internal static bool IsRepetition(this ParseNode parseNode)

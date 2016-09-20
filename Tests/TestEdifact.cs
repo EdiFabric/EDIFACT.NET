@@ -303,20 +303,6 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestGenerateWithEmptyNode()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
-            var interchange = TestHelper.GenerateEdifact(sample);
-
-            // ACT
-            var ediSegments = interchange.GenerateEdi();
-
-            // ASSERT
-            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-        }
-
-        [TestMethod]
         public void TestGenerateWithRepeatingSegment()
         {
             // ARRANGE
@@ -372,61 +358,33 @@ namespace EdiFabric.Tests
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
-        //[TestMethod]
-        //public void TestToEdiWithEscapingTheEscapeGeneration()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_EscapeGen.xml";
-        //    const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapeGen.txt";
+        [TestMethod]
+        public void TestGenerateWithEscapedEscape()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //    var reader = new StreamReader(stream);
-        //    var expectedEdi = new List<string>();
-        //    while (reader.Peek() >= 0)
-        //    {
-        //        expectedEdi.Add(reader.ReadLine());
-        //    }
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
-        //    // ACT
-        //    var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample))).ToEdi();
+        [TestMethod]
+        public void TestGenerateWithTrailingSeparator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //    // ASSERT
-        //    Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
-        //    for (int i = 0; i < parsedEdi.Count; i++)
-        //    {
-        //        Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
-        //    }
-        //}
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //[TestMethod]
-        //public void TestToEdiWithTrailingSeparator()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_TrailingSeparator.xml";
-        //    const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
-
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-
-        //    var reader = new StreamReader(stream);
-        //    var expectedEdi = new List<string>();
-        //    while (reader.Peek() >= 0)
-        //    {
-        //        expectedEdi.Add(reader.ReadLine());
-        //    }
-
-        //    // ACT
-        //    var parsedEdi = Interchange.LoadFrom(XElement.Load(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample))).ToEdi();
-
-        //    // ASSERT
-        //    Assert.AreEqual(expectedEdi.Count, parsedEdi.Count);
-        //    for (int i = 0; i < parsedEdi.Count; i++)
-        //    {
-        //        Assert.IsTrue(parsedEdi[i] == expectedEdi[i]);
-        //    }
-        //}
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
 
         //[TestMethod]
         //public void TestToEdiWithEscapedRepetitonTerminator()
@@ -447,23 +405,18 @@ namespace EdiFabric.Tests
         //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         //}
 
-        //[TestMethod]
-        //public void TestToEdiWithBom()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BOM.txt";
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+        [TestMethod]
+        public void TestGenerateWithBom()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BOM.txt";
+            var interchange = TestHelper.GenerateEdifact(sample);
 
-        //    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(expectedResult);
-        //    Debug.Assert(stream != null, "stream != null");
-        //    var expectedXml = XElement.Load(stream);
+            // ACT
+            var ediSegments = interchange.GenerateEdi();
 
-        //    // ACT
-        //    var interchange = Interchange.LoadFrom(Assembly.GetExecutingAssembly().GetManifestResourceStream(sample));
-        //    var parsedXml = TestHelper.Serialize(interchange, TargetNamespaceEdifact);
-
-        //    // ASSERT
-        //    Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
-        //}
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
     }
 }

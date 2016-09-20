@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using EdiFabric.Framework.Constants;
 
@@ -22,11 +23,12 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public class EdiReader<T, TU> : IDisposable
     {
-        private readonly Separators _separators;
         private readonly StreamReader _streamReader;
         private readonly string _definitionsAssemblyName;
+        private Separators _separators;
         private SegmentContext _interchangeHeader;
         private SegmentContext _groupHeader;
+        private char[] _trims = new[] { '\r', '\n' };
 
         /// <summary>
         /// The EDI message containing the parsed object and the group and interchange headers
@@ -41,8 +43,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding.</param>
         protected EdiReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
         {
-            _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, false);
-            _separators = new Separators(ExtractHeader());
+            _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, true);
             _definitionsAssemblyName = definitionsAssemblyName;
         }
 
@@ -54,19 +55,36 @@ namespace EdiFabric.Framework.Readers
         {
             var currentMessage = new List<SegmentContext>();
             var result = false;
-
+            
             while (_streamReader.Peek() >= 0 && !result)
             {
-                var segment = _streamReader.ReadSegment(_separators);
-                var segmentContext = new SegmentContext(segment, _separators);
+                var first3 = _streamReader.Read(3, _trims);
+                var header = _streamReader.ReadHeader(first3);
+                if (header.Item2 != null && _separators == null)
+                {
+                    _separators = header.Item2;
+                    _trims = _trims.Except(_separators.Segment.ToCharArray()).ToArray();
+                }
 
+                if(_separators == null)
+                    throw new ParserException(
+                        string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.", SegmentTags.UNA,
+                            SegmentTags.UNB, SegmentTags.ISA));               
+
+                var segment = header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
+                var segmentContext = new SegmentContext(segment, _separators);
                 switch (segmentContext.Tag)
                 {
                     case SegmentTags.UNA:
+                        break;
                     case SegmentTags.UNZ:
                     case SegmentTags.IEA:
+                        _interchangeHeader = null;
+                        _separators = null;
+                        break;
                     case SegmentTags.UNE:
                     case SegmentTags.GE:
+                        _groupHeader = null;
                         break;
                     case SegmentTags.UNB:
                     case SegmentTags.ISA:
@@ -107,16 +125,6 @@ namespace EdiFabric.Framework.Readers
             {
                 yield return Message;
             }
-        }
-
-        private string ExtractHeader()
-        {
-            var header = new char[106];
-            _streamReader.Read(header, 0, header.Length);
-            var result = string.Concat(header);
-            _streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-            _streamReader.DiscardBufferedData();
-            return result;
         }
 
         /// <summary>
