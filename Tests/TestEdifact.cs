@@ -11,7 +11,7 @@ namespace EdiFabric.Tests
     [TestClass]
     public class TestEdifact
     {
-        public const string TargetNamespaceEdifact = "www.edifabric.com/edifact";
+        public const string TargetNamespace = "www.edifabric.com/edifact";
         
         [TestMethod]
         public void TestParse()
@@ -29,7 +29,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -93,7 +93,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -113,7 +113,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -133,7 +133,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -183,7 +183,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNotNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -200,17 +200,17 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(messages.Count == 2);
-            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
-                          TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
-            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespaceEdifact).ToString() ==
-                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespaceEdifact).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace).ToString() ==
+                          TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespace).ToString() ==
+                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespace).ToString());
             foreach (var message in messages)
             {
                 Assert.IsNotNull(message);
                 Assert.IsNotNull(message.InterchangeHeader);
                 Assert.IsNotNull(message.Value);
                 Assert.IsNotNull(message.GroupHeader);
-                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
         }
@@ -228,17 +228,17 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(messages.Count == 2);
-            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
-                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
-            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespaceEdifact).ToString() !=
-                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespaceEdifact).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace).ToString() ==
+                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespace).ToString() !=
+                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespace).ToString());
             foreach (var message in messages)
             {
                 Assert.IsNotNull(message);
                 Assert.IsNotNull(message.InterchangeHeader);
                 Assert.IsNotNull(message.Value);
                 Assert.IsNotNull(message.GroupHeader);
-                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
         }
@@ -256,15 +256,15 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(messages.Count == 2);
-            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact).ToString() ==
-                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact).ToString());
+            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace).ToString() ==
+                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace).ToString());
            foreach (var message in messages)
             {
                 Assert.IsNotNull(message);
                 Assert.IsNotNull(message.InterchangeHeader);
                 Assert.IsNotNull(message.Value);
                 Assert.IsNull(message.GroupHeader);
-                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
         }
@@ -285,7 +285,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -333,7 +333,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -381,7 +381,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -415,7 +415,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -463,9 +463,9 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.GroupHeader);
-            var parsedXmlInterchange = TestHelper.Serialize(message.InterchangeHeader, TargetNamespaceEdifact);
+            var parsedXmlInterchange = TestHelper.Serialize(message.InterchangeHeader, TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlGroup = TestHelper.Serialize(message.GroupHeader, TargetNamespaceEdifact);
+            var parsedXmlGroup = TestHelper.Serialize(message.GroupHeader, TargetNamespace);
             Assert.AreEqual(parsedXmlGroup.ToString(), expectedXmlGroup.ToString());
         }
 
@@ -485,7 +485,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(message.InterchangeHeader);
             Assert.IsNotNull(message.Value);
             Assert.IsNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -506,15 +506,15 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(messages.Count == 2);
-            var parsedXmlInterchange = TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespaceEdifact);
+            var parsedXmlInterchange = TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlInterchange2 = TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespaceEdifact);
+            var parsedXmlInterchange2 = TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange2.ToString(), expectedXmlInterchange2.ToString());            
             foreach (var message in messages)
             {
                 Assert.IsNotNull(message);
                 Assert.IsNotNull(message.Value);
-                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespaceEdifact);
+                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
         }

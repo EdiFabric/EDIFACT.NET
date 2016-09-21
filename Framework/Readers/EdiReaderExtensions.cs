@@ -74,12 +74,13 @@ namespace EdiFabric.Framework.Readers
                         dataElement = reader.Read(1)[0];
                         var isa = reader.ReadIsa(dataElement);
                         var isaElements = isa.Split(dataElement);
-                        componentDataElement = isaElements[16].First();
-                        repetitionDataElement = isaElements[11].First() != 'U'
-                            ? isaElements[11].First()
+                        if (isaElements[15].Count() != 2)
+                            throw new Exception("Can't find the segment terminator.");
+                        componentDataElement = isaElements[15].First();
+                        repetitionDataElement = isaElements[10].First() != 'U'
+                            ? isaElements[10].First()
                             : Separators.DefaultSeparatorsX12().RepetitionDataElement;
-                        var last = isaElements[16].ToCharArray();
-                        segment = last[1];
+                        segment = isaElements[15].Last();
                         separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                             repetitionDataElement);
                         header = segmentName + dataElement + isa;
@@ -178,7 +179,7 @@ namespace EdiFabric.Framework.Readers
             var line = "";
             var counter = 0;
 
-            while (reader.Peek() >= 0 && counter < 16)
+            while (reader.Peek() >= 0 && counter < 15)
             {
                 var symbol = (char) reader.Read();
                 line = line + symbol;

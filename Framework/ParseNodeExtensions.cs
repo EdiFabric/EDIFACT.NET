@@ -81,6 +81,9 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(line))
                 return string.Empty;
 
+            if (separators.Escape == '\0')
+                return line;
+
             return line.ToCharArray()
                 .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
         }
@@ -124,7 +127,7 @@ namespace EdiFabric.Framework
         private static string TrimEndWithEscape(this string input, char escapeCharacter, char separator)
         {
             var result = input.TrimEnd(separator);
-            if (result.EndsWith(escapeCharacter.ToString()))
+            if (escapeCharacter != '\0' && result.EndsWith(escapeCharacter.ToString()))
                 result = result + separator;
 
             return result;

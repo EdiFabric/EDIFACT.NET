@@ -9,6 +9,7 @@ using EdiFabric.Framework;
 using EdiFabric.Framework.Headers;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.EdifactD00AINVOIC;
+using EdiFabric.Rules.X12002040810;
 
 namespace EdiFabric.Tests
 {
@@ -61,6 +62,14 @@ namespace EdiFabric.Tests
             }
         }
 
+        public static EdiMessage<S_ISA, S_GS> ParseX12(string sample, Encoding encoding = null)
+        {
+            using (var ediReader = X12Reader.Create(Load(sample), RulesAssemblyName, encoding ?? Encoding.Default))
+            {
+                return ediReader.ReadMessage() ? ediReader.Message : null;
+            }
+        }
+
         public static List<EdiMessage<S_UNB, S_UNG>> ParseEdifactMultiple(string sample, Encoding encoding = null)
         {
             using (var ediReader = EdifactReader.Create(Load(sample), RulesAssemblyName, encoding ?? Encoding.Default))
@@ -75,6 +84,17 @@ namespace EdiFabric.Tests
             var group = new EdifactGroup<M_INVOIC>(message.GroupHeader);
             group.AddItem(message.Value as M_INVOIC);
             var interchange = new EdifactInterchange(message.InterchangeHeader);
+            interchange.AddItem(group);
+
+            return interchange;
+        }
+
+        public static X12Interchange GenerateX12(string sample)
+        {
+            var message = ParseX12(sample);
+            var group = new X12Group<M_810>(message.GroupHeader);
+            group.AddItem(message.Value as M_810);
+            var interchange = new X12Interchange(message.InterchangeHeader);
             interchange.AddItem(group);
 
             return interchange;

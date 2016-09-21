@@ -10,6 +10,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace EdiFabric.Framework.Headers
@@ -168,6 +169,8 @@ namespace EdiFabric.Framework.Headers
         {
             var result = new List<string>();
             var currentSeparators = separators ?? Separators.DefaultSeparatorsX12();
+
+            Header.D_701_16 = Header.D_701_16.First().ToString();
 
             result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)
