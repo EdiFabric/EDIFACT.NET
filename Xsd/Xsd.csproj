@@ -47,18 +47,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EF_EDIFACT_D00A_INVOIC.xsd">
+    <EmbeddedResource Include="EF_EDIFACT_D00A_INVOIC.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="EF_X12_002040_810.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="EF_X12_002040_810.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="EF_X12_004010X098A1_837.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="EF_X12_004010X098A1_837.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="EF_X12_005010X222A1_837.xsd">
+    </EmbeddedResource>
+    <EmbeddedResource Include="EF_X12_005010X222A1_837.xsd">
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -21,34 +21,34 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Separator for segments.
         /// </summary>
-        public string Segment { get; private set; }
+        public char Segment { get; private set; }
 
         /// <summary>
         /// Separator for component data elements.
         /// </summary>
-        public string ComponentDataElement { get; private set; }
+        public char ComponentDataElement { get; private set; }
 
         /// <summary>
         /// Release indicator for escaping terminators.
         /// </summary>
-        public string Escape { get; private set; }
+        public char Escape { get; private set; }
 
         ///<summary>
         /// Separator for data elements.
         /// </summary>
-        public string DataElement { get; private set; }
+        public char DataElement { get; private set; }
 
         /// <summary>
         /// Separator for repetitions of data elements.
         /// </summary>
-        public string RepetitionDataElement { get; private set; }
+        public char RepetitionDataElement { get; private set; }
 
-        internal Separators(string segment, string componentDataElement, string dataElement,
-            string repetitionDataElement, string escape = null)
+        internal Separators(char segment, char componentDataElement, char dataElement,
+            char repetitionDataElement, char escape)
         {
             ComponentDataElement = componentDataElement;
             DataElement = dataElement;
-            Escape = escape ?? string.Empty;
+            Escape = escape;
             RepetitionDataElement = repetitionDataElement;
             Segment = segment;
         }
@@ -56,29 +56,19 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// </summary>
-        public static Separators SeparatorsX12(string segment, string componentDataElement, string dataElement,
-            string repetitionDataElement)
+        public static Separators SeparatorsX12(char segment, char componentDataElement, char dataElement,
+            char repetitionDataElement)
         {
-            var deafult = DefaultSeparatorsX12();
-
-            return new Separators(segment ?? deafult.Segment,
-                componentDataElement ?? deafult.ComponentDataElement, dataElement ?? deafult.DataElement,
-                repetitionDataElement ?? deafult.RepetitionDataElement);
+            return new Separators(segment, componentDataElement, dataElement, repetitionDataElement, '\0');
         }
 
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// </summary>
-        public static Separators SeparatorsEdifact(string segment, string componentDataElement, string dataElement,
-            string repetitionDataElement, string escape)
+        public static Separators SeparatorsEdifact(char segment, char componentDataElement, char dataElement,
+            char repetitionDataElement, char escape)
         {
-            var deafult = DefaultSeparatorsEdifact();
-
-            return new Separators(segment ?? deafult.Segment,
-                componentDataElement ?? deafult.ComponentDataElement,
-                dataElement ?? deafult.DataElement,
-                repetitionDataElement ?? deafult.RepetitionDataElement,
-                escape ?? deafult.Escape);
+            return new Separators(segment, componentDataElement, dataElement, repetitionDataElement, escape);
         }
 
         /// <summary>
@@ -87,7 +77,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsX12()
         {
-            return new Separators("~", ":", "*", "^");
+            return new Separators('~', ':', '*', '^', '\0');
         }
 
         /// <summary>
@@ -96,7 +86,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsEdifact()
         {
-            return new Separators("'", ":", "+", "*", "?");
+            return new Separators('\'', ':', '+', '*', '?');
         }
 
         /// <summary>
@@ -105,7 +95,7 @@ namespace EdiFabric.Framework
         /// <returns>The separators.</returns>
         public string ToUna()
         {
-            return SegmentTags.UNA + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
+            return SegmentTags.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
     }
 }

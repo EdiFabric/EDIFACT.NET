@@ -15,6 +15,7 @@ namespace EdiFabric.Tests
     class TestHelper
     {
         public const string RulesAssemblyName = "EdiFabric.Rules";
+        public const string XsdAssemblyName = "EdiFabric.Xsd";
 
         public static XElement Serialize<T>(T instance, string nameSpace)
         {
@@ -30,6 +31,13 @@ namespace EdiFabric.Tests
         public static Stream Load(string qualifiedFileName)
         {
             return Assembly.GetExecutingAssembly().GetManifestResourceStream(qualifiedFileName);
+        }
+
+        public static Stream LoadXsd(string xsd)
+        {
+            return
+                Assembly.Load(new AssemblyName(XsdAssemblyName))
+                    .GetManifestResourceStream(string.Format("{0}.{1}", XsdAssemblyName, xsd));
         }
 
         public static string AsString(string qualifiedFileName)
@@ -64,7 +72,7 @@ namespace EdiFabric.Tests
         public static EdifactInterchange GenerateEdifact(string sample)
         {
             var message = ParseEdifact(sample);
-            var group = new EdifactGroup<M_INVOIC>(null);
+            var group = new EdifactGroup<M_INVOIC>(message.GroupHeader);
             group.AddItem(message.Value as M_INVOIC);
             var interchange = new EdifactInterchange(message.InterchangeHeader);
             interchange.AddItem(group);

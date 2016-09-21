@@ -151,7 +151,7 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
             if (separators == null) throw new ArgumentNullException("separators");
 
-            return segment.Split(separators.Escape.ToCharArray()[0],
+            return segment.SplitWithEscape(separators.Escape,
                 separators.DataElement).Skip(1).ToArray();
         }
 
@@ -160,30 +160,30 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
 
-            return dataElement.Split(separators.Escape.ToCharArray()[0],
+            return dataElement.SplitWithEscape(separators.Escape,
                 separators.ComponentDataElement).ToArray();
         }
 
-        internal static IEnumerable<string> Split(this string input, char escapeCharacter, string separator)
+        internal static IEnumerable<string> SplitWithEscape(this string input, char escapeCharacter, char separator)
         {
             var startOfSegment = 0;
             var index = 0;
             while (index < input.Length)
             {
-                index = input.IndexOf(separator, index, StringComparison.Ordinal);
+                index = input.IndexOf(separator.ToString(), index, StringComparison.Ordinal);
                 if (index > 0 && input[index - 1] == escapeCharacter)
                 {
                     if (index > 1)
                     {
                         if (input[index - 2] != escapeCharacter)
                         {
-                            index += separator.Length;
+                            index += 1;
                             continue;
                         }
                     }
                     else
                     {
-                        index += separator.Length;
+                        index += 1;
                         continue;
                     }
                 }
@@ -192,7 +192,7 @@ namespace EdiFabric.Framework
                     break;
                 }
                 yield return input.Substring(startOfSegment, index - startOfSegment);
-                index += separator.Length;
+                index += 1;
                 startOfSegment = index;
             }
             yield return input.Substring(startOfSegment);

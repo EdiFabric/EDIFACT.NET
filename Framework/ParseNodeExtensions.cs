@@ -91,25 +91,25 @@ namespace EdiFabric.Framework
                 return string.Empty;
 
             var result = string.Empty;
-            var temp = line.Split(new[] { separators.Escape + separators.Escape }, StringSplitOptions.RemoveEmptyEntries);
+            var temp = line.SplitWithEscape(separators.Escape, separators.Escape);
             foreach (var str in temp)
             {
-                result = result + str.Replace(separators.Escape, string.Empty) + separators.Escape;
+                result = result + str;
             }
 
-            if (!line.EndsWith(separators.Escape + separators.Escape))
-                result = result.TrimEnd(separators.Escape.ToCharArray());
+            if (!line.EndsWith(string.Concat(separators.Escape, separators.Escape)))
+                result = result.TrimEnd(separators.Escape);
 
             return result;
         }
 
         private static bool IsSeparator(this char value, Separators separators)
         {
-            return separators.ComponentDataElement.Contains(value) ||
-                   separators.DataElement.Contains(value) ||
-                   separators.Escape.Contains(value) ||
-                   separators.RepetitionDataElement.Contains(value) ||
-                   separators.Segment.Contains(value);
+            return separators.ComponentDataElement == value ||
+                   separators.DataElement == value ||
+                   separators.Escape == value ||
+                   separators.RepetitionDataElement == value ||
+                   separators.Segment == value;
         }
 
         private static string[] GetRepetitions(this string value, Separators separators)
@@ -117,14 +117,14 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
 
-            return value.Split(separators.Escape.ToCharArray()[0],
+            return value.SplitWithEscape(separators.Escape,
                 separators.RepetitionDataElement).ToArray();
         }
 
-        private static string TrimEnd(this string input, string escapeCharacter, string separator)
+        private static string TrimEndWithEscape(this string input, char escapeCharacter, char separator)
         {
-            var result = input.TrimEnd(separator.ToCharArray());
-            if (result.EndsWith(escapeCharacter))
+            var result = input.TrimEnd(separator);
+            if (result.EndsWith(escapeCharacter.ToString()))
                 result = result + separator;
 
             return result;
@@ -258,6 +258,11 @@ namespace EdiFabric.Framework
             {
                 var currentDataElement = dataElements[deIndex];
                 if (string.IsNullOrEmpty(currentDataElement)) continue;
+                if (dataElementsGrammar.Count <= deIndex)
+                    throw new ParserException(
+                        string.Format(
+                            "More data elements ({0}) were found in segment {1} than in the rule class ({2}).",
+                            dataElements.Length, line, dataElementsGrammar.Count));
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
                 var repetitions = currentDataElement.GetRepetitions(separators);
                 foreach (var repetition in repetitions)
@@ -274,6 +279,10 @@ namespace EdiFabric.Framework
                     {
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
+                        if (componentDataElementsGrammar.Count <= cdeIndex)
+                            throw new ParserException(
+                                string.Format("More data elements ({0}) were found in segment {1} than in the rule class {2}.",
+                                    componentDataElements.Length, currentComponentDataElement, componentDataElementsGrammar.Count));
                         var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
 
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,
@@ -363,7 +372,7 @@ namespace EdiFabric.Framework
                             .Aggregate(value,
                                 (current, subElement) =>
                                     current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
-                        value = value.TrimEnd(separators.Escape, separators.ComponentDataElement);                       
+                        value = value.TrimEndWithEscape(separators.Escape, separators.ComponentDataElement);                       
                     }
                 }
                 else
@@ -378,7 +387,7 @@ namespace EdiFabric.Framework
                 result = result + separator + value;
             }
 
-            return result.TrimEnd(separators.Escape, separators.DataElement) + separators.Segment;
+            return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
         }
 
         internal static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)

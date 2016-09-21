@@ -34,7 +34,7 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
             if (separators == null) throw new ArgumentNullException("separators");
 
-            var dataElements = ediSegment.Split(separators.DataElement.ToCharArray(), StringSplitOptions.None);
+            var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
             if (dataElements.Length < 2) throw new Exception("Segment is blank.");
 
             Name = dataElements[0];
@@ -44,13 +44,13 @@ namespace EdiFabric.Framework
             if (ediSegment.StartsWith(SegmentTags.UNA.ToString())) Name = SegmentTags.UNA.ToString();
 
             // Handle blank segments, e.g. BHT+'
-            var firstComponentDataElements = dataElements[1].Split(separators.ComponentDataElement.ToCharArray(),
+            var firstComponentDataElements = dataElements[1].Split(new[] {separators.ComponentDataElement},
                 StringSplitOptions.None);
             FirstValue = firstComponentDataElements[0];
             if (dataElements.Length > 2)
             {
                 var secondComponentDataElements =
-                    dataElements[2].Split(separators.ComponentDataElement.ToCharArray(),
+                    dataElements[2].Split(new[] {separators.ComponentDataElement},
                         StringSplitOptions.None);
                 SecondValue = secondComponentDataElements[0];
             }

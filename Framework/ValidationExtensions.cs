@@ -53,7 +53,7 @@ namespace EdiFabric.Framework
             return message.Validate(xsd, "www.edifabric.com/x12");
         }
 
-        private static IEnumerable<string> Validate<T>(this T message, Stream xsd, string nameSpace )
+        private static IEnumerable<string> Validate<T>(this T message, Stream xsd, string nameSpace)
         {
             var result = new List<string>();
             var schemas = new XmlSchemaSet();

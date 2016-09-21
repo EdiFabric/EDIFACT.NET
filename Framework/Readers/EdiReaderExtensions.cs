@@ -16,7 +16,7 @@ using EdiFabric.Framework.Constants;
 
 namespace EdiFabric.Framework.Readers
 {
-    static class EdiReaderExtensions
+    internal static class EdiReaderExtensions
     {
         internal static string ReadSegment(this StreamReader reader, Separators separators)
         {
@@ -24,21 +24,18 @@ namespace EdiFabric.Framework.Readers
 
             while (reader.Peek() >= 0)
             {
-                var symbol = (char)reader.Read();
+                var symbol = (char) reader.Read();
                 line = line + symbol;
 
-                if (line.EndsWith(separators.Segment))
+                if (line.EndsWith(separators.Segment.ToString()))
                 {
-                    if (separators.Escape.Length != 0 &&
+                    if (separators.Escape != '\0' &&
                         line.EndsWith(string.Concat(separators.Escape, separators.Segment)))
                     {
                         continue;
                     }
 
-                    if (separators.Segment != Environment.NewLine)
-                        line = line.Trim('\r', '\n');
-
-                    int index = line.LastIndexOf(separators.Segment, StringComparison.Ordinal);
+                    int index = line.LastIndexOf(separators.Segment.ToString(), StringComparison.Ordinal);
                     if (index > 0)
                     {
                         line = line.Remove(index);
@@ -54,18 +51,18 @@ namespace EdiFabric.Framework.Readers
 
         internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
         {
-            var parseNode = ParseNode.BuldTree(typeof(T), false);
+            var parseNode = ParseNode.BuldTree(typeof (T), false);
             parseNode.ParseSegment(segmentContext.Value, separators);
-            return (T)parseNode.ToInstance();
+            return (T) parseNode.ToInstance();
         }
 
         internal static Tuple<string, Separators> ReadHeader(this StreamReader reader, string segmentName)
         {
-            string dataElement;
-            string componentDataElement;
-            string repetitionDataElement;
-            string segment;
-            string escape;
+            char dataElement;
+            char componentDataElement;
+            char repetitionDataElement;
+            char segment;
+            char escape;
             string header = null;
             Separators separators = null;
 
@@ -74,18 +71,15 @@ namespace EdiFabric.Framework.Readers
                 case SegmentTags.ISA:
                     try
                     {
-                        dataElement = reader.Read(1);
+                        dataElement = reader.Read(1)[0];
                         var isa = reader.ReadIsa(dataElement);
-                        var isaElements = isa.Split(dataElement.ToCharArray());
-                        componentDataElement = string.Concat(isaElements[16].First());
-                        repetitionDataElement = isaElements[11] != "U"
-                            ? isaElements[11]
+                        var isaElements = isa.Split(dataElement);
+                        componentDataElement = isaElements[16].First();
+                        repetitionDataElement = isaElements[11].First() != 'U'
+                            ? isaElements[11].First()
                             : Separators.DefaultSeparatorsX12().RepetitionDataElement;
                         var last = isaElements[16].ToCharArray();
-                        segment = last.Length > 1 && !char.IsWhiteSpace(last[1])
-                            ? string.Concat(last[1])
-                            : Environment.NewLine;
-
+                        segment = last[1];
                         separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                             repetitionDataElement);
                         header = segmentName + dataElement + isa;
@@ -104,7 +98,7 @@ namespace EdiFabric.Framework.Readers
                     segment = defaultSeparators.Segment;
 
                     separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
-                            repetitionDataElement, escape);
+                        repetitionDataElement, escape);
                     header = segmentName + reader.ReadSegment(separators);
                     break;
                 case SegmentTags.UNA:
@@ -112,11 +106,11 @@ namespace EdiFabric.Framework.Readers
                     {
                         var una = reader.Read(6);
                         var unaChars = una.ToArray();
-                        componentDataElement = string.Concat(unaChars[0]);
-                        dataElement = string.Concat(unaChars[1]);
-                        escape = string.Concat(unaChars[3]);
+                        componentDataElement = unaChars[0];
+                        dataElement = unaChars[1];
+                        escape = unaChars[3];
                         repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
-                        segment = string.Concat(unaChars[5]);
+                        segment = unaChars[5];
 
                         separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
                             repetitionDataElement, escape);
@@ -159,10 +153,13 @@ namespace EdiFabric.Framework.Readers
 
         internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
         {
+            if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
+                return SegmentTags.Regular;
+
             if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
 
             var segmentTag = separators != null
-                ? segment.Split(separators.DataElement.ToCharArray(), StringSplitOptions.None).FirstOrDefault()
+                ? segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault()
                 : segment.ToUpper().TrimStart().Substring(0, 3);
 
             SegmentTags tag;
@@ -176,23 +173,23 @@ namespace EdiFabric.Framework.Readers
             return string.Concat(result);
         }
 
-        private static string ReadIsa(this StreamReader reader, string dataElementSeparator)
+        private static string ReadIsa(this StreamReader reader, char dataElementSeparator)
         {
             var line = "";
             var counter = 0;
 
             while (reader.Peek() >= 0 && counter < 16)
             {
-                var symbol = (char)reader.Read();
+                var symbol = (char) reader.Read();
                 line = line + symbol;
 
-                if (dataElementSeparator[0] == symbol)
+                if (dataElementSeparator == symbol)
                 {
                     counter = counter + 1;
                 }
             }
 
             return line + reader.Read(2);
-        } 
+        }
     }
 }

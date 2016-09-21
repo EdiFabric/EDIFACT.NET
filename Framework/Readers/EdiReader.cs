@@ -28,7 +28,7 @@ namespace EdiFabric.Framework.Readers
         private Separators _separators;
         private SegmentContext _interchangeHeader;
         private SegmentContext _groupHeader;
-        private char[] _trims = { '\r', '\n' };
+        private char[] _trims = { '\r', '\n', ' ' };
 
         /// <summary>
         /// The EDI message containing the parsed object and the group and interchange headers
@@ -58,7 +58,10 @@ namespace EdiFabric.Framework.Readers
             
             while (_streamReader.Peek() >= 0 && !result)
             {
-                var segmentContext = new SegmentContext(ReadSegment(), _separators);
+                var currentSegment = ReadSegment();
+                if (string.IsNullOrEmpty(currentSegment)) break;
+                
+                var segmentContext = new SegmentContext(currentSegment, _separators);
                 switch (segmentContext.Tag)
                 {
                     case SegmentTags.UNA:
@@ -113,16 +116,17 @@ namespace EdiFabric.Framework.Readers
         private string ReadSegment()
         {
             var first3 = _streamReader.Read(3, _trims);
+            if (string.IsNullOrEmpty(first3)) return null;
             var header = _streamReader.ReadHeader(first3);
             if (header.Item2 != null && _separators == null)
             {
                 _separators = header.Item2;
-                _trims = _trims.Except(_separators.Segment.ToCharArray()).ToArray();
+                _trims = _trims.Except(new[] {_separators.Segment}).ToArray();
             }
 
             if (_separators == null)
                 throw new ParserException(
-                    string.Format("Invalid EDI message. The first segment must be one of {0}, {1}, {2}.",
+                    string.Format("Invalid EDI message. The first segment must be either {0} or {1} or {2}.",
                         SegmentTags.UNA, SegmentTags.UNB, SegmentTags.ISA));
 
             return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);

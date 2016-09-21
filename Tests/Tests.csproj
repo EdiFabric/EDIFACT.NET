@@ -79,6 +79,10 @@
       <Project>{2b71580c-f607-43da-904a-527a21397477}</Project>
       <Name>Rules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xsd\Xsd.csproj">
+      <Project>{f6d8a3d6-d721-4f49-b12b-7fbb70e40f2e}</Project>
+      <Name>Xsd</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Xsd\EdifactEnvelope.xsd" />
@@ -275,6 +279,36 @@
     <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_RepeatingDataElement.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Valid.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\Edifact_Group.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\Edifact_Interchange.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleInterchange.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\Edifact_Interchange2.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_InvalidTrailers.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_InvalidHeader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_InvalidSegment.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
