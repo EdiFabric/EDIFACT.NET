@@ -87,7 +87,10 @@
         </xs:element>
         <xs:element name="D_BHT06_ClaimOrEncounterIdentifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="CH" />
+              <xs:enumeration value="RP" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -198,7 +201,9 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="46" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_SubmitterIdentifier">
@@ -248,7 +253,12 @@
         </xs:element>
         <xs:element name="D_PER03_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_PER04_CommunicationNumber">
@@ -261,7 +271,13 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER05_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER06_CommunicationNumber">
@@ -274,7 +290,13 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER07_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER08_CommunicationNumber">
@@ -362,7 +384,9 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="46" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_ReceiverPrimaryIdentifier">
@@ -424,12 +448,16 @@
         </xs:element>
         <xs:element name="D_HL03_HierarchicalLevelCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="20" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HL04_HierarchicalChildCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -737,7 +765,11 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_BillingProviderIdentifier">
@@ -982,7 +1014,11 @@
         </xs:element>
         <xs:element name="D_PER03_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_PER04_CommunicationNumber">
@@ -995,7 +1031,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER05_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER06_CommunicationNumber">
@@ -1008,7 +1049,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER07_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER08_CommunicationNumber">
@@ -1100,7 +1146,11 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_PaytoProviderIdentifier">
@@ -1293,12 +1343,17 @@
         </xs:element>
         <xs:element name="D_HL03_HierarchicalLevelCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="22" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HL04_HierarchicalChildCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="0" />
+              <xs:enumeration value="1" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -1341,7 +1396,17 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SBR05_InsuranceTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="12" />
+              <xs:enumeration value="13" />
+              <xs:enumeration value="14" />
+              <xs:enumeration value="15" />
+              <xs:enumeration value="16" />
+              <xs:enumeration value="41" />
+              <xs:enumeration value="42" />
+              <xs:enumeration value="43" />
+              <xs:enumeration value="47" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SBR06">
@@ -1370,7 +1435,31 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SBR09_ClaimFilingIndicatorCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="09" />
+              <xs:enumeration value="10" />
+              <xs:enumeration value="11" />
+              <xs:enumeration value="12" />
+              <xs:enumeration value="13" />
+              <xs:enumeration value="14" />
+              <xs:enumeration value="15" />
+              <xs:enumeration value="16" />
+              <xs:enumeration value="AM" />
+              <xs:enumeration value="BL" />
+              <xs:enumeration value="CH" />
+              <xs:enumeration value="CI" />
+              <xs:enumeration value="DS" />
+              <xs:enumeration value="HM" />
+              <xs:enumeration value="LI" />
+              <xs:enumeration value="LM" />
+              <xs:enumeration value="MB" />
+              <xs:enumeration value="MC" />
+              <xs:enumeration value="OF" />
+              <xs:enumeration value="TV" />
+              <xs:enumeration value="VA" />
+              <xs:enumeration value="WC" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -1413,7 +1502,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT05_DateTimePeriodFormatQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="D8" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT06_InsuredIndividualDeathDate">
@@ -1426,7 +1517,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT07_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT08_PatientWeight">
@@ -1436,7 +1529,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT09_PregnancyIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -1523,7 +1618,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="MI" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_SubscriberPrimaryIdentifier">
@@ -1649,7 +1747,11 @@
         </xs:element>
         <xs:element name="D_DMG03_SubscriberGenderCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="F" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="U" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_DMG04">
@@ -1861,7 +1963,10 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="PI" />
+              <xs:enumeration value="XV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_PayerIdentifier">
@@ -2253,7 +2358,9 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="MI" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_CreditOrDebitCardNumber">
@@ -2379,33 +2486,65 @@
         <xs:element ref="tns:C_CLM05_C023U837_TS837Q1_2300" />
         <xs:element name="D_CLM06_ProviderOrSupplierSignatureIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="N" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CLM07_MedicareAssignmentCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="P" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CLM08_BenefitsAssignmentCertificationIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="N" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CLM09_ReleaseOfInformationCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="I" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="N" />
+              <xs:enumeration value="O" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM10_PatientSignatureSourceCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="P" />
+              <xs:enumeration value="S" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" ref="tns:C_CLM11_C024U841_TS837Q1_2300" />
         <xs:element minOccurs="0" name="D_CLM12_SpecialProgramIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM13">
@@ -2434,7 +2573,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM16_ParticipationAgreement">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="P" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM17">
@@ -2463,7 +2604,19 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM20_DelayReasonCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+              <xs:enumeration value="6" />
+              <xs:enumeration value="7" />
+              <xs:enumeration value="8" />
+              <xs:enumeration value="9" />
+              <xs:enumeration value="10" />
+              <xs:enumeration value="11" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -2504,17 +2657,32 @@
       <xs:sequence>
         <xs:element name="D_CLM11_C02401U842_RelatedCausesCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AA" />
+              <xs:enumeration value="AP" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="OA" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM11_C02402U843_RelatedCausesCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AA" />
+              <xs:enumeration value="AP" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="OA" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM11_C02403U844_RelatedCausesCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AA" />
+              <xs:enumeration value="AP" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="OA" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CLM11_C02404U845_AutoAccidentStateOrProvinceCode">
@@ -3105,7 +3273,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PWK05_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AC" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PWK06_AttachmentControlNumber">
@@ -3874,17 +4044,30 @@
         </xs:element>
         <xs:element name="D_CR103_AmbulanceTransportCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="I" />
+              <xs:enumeration value="R" />
+              <xs:enumeration value="T" />
+              <xs:enumeration value="X" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR104_AmbulanceTransportReasonCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR105_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DH" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR106_TransportDistance">
@@ -3976,7 +4159,15 @@
         </xs:element>
         <xs:element name="D_CR208_PatientConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+              <xs:enumeration value="G" />
+              <xs:enumeration value="M" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR209">
@@ -4005,7 +4196,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_CR212_XrayAvailabilityIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="N" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -4041,27 +4235,82 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC05_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC06_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC07_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -4096,27 +4345,57 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="L1" />
+              <xs:enumeration value="L2" />
+              <xs:enumeration value="L3" />
+              <xs:enumeration value="L4" />
+              <xs:enumeration value="L5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="L1" />
+              <xs:enumeration value="L2" />
+              <xs:enumeration value="L3" />
+              <xs:enumeration value="L4" />
+              <xs:enumeration value="L5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC05_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="L1" />
+              <xs:enumeration value="L2" />
+              <xs:enumeration value="L3" />
+              <xs:enumeration value="L4" />
+              <xs:enumeration value="L5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC06_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="L1" />
+              <xs:enumeration value="L2" />
+              <xs:enumeration value="L3" />
+              <xs:enumeration value="L4" />
+              <xs:enumeration value="L5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC07_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="L1" />
+              <xs:enumeration value="L2" />
+              <xs:enumeration value="L3" />
+              <xs:enumeration value="L4" />
+              <xs:enumeration value="L5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -4148,7 +4427,9 @@
         </xs:element>
         <xs:element name="D_CRC03_HomeboundIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="IH" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04">
@@ -4206,17 +4487,32 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AV" />
+              <xs:enumeration value="NU" />
+              <xs:enumeration value="S2" />
+              <xs:enumeration value="ST" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AV" />
+              <xs:enumeration value="NU" />
+              <xs:enumeration value="S2" />
+              <xs:enumeration value="ST" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC05_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AV" />
+              <xs:enumeration value="NU" />
+              <xs:enumeration value="S2" />
+              <xs:enumeration value="ST" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC06">
@@ -4399,7 +4695,9 @@
       <xs:sequence>
         <xs:element name="D_HI03_C02201U879_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI03_C02202U880_DiagnosisCode">
@@ -4452,7 +4750,9 @@
       <xs:sequence>
         <xs:element name="D_HI04_C02201U887_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI04_C02202U888_DiagnosisCode">
@@ -4505,7 +4805,9 @@
       <xs:sequence>
         <xs:element name="D_HI05_C02201U895_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI05_C02202U896_DiagnosisCode">
@@ -4558,7 +4860,9 @@
       <xs:sequence>
         <xs:element name="D_HI06_C02201U903_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI06_C02202U904_DiagnosisCode">
@@ -4611,7 +4915,9 @@
       <xs:sequence>
         <xs:element name="D_HI07_C02201U911_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI07_C02202U912_DiagnosisCode">
@@ -4664,7 +4970,9 @@
       <xs:sequence>
         <xs:element name="D_HI08_C02201U919_DiagnosisTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="BF" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HI08_C02202U920_DiagnosisCode">
@@ -4810,17 +5118,37 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP13_RejectReasonCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="T1" />
+              <xs:enumeration value="T2" />
+              <xs:enumeration value="T3" />
+              <xs:enumeration value="T4" />
+              <xs:enumeration value="T5" />
+              <xs:enumeration value="T6" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP14_PolicyComplianceCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP15_ExceptionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+              <xs:enumeration value="6" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -4879,7 +5207,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD03_FrequencyPeriod">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DA" />
+              <xs:enumeration value="MO" />
+              <xs:enumeration value="Q1" />
+              <xs:enumeration value="WK" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD04_FrequencyCount">
@@ -4889,7 +5222,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD05_DurationOfVisitsUnits">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="7" />
+              <xs:enumeration value="35" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD06_DurationOfVisitsNumberOfUnits">
@@ -4899,12 +5235,49 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD07_ShipDeliveryOrCalendarPatternCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+              <xs:enumeration value="6" />
+              <xs:enumeration value="7" />
+              <xs:enumeration value="A" />
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+              <xs:enumeration value="G" />
+              <xs:enumeration value="H" />
+              <xs:enumeration value="J" />
+              <xs:enumeration value="K" />
+              <xs:enumeration value="L" />
+              <xs:enumeration value="N" />
+              <xs:enumeration value="O" />
+              <xs:enumeration value="S" />
+              <xs:enumeration value="W" />
+              <xs:enumeration value="SA" />
+              <xs:enumeration value="SB" />
+              <xs:enumeration value="SC" />
+              <xs:enumeration value="SD" />
+              <xs:enumeration value="SG" />
+              <xs:enumeration value="SL" />
+              <xs:enumeration value="SP" />
+              <xs:enumeration value="SX" />
+              <xs:enumeration value="SY" />
+              <xs:enumeration value="SZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD08_DeliveryPatternTimeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -4998,7 +5371,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_ReferringProviderIdentifier">
@@ -5197,7 +5574,11 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_RenderingProviderIdentifier">
@@ -5395,7 +5776,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_PurchasedServiceProviderIdentifier">
@@ -5547,7 +5932,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_LaboratoryOrFacilityPrimaryIdentifier">
@@ -5769,7 +6158,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_SupervisingProviderIdentifier">
@@ -5920,7 +6313,23 @@
         </xs:element>
         <xs:element name="D_SBR05_InsuranceTypeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="AP" />
+              <xs:enumeration value="C1" />
+              <xs:enumeration value="CP" />
+              <xs:enumeration value="GP" />
+              <xs:enumeration value="HM" />
+              <xs:enumeration value="IP" />
+              <xs:enumeration value="LD" />
+              <xs:enumeration value="LT" />
+              <xs:enumeration value="MB" />
+              <xs:enumeration value="MC" />
+              <xs:enumeration value="MI" />
+              <xs:enumeration value="MP" />
+              <xs:enumeration value="OT" />
+              <xs:enumeration value="PP" />
+              <xs:enumeration value="SP" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SBR06">
@@ -5949,7 +6358,31 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SBR09_ClaimFilingIndicatorCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="09" />
+              <xs:enumeration value="10" />
+              <xs:enumeration value="11" />
+              <xs:enumeration value="12" />
+              <xs:enumeration value="13" />
+              <xs:enumeration value="14" />
+              <xs:enumeration value="15" />
+              <xs:enumeration value="16" />
+              <xs:enumeration value="AM" />
+              <xs:enumeration value="BL" />
+              <xs:enumeration value="CH" />
+              <xs:enumeration value="CI" />
+              <xs:enumeration value="DS" />
+              <xs:enumeration value="HM" />
+              <xs:enumeration value="LI" />
+              <xs:enumeration value="LM" />
+              <xs:enumeration value="MB" />
+              <xs:enumeration value="MC" />
+              <xs:enumeration value="OF" />
+              <xs:enumeration value="TV" />
+              <xs:enumeration value="VA" />
+              <xs:enumeration value="WC" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -6376,7 +6809,11 @@
         </xs:element>
         <xs:element name="D_DMG03_OtherInsuredGenderCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="F" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="U" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_DMG04">
@@ -6448,12 +6885,21 @@
         </xs:element>
         <xs:element name="D_OI03_BenefitsAssignmentCertificationIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="N" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_OI04_PatientSignatureSourceCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="P" />
+              <xs:enumeration value="S" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_OI05">
@@ -6466,7 +6912,14 @@
         </xs:element>
         <xs:element name="D_OI06_ReleaseOfInformationCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="I" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="N" />
+              <xs:enumeration value="O" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -6622,7 +7075,10 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="MI" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_OtherInsuredIdentifier">
@@ -6837,7 +7293,10 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="PI" />
+              <xs:enumeration value="XV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_OtherPayerPrimaryIdentifier">
@@ -6887,7 +7346,12 @@
         </xs:element>
         <xs:element name="D_PER03_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_PER04_CommunicationNumber">
@@ -6900,7 +7364,13 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER05_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER06_CommunicationNumber">
@@ -6913,7 +7383,13 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER07_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="ED" />
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER08_CommunicationNumber">
@@ -7176,7 +7652,9 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="MI" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_OtherPayerPatientPrimaryIdentifier">
@@ -8026,7 +8504,11 @@
         </xs:element>
         <xs:element name="D_SV103_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="F2" />
+              <xs:enumeration value="MJ" />
+              <xs:enumeration value="UN" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_SV104_ServiceUnitCount">
@@ -8058,7 +8540,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SV109_EmergencyIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SV110">
@@ -8071,12 +8555,16 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SV111_EPSDTIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SV112_FamilyPlanningIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SV113">
@@ -8097,7 +8585,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SV115_CoPayStatusCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="0" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SV116">
@@ -8265,7 +8755,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_SV506_RentalUnitPriceIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="6" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_SV507">
@@ -8434,17 +8928,30 @@
         </xs:element>
         <xs:element name="D_CR103_AmbulanceTransportCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="I" />
+              <xs:enumeration value="R" />
+              <xs:enumeration value="T" />
+              <xs:enumeration value="X" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR104_AmbulanceTransportReasonCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR105_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DH" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_CR106_TransportDistance">
@@ -8536,7 +9043,15 @@
         </xs:element>
         <xs:element name="D_CR208_PatientConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="A" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+              <xs:enumeration value="G" />
+              <xs:enumeration value="M" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR209">
@@ -8565,7 +9080,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_CR212_XrayAvailabilityIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="N" />
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -8690,22 +9208,32 @@
         </xs:element>
         <xs:element name="D_CR512_OxygenTestConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="E" />
+              <xs:enumeration value="R" />
+              <xs:enumeration value="S" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR513_OxygenTestFindingsCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR514_OxygenTestFindingsCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="2" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR515_OxygenTestFindingsCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="3" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CR516">
@@ -8761,27 +9289,82 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC05_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC06_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC07_ConditionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+              <xs:enumeration value="02" />
+              <xs:enumeration value="03" />
+              <xs:enumeration value="04" />
+              <xs:enumeration value="05" />
+              <xs:enumeration value="06" />
+              <xs:enumeration value="07" />
+              <xs:enumeration value="08" />
+              <xs:enumeration value="09" />
+              <xs:enumeration value="60" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -8814,7 +9397,9 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="65" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04">
@@ -8873,27 +9458,57 @@
         </xs:element>
         <xs:element name="D_CRC03_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="37" />
+              <xs:enumeration value="38" />
+              <xs:enumeration value="AL" />
+              <xs:enumeration value="P1" />
+              <xs:enumeration value="ZV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC04_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="37" />
+              <xs:enumeration value="38" />
+              <xs:enumeration value="AL" />
+              <xs:enumeration value="P1" />
+              <xs:enumeration value="ZV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC05_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="37" />
+              <xs:enumeration value="38" />
+              <xs:enumeration value="AL" />
+              <xs:enumeration value="P1" />
+              <xs:enumeration value="ZV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC06_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="37" />
+              <xs:enumeration value="38" />
+              <xs:enumeration value="AL" />
+              <xs:enumeration value="P1" />
+              <xs:enumeration value="ZV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CRC07_ConditionIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="37" />
+              <xs:enumeration value="38" />
+              <xs:enumeration value="AL" />
+              <xs:enumeration value="P1" />
+              <xs:enumeration value="ZV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -10064,7 +10679,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD03_FrequencyPeriod">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DA" />
+              <xs:enumeration value="MO" />
+              <xs:enumeration value="Q1" />
+              <xs:enumeration value="WK" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD04_FrequencyCount">
@@ -10074,7 +10694,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD05_DurationOfVisitsUnits">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="7" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="35" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD06_DurationOfVisitsNumberOfUnits">
@@ -10084,12 +10708,48 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD07_ShipDeliveryOrCalendarPatternCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+              <xs:enumeration value="6" />
+              <xs:enumeration value="7" />
+              <xs:enumeration value="A" />
+              <xs:enumeration value="B" />
+              <xs:enumeration value="C" />
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+              <xs:enumeration value="G" />
+              <xs:enumeration value="H" />
+              <xs:enumeration value="J" />
+              <xs:enumeration value="K" />
+              <xs:enumeration value="L" />
+              <xs:enumeration value="N" />
+              <xs:enumeration value="O" />
+              <xs:enumeration value="SA" />
+              <xs:enumeration value="SB" />
+              <xs:enumeration value="SC" />
+              <xs:enumeration value="SD" />
+              <xs:enumeration value="SG" />
+              <xs:enumeration value="SL" />
+              <xs:enumeration value="SP" />
+              <xs:enumeration value="SX" />
+              <xs:enumeration value="SY" />
+              <xs:enumeration value="SZ" />
+              <xs:enumeration value="W" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HSD08_DeliveryPatternTimeCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="D" />
+              <xs:enumeration value="E" />
+              <xs:enumeration value="F" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -10165,7 +10825,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP09_ProductOrServiceIDQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="HC" />
+              <xs:enumeration value="IV" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP10_ProcedureCode">
@@ -10178,7 +10842,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP11_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="DA" />
+              <xs:enumeration value="UN" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP12_RepricedApprovedServiceUnitCount">
@@ -10188,17 +10855,37 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP13_RejectReasonCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="T1" />
+              <xs:enumeration value="T2" />
+              <xs:enumeration value="T3" />
+              <xs:enumeration value="T4" />
+              <xs:enumeration value="T5" />
+              <xs:enumeration value="T6" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP14_PolicyComplianceCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_HCP15_ExceptionCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="1" />
+              <xs:enumeration value="2" />
+              <xs:enumeration value="3" />
+              <xs:enumeration value="4" />
+              <xs:enumeration value="5" />
+              <xs:enumeration value="6" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -10543,7 +11230,12 @@
       <xs:sequence>
         <xs:element name="D_CTP05_C00101U5990_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="F2" />
+              <xs:enumeration value="GR" />
+              <xs:enumeration value="ML" />
+              <xs:enumeration value="UN" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_CTP05_C00102U5991">
@@ -10750,7 +11442,11 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_RenderingProviderIdentifier">
@@ -10948,7 +11644,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_PurchasedServiceProviderIdentifier">
@@ -11100,7 +11800,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_LaboratoryOrFacilityPrimaryIdentifier">
@@ -11322,7 +12026,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_SupervisingProviderIdentifier">
@@ -11470,7 +12178,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_OrderingProviderIdentifier">
@@ -11644,7 +12356,11 @@
         </xs:element>
         <xs:element name="D_PER03_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_PER04_CommunicationNumber">
@@ -11657,7 +12373,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER05_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER06_CommunicationNumber">
@@ -11670,7 +12391,12 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PER07_CommunicationNumberQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="EM" />
+              <xs:enumeration value="EX" />
+              <xs:enumeration value="FX" />
+              <xs:enumeration value="TE" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PER08_CommunicationNumber">
@@ -11768,7 +12494,11 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="24" />
+              <xs:enumeration value="34" />
+              <xs:enumeration value="XX" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_ReferringProviderIdentifier">
@@ -11972,7 +12702,10 @@
         </xs:element>
         <xs:element name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="PI" />
+              <xs:enumeration value="XV" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_NM109_OtherPayerIdentificationNumber">
@@ -12092,7 +12825,11 @@
       <xs:sequence>
         <xs:element name="D_SVD03_C00301U986_ProductOrServiceIDQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="HC" />
+              <xs:enumeration value="IV" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_SVD03_C00302U987_ProcedureCode">
@@ -12404,12 +13141,16 @@
         </xs:element>
         <xs:element name="D_HL03_HierarchicalLevelCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="23" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element name="D_HL04_HierarchicalChildCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="0" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -12475,7 +13216,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT05_DateTimePeriodFormatQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="D8" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT06_PatientDeathDate">
@@ -12488,7 +13231,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT07_UnitOrBasisForMeasurementCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="01" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT08_PatientWeight">
@@ -12498,7 +13243,9 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_PAT09_PregnancyIndicator">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="Y" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
       </xs:sequence>
@@ -12574,7 +13321,10 @@
         </xs:element>
         <xs:element minOccurs="0" name="D_NM108_IdentificationCodeQualifier">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="MI" />
+              <xs:enumeration value="ZZ" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_NM109_PatientPrimaryIdentifier">
@@ -12700,7 +13450,11 @@
         </xs:element>
         <xs:element name="D_DMG03_PatientGenderCode">
           <xs:simpleType>
-            <xs:restriction base="xs:string" />
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="F" />
+              <xs:enumeration value="M" />
+              <xs:enumeration value="U" />
+            </xs:restriction>
           </xs:simpleType>
         </xs:element>
         <xs:element minOccurs="0" name="D_DMG04">
