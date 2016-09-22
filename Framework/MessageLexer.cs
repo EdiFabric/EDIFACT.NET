@@ -164,7 +164,12 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
             if (separators == null) throw new ArgumentNullException("separators");
 
-            return segment.SplitWithEscape(separators.Escape,
+            if (!separators.Escape.HasValue)
+            {
+                return segment.Split(separators.DataElement).Skip(1).ToArray();
+            }
+
+            return segment.SplitWithEscape(separators.Escape.Value,
                 separators.DataElement).Skip(1).ToArray();
         }
 
@@ -173,7 +178,12 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(dataElement)) throw new ArgumentNullException("dataElement");
 
-            return dataElement.SplitWithEscape(separators.Escape,
+            if (!separators.Escape.HasValue)
+            {
+                return dataElement.Split(separators.ComponentDataElement);
+            }
+
+            return dataElement.SplitWithEscape(separators.Escape.Value,
                 separators.ComponentDataElement).ToArray();
         }
 

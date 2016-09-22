@@ -81,7 +81,7 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(line))
                 return string.Empty;
 
-            if (separators.Escape == '\0')
+            if (!separators.Escape.HasValue)
                 return line;
 
             return line.ToCharArray()
@@ -94,14 +94,16 @@ namespace EdiFabric.Framework
                 return string.Empty;
 
             var result = string.Empty;
-            var temp = line.SplitWithEscape(separators.Escape, separators.Escape);
+            var temp = separators.Escape.HasValue
+                ? line.SplitWithEscape(separators.Escape.Value, separators.Escape.Value)
+                : new List<string> {line};
             foreach (var str in temp)
             {
                 result = result + str;
             }
 
-            if (!line.EndsWith(string.Concat(separators.Escape, separators.Escape)))
-                result = result.TrimEnd(separators.Escape);
+            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value)))
+                result = result.TrimEnd(separators.Escape.Value);
 
             return result;
         }
@@ -120,14 +122,19 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
 
-            return value.SplitWithEscape(separators.Escape,
+            if (!separators.Escape.HasValue)
+            {
+                return value.Split(separators.RepetitionDataElement);
+            }
+
+            return value.SplitWithEscape(separators.Escape.Value,
                 separators.RepetitionDataElement).ToArray();
         }
 
-        private static string TrimEndWithEscape(this string input, char escapeCharacter, char separator)
+        private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
         {
             var result = input.TrimEnd(separator);
-            if (escapeCharacter != '\0' && result.EndsWith(escapeCharacter.ToString()))
+            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString()))
                 result = result + separator;
 
             return result;

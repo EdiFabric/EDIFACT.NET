@@ -29,8 +29,8 @@ namespace EdiFabric.Framework.Readers
 
                 if (line.EndsWith(separators.Segment.ToString()))
                 {
-                    if (separators.Escape != '\0' &&
-                        line.EndsWith(string.Concat(separators.Escape, separators.Segment)))
+                    if (separators.Escape.HasValue &&
+                        line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment)))
                     {
                         continue;
                     }
@@ -94,7 +94,7 @@ namespace EdiFabric.Framework.Readers
                     var defaultSeparators = Separators.DefaultSeparatorsEdifact();
                     componentDataElement = defaultSeparators.ComponentDataElement;
                     dataElement = defaultSeparators.DataElement;
-                    escape = defaultSeparators.Escape;
+                    escape = defaultSeparators.Escape.Value;
                     repetitionDataElement = defaultSeparators.RepetitionDataElement;
                     segment = defaultSeparators.Segment;
 
