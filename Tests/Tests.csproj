@@ -86,6 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_BOM.txt" />
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidHeader.txt" />
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_TrailingBlanks.txt" />
     <EmbeddedResource Include="Xsd\EdifactEnvelope.xsd" />
     <EmbeddedResource Include="Xsd\X12Envelope.xsd" />
@@ -304,12 +306,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_InvalidTrailers.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204_InvalidHeader.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
