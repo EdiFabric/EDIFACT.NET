@@ -1,9 +1,9 @@
-<S_ISA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="www.edifabric.com/x12">
+﻿<S_ISA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="www.edifabric.com/x12">
   <D_744_1>00</D_744_1>
-  <D_745_2></D_745_2>
+  <D_745_2>          </D_745_2>
   <D_746_3>00</D_746_3>
-  <D_747_4></D_747_4>
-  <D_704_5>16</D_704_5>
+  <D_747_4>          </D_747_4>
+  <D_704_5>17</D_704_5>
   <D_705_6>102096559TEST </D_705_6>
   <D_704_7>14</D_704_7>
   <D_706_8>PARTNERTEST</D_706_8>

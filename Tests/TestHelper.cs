@@ -8,8 +8,6 @@ using System.Xml.Serialization;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Headers;
 using EdiFabric.Framework.Readers;
-using EdiFabric.Rules.EdifactD00AINVOIC;
-using EdiFabric.Rules.X12002040810;
 
 namespace EdiFabric.Tests
 {
@@ -77,6 +75,16 @@ namespace EdiFabric.Tests
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
             using (var ediReader = EdifactReader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix)
+                )
+            {
+                return ediReader.ReadAllMessages().ToList();
+            }
+        }
+
+        public static List<EdiMessage<S_ISA, S_GS>> ParseX12Multiple(string sample, Encoding encoding = null,
+            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
+        {
+            using (var ediReader = X12Reader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix)
                 )
             {
                 return ediReader.ReadAllMessages().ToList();

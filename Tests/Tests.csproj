@@ -85,6 +85,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_BOM.txt" />
+    <EmbeddedResource Include="Edi\X12_810_00204_TrailingBlanks.txt" />
     <EmbeddedResource Include="Xsd\EdifactEnvelope.xsd" />
     <EmbeddedResource Include="Xsd\X12Envelope.xsd" />
   </ItemGroup>
@@ -100,9 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_NonDefaultSeparators.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204_SegmentSeparatorIsNewLine.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_DefaultUNA.txt" />
@@ -132,25 +131,7 @@
     <EmbeddedResource Include="Edi\X12_810_00204_MultipleGroups.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_MultipleMessages.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_MultipleGroups.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleMessages.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204_PropertiesOrder.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_PropertiesOrder.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt" />
@@ -161,25 +142,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_EmptyNode.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Xml\X12_810_00204_RepetitionSeparator.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_RepetitionSeparator.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_SegmentList.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204Deserialize.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00401.txt" />
@@ -213,9 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\X12_810_00204_MultipleGroupsBrokenLine.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00401_SecondaryValue1.txt" />
@@ -315,6 +280,36 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_SegmentSeparatorLF.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_TrailingSeparator.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\X12_Group.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\X12_Interchange.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_MultipleInterchanges.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\X12_Interchange2.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidTrailers.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidHeader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -144,6 +144,7 @@ namespace EdiFabric.Framework.Headers
                 D_28_2 = gs.D_28_6
             }, Separators.DefaultSeparatorsX12())
         {
+            if(header == null) throw new ParserException("GS header is null.");
         }
     }
 
@@ -170,7 +171,9 @@ namespace EdiFabric.Framework.Headers
             var result = new List<string>();
             var currentSeparators = separators ?? Separators.DefaultSeparatorsX12();
 
-            Header.D_701_16 = Header.D_701_16.First().ToString();
+            Header.D_701_16 = currentSeparators.ComponentDataElement.ToString();
+            if (Header.D_726_11 != "U")
+                Header.D_726_11 = currentSeparators.RepetitionDataElement.ToString();
 
             result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)

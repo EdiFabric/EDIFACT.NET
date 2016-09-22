@@ -77,7 +77,7 @@ namespace EdiFabric.Framework
         /// </summary>
         public static Separators DefaultSeparatorsX12()
         {
-            return new Separators('~', ':', '*', '^', null);
+            return new Separators('~', '>', '*', '^', null);
         }
 
         /// <summary>
