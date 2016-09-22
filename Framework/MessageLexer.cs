@@ -51,7 +51,8 @@ namespace EdiFabric.Framework
                 try
                 {
                     // Jump back to HL segment if needed
-                    if (segment.IsJump) segmentPosition = segmentPosition.JumpToHl(instancePosition, segment.ParentId);
+                    if (segment.IsJump)
+                        segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
 
                     var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                     if (currSeg == null)

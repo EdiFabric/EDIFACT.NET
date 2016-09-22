@@ -403,25 +403,30 @@ namespace EdiFabric.Framework
             return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
         }
 
-        internal static ParseNode JumpToHl(this ParseNode parseNode, ParseNode builtNode, string parentId)
+        internal static ParseNode JumpToHl(this ParseNode grammarRoot, ParseNode instanceRoot, string parentId)
         {
             ParseNode hlParent;
             if (parentId != null)
             {
                 // Parent HL, start right after it
                 hlParent =
-                    builtNode.Descendants()
-                        .Single(
+                    instanceRoot.Descendants()
+                        .SingleOrDefault(
                             d =>
                                 d.Name.StartsWith("S_HL") &&
                                 d.Children.First().Value == parentId);
-                var hl = parseNode.Root().Descendants().Single(pt => pt.Name == hlParent.Name);
+                if(hlParent == null)
+                    throw new ParserException(string.Format("HL with id = {0} was not found.", parentId));
+
+                var hl = grammarRoot.Descendants().Single(pt => pt.Name == hlParent.Name);
+                if(hl.IndexInParent() != 0)
+                    throw new ParserException(string.Format("HL with id = {0} is not the first segment.", parentId));
+                
                 return hl.Parent.Children.ElementAt(1);
             }
             
             // Root HL, start from it
-            hlParent = builtNode.Descendants().First(d => d.Name.StartsWith("S_HL"));
-            return parseNode.Root().Descendants().Single(pt => pt.Name == hlParent.Name);
+            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL"));
         }
 
         internal static ParseNode Root(this ParseNode parseNode)

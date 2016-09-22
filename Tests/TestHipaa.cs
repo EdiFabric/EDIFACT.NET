@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System;
-using System.Linq;
 using System.Xml.Linq;
-using EdiFabric.Framework;
-using EdiFabric.Framework.Headers;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class TestHipaa
     {
@@ -107,7 +99,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestGenerate5001Hl()
+        public void TestGenerate5010Hl()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
@@ -117,7 +109,6 @@ namespace EdiFabric.Tests
             var ediSegments = interchange.GenerateEdi();
 
             // ASSERT
-            var f = TestHelper.AsString(ediSegments, Environment.NewLine);
             Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
         }  
     }
