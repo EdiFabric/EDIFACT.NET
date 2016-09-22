@@ -28,6 +28,10 @@ namespace EdiFabric.Framework
         /// The EDI message
         /// </summary>
         public object Value { get; private set; }
+        /// <summary>
+        /// The separators.
+        /// </summary>
+        public Separators Separators { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiMessage{T, TU}"/> class.
@@ -35,11 +39,13 @@ namespace EdiFabric.Framework
         /// <param name="value">The message.</param>
         /// <param name="interchangeHeader">The interchange header.</param>
         /// <param name="groupHeader">The group header.</param>
-        public EdiMessage(object value, T interchangeHeader, TU groupHeader)
+        /// <param name="separators">The separators.</param>
+        public EdiMessage(object value, T interchangeHeader, TU groupHeader, Separators separators)
         {
             InterchangeHeader = interchangeHeader;
             GroupHeader = groupHeader;
             Value = value;
+            Separators = separators;
         }
     }
 }

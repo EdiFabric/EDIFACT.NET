@@ -267,7 +267,10 @@ namespace EdiFabric.Framework
                             "More data elements ({0}) were found in segment {1} than in the rule class ({2}).",
                             dataElements.Length, line, dataElementsGrammar.Count));
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
-                var repetitions = currentDataElement.GetRepetitions(separators);
+
+                var repetitions = currentDataElementGrammar.IsX12RepetitionSeparator()
+                    ? new[] { currentDataElement }
+                    : currentDataElement.GetRepetitions(separators);
                 foreach (var repetition in repetitions)
                 {
                     var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
@@ -417,6 +420,12 @@ namespace EdiFabric.Framework
         internal static ParseNode Root(this ParseNode parseNode)
         {
             return parseNode.Ancestors().Last(); 
+        }
+
+        private static bool IsX12RepetitionSeparator(this ParseNode parseNode)
+        {
+            return parseNode.Parent != null && parseNode.Parent.Name == "S_ISA" &&
+                   parseNode.Name == "D_726_11";
         }
     }
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF_EDIFACT_D00A_INVOIC.cs" />
+    <Compile Include="EF_X12_002040_810_Repetition.cs" />
     <Compile Include="EF_X12_002040_810.cs" />
     <Compile Include="EF_X12_004010X098A1_837.cs" />
     <Compile Include="EF_X12_005010X222A1_837.cs" />

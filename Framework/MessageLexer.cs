@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using EdiFabric.Framework.Constants;
 
@@ -18,11 +19,24 @@ namespace EdiFabric.Framework
 {
     static class MessageLexer
     {
-        internal static object Analyze(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName, Type type)
+        private static readonly string RulesAssembly;
+
+        static MessageLexer()
+        {
+            try
+            {
+                RulesAssembly = ConfigurationManager.AppSettings["EdiFabric.RulesAssemblyName"];
+            }
+            catch(Exception)
+            {
+                // ignored
+            }
+        }
+
+        internal static object Analyze(this List<SegmentContext> segments, Separators separators, Type type, string rulesAssemblyName)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
             if (type == null) throw new ArgumentNullException("type");
 
             var messageGrammar = ParseNode.BuldTree(type, true);
@@ -67,12 +81,11 @@ namespace EdiFabric.Framework
             return instancePosition.Root().ToInstance();
         }
 
-        internal static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
+        internal static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
-
+           
             string version;
             string tag;
 
@@ -98,15 +111,14 @@ namespace EdiFabric.Framework
                 throw new ParserException("Invalid ST segment.", ex);
             }
 
-            return ToType(Formats.X12, version, tag, definitionsAssemblyName);
+            return ToType(Formats.X12, version, tag, rulesAssemblyName, rulesNamespacePrefix);
         }
 
-        internal static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string definitionsAssemblyName)
+        internal static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
-
+            
             string version;
             string tag;
             try
@@ -123,25 +135,26 @@ namespace EdiFabric.Framework
                 throw new ParserException("Invalid UNH segment.", ex);
             }
 
-            return ToType(Formats.Edifact, version, tag, definitionsAssemblyName);
+            return ToType(Formats.Edifact, version, tag, rulesAssemblyName, rulesNamespacePrefix);
         }
 
-        private static Type ToType(Formats format, string version, string tag, string definitionsAssemblyName)
+        private static Type ToType(Formats format, string version, string tag, string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
             if (string.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
-            if (string.IsNullOrEmpty(definitionsAssemblyName)) throw new ArgumentNullException("definitionsAssemblyName");
-
-            var typeFullName = "EdiFabric.Rules." + format + version + tag;
-
+            
+            var rulesAssembly = rulesAssemblyName ?? RulesAssembly;
+            if(string.IsNullOrEmpty(rulesAssembly)) throw new ParserException("Fully qualified EDI rules assembly name is blank.");
+            var namespacePrefix = rulesNamespacePrefix ?? "EdiFabric.Rules";
+            var typeFullName = namespacePrefix.TrimEnd('.') + "." + format + version + tag;
             typeFullName = typeFullName + ".M_" + tag;
-            var systemType = Type.GetType(typeFullName + ", " + definitionsAssemblyName);
+            var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
 
             if (systemType == null)
                 throw new ParserException(
                     string.Format(
                         "Type '{0}' was not found in assembly '{1}'.",
-                        typeFullName, definitionsAssemblyName));
+                        typeFullName, rulesAssemblyName));
 
             return systemType;
         }

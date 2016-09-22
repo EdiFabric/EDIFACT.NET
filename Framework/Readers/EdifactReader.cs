@@ -23,24 +23,39 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Initializes a new instance of the <see cref="EdifactReader"/> class.
         /// </summary>
-        /// <param name="ediStream">The EDI stream.</param>
-        /// <param name="definitionsAssemblyName">The full assembly name of the assembly with the definition classes.</param>
-        /// <param name="encoding">The encoding.</param>
-        protected EdifactReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
-            : base(ediStream, definitionsAssemblyName, encoding)
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
+        protected EdifactReader(Stream ediStream, string rulesAssemblyName, Encoding encoding, string rulesNamespacePrefix)
+            : base(ediStream, rulesAssemblyName, encoding, rulesNamespacePrefix)
         {
         }
         
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="EdifactReader"/> class.
         /// </summary>
-        /// <param name="ediStream">The EDI stream.</param>
-        /// <param name="definitionsAssemblyName">The full assembly name of the assembly with the definition classes.</param>
-        /// <param name="encoding">The encoding.</param>
-        /// <returns></returns>
-        public static EdifactReader Create(Stream ediStream, string definitionsAssemblyName, Encoding encoding = null)
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
+        /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
+        public static EdifactReader Create(Stream ediStream, string rulesAssemblyName = null, Encoding encoding = null, string rulesNamespacePrefix = null)
         {
-            return new EdifactReader(ediStream, definitionsAssemblyName, encoding);
-        }       
+            return new EdifactReader(ediStream, rulesAssemblyName, encoding, rulesNamespacePrefix);
+        }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="EdifactReader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
+        /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
+        public static EdifactReader Create(Stream ediStream, Encoding encoding = null, string rulesAssemblyName = null, string rulesNamespacePrefix = null)
+        {
+            return new EdifactReader(ediStream, rulesAssemblyName, encoding, rulesNamespacePrefix);
+        }  
     }
 }

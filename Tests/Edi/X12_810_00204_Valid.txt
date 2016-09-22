@@ -1,15 +1,15 @@
-ISA*00*          *00*          *16*102096559TEST *14*PARTNERTEST*071214*1406*!*00204*810000263*1*T*>~
+ISA*00*          *00*          *16*102096559TEST *14*PARTNERTEST*071214*1406*U*00204*810000263*1*T*>~
 GS*IN*102096559TEST*PARTNER*20071214*1406*810000263*X*002040~
 ST*810*166061414~
-BIG*20070129*0013833070*20070129*V8748745***DI~
-NTE*GEN*If 0% VAT is charged and your VAT ID number is displayed above, this~
-NTE*GEN*is either an exempt or a reverse charge transaction.~
-NTE*GEN*This supply is exempt from VAT according to the section 64 of the Czec~
-NTE*GEN*h VAT Act.~
+BIG*200701*0013833070*200701*V8748745***DI~
+NTE*GEN*If 0% VAT is charged and your VAT ID number is displayed~
+NTE*GEN* above ,this is either an exempt or a reverse charge~
+NTE*GEN* transaction.This supply is exempt from VAT according~
+NTE*GEN* to the section 64 of the Czech VAT Act.~
 CUR*SE*USD~
 REF*61*noval*Adobe VAT Number~
-REF*CO*121212>a!133>b~
-REF*VN*0070861270>c!123>d*Something~
+REF*CO*121212~
+REF*VN*0070861270~
 N1*II*ADOBE SYSTEMS INCORPORATED*91*0000012137~
 N2*ADOBE SYSTEMS INCORPORATED~
 N3*345 PARK AVENUE~
@@ -38,11 +38,11 @@ N4*SAN JOSE*CA*95110*US~
 N1*EN**91*0020064630~
 N1*DU**91*0010013997~
 ITD*14*3*****35*****Up to 03/05/2007 without deduction~
-DTM*011*20070129~
+DTM*011*200701~
 IT1*000010*1*EA*160*CP*VP*65008841AB02A00*BP*7167946*UP*883919019161~
 PID*F****ACRO,8.0,WIN,AOO,UE,1PK,N/A~
 TDS*16000~
-TXI*ST*0*0*noval*Customer VAT Number~
+TXI*ST*0*0*noval*12345~
 CTT*1~
 SE*44*166061414~
 GE*1*810000263~

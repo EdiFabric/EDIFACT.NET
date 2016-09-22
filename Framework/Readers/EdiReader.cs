@@ -24,7 +24,8 @@ namespace EdiFabric.Framework.Readers
     public class EdiReader<T, TU> : IDisposable
     {
         private readonly StreamReader _streamReader;
-        private readonly string _definitionsAssemblyName;
+        private readonly string _rulesAssemblyName;
+        private readonly string _rulesNamespacePrefix;
         private Separators _separators;
         private SegmentContext _interchangeHeader;
         private SegmentContext _groupHeader;
@@ -38,13 +39,15 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiReader{T, TU}"/> class.
         /// </summary>
-        /// <param name="ediStream">The EDI stream.</param>
-        /// <param name="definitionsAssemblyName">The full assembly name of the assembly with the definition classes.</param>
-        /// <param name="encoding">The encoding.</param>
-        protected EdiReader(Stream ediStream, string definitionsAssemblyName, Encoding encoding)
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
+        protected EdiReader(Stream ediStream, string rulesAssemblyName, Encoding encoding, string rulesNamespacePrefix)
         {
             _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, true);
-            _definitionsAssemblyName = definitionsAssemblyName;
+            _rulesAssemblyName = rulesAssemblyName;
+            _rulesNamespacePrefix = rulesNamespacePrefix;
         }
 
         /// <summary>
@@ -135,12 +138,13 @@ namespace EdiFabric.Framework.Readers
         private EdiMessage<T, TU> ReadMessage(SegmentContext segmentContext, List<SegmentContext> currentMessage)
         {
             var type = segmentContext.Tag == SegmentTags.SE
-                ? currentMessage.ToX12Type(_separators, _definitionsAssemblyName)
-                : currentMessage.ToEdifactType(_separators, _definitionsAssemblyName);
-            var messageInstance = currentMessage.Analyze(_separators, _definitionsAssemblyName, type);
+                ? currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix)
+                : currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
+            var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
+
             return new EdiMessage<T, TU>(messageInstance,
                 _interchangeHeader.ParseSegment<T>(_separators),
-                _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU));
+                _groupHeader != null ? _groupHeader.ParseSegment<TU>(_separators) : default(TU), _separators);
         }
 
         /// <summary>
