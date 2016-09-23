@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Headers\IEdiGroup.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Constants\SegmentTags.cs" />

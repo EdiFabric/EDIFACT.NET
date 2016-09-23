@@ -40,6 +40,10 @@ namespace EdiFabric.Framework
             if (type == null) throw new ArgumentNullException("type");
 
             var messageGrammar = ParseNode.BuldTree(type, true);
+
+            if (messageGrammar.Prefix != Prefixes.M)
+                throw new Exception(string.Format("Only messages are supported: {0}", messageGrammar.Name));
+
             var segmentPosition = messageGrammar.Children.First();
             var instancePosition = new ParseNode(type);
 

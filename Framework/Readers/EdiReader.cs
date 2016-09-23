@@ -45,7 +45,9 @@ namespace EdiFabric.Framework.Readers
         /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
         protected EdiReader(Stream ediStream, string rulesAssemblyName, Encoding encoding, string rulesNamespacePrefix)
         {
-            _streamReader = new StreamReader(ediStream.ToSeekStream(), encoding ?? Encoding.Default, true);
+            if (ediStream == null) throw new ArgumentNullException("ediStream");
+
+            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
             _rulesAssemblyName = rulesAssemblyName;
             _rulesNamespacePrefix = rulesNamespacePrefix;
         }
@@ -89,7 +91,7 @@ namespace EdiFabric.Framework.Readers
                     case SegmentTags.UNT:
                     case SegmentTags.SE:
                         currentMessage.Add(segmentContext);
-                        if (_groupHeader != null)
+                        if (segmentContext.Tag == SegmentTags.SE)
                             currentMessage.Add(_groupHeader);
                         Message = ReadMessage(segmentContext, currentMessage);
                         result = true;

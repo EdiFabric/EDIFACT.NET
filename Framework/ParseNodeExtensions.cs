@@ -258,9 +258,12 @@ namespace EdiFabric.Framework
 
         internal static void ParseSegment(this ParseNode parseNode, string line, Separators separators)
         {
-            if (parseNode.Prefix != Prefixes.S)
-                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
+            if (parseNode == null) throw new ArgumentNullException("parseNode");
             if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
+            if (separators == null) throw new ArgumentNullException("separators");
+
+            if (parseNode.Prefix != Prefixes.S)
+                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));           
 
             var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children;
             var dataElements = line.GetDataElements(separators);
@@ -308,6 +311,8 @@ namespace EdiFabric.Framework
 
         internal static object ToInstance(this ParseNode parseNode)
         {
+            if (parseNode == null) throw new ArgumentNullException("parseNode");
+
             var root = Activator.CreateInstance(parseNode.Type);
             var instanceLinks = new Dictionary<string, object> { { parseNode.Path, root } };
             var stack = new Stack<ParseNode>(new[] { parseNode });            
@@ -366,6 +371,9 @@ namespace EdiFabric.Framework
 
         internal static string GenerateSegment(this ParseNode parseNode, Separators separators)
         {
+            if (parseNode == null) throw new ArgumentNullException("parseNode");
+            if (separators == null) throw new ArgumentNullException("separators");
+
             if (parseNode.Prefix != Prefixes.S)
                 throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
 

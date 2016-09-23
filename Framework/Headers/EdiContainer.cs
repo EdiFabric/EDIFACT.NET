@@ -1,5 +1,4 @@
-﻿
-//---------------------------------------------------------------------
+﻿//---------------------------------------------------------------------
 // This file is part of ediFabric
 //
 // Copyright (c) ediFabric. All rights reserved.
@@ -18,20 +17,7 @@ using EdiFabric.Framework.Constants;
 namespace EdiFabric.Framework.Headers
 {
     /// <summary>
-    /// EDI container interface
-    /// </summary>
-    public interface IEdiGroup
-    {
-        /// <summary>
-        /// Generates a collection of EDI strings.
-        /// </summary>
-        /// <param name="separators">The EDI separators.</param>
-        /// <returns>The collection of EDI strings.</returns>
-        IEnumerable<string> GenerateEdi(Separators separators);
-    }
-
-    /// <summary>
-    /// THis class represents an EDI interchange or group
+    /// This class represents an EDI interchange or group
     /// </summary>
     /// <typeparam name="T">The header type.</typeparam>
     /// <typeparam name="TU">The items type - the group type if the container is an interchange or the messages type if the container is a group.</typeparam>
@@ -39,7 +25,7 @@ namespace EdiFabric.Framework.Headers
     public class EdiContainer<T, TU, TV> 
     {
         /// <summary>
-        /// The header (ISA or UNB)
+        /// The header 
         /// </summary>
         public T Header { get; private set; }
         private readonly Func<T, int, TV> _trailerSetter;
@@ -53,7 +39,7 @@ namespace EdiFabric.Framework.Headers
             get { return _items.AsReadOnly(); }
         }
         /// <summary>
-        /// The trailer (IEA or UNZ)
+        /// The trailer 
         /// </summary>
         public TV Trailer { get; private set; }
 
@@ -66,6 +52,7 @@ namespace EdiFabric.Framework.Headers
         protected EdiContainer(T header, Func<T, int, TV> trailerSetter, Separators defaultSeparators)
         {
             if (trailerSetter == null) throw new ArgumentNullException("trailerSetter");
+            if (defaultSeparators == null) throw new ArgumentNullException("defaultSeparators");
 
             Header = header;
             _trailerSetter = trailerSetter;
@@ -99,10 +86,10 @@ namespace EdiFabric.Framework.Headers
         }
 
         /// <summary>
-        /// Generates a collection of EDI strings.
+        /// Generates a collection of EDI segments.
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
-        /// <returns>The collection of EDI strings.</returns>
+        /// <returns>The collection of EDI segments.</returns>
         public virtual IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
@@ -120,6 +107,12 @@ namespace EdiFabric.Framework.Headers
             return result;
         }
 
+        /// <summary>
+        /// Converts a message to a collection of EDI segments.
+        /// </summary>
+        /// <param name="item">The message.</param>
+        /// <param name="separators">The EDI separators.</param>
+        /// <returns>The collection of EDI segments.</returns>
         protected static IEnumerable<string> ToEdi(object item, Separators separators)
         {
             var parseTree = ParseNode.BuldTree(item);

@@ -62,11 +62,11 @@ namespace EdiFabric.Framework.Readers
             char componentDataElement;
             char repetitionDataElement;
             char segment;
-            char escape;
+            char? escape;
             string header = null;
             Separators separators = null;
 
-            switch (segmentName.ToSegmentTag(null))
+            switch (segmentName.ToSegmentTag())
             {
                 case SegmentTags.ISA:
                     try
@@ -94,7 +94,7 @@ namespace EdiFabric.Framework.Readers
                     var defaultSeparators = Separators.DefaultSeparatorsEdifact();
                     componentDataElement = defaultSeparators.ComponentDataElement;
                     dataElement = defaultSeparators.DataElement;
-                    escape = defaultSeparators.Escape.Value;
+                    escape = defaultSeparators.Escape;
                     repetitionDataElement = defaultSeparators.RepetitionDataElement;
                     segment = defaultSeparators.Segment;
 
@@ -127,16 +127,6 @@ namespace EdiFabric.Framework.Readers
             return new Tuple<string, Separators>(header, separators);
         }
 
-        internal static Stream ToSeekStream(this Stream stream)
-        {
-            if (stream.CanSeek) return stream;
-
-            var ms = new MemoryStream();
-            stream.CopyTo(ms);
-            ms.Position = 0;
-            return ms;
-        }
-
         internal static string Read(this StreamReader reader, int bytes, char[] trims)
         {
             string result = null;
@@ -152,7 +142,7 @@ namespace EdiFabric.Framework.Readers
             return result;
         }
 
-        internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
+        internal static SegmentTags ToSegmentTag(this string segment, Separators separators = null)
         {
             if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
                 return SegmentTags.Regular;

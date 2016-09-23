@@ -276,6 +276,7 @@ namespace EdiFabric.Framework.Headers
                 D_0020_2 = unb.D_0020_5
             }, Separators.DefaultSeparatorsEdifact())
         {
+            if (header == null) throw new ParserException("UNB header is null.");
         }
 
         public override IEnumerable<string> GenerateEdi(Separators separators = null)

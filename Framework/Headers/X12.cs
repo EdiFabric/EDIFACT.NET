@@ -164,6 +164,7 @@ namespace EdiFabric.Framework.Headers
                 D_709_2 = header.D_709_13
             }, Separators.DefaultSeparatorsX12())
         {
+            if (header == null) throw new ParserException("ISA header is null.");
         }
 
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
