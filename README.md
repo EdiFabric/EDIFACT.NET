@@ -13,15 +13,7 @@ ediFabric is as simple as a single .NET assembly with ~1000 lines of code. It us
 
 These classes are used as parsing grammar by the framework. In order to be able to parse a transaction set, the corresponding class must be included.
 
-A guide on how to handcraft a transaction set class can be downloaded from here www.edifabric.com.
-
-You can purchase translation packages here:
-
-X12 http://edifabric.com/classes/x12/
-
-EDIFACT http://edifabric.com/classes/edifact/
-
-HIPAA http://edifabric.com/classes/hipaa/
+For more info please visit our web site www.edifabric.com.
 
 This project has migrated from CodePlex, for old discussions and issues please go to http://edifabric.codeplex.com/
 
