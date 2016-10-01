@@ -169,7 +169,7 @@ namespace EdiFabric.Tests
             var ediSegments = interchange.GenerateEdi(newSeparators);
 
             // ASSERT
-            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, null));
+            Assert.AreEqual(TestHelper.AsString(sample, false), TestHelper.AsString(ediSegments, null));
         }
 
         [TestMethod]

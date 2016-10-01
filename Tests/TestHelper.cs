@@ -39,10 +39,13 @@ namespace EdiFabric.Tests
                     .GetManifestResourceStream(string.Format("{0}.{1}", XsdAssemblyName, xsd));
         }
 
-        public static string AsString(string qualifiedFileName)
+        public static string AsString(string qualifiedFileName, bool withLfCr = true)
         {
             using (var reader = new StreamReader(Load(qualifiedFileName), Encoding.Default))
             {
+                if (withLfCr)
+                    return reader.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n");
+
                 return reader.ReadToEnd();
             }
         }
