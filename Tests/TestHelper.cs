@@ -58,7 +58,7 @@ namespace EdiFabric.Tests
         public static EdiMessage<S_UNB, S_UNG> ParseEdifact(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = EdifactReader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix)
+            using (var ediReader = EdifactReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
                 )
             {
                 return ediReader.ReadMessage() ? ediReader.Message : null;
@@ -68,7 +68,7 @@ namespace EdiFabric.Tests
         public static EdiMessage<S_ISA, S_GS> ParseX12(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = X12Reader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix))
+            using (var ediReader = X12Reader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
             {
                 return ediReader.ReadMessage() ? ediReader.Message : null;
             }
@@ -77,7 +77,7 @@ namespace EdiFabric.Tests
         public static List<EdiMessage<S_UNB, S_UNG>> ParseEdifactMultiple(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = EdifactReader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix)
+            using (var ediReader = EdifactReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
                 )
             {
                 return ediReader.ReadAllMessages().ToList();
@@ -87,7 +87,7 @@ namespace EdiFabric.Tests
         public static List<EdiMessage<S_ISA, S_GS>> ParseX12Multiple(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = X12Reader.Create(Load(sample), rulesAssemblyName, encoding, rulesNameSpacePrefix)
+            using (var ediReader = X12Reader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
                 )
             {
                 return ediReader.ReadAllMessages().ToList();

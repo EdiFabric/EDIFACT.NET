@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- The configuration and platform will be used to determine which assemblies to include from solution and
+				 project documentation sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1e6dd59a-f41b-4654-97c0-8e7889bcbd25}</ProjectGuid>
+    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Documentation</Name>
+    <!-- SHFB properties -->
+    <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
+    <OutputPath>.\Help\</OutputPath>
+    <HtmlHelpName>Documentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\..\..\..\Git\ediFabric\Framework\bin\Debug\EdiFabric.Framework.dll" />
+      <DocumentationSource sourceFile="..\..\..\..\Git\ediFabric\Framework\bin\Debug\EdiFabric.Framework.xml" />
+    </DocumentationSources>
+    <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
+    <HelpFileFormat>HtmlHelp1</HelpFileFormat>
+    <IndentHtml>False</IndentHtml>
+    <KeepLogFile>True</KeepLogFile>
+    <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
+    <CleanIntermediates>True</CleanIntermediates>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <MaximumGroupParts>2</MaximumGroupParts>
+    <NamespaceGrouping>False</NamespaceGrouping>
+    <SyntaxFilters>C#, Visual Basic</SyntaxFilters>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <PresentationStyle>VS2013</PresentationStyle>
+    <Preliminary>False</Preliminary>
+    <NamingMethod>Guid</NamingMethod>
+    <HelpTitle>ediFabric</HelpTitle>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <FeedbackEMailAddress>office%40edifabric.com</FeedbackEMailAddress>
+    <CopyrightText>Copyright %28c%29 ediFabric. All rights reserved.</CopyrightText>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="EdiFabric.Framework" isDocumented="True">The global namespace for the framework. Contains types that allow streaming of large EDI files and parser exceptions.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="EdiFabric.Framework.Envelopes" isDocumented="True">This namespace contains all of the abstract types required to represent EDI interchanges. It contains the InterchangeContext type, which holds all of the separators and the target namespace.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="(global)" isDocumented="True" />
+      <NamespaceSummaryItem name="EdiFabric.Framework.Envelopes.Edifact" isDocumented="True">This namespace contains types that allow parsing or generating of EDIFACT interchanges.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="EdiFabric.Framework.Envelopes.X12" isDocumented="True">This namespace contains types that allow parsing or generating of X12 interchanges.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="EdiFabric.Framework.Messages" isDocumented="True">This namespace contains types that allow parsing or generating of EDI messages.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="EdiFabric.Framework.Messages.Segments" isDocumented="True">This namespace contains types that allow parsing or generating of EDI segments.</NamespaceSummaryItem>
+    </NamespaceSummaries>
+    <ApiFilter>
+      <Filter entryType="Namespace" fullName="EdiFabric.Framework.Envelopes.Edifact" isExposed="False">
+        <Filter entryType="Class" fullName="EdiFabric.Framework.Envelopes.Edifact.Interchange" filterName="Interchange" isExposed="True" />
+      </Filter>
+      <Filter entryType="Namespace" fullName="EdiFabric.Framework.Envelopes.X12" isExposed="False">
+        <Filter entryType="Class" fullName="EdiFabric.Framework.Envelopes.X12.Interchange" filterName="Interchange" isExposed="True" />
+      </Filter>
+    </ApiFilter>
+    <VisibleItems>None</VisibleItems>
+    <MissingTags>Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
+  </PropertyGroup>
+  <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
+			 the build.  The others are optional common platform types that may appear. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <!-- Import the SHFB build targets -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
+  <!-- The pre-build and post-build event properties must appear *after* the targets file import in order to be
+			 evaluated correctly. -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EdiFabric.Framework">
+      <HintPath>..\..\..\..\Git\ediFabric\Framework\bin\Debug\EdiFabric.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

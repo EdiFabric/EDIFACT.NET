@@ -42,10 +42,10 @@ namespace EdiFabric.Framework.Readers
         /// Initializes a new instance of the <see cref="EdiReader{T, TU}"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>       
         /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
-        protected EdiReader(Stream ediStream, string rulesAssemblyName, Encoding encoding, string rulesNamespacePrefix)
+        protected EdiReader(Stream ediStream, Encoding encoding, string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
 
