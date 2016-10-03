@@ -67,6 +67,28 @@ namespace EdiFabric.Framework
             return result;
         }
 
+        /// <summary>
+        /// Serializes an instance to XML
+        /// </summary>
+        /// <param name="instance">The instance to serialize.</param>
+        /// <typeparam name="T">The type of the instance.</typeparam>
+        /// <returns>The serialized instance as XML.</returns>
+        public static XDocument SerializeEdifact<T>(this T instance)
+        {
+            return instance.Serialize("www.edifabric.com/edifact");
+        }
+
+        /// <summary>
+        /// Serializes an instance to XML
+        /// </summary>
+        /// <param name="instance">The instance to serialize.</param>
+        /// <typeparam name="T">The type of the instance.</typeparam>
+        /// <returns>The serialized instance as XML.</returns>
+        public static XDocument SerializeX12<T>(this T instance)
+        {
+            return instance.Serialize("www.edifabric.com/x12");
+        }
+
         private static XDocument Serialize<T>(this T instance, string nameSpace)
         {
             var type = typeof (T);
