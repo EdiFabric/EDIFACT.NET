@@ -56,6 +56,11 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// </summary>
+        /// <param name="segment">Separator for segments.</param>
+        /// <param name="componentDataElement">Separator for component data elements.</param>
+        /// <param name="dataElement">Separator for data elements.</param>
+        /// <param name="repetitionDataElement">Separator for repetitions of data elements.</param>
+        /// <returns>A new instance of the <see cref="Separators"/> class.</returns>
         public static Separators SeparatorsX12(char segment, char componentDataElement, char dataElement,
             char repetitionDataElement)
         {
@@ -65,6 +70,12 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// </summary>
+        /// <param name="segment">Separator for segments.</param>
+        /// <param name="componentDataElement">Separator for component data elements.</param>
+        /// <param name="dataElement">Separator for data elements.</param>
+        /// <param name="repetitionDataElement">Separator for repetitions of data elements.</param>
+        /// <param name="escape">Release indicator for escaping terminators.</param>
+        /// <returns>A new instance of the <see cref="Separators"/> class.</returns>
         public static Separators SeparatorsEdifact(char segment, char componentDataElement, char dataElement,
             char repetitionDataElement, char? escape)
         {
@@ -75,6 +86,7 @@ namespace EdiFabric.Framework
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// Uses the default X12 separators.
         /// </summary>
+        /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
         public static Separators DefaultSeparatorsX12()
         {
             return new Separators('~', '>', '*', '^', null);
@@ -84,6 +96,7 @@ namespace EdiFabric.Framework
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
         /// Uses the default EDIFACT separators.
         /// </summary>
+        /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
         public static Separators DefaultSeparatorsEdifact()
         {
             return new Separators('\'', ':', '+', '*', '?');
@@ -93,7 +106,7 @@ namespace EdiFabric.Framework
         /// Creates UNA segment.
         /// </summary>
         /// <returns>The separators.</returns>
-        public string ToUna()
+        internal string ToUna()
         {
             return SegmentTags.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }

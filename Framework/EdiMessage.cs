@@ -14,6 +14,8 @@ namespace EdiFabric.Framework
     /// <summary>
     /// EDI Message.
     /// </summary>
+    /// <typeparam name="T">The type of the interchange header.</typeparam>
+    /// <typeparam name="TU">The type of the group header.</typeparam>
     public class EdiMessage<T, TU>
     {
         /// <summary>

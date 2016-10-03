@@ -21,6 +21,8 @@ namespace EdiFabric.Framework.Readers
     /// <summary>
     /// Parses EDI messages into .NET object.
     /// </summary>
+    /// <typeparam name="T">The type of the interchange header.</typeparam>
+    /// <typeparam name="TU">The type of the group header.</typeparam>
     public class EdiReader<T, TU> : IDisposable
     {
         private readonly StreamReader _streamReader;

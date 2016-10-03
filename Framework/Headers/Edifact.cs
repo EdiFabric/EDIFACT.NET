@@ -279,6 +279,11 @@ namespace EdiFabric.Framework.Headers
             if (header == null) throw new ParserException("UNB header is null.");
         }
 
+        /// <summary>
+        /// Generates a collection of EDI segments.
+        /// </summary>
+        /// <param name="separators">The EDI separators.</param>
+        /// <returns>The collection of EDI segments.</returns>
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
