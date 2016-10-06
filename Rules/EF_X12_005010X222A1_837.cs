@@ -795,7 +795,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public X12_ID_1138 D_SBR01_PayerResponsibilitySequenceNumberCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1069 D_SBR02_IndividualRelationshipCode {get; set;}
+    public string D_SBR02_IndividualRelationshipCode {get; set;}
     [XmlElement(Order=2)]
     public string D_SBR03_SubscriberGrouporPolicyNumber {get; set;}
     [XmlElement(Order=3)]
@@ -829,20 +829,13 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
         U,
     }
     [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1069 {
-        [XmlEnum("18")]
-        Item18,
-    }
-    [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_PAT_PatientInformation {
     [XmlElement(Order=0)]
-    public X12_ID_1069_2 D_PAT01_IndividualRelationshipCode {get; set;}
+    public string D_PAT01_IndividualRelationshipCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1384 D_PAT02_PatientLocationCode {get; set;}
+    public string D_PAT02_PatientLocationCode {get; set;}
     [XmlElement(Order=2)]
     public string D_PAT03_EmploymentStatusCode {get; set;}
     [XmlElement(Order=3)]
@@ -857,276 +850,6 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     public string D_PAT08_PatientWeight {get; set;}
     [XmlElement(Order=8)]
     public string D_PAT09_PregnancyIndicator {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1069_2 {
-        [XmlEnum("01")]
-        Item01,
-        [XmlEnum("02")]
-        Item02,
-        [XmlEnum("03")]
-        Item03,
-        [XmlEnum("04")]
-        Item04,
-        [XmlEnum("05")]
-        Item05,
-        [XmlEnum("06")]
-        Item06,
-        [XmlEnum("07")]
-        Item07,
-        [XmlEnum("08")]
-        Item08,
-        [XmlEnum("09")]
-        Item09,
-        [XmlEnum("10")]
-        Item10,
-        [XmlEnum("11")]
-        Item11,
-        [XmlEnum("12")]
-        Item12,
-        [XmlEnum("13")]
-        Item13,
-        [XmlEnum("14")]
-        Item14,
-        [XmlEnum("15")]
-        Item15,
-        [XmlEnum("16")]
-        Item16,
-        [XmlEnum("17")]
-        Item17,
-        [XmlEnum("18")]
-        Item18,
-        [XmlEnum("19")]
-        Item19,
-        [XmlEnum("20")]
-        Item20,
-        [XmlEnum("21")]
-        Item21,
-        [XmlEnum("22")]
-        Item22,
-        [XmlEnum("23")]
-        Item23,
-        [XmlEnum("24")]
-        Item24,
-        [XmlEnum("25")]
-        Item25,
-        [XmlEnum("26")]
-        Item26,
-        [XmlEnum("27")]
-        Item27,
-        [XmlEnum("28")]
-        Item28,
-        [XmlEnum("29")]
-        Item29,
-        [XmlEnum("30")]
-        Item30,
-        [XmlEnum("31")]
-        Item31,
-        [XmlEnum("32")]
-        Item32,
-        [XmlEnum("33")]
-        Item33,
-        [XmlEnum("34")]
-        Item34,
-        [XmlEnum("36")]
-        Item36,
-        [XmlEnum("37")]
-        Item37,
-        [XmlEnum("38")]
-        Item38,
-        [XmlEnum("39")]
-        Item39,
-        [XmlEnum("40")]
-        Item40,
-        [XmlEnum("41")]
-        Item41,
-        [XmlEnum("43")]
-        Item43,
-        [XmlEnum("45")]
-        Item45,
-        [XmlEnum("46")]
-        Item46,
-        [XmlEnum("47")]
-        Item47,
-        [XmlEnum("48")]
-        Item48,
-        [XmlEnum("49")]
-        Item49,
-        [XmlEnum("50")]
-        Item50,
-        [XmlEnum("51")]
-        Item51,
-        [XmlEnum("52")]
-        Item52,
-        [XmlEnum("53")]
-        Item53,
-        [XmlEnum("55")]
-        Item55,
-        [XmlEnum("56")]
-        Item56,
-        [XmlEnum("57")]
-        Item57,
-        [XmlEnum("58")]
-        Item58,
-        [XmlEnum("59")]
-        Item59,
-        [XmlEnum("60")]
-        Item60,
-        [XmlEnum("61")]
-        Item61,
-        [XmlEnum("62")]
-        Item62,
-        [XmlEnum("63")]
-        Item63,
-        [XmlEnum("64")]
-        Item64,
-        [XmlEnum("65")]
-        Item65,
-        [XmlEnum("66")]
-        Item66,
-        [XmlEnum("67")]
-        Item67,
-        [XmlEnum("68")]
-        Item68,
-        [XmlEnum("70")]
-        Item70,
-        [XmlEnum("71")]
-        Item71,
-        [XmlEnum("72")]
-        Item72,
-        [XmlEnum("73")]
-        Item73,
-        [XmlEnum("74")]
-        Item74,
-        [XmlEnum("75")]
-        Item75,
-        [XmlEnum("76")]
-        Item76,
-        [XmlEnum("78")]
-        Item78,
-        [XmlEnum("79")]
-        Item79,
-        [XmlEnum("80")]
-        Item80,
-        [XmlEnum("81")]
-        Item81,
-        [XmlEnum("82")]
-        Item82,
-        [XmlEnum("83")]
-        Item83,
-        [XmlEnum("84")]
-        Item84,
-        [XmlEnum("86")]
-        Item86,
-        [XmlEnum("87")]
-        Item87,
-        [XmlEnum("88")]
-        Item88,
-        [XmlEnum("90")]
-        Item90,
-        [XmlEnum("91")]
-        Item91,
-        [XmlEnum("92")]
-        Item92,
-        [XmlEnum("93")]
-        Item93,
-        [XmlEnum("94")]
-        Item94,
-        [XmlEnum("95")]
-        Item95,
-        [XmlEnum("96")]
-        Item96,
-        [XmlEnum("97")]
-        Item97,
-        [XmlEnum("98")]
-        Item98,
-        [XmlEnum("99")]
-        Item99,
-        A1,
-        A2,
-        A3,
-        A4,
-        A5,
-        A6,
-        A7,
-        A8,
-        A9,
-        B1,
-        B2,
-        B3,
-        B4,
-        B5,
-        B6,
-        B7,
-        B8,
-        B9,
-        C1,
-        C2,
-        C3,
-        C4,
-        C5,
-        C8,
-        C9,
-        D1,
-        D2,
-        D3,
-        D4,
-        D5,
-        D6,
-        D7,
-        D8,
-        D9,
-        E1,
-        E2,
-        E3,
-        E4,
-        E5,
-        E6,
-        E7,
-        E8,
-        E9,
-        F1,
-        F2,
-        F3,
-        F6,
-        F7,
-        F8,
-        F9,
-        G2,
-        G3,
-        G4,
-        G5,
-        G6,
-        G7,
-        G8,
-        G9,
-        H1,
-        H4,
-        N1,
-        OT,
-        ZZ,
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1384 {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        L,
-        M,
-        O,
-        P,
-        R,
-        S,
-        T,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -2730,20 +2453,9 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
+    public string D_K302_RecordFormatCode {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure C_C001_CompositeUnitofMeasure {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1333 {
-        C,
-        D,
-        E,
-        F,
-        P,
-        S,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -2804,7 +2516,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CR1_AmbulanceTransportInformation {
     [XmlElement(Order=0)]
-    public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
+    public string D_CR101_UnitorBasisforMeasurementCode {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -2823,12 +2535,6 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     public string D_CR109_RoundTripPurposeDescription {get; set;}
     [XmlElement(Order=9)]
     public string D_CR110_StretcherPurposeDescription {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_355_3 {
-        LB,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -4792,9 +4498,9 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_OI_OtherInsuranceCoverageInformation {
     [XmlElement(Order=0)]
-    public X12_ID_1032_2 D_OI01_ClaimFilingIndicatorCode {get; set;}
+    public string D_OI01_ClaimFilingIndicatorCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1383 D_OI02_ClaimSubmissionReasonCode {get; set;}
+    public string D_OI02_ClaimSubmissionReasonCode {get; set;}
     [XmlElement(Order=2)]
     public string D_OI03_BenefitsAssignmentCertificationIndicator {get; set;}
     [XmlElement(Order=3)]
@@ -4803,124 +4509,6 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     public string D_OI05_ProviderAgreementCode {get; set;}
     [XmlElement(Order=5)]
     public string D_OI06_ReleaseofInformationCode {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1032_2 {
-        [XmlEnum("01")]
-        Item01,
-        [XmlEnum("02")]
-        Item02,
-        [XmlEnum("03")]
-        Item03,
-        [XmlEnum("04")]
-        Item04,
-        [XmlEnum("05")]
-        Item05,
-        [XmlEnum("06")]
-        Item06,
-        [XmlEnum("07")]
-        Item07,
-        [XmlEnum("08")]
-        Item08,
-        [XmlEnum("09")]
-        Item09,
-        [XmlEnum("10")]
-        Item10,
-        [XmlEnum("11")]
-        Item11,
-        [XmlEnum("12")]
-        Item12,
-        [XmlEnum("13")]
-        Item13,
-        [XmlEnum("14")]
-        Item14,
-        [XmlEnum("15")]
-        Item15,
-        [XmlEnum("16")]
-        Item16,
-        [XmlEnum("17")]
-        Item17,
-        [XmlEnum("18")]
-        Item18,
-        [XmlEnum("19")]
-        Item19,
-        [XmlEnum("20")]
-        Item20,
-        [XmlEnum("21")]
-        Item21,
-        [XmlEnum("22")]
-        Item22,
-        [XmlEnum("31")]
-        Item31,
-        [XmlEnum("32")]
-        Item32,
-        [XmlEnum("33")]
-        Item33,
-        AM,
-        BL,
-        CH,
-        CI,
-        CN,
-        DS,
-        FI,
-        HM,
-        LI,
-        LM,
-        MA,
-        MB,
-        MC,
-        MH,
-        OF,
-        SA,
-        TV,
-        VA,
-        WB,
-        WC,
-        WD,
-        WE,
-        ZZ,
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1383 {
-        [XmlEnum("00")]
-        Item00,
-        [XmlEnum("01")]
-        Item01,
-        [XmlEnum("02")]
-        Item02,
-        [XmlEnum("03")]
-        Item03,
-        [XmlEnum("05")]
-        Item05,
-        [XmlEnum("07")]
-        Item07,
-        [XmlEnum("08")]
-        Item08,
-        [XmlEnum("09")]
-        Item09,
-        [XmlEnum("15")]
-        Item15,
-        [XmlEnum("16")]
-        Item16,
-        [XmlEnum("17")]
-        Item17,
-        [XmlEnum("18")]
-        Item18,
-        [XmlEnum("20")]
-        Item20,
-        [XmlEnum("22")]
-        Item22,
-        [XmlEnum("27")]
-        Item27,
-        [XmlEnum("28")]
-        Item28,
-        [XmlEnum("29")]
-        Item29,
-        PB,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -6045,7 +5633,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CR1_AmbulanceTransportInformation_2 {
     [XmlElement(Order=0)]
-    public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
+    public string D_CR101_UnitorBasisforMeasurementCode {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -6946,7 +6534,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
+    public string D_K302_RecordFormatCode {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_5 C_C001_CompositeUnitofMeasure_5 {get; set;}
     }
@@ -7201,9 +6789,9 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CTP_DrugQuantity {
     [XmlElement(Order=0)]
-    public X12_ID_687 D_CTP01_ClassofTradeCode {get; set;}
+    public string D_CTP01_ClassofTradeCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_236 D_CTP02_PriceIdentifierCode {get; set;}
+    public string D_CTP02_PriceIdentifierCode {get; set;}
     [XmlElement(Order=2)]
     public string D_CTP03_UnitPrice {get; set;}
     [XmlElement(Order=3)]
@@ -7222,246 +6810,6 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     public string D_CTP10_ConditionValue {get; set;}
     [XmlElement(Order=10)]
     public string D_CTP11_MultiplePriceQuantity {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_687 {
-        AA,
-        AB,
-        AC,
-        AD,
-        AE,
-        AF,
-        AG,
-        AH,
-        AI,
-        AJ,
-        AL,
-        AM,
-        AN,
-        AO,
-        AP,
-        AQ,
-        AR,
-        AS,
-        BG,
-        BR,
-        CB,
-        CN,
-        CO,
-        CR,
-        CX,
-        CY,
-        DE,
-        DF,
-        DI,
-        DR,
-        EX,
-        FS,
-        GA,
-        GM,
-        GR,
-        GV,
-        HS,
-        ID,
-        IN,
-        IR,
-        JB,
-        LC,
-        MC,
-        MF,
-        ML,
-        OE,
-        OF,
-        ON,
-        PF,
-        PH,
-        PT,
-        PY,
-        RS,
-        SA,
-        SB,
-        SE,
-        ST,
-        TR,
-        WA,
-        WC,
-        WH,
-        WS,
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_236 {
-        ACT,
-        AGC,
-        ALT,
-        AWP,
-        BBP,
-        BCH,
-        BID,
-        C01,
-        C02,
-        C03,
-        C04,
-        C05,
-        C06,
-        C07,
-        C08,
-        C09,
-        C10,
-        C11,
-        C12,
-        C13,
-        C14,
-        C15,
-        C16,
-        C17,
-        C18,
-        C19,
-        C20,
-        C21,
-        C22,
-        C23,
-        C24,
-        C25,
-        C26,
-        C27,
-        C28,
-        C29,
-        C30,
-        CAN,
-        CAT,
-        CDF,
-        CDV,
-        CHG,
-        CON,
-        CUP,
-        CUS,
-        D01,
-        D02,
-        D03,
-        DAP,
-        DIS,
-        DPR,
-        DSC,
-        DSD,
-        DSP,
-        EDM,
-        EDP,
-        EDS,
-        EDW,
-        ELC,
-        EST,
-        EUP,
-        FCH,
-        FCP,
-        FDS,
-        FET,
-        FGP,
-        FOR,
-        FSP,
-        FUL,
-        FUP,
-        GAP,
-        GDP,
-        GOV,
-        GSP,
-        GTP,
-        ICL,
-        IND,
-        INS,
-        INV,
-        LAR,
-        LCP,
-        LPP,
-        LPR,
-        MAP,
-        MAS,
-        MAX,
-        MIN,
-        MNC,
-        MNR,
-        MOD,
-        MPR,
-        MSR,
-        MXR,
-        N01,
-        N02,
-        N03,
-        N04,
-        N05,
-        N06,
-        N07,
-        N08,
-        N09,
-        N10,
-        N11,
-        N12,
-        N13,
-        N14,
-        N15,
-        N16,
-        N17,
-        N18,
-        N19,
-        N20,
-        N21,
-        N22,
-        N23,
-        N24,
-        N25,
-        N26,
-        N27,
-        N28,
-        N29,
-        N30,
-        N31,
-        NET,
-        OAP,
-        OPP,
-        PAP,
-        PAQ,
-        PBQ,
-        PBR,
-        PHS,
-        PIE,
-        PLT,
-        PPA,
-        PPD,
-        PRF,
-        PRO,
-        PRP,
-        PUR,
-        QTE,
-        REG,
-        RES,
-        RPA,
-        RPM,
-        RPP,
-        RSH,
-        RTL,
-        SAC,
-        SDP,
-        SFP,
-        SHD,
-        SLP,
-        SPC,
-        SPE,
-        SSP,
-        STA,
-        SUM,
-        SWP,
-        THP,
-        TOT,
-        TRF,
-        UCP,
-        ULC,
-        WAR,
-        WHL,
-        WSP,
-        ZNP,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -8379,21 +7727,13 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_FRM01_QuestionNumber_Letter {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1073_4 D_FRM02_QuestionResponse {get; set;}
+    public string D_FRM02_QuestionResponse {get; set;}
     [XmlElement(Order=2)]
     public string D_FRM03_QuestionResponse {get; set;}
     [XmlElement(Order=3)]
     public string D_FRM04_QuestionResponse {get; set;}
     [XmlElement(Order=4)]
     public string D_FRM05_QuestionResponse {get; set;}
-    }
-    [Serializable]
-    [XmlType(Namespace="www.edifabric.com/x12", AnonymousType=true)]
-    [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
-    public enum X12_ID_1073_4 {
-        N,
-        W,
-        Y,
     }
     [Serializable]
     [XmlType(AnonymousType=true, Namespace="www.edifabric.com/x12")]
@@ -8428,7 +7768,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public X12_ID_1069_4 D_PAT01_IndividualRelationshipCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1384 D_PAT02_PatientLocationCode {get; set;}
+    public string D_PAT02_PatientLocationCode {get; set;}
     [XmlElement(Order=2)]
     public string D_PAT03_EmploymentStatusCode {get; set;}
     [XmlElement(Order=3)]
@@ -9529,7 +8869,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
+    public string D_K302_RecordFormatCode {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_7 C_C001_CompositeUnitofMeasure_7 {get; set;}
     }
@@ -9582,7 +8922,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CR1_AmbulanceTransportInformation_3 {
     [XmlElement(Order=0)]
-    public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
+    public string D_CR101_UnitorBasisforMeasurementCode {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -11325,9 +10665,9 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_OI_OtherInsuranceCoverageInformation_2 {
     [XmlElement(Order=0)]
-    public X12_ID_1032_2 D_OI01_ClaimFilingIndicatorCode {get; set;}
+    public string D_OI01_ClaimFilingIndicatorCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1383 D_OI02_ClaimSubmissionReasonCode {get; set;}
+    public string D_OI02_ClaimSubmissionReasonCode {get; set;}
     [XmlElement(Order=2)]
     public string D_OI03_BenefitsAssignmentCertificationIndicator {get; set;}
     [XmlElement(Order=3)]
@@ -12332,7 +11672,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CR1_AmbulanceTransportInformation_4 {
     [XmlElement(Order=0)]
-    public X12_ID_355_3 D_CR101_UnitorBasisforMeasurementCode {get; set;}
+    public string D_CR101_UnitorBasisforMeasurementCode {get; set;}
     [XmlElement(Order=1)]
     public string D_CR102_PatientWeight {get; set;}
     [XmlElement(Order=2)]
@@ -13087,7 +12427,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_K301_FixedFormatInformation {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1333 D_K302_RecordFormatCode {get; set;}
+    public string D_K302_RecordFormatCode {get; set;}
     [XmlElement(Order=2)]
     public C_C001_CompositeUnitofMeasure_11 C_C001_CompositeUnitofMeasure_11 {get; set;}
     }
@@ -13282,9 +12622,9 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlRoot(Namespace="www.edifabric.com/x12", IsNullable=false)]
     public class S_CTP_DrugQuantity_2 {
     [XmlElement(Order=0)]
-    public X12_ID_687 D_CTP01_ClassofTradeCode {get; set;}
+    public string D_CTP01_ClassofTradeCode {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_236 D_CTP02_PriceIdentifierCode {get; set;}
+    public string D_CTP02_PriceIdentifierCode {get; set;}
     [XmlElement(Order=2)]
     public string D_CTP03_UnitPrice {get; set;}
     [XmlElement(Order=3)]
@@ -14194,7 +13534,7 @@ namespace EdiFabric.Rules.X12005010X222A1837 {
     [XmlElement(Order=0)]
     public string D_FRM01_QuestionNumber_Letter {get; set;}
     [XmlElement(Order=1)]
-    public X12_ID_1073_4 D_FRM02_QuestionResponse {get; set;}
+    public string D_FRM02_QuestionResponse {get; set;}
     [XmlElement(Order=2)]
     public string D_FRM03_QuestionResponse {get; set;}
     [XmlElement(Order=3)]
