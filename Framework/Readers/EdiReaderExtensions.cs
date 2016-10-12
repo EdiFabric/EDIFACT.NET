@@ -51,9 +51,14 @@ namespace EdiFabric.Framework.Readers
 
         internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
         {
-            var parseNode = ParseNode.BuldTree(typeof (T), false);
-            parseNode.ParseSegment(segmentContext.Value, separators);
-            return (T) parseNode.ToInstance();
+            return segmentContext.Value.ParseSegment<T>(separators);
+        }
+
+        internal static T ParseSegment<T>(this string segmentValue, Separators separators)
+        {
+            var parseNode = ParseNode.BuldTree(typeof(T), false);
+            parseNode.ParseSegment(segmentValue, separators);
+            return (T)parseNode.ToInstance();
         }
 
         internal static Tuple<string, Separators> ReadHeader(this StreamReader reader, string segmentName)
@@ -87,7 +92,7 @@ namespace EdiFabric.Framework.Readers
                     }
                     catch (Exception ex)
                     {
-                        throw new ParserException("Unable to extract X12 interchange delimiters", ex);
+                        throw new Exception("Unable to extract X12 interchange delimiters", ex);
                     }
                     break;
                 case SegmentTags.UNB:
@@ -119,7 +124,7 @@ namespace EdiFabric.Framework.Readers
                     }
                     catch (Exception ex)
                     {
-                        throw new ParserException("Unable to extract UNA interchange delimiters", ex);
+                        throw new Exception("Unable to extract UNA interchange delimiters", ex);
                     }
                     break;
             }

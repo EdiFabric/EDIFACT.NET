@@ -9,6 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -18,7 +19,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the EDIFACT interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNB
+    public class S_UNB : IEdiControl
     {
         [XmlElement(Order = 0)]
         public C_S001 C_S001 { get; set; }
@@ -136,7 +137,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the EDIFACT group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNG
+    public class S_UNG : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_0038_1 { get; set; }
@@ -218,7 +219,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the EDIFACT group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNE
+    public class S_UNE : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_0060_1 { get; set; }
@@ -231,7 +232,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the EDIFACT interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNZ
+    public class S_UNZ : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_0036_1 { get; set; }
@@ -276,7 +277,7 @@ namespace EdiFabric.Framework.Headers
                 D_0020_2 = unb.D_0020_5
             }, Separators.DefaultSeparatorsEdifact())
         {
-            if (header == null) throw new ParserException("UNB header is null.");
+            if (header == null) throw new Exception("UNB header is null.");
         }
 
         /// <summary>

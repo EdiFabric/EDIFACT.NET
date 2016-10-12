@@ -9,8 +9,8 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace EdiFabric.Framework.Headers
@@ -19,7 +19,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the X12 interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_ISA
+    public class S_ISA : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_744_1 { get; set; }
@@ -74,7 +74,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the X12 group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GS
+    public class S_GS : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_479_1 { get; set; }
@@ -105,7 +105,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the X12 group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GE
+    public class S_GE : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_97_1 { get; set; }
@@ -118,7 +118,7 @@ namespace EdiFabric.Framework.Headers
     /// This class represents the X12 interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_IEA
+    public class S_IEA : IEdiControl
     {
         [XmlElement(Order = 0)]
         public string D_405_1 { get; set; }
@@ -144,7 +144,7 @@ namespace EdiFabric.Framework.Headers
                 D_28_2 = gs.D_28_6
             }, Separators.DefaultSeparatorsX12())
         {
-            if(header == null) throw new ParserException("GS header is null.");
+            if(header == null) throw new Exception("GS header is null.");
         }
     }
 
@@ -164,7 +164,7 @@ namespace EdiFabric.Framework.Headers
                 D_709_2 = header.D_709_13
             }, Separators.DefaultSeparatorsX12())
         {
-            if (header == null) throw new ParserException("ISA header is null.");
+            if (header == null) throw new Exception("ISA header is null.");
         }
 
         /// <summary>

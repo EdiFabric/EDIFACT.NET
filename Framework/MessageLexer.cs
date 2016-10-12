@@ -78,7 +78,7 @@ namespace EdiFabric.Framework
                 }
                 catch (Exception ex)
                 {
-                    throw new ParserException("Failed at line: " + segment.Value, ex);
+                    throw new Exception("Failed at line: " + segment.Value, ex);
                 }
                 Logger.Log(string.Format("Matched segment: {0}", segmentPosition.Name));
             }
@@ -102,7 +102,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParserException("Invalid GS segment.", ex);
+                throw new Exception("Invalid GS segment.", ex);
             }
 
             try
@@ -113,7 +113,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParserException("Invalid ST segment.", ex);
+                throw new Exception("Invalid ST segment.", ex);
             }
 
             return ToType(Formats.X12, version, tag, rulesAssemblyName, rulesNamespacePrefix);
@@ -137,7 +137,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParserException("Invalid UNH segment.", ex);
+                throw new Exception("Invalid UNH segment.", ex);
             }
 
             return ToType(Formats.Edifact, version, tag, rulesAssemblyName, rulesNamespacePrefix);
@@ -149,14 +149,14 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
             
             var rulesAssembly = rulesAssemblyName ?? RulesAssembly;
-            if(string.IsNullOrEmpty(rulesAssembly)) throw new ParserException("Fully qualified EDI rules assembly name is blank.");
+            if(string.IsNullOrEmpty(rulesAssembly)) throw new Exception("Fully qualified EDI rules assembly name is blank.");
             var namespacePrefix = rulesNamespacePrefix ?? "EdiFabric.Rules";
             var typeFullName = namespacePrefix.TrimEnd('.') + "." + format + version + tag;
             typeFullName = typeFullName + ".M_" + tag;
             var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
 
             if (systemType == null)
-                throw new ParserException(
+                throw new Exception(
                     string.Format(
                         "Type '{0}' was not found in assembly '{1}'.",
                         typeFullName, rulesAssemblyName));

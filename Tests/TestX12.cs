@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Items;
 using EdiFabric.Rules.X12002040810;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -22,14 +23,13 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var message = TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(message);
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.Value);
-            Assert.IsNotNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -55,7 +55,7 @@ namespace EdiFabric.Tests
             const string validationXsd = "EF_X12_002040_810.xsd";
 
             // ACT
-            var message = (M_810)TestHelper.ParseX12(sample).Value;
+            var message = (M_810)TestHelper.Parse(sample).OfType<EdiMessage>().Single().Value;
             var brokenRules = message.ValidateX12(TestHelper.LoadXsd(validationXsd));
 
             // ASSERT
@@ -70,7 +70,7 @@ namespace EdiFabric.Tests
             const string validationXsd = "EF_X12_002040_810.xsd";
 
             // ACT
-            var message = (M_810)TestHelper.ParseX12(sample).Value;
+            var message = (M_810)TestHelper.Parse(sample).OfType<EdiMessage>().Single().Value;
             var brokenRules = message.ValidateX12(TestHelper.LoadXsd(validationXsd));
 
             // ASSERT
@@ -86,15 +86,14 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var message = TestHelper.ParseX12(sample, null, null, "EdiFabric.Rules.Rep");
+            var ediItems = TestHelper.Parse(sample, null, null, "EdiFabric.Rules.Rep").ToList();
 
             // ASSERT
-            Assert.IsNotNull(message);
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.Value);
-            Assert.IsNotNull(message.GroupHeader);
-            Assert.IsTrue(message.Separators.RepetitionDataElement == '!');
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<EdiMessage>().Single().Separators.RepetitionDataElement == '!');
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -124,14 +123,13 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var message = TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(message);
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.Value);
-            Assert.IsNotNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -144,14 +142,13 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var message = TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(message);
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.Value);
-            Assert.IsNotNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -173,28 +170,31 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
         public void TestParseWithError()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BadSegment.txt";
 
             // ACT
-            TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
+        [ExpectedException(typeof(Exception))]
         public void TestGenerateWithNoGroup()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-            var message = TestHelper.ParseX12(sample);
-            var group = new X12Group<M_810>(null);
-            group.AddItem((M_810) message.Value);
-            var interchange = new X12Interchange(message.InterchangeHeader);
-            interchange.AddItem(group);
+            var items = TestHelper.Parse(sample).ToList();
 
+            var group = new X12Group<M_810>(null);
+            group.AddItem(items.OfType<M_810>().Single());
+            var interchange = new X12Interchange(items.OfType<EdiControl<S_ISA>>().Single().Parse());
+            interchange.AddItem(group);
+            
             // ACT
             interchange.GenerateEdi();
         }
@@ -208,20 +208,18 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var messages = TestHelper.ParseX12Multiple(sample);
+            var ediItems = TestHelper.ParseMultiple(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(messages.Count == 2);
-            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace).ToString() ==
-                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace).ToString());
-            Assert.IsTrue(TestHelper.Serialize(messages[0].GroupHeader, TargetNamespace).ToString() ==
-                          TestHelper.Serialize(messages[1].GroupHeader, TargetNamespace).ToString());
-            foreach (var message in messages)
+            Assert.IsTrue(ediItems.OfType<EdiMessage>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_ISA>>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_GS>>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_GE>>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_IEA>>().Count() == 1);
+            foreach (var item in ediItems)
             {
-                Assert.IsNotNull(message);
-                Assert.IsNotNull(message.InterchangeHeader);
-                Assert.IsNotNull(message.Value);
-                Assert.IsNotNull(message.GroupHeader);
+                var message = item as EdiMessage;
+                if (message == null) continue;
                 var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
@@ -236,18 +234,18 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var messages = TestHelper.ParseX12Multiple(sample);
+            var ediItems = TestHelper.ParseMultiple(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(messages.Count == 2);
-            Assert.IsTrue(TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace).ToString() ==
-                         TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace).ToString());
-            foreach (var message in messages)
+            Assert.IsTrue(ediItems.OfType<EdiMessage>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_ISA>>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_GS>>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_GE>>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<EdiControl<S_IEA>>().Count() == 1);
+            foreach (var item in ediItems)
             {
-                Assert.IsNotNull(message);
-                Assert.IsNotNull(message.InterchangeHeader);
-                Assert.IsNotNull(message.Value);
-                Assert.IsNotNull(message.GroupHeader);
+                var message = item as EdiMessage;
+                if (message == null) continue;
                 var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
@@ -278,14 +276,19 @@ namespace EdiFabric.Tests
             var expectedXmlInterchange = XElement.Load(TestHelper.Load(expectedInterchange), LoadOptions.PreserveWhitespace);
 
             // ACT
-            var message = TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.GroupHeader);
-            var parsedXmlInterchange = TestHelper.Serialize(message.InterchangeHeader, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXmlInterchange =
+                TestHelper.Serialize(ediItems.OfType<EdiControl<S_ISA>>().First().Parse(),
+                    TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlGroup = TestHelper.Serialize(message.GroupHeader, TargetNamespace);
+            var parsedXmlGroup =
+                TestHelper.Serialize(ediItems.OfType<EdiControl<S_GS>>().First().Parse(),
+                    TargetNamespace);
             Assert.AreEqual(parsedXmlGroup.ToString(), expectedXmlGroup.ToString());
         }
 
@@ -298,14 +301,13 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var message = TestHelper.ParseX12(sample);
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(message);
-            Assert.IsNotNull(message.InterchangeHeader);
-            Assert.IsNotNull(message.Value);
-            Assert.IsNotNull(message.GroupHeader);
-            var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
             Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
         }
 
@@ -322,54 +324,69 @@ namespace EdiFabric.Tests
             var expectedXmlInterchange2 = XElement.Load(TestHelper.Load(expectedInterchange2), LoadOptions.PreserveWhitespace);
 
             // ACT
-            var messages = TestHelper.ParseX12Multiple(sample);
+            var items = TestHelper.ParseMultiple(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(messages.Count == 2);
-            var parsedXmlInterchange = TestHelper.Serialize(messages[0].InterchangeHeader, TargetNamespace);
+            Assert.IsTrue(items.Count == 10);
+            Assert.IsTrue(items.OfType<EdiMessage>().Count() == 2);
+            Assert.IsTrue(items.OfType<EdiControl<S_ISA>>().Count() == 2);
+            Assert.IsTrue(items.OfType<EdiControl<S_GS>>().Count() == 2);
+            Assert.IsTrue(items.OfType<EdiControl<S_GE>>().Count() == 2);
+            Assert.IsTrue(items.OfType<EdiControl<S_IEA>>().Count() == 2);
+            var parsedXmlInterchange =
+                TestHelper.Serialize(items.OfType<EdiControl<S_ISA>>().First().Parse(),
+                    TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlInterchange2 = TestHelper.Serialize(messages[1].InterchangeHeader, TargetNamespace);
+            var parsedXmlInterchange2 =
+                TestHelper.Serialize(items.OfType<EdiControl<S_ISA>>().Last().Parse(),
+                    TargetNamespace);
             Assert.AreEqual(parsedXmlInterchange2.ToString(), expectedXmlInterchange2.ToString());
-            foreach (var message in messages)
+            foreach (var item in items.OfType<EdiMessage>())
             {
-                Assert.IsNotNull(message);
-                Assert.IsNotNull(message.Value);
-                var parsedXml = TestHelper.Serialize(message.Value, TargetNamespace);
+                Assert.IsNotNull(item);
+                Assert.IsNotNull(item.Value);
+                var parsedXml = TestHelper.Serialize(item.Value, TargetNamespace);
                 Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
             }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
         public void TestParseWithInvalidTrailers()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidTrailers.txt";
 
             // ACT
-            TestHelper.ParseX12Multiple(sample);
+            var ediItems = TestHelper.ParseMultiple(sample);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
         public void TestParseWithInvalidHeader()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidHeader.txt";
 
             // ACT
-            TestHelper.ParseX12Multiple(sample);
+            var ediItems = TestHelper.Parse(sample);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
         public void TestParseWithInvalidSegment()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidSegment.txt";
 
             // ACT
-            TestHelper.ParseX12Multiple(sample);
+            var ediItems = TestHelper.ParseMultiple(sample);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
         }
     }
 }

@@ -22,7 +22,7 @@ namespace EdiFabric.Framework
     /// <summary>
     /// This class contains XML serialization and validation functionality.
     /// </summary>
-    public static class ValidationExtensions
+    public static class PublicExtensions
     {
         private static readonly ConcurrentDictionary<string, XmlSerializer> SerializerCache =
             new ConcurrentDictionary<string, XmlSerializer>();
@@ -63,7 +63,7 @@ namespace EdiFabric.Framework
                 schemas.Add(nameSpace, reader);
                 xDoc.Validate(schemas, (o, e) => result.Add(e.Message));
             }
-            
+
             return result;
         }
 

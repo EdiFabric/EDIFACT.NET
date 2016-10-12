@@ -23,9 +23,9 @@ namespace EdiFabric.Framework
         {
             var index = parents.IndexOf(node);
             if(index == -1)
-                throw new ParserException("Child is not part of the parents list.");
+                throw new Exception("Child is not part of the parents list.");
             if(index + 1 == parents.Count)
-                throw new ParserException("Child is in the last position in the parents list.");
+                throw new Exception("Child is in the last position in the parents list.");
             var next = parents[index + 1];
 
             return node.IndexOfChild(next);
@@ -201,7 +201,7 @@ namespace EdiFabric.Framework
         internal static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
         {
             if (segment.Prefix != Prefixes.S)
-                throw new ParserException("Not a segment " + segment.Name);
+                throw new Exception("Not a segment " + segment.Name);
 
             var lastParents = lastFoundSegment.Ancestors();
             var parents = segment.Ancestors().ToList();
@@ -218,7 +218,8 @@ namespace EdiFabric.Framework
 
         internal static bool IsEqual(this ParseNode parseNode, SegmentContext segmentContext)
         {
-            if(parseNode.Prefix != Prefixes.S) throw new ParserException(string.Format("Can't compare non segments: {0}", parseNode.Name));
+            if(parseNode.Prefix != Prefixes.S)
+                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));               
 
             // The names must match
             if (parseNode.EdiName == segmentContext.Name)
@@ -272,7 +273,7 @@ namespace EdiFabric.Framework
                 var currentDataElement = dataElements[deIndex];
                 if (string.IsNullOrEmpty(currentDataElement)) continue;
                 if (dataElementsGrammar.Count <= deIndex)
-                    throw new ParserException(
+                    throw new Exception(
                         string.Format(
                             "More data elements ({0}) were found in segment {1} than in the rule class ({2}).",
                             dataElements.Length, line, dataElementsGrammar.Count));
@@ -296,7 +297,7 @@ namespace EdiFabric.Framework
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
                         if (componentDataElementsGrammar.Count <= cdeIndex)
-                            throw new ParserException(
+                            throw new Exception(
                                 string.Format("More data elements ({0}) were found in segment {1} than in the rule class {2}.",
                                     componentDataElements.Length, currentComponentDataElement, componentDataElementsGrammar.Count));
                         var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
@@ -424,11 +425,11 @@ namespace EdiFabric.Framework
                                 d.Name.StartsWith("S_HL") &&
                                 d.Children.First().Value == parentId);
                 if(hlParent == null)
-                    throw new ParserException(string.Format("HL with id = {0} was not found.", parentId));
+                    throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
 
                 var hl = grammarRoot.Descendants().Single(pt => pt.Name == hlParent.Name);
                 if(hl.IndexInParent() != 0)
-                    throw new ParserException(string.Format("HL with id = {0} is not the first segment.", parentId));
+                    throw new Exception(string.Format("HL with id = {0} is not the first segment.", parentId));
                 
                 return hl.Parent.Children.ElementAt(1);
             }

@@ -5,15 +5,15 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using EdiFabric.Framework;
+using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Items;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Tests
 {
     internal class TestHelper
     {
-        //public const string RulesAssemblyName = "EdiFabric.Rules";
         public const string XsdAssemblyName = "EdiFabric.Xsd";
 
         public static XElement Serialize<T>(T instance, string nameSpace)
@@ -55,51 +55,32 @@ namespace EdiFabric.Tests
             return list.Aggregate("", (current, item) => current + item + postFix);
         }
 
-        public static EdiMessage<S_UNB, S_UNG> ParseEdifact(string sample, Encoding encoding = null,
+        public static IEnumerable<EdiItem> Parse(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = EdifactReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
-                )
+            using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
             {
-                return ediReader.ReadMessage() ? ediReader.Message : null;
+                return ediReader.ReadToNextMessage().ToList();
             }
         }
 
-        public static EdiMessage<S_ISA, S_GS> ParseX12(string sample, Encoding encoding = null,
+        public static IEnumerable<EdiItem> ParseMultiple(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = X12Reader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
+            using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
             {
-                return ediReader.ReadMessage() ? ediReader.Message : null;
+                return ediReader.ReadToEnd().ToList();
             }
         }
-
-        public static List<EdiMessage<S_UNB, S_UNG>> ParseEdifactMultiple(string sample, Encoding encoding = null,
-            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
-        {
-            using (var ediReader = EdifactReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
-                )
-            {
-                return ediReader.ReadAllMessages().ToList();
-            }
-        }
-
-        public static List<EdiMessage<S_ISA, S_GS>> ParseX12Multiple(string sample, Encoding encoding = null,
-            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
-        {
-            using (var ediReader = X12Reader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix)
-                )
-            {
-                return ediReader.ReadAllMessages().ToList();
-            }
-        }
-
+        
         public static EdifactInterchange GenerateEdifact<T>(string sample)
         {
-            var message = ParseEdifact(sample);
-            var group = new EdifactGroup<T>(message.GroupHeader);
-            group.AddItem((T)message.Value);
-            var interchange = new EdifactInterchange(message.InterchangeHeader);
+            var items = Parse(sample).ToList();
+
+            var ung = items.OfType<EdiControl<S_UNG>>().SingleOrDefault();
+            var group = new EdifactGroup<T>(ung != null ? ung.Parse() : null);
+            group.AddItem(items.OfType<EdiMessage>().Select(i => i.Value).OfType<T>().Single());
+            var interchange = new EdifactInterchange(items.OfType<EdiControl<S_UNB>>().Single().Parse());
             interchange.AddItem(group);
 
             return interchange;
@@ -107,10 +88,11 @@ namespace EdiFabric.Tests
 
         public static X12Interchange GenerateX12<T>(string sample, string rulesNameSpacePrefix = null)
         {
-            var message = ParseX12(sample, null, null, rulesNameSpacePrefix);
-            var group = new X12Group<T>(message.GroupHeader);
-            group.AddItem((T)message.Value);
-            var interchange = new X12Interchange(message.InterchangeHeader);
+            var items = Parse(sample, null, null, rulesNameSpacePrefix).ToList();
+
+            var group = new X12Group<T>(items.OfType<EdiControl<S_GS>>().Single().Parse());
+            group.AddItem(items.OfType<EdiMessage>().Select(i => i.Value).OfType<T>().Single());
+            var interchange = new X12Interchange(items.OfType<EdiControl<S_ISA>>().Single().Parse());
             interchange.AddItem(group);
 
             return interchange;

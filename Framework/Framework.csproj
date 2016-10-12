@@ -78,11 +78,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\ErrorCodeDescriptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Constants\ErrorCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Constants\ErrorCodes1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Constants\ErrorCodes2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Constants\ErrorContexts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\ControlParsingException.cs" />
+    <Compile Include="Exceptions\MessageParsingException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="Headers\IEdiControl.cs" />
+    <Compile Include="Items\EdiControl.cs" />
     <Compile Include="Headers\IEdiGroup.cs" />
-    <Compile Include="Readers\EdifactReader.cs" />
+    <Compile Include="Items\EdiError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Items\EdiItem.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Constants\SegmentTags.cs" />
-    <Compile Include="EdiMessage.cs" />
+    <Compile Include="Items\EdiMessage.cs" />
     <Compile Include="Headers\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Constants\Prefixes.cs" />
@@ -95,11 +120,9 @@
     <Compile Include="Separators.cs" />
     <Compile Include="Headers\Edifact.cs" />
     <Compile Include="Headers\X12.cs" />
-    <Compile Include="ParserException.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Readers\X12Reader.cs" />
-    <Compile Include="ValidationExtensions.cs" />
+    <Compile Include="PublicExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
