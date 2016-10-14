@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 
-namespace EdiFabric.Framework.Headers
+namespace EdiFabric.Framework.Controls
 {
     /// <summary>
     /// EDI container interface.

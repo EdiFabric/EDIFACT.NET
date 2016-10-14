@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace EdiFabric.Framework.Headers
+namespace EdiFabric.Framework.Controls
 {
     /// <summary>
     /// This class represents the X12 interchange header.

@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Items;
 using EdiFabric.Framework.Readers;
 

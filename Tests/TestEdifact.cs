@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Headers;
+using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Items;
 using EdiFabric.Rules.EdifactD00AINVOIC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

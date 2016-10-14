@@ -84,13 +84,10 @@
     <Compile Include="Constants\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Constants\ErrorCodes1.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Constants\ErrorCodes2.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Constants\ErrorContexts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\IEdiControl.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\ControlParsingException.cs" />
@@ -98,9 +95,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\ParsingException.cs" />
-    <Compile Include="Headers\IEdiControl.cs" />
     <Compile Include="Items\EdiControl.cs" />
-    <Compile Include="Headers\IEdiGroup.cs" />
+    <Compile Include="Controls\IEdiGroup.cs" />
     <Compile Include="Items\EdiError.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -108,7 +104,7 @@
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Constants\SegmentTags.cs" />
     <Compile Include="Items\EdiMessage.cs" />
-    <Compile Include="Headers\EdiContainer.cs" />
+    <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Constants\Prefixes.cs" />
     <Compile Include="Constants\Formats.cs" />
@@ -118,8 +114,8 @@
     <Compile Include="ParseNode.cs" />
     <Compile Include="MessageLexer.cs" />
     <Compile Include="Separators.cs" />
-    <Compile Include="Headers\Edifact.cs" />
-    <Compile Include="Headers\X12.cs" />
+    <Compile Include="Controls\Edifact.cs" />
+    <Compile Include="Controls\X12.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicExtensions.cs" />

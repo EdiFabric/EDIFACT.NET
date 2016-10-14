@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -20,33 +21,44 @@ namespace EdiFabric.Framework.Readers
     {
         internal static string ReadSegment(this StreamReader reader, Separators separators)
         {
-            var line = "";
-
-            while (reader.Peek() >= 0)
+            try
             {
-                var symbol = (char) reader.Read();
-                line = line + symbol;
+                var line = "";
 
-                if (line.EndsWith(separators.Segment.ToString()))
+                while (reader.Peek() >= 0)
                 {
-                    if (separators.Escape.HasValue &&
-                        line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment)))
-                    {
-                        continue;
-                    }
+                    var symbol = (char)reader.Read();
+                    line = line + symbol;
 
-                    int index = line.LastIndexOf(separators.Segment.ToString(), StringComparison.Ordinal);
-                    if (index > 0)
+                    if (line.EndsWith(separators.Segment.ToString()))
                     {
-                        line = line.Remove(index);
-                    }
+                        if (separators.Escape.HasValue &&
+                            line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment)))
+                        {
+                            continue;
+                        }
 
-                    if (!string.IsNullOrEmpty(line))
-                        break;
+                        int index = line.LastIndexOf(separators.Segment.ToString(), StringComparison.Ordinal);
+                        if (index > 0)
+                        {
+                            line = line.Remove(index);
+                        }
+
+                        if (!string.IsNullOrEmpty(line))
+                            break;
+                    }
                 }
-            }
 
-            return line.Trim('\r', '\n');
+                return line.Trim('\r', '\n');
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParsingException)
+                    throw;
+
+                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
+            }
+            
         }
 
         internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
@@ -61,26 +73,26 @@ namespace EdiFabric.Framework.Readers
             return (T)parseNode.ToInstance();
         }
 
-        internal static Tuple<string, Separators> ReadHeader(this StreamReader reader, string segmentName)
+        internal static Tuple<string, Separators> ReadControl(this StreamReader reader, string segmentName)
         {
-            char dataElement;
-            char componentDataElement;
-            char repetitionDataElement;
-            char segment;
-            char? escape;
             string header = null;
             Separators separators = null;
 
-            switch (segmentName.ToSegmentTag())
+            try
             {
-                case SegmentTags.ISA:
-                    try
-                    {
+                char dataElement;
+                char componentDataElement;
+                char repetitionDataElement;
+                char segment;
+                char? escape;
+                switch (segmentName.ToSegmentTag())
+                {
+                    case SegmentTags.ISA:
                         dataElement = reader.Read(1)[0];
                         var isa = reader.ReadIsa(dataElement);
                         var isaElements = isa.Split(dataElement);
                         if (isaElements[15].Count() != 2)
-                            throw new Exception("Can't find the segment terminator.");
+                            throw new ControlParsingException(ErrorCodes.InvalidSegmentTerminator);
                         componentDataElement = isaElements[15].First();
                         repetitionDataElement = isaElements[10].First() != 'U'
                             ? isaElements[10].First()
@@ -89,77 +101,99 @@ namespace EdiFabric.Framework.Readers
                         separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                             repetitionDataElement);
                         header = segmentName + dataElement + isa;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Unable to extract X12 interchange delimiters", ex);
-                    }
-                    break;
-                case SegmentTags.UNB:
-                    var defaultSeparators = Separators.DefaultSeparatorsEdifact();
-                    componentDataElement = defaultSeparators.ComponentDataElement;
-                    dataElement = defaultSeparators.DataElement;
-                    escape = defaultSeparators.Escape;
-                    repetitionDataElement = defaultSeparators.RepetitionDataElement;
-                    segment = defaultSeparators.Segment;
-
-                    separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
-                        repetitionDataElement, escape);
-                    header = segmentName + reader.ReadSegment(separators);
-                    break;
-                case SegmentTags.UNA:
-                    try
-                    {
-                        var una = reader.Read(6);
-                        var unaChars = una.ToArray();
-                        componentDataElement = unaChars[0];
-                        dataElement = unaChars[1];
-                        escape = unaChars[3];
-                        repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
-                        segment = unaChars[5];
+                        break;
+                    case SegmentTags.UNB:
+                        var defaultSeparators = Separators.DefaultSeparatorsEdifact();
+                        componentDataElement = defaultSeparators.ComponentDataElement;
+                        dataElement = defaultSeparators.DataElement;
+                        escape = defaultSeparators.Escape;
+                        repetitionDataElement = defaultSeparators.RepetitionDataElement;
+                        segment = defaultSeparators.Segment;
 
                         separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
                             repetitionDataElement, escape);
-                        header = segmentName + una;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Unable to extract UNA interchange delimiters", ex);
-                    }
-                    break;
-            }
+                        header = segmentName + reader.ReadSegment(separators);
+                        break;
+                    case SegmentTags.UNA:
+                        try
+                        {
+                            var una = reader.Read(6);
+                            var unaChars = una.ToArray();
+                            componentDataElement = unaChars[0];
+                            dataElement = unaChars[1];
+                            escape = unaChars[3];
+                            repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
+                            segment = unaChars[5];
 
-            return new Tuple<string, Separators>(header, separators);
+                            separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
+                                repetitionDataElement, escape);
+                            header = segmentName + una;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Unable to extract UNA interchange delimiters", ex);
+                        }
+                        break;
+                }
+
+                return new Tuple<string, Separators>(header, separators);
+
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParsingException)
+                    throw;
+
+                throw new ControlParsingException(ErrorCodes.InvalidControlStructure, ex);
+            }
         }
 
         internal static string Read(this StreamReader reader, int bytes, char[] trims)
         {
-            string result = null;
-            var counter = 0;
-            while (counter < bytes && !reader.EndOfStream)
+            try
             {
-                var symbol = reader.Read(1).Trim(trims);
-                if (!string.IsNullOrEmpty(symbol))
-                    counter += 1;
-                result += symbol;
-            }
+                string result = null;
+                var counter = 0;
+                while (counter < bytes && !reader.EndOfStream)
+                {
+                    var symbol = reader.Read(1).Trim(trims);
+                    if (!string.IsNullOrEmpty(symbol))
+                        counter += 1;
+                    result += symbol;
+                }
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, ex);
+            }           
         }
 
         internal static SegmentTags ToSegmentTag(this string segment, Separators separators = null)
         {
-            if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
-                return SegmentTags.Regular;
+            try
+            {
+                if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
+                    return SegmentTags.Regular;
 
-            if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
+                if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
 
-            var segmentTag = separators != null
-                ? segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault()
-                : segment.ToUpper().TrimStart().Substring(0, 3);
+                var segmentTag = separators != null
+                    ? segment.Split(new[] { separators.DataElement }, StringSplitOptions.None).FirstOrDefault()
+                    : segment.ToUpper().TrimStart().Substring(0, 3);
 
-            SegmentTags tag;
-            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
+                SegmentTags tag;
+                return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParsingException)
+                    throw;
+
+                throw new ParsingException(ErrorCodes.UnrecognizedSegmentId, ex);
+            }
+            
         }
 
         private static string Read(this StreamReader reader, int bytes)

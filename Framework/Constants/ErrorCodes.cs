@@ -1,5 +1,19 @@
-﻿namespace EdiFabric.Framework.Constants
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+namespace EdiFabric.Framework.Constants
 {
+    /// <summary>
+    /// System error codes for all know error conditions.
+    /// </summary>
     public enum ErrorCodes
     {
         /// <summary>
@@ -9,20 +23,32 @@
 
         /// <summary>
         /// Invalid Control Structure
-        /// Missing ISA
         /// </summary>
         InvalidControlStructure,
 
         /// <summary>
         /// Invalid Interchange Content
-        /// Missing GS
         /// </summary>
         InvalidInterchangeContent,
 
         /// <summary>
         /// Improper End of File
-        /// Missing GE or ISA
         /// </summary>
         ImproperEndOfFile,
+
+        /// <summary>
+        /// Invalid Segment Terminator
+        /// </summary>
+        InvalidSegmentTerminator,
+
+        /// <summary>
+        /// Segment is blank
+        /// </summary>
+        BlankSegment,
+
+        /// <summary>
+        /// Segment Id is unknown
+        /// </summary>
+        UnrecognizedSegmentId,
     }
 }

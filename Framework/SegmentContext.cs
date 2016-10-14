@@ -11,6 +11,7 @@
 
 using System;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework
@@ -25,7 +26,7 @@ namespace EdiFabric.Framework
         public string ParentId { get; private set; }
         public string Value { get; private set; }
         public bool IsJump{ get; private set; }
-        public bool IsHeader{ get; private set; }
+        public bool IsControl{ get; private set; }
         public string LogName { get; private set; }
         public SegmentTags Tag { get; private set; }
         
@@ -35,7 +36,7 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
 
             var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
-            if (dataElements.Length < 2) throw new Exception("Segment is blank.");
+            if (dataElements.Length < 2) throw new MessageParsingException(ErrorCodes.BlankSegment);
 
             Name = dataElements[0];
             Value = ediSegment;
@@ -56,11 +57,10 @@ namespace EdiFabric.Framework
             }
             if (Name == Hl && !string.IsNullOrEmpty(dataElements[2])) 
                 ParentId = dataElements[2];
-            IsJump = Name == Hl && FirstValue != null && FirstValue != "1" &&
-                     (int.Parse(FirstValue) - int.Parse(ParentId ?? "0") > 1);
-
+            
+            IsJump = Jump();
             Tag = ediSegment.ToSegmentTag(separators);
-            IsHeader = Header();
+            IsControl = Control();
             LogName = ToLogName();
         }
 
@@ -80,11 +80,20 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        private bool Header()
+        private bool Control()
         {
             return Tag == SegmentTags.UNB || Tag == SegmentTags.UNG || Tag == SegmentTags.UNE || Tag == SegmentTags.UNZ ||
                    Tag == SegmentTags.UNA ||
                    Tag == SegmentTags.ISA || Tag == SegmentTags.GS || Tag == SegmentTags.GE || Tag == SegmentTags.IEA;
+        }
+
+        private bool Jump()
+        {
+            int fv;
+            int p;
+            return Name == Hl && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
+                     int.TryParse(ParentId ?? "0", out p) &&
+                     (fv - p > 1);
         }
     }
 }

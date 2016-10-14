@@ -49,7 +49,7 @@ namespace EdiFabric.Framework
 
             foreach (var segment in segments)
             {
-                if (segment.IsHeader) continue;
+                if (segment.IsControl) continue;
 
                 Logger.Log(string.Format("Segment to match: {0}", segment.LogName));
                 try

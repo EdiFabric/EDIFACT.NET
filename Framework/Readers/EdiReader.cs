@@ -15,14 +15,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Headers;
 using EdiFabric.Framework.Items;
 
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Parses EDI messages into .NET object.
+    /// Parses EDI messages into .NET objects.
     /// </summary>
     public class EdiReader : IDisposable
     {
@@ -74,7 +74,8 @@ namespace EdiFabric.Framework.Readers
         } 
 
         /// <summary>
-        /// Reads an EDI message from the stream.
+        /// Reads an EDI item from the stream.
+        /// Items can be: control segment, message or error.
         /// </summary>
         /// <returns>If a new message was read.</returns>
         public bool Read()
@@ -142,6 +143,7 @@ namespace EdiFabric.Framework.Readers
                             currentMessage.Add(segmentContext);
                             Item = ParseEdifact(currentMessage);
                             result = true;
+                            _messageMarker--;
                             currentMessage.Clear();
                             break;
                         case SegmentTags.SE:
@@ -162,7 +164,7 @@ namespace EdiFabric.Framework.Readers
                             break;
                     }
 
-                    ValidateReadStructure();
+                    ValidateControlStructure();
                 }               
             }
             catch (ParsingException ex)
@@ -192,24 +194,30 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// 
+        /// Reads the stream until the end of a message.
+        /// Breaks on message exception or invalid interchange content.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A collection of EDI items.
+        /// </returns>
         public IEnumerable<EdiItem> ReadToNextMessage()
         {
             while (Read())
             {
                 yield return Item;
                 if (Item is EdiMessage || IsBreakingError() ||
-                    ((EdiError) Item).Value is MessageParsingException)
+                    (Item is EdiError && ((EdiError)Item).Value is MessageParsingException))
                     break;
             }
         }
 
         /// <summary>
-        /// 
+        /// Reads the stream until the end of a group.
+        /// Breaks on invalid interchange content.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A collection of EDI items.
+        /// </returns>
         public IEnumerable<EdiItem> ReadToNextGroup()
         {
             while (Read())
@@ -221,9 +229,12 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// 
+        /// Reads the stream until the end of an interchange.
+        /// Breaks on invalid interchange content.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A collection of EDI items.
+        /// </returns>
         public IEnumerable<EdiItem> ReadToNextInterchange()
         {
             while (Read())
@@ -237,8 +248,9 @@ namespace EdiFabric.Framework.Readers
         private string ReadSegment()
         {
             var first3 = _streamReader.Read(3, _trims);
+
             if (string.IsNullOrEmpty(first3)) return null;
-            var header = _streamReader.ReadHeader(first3);
+            var header = _streamReader.ReadControl(first3);
             if (header.Item2 != null && _separators == null)
             {
                 _separators = header.Item2;
@@ -246,25 +258,45 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_separators == null)
-                throw new ControlParsingException(ErrorCodes.InvalidInterchangeContent);
+                throw new ControlParsingException(ErrorCodes.InvalidControlStructure);
 
             return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
         }
 
         private EdiItem ParseX12(List<SegmentContext> currentMessage)
         {
-            var type = currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-            var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
+            try
+            {
+                var type = currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
+                var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
 
-            return new EdiMessage(messageInstance, _separators);
+                return new EdiMessage(messageInstance, _separators);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParsingException)
+                    throw;
+
+                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
+            }           
         }
 
         private EdiItem ParseEdifact(List<SegmentContext> currentMessage)
         {
-            var type = currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-            var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
+            try
+            {
+                var type = currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
+                var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
 
-            return new EdiMessage(messageInstance, _separators);
+                return new EdiMessage(messageInstance, _separators);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ParsingException)
+                    throw;
+
+                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
+            }
         }
 
         private bool IsBreakingError()
@@ -278,14 +310,18 @@ namespace EdiFabric.Framework.Readers
                    error.ErrorCode == ErrorCodes.ImproperEndOfFile;
         }
 
-        private void ValidateReadStructure()
+        private void ValidateControlStructure()
         {
+            ParsingException exception = _streamReader.EndOfStream
+                ? new ControlParsingException(ErrorCodes.ImproperEndOfFile)
+                : new ControlParsingException(ErrorCodes.InvalidControlStructure);
+
             if (_interchangeMarker < 0 || _interchangeMarker > 1)
-                throw new ParsingException(ErrorCodes.InvalidControlStructure);
+                throw exception;
             if (_groupMarker < 0 || _groupMarker > 1)
-                throw new ParsingException(ErrorCodes.InvalidControlStructure);
+                throw exception;
             if (_messageMarker < 0 || _messageMarker > 1)
-                throw new ParsingException(ErrorCodes.InvalidControlStructure);
+                throw exception;
         }
 
         /// <summary>

@@ -9,22 +9,13 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Framework.Exceptions;
-
-namespace EdiFabric.Framework.Items
+namespace EdiFabric.Framework.Controls
 {
     /// <summary>
-    /// EDI error with custom error code.
+    /// Control interface.
+    /// Marks a segment as control segment.
     /// </summary>
-    public class EdiError : EdiItem
+    public interface IEdiControl
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdiError"/> class.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        public EdiError(ParsingException exception)
-            : base(exception)
-        {
-        }
     }
 }
