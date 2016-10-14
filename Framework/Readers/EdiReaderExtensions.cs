@@ -53,10 +53,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                if (ex is ParsingException)
-                    throw;
-
-                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, ex);
             }
             
         }
@@ -92,7 +89,7 @@ namespace EdiFabric.Framework.Readers
                         var isa = reader.ReadIsa(dataElement);
                         var isaElements = isa.Split(dataElement);
                         if (isaElements[15].Count() != 2)
-                            throw new ControlParsingException(ErrorCodes.InvalidSegmentTerminator);
+                            throw new ParsingException(ErrorCodes.SegmentTerminatorNotFound);
                         componentDataElement = isaElements[15].First();
                         repetitionDataElement = isaElements[10].First() != 'U'
                             ? isaElements[10].First()
@@ -115,24 +112,17 @@ namespace EdiFabric.Framework.Readers
                         header = segmentName + reader.ReadSegment(separators);
                         break;
                     case SegmentTags.UNA:
-                        try
-                        {
-                            var una = reader.Read(6);
-                            var unaChars = una.ToArray();
-                            componentDataElement = unaChars[0];
-                            dataElement = unaChars[1];
-                            escape = unaChars[3];
-                            repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
-                            segment = unaChars[5];
+                        var una = reader.Read(6);
+                        var unaChars = una.ToArray();
+                        componentDataElement = unaChars[0];
+                        dataElement = unaChars[1];
+                        escape = unaChars[3];
+                        repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
+                        segment = unaChars[5];
 
-                            separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
-                                repetitionDataElement, escape);
-                            header = segmentName + una;
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception("Unable to extract UNA interchange delimiters", ex);
-                        }
+                        separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
+                            repetitionDataElement, escape);
+                        header = segmentName + una;
                         break;
                 }
 
@@ -144,7 +134,7 @@ namespace EdiFabric.Framework.Readers
                 if (ex is ParsingException)
                     throw;
 
-                throw new ControlParsingException(ErrorCodes.InvalidControlStructure, ex);
+                throw new ParsingException(ErrorCodes.InvalidControlStructure, ex);
             }
         }
 
@@ -172,28 +162,17 @@ namespace EdiFabric.Framework.Readers
 
         internal static SegmentTags ToSegmentTag(this string segment, Separators separators = null)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
-                    return SegmentTags.Regular;
+            if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
+                return SegmentTags.Regular;
 
-                if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
+            if (segment.StartsWith(SegmentTags.UNA.ToString())) return SegmentTags.UNA;
 
-                var segmentTag = separators != null
-                    ? segment.Split(new[] { separators.DataElement }, StringSplitOptions.None).FirstOrDefault()
-                    : segment.ToUpper().TrimStart().Substring(0, 3);
+            var segmentTag = separators != null
+                ? segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault()
+                : segment.ToUpper().TrimStart().Substring(0, 3);
 
-                SegmentTags tag;
-                return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
-            }
-            catch (Exception ex)
-            {
-                if (ex is ParsingException)
-                    throw;
-
-                throw new ParsingException(ErrorCodes.UnrecognizedSegmentId, ex);
-            }
-            
+            SegmentTags tag;
+            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
         }
 
         private static string Read(this StreamReader reader, int bytes)

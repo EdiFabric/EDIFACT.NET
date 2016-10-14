@@ -36,7 +36,7 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
 
             var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
-            if (dataElements.Length < 2) throw new MessageParsingException(ErrorCodes.BlankSegment);
+            if (dataElements.Length < 2) throw new ParsingException(ErrorCodes.BlankSegment);
 
             Name = dataElements[0];
             Value = ediSegment;

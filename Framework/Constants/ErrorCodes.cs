@@ -39,7 +39,7 @@ namespace EdiFabric.Framework.Constants
         /// <summary>
         /// Invalid Segment Terminator
         /// </summary>
-        InvalidSegmentTerminator,
+        SegmentTerminatorNotFound,
 
         /// <summary>
         /// Segment is blank
@@ -47,8 +47,48 @@ namespace EdiFabric.Framework.Constants
         BlankSegment,
 
         /// <summary>
-        /// Segment Id is unknown
+        /// The name of the rules assembly was not set in config
         /// </summary>
-        UnrecognizedSegmentId,
+        RulesAssemblyNameNotSet,
+
+        /// <summary>
+        /// Type not found in assembly
+        /// </summary>
+        TypeNotFound,
+
+        /// <summary>
+        /// Invalid GS
+        /// </summary>
+        GsInvalid,
+
+        /// <summary>
+        /// Missing GS
+        /// </summary>
+        GsNotFound,
+
+        /// <summary>
+        /// Missing ST
+        /// </summary>
+        StNotFound,
+
+        /// <summary>
+        /// Invalid UNH
+        /// </summary>
+        UnhInvalid,
+
+        /// <summary>
+        /// Missing UNH
+        /// </summary>
+        UnhNotFound,
+
+        /// <summary>
+        /// Missing segment at position
+        /// </summary>
+        SegmentNotFound,
+
+        /// <summary>
+        /// Data elements count is different
+        /// </summary>
+        DataElementsNumberMismatch,
     }
 }

@@ -90,7 +90,6 @@
     <Compile Include="Controls\IEdiControl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\ControlParsingException.cs" />
     <Compile Include="Exceptions\MessageParsingException.cs">
       <SubType>Code</SubType>
     </Compile>

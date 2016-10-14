@@ -188,7 +188,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                Item = new EdiError(new ParsingException(ErrorCodes.Unknown, ex));
+                Item = new EdiError(new ParsingException(ErrorCodes.Unknown, ex.Message, ex));
                 result = true;
             }
 
@@ -275,7 +275,7 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_separators == null)
-                throw new ControlParsingException(ErrorCodes.InvalidControlStructure);
+                throw new ParsingException(ErrorCodes.InvalidControlStructure);
 
             return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
         }
@@ -291,8 +291,9 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                if (ex is ParsingException)
-                    throw;
+                var exception = ex as ParsingException;
+                if (exception != null)
+                    throw new MessageParsingException(exception.ErrorCode, ex);
 
                 throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
             }           
@@ -309,8 +310,9 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                if (ex is ParsingException)
-                    throw;
+                var exception = ex as ParsingException;
+                if (exception != null)
+                    throw new MessageParsingException(exception.ErrorCode, ex);
 
                 throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
             }
@@ -324,14 +326,15 @@ namespace EdiFabric.Framework.Readers
 
             return error.ErrorCode == ErrorCodes.InvalidControlStructure ||
                    error.ErrorCode == ErrorCodes.InvalidInterchangeContent ||
-                   error.ErrorCode == ErrorCodes.ImproperEndOfFile;
+                   error.ErrorCode == ErrorCodes.ImproperEndOfFile ||
+                   error.ErrorCode == ErrorCodes.SegmentTerminatorNotFound;
         }
 
         private void ValidateControlStructure()
         {
             ParsingException exception = _streamReader.EndOfStream
-                ? new ControlParsingException(ErrorCodes.ImproperEndOfFile)
-                : new ControlParsingException(ErrorCodes.InvalidControlStructure);
+                ? new ParsingException(ErrorCodes.ImproperEndOfFile)
+                : new ParsingException(ErrorCodes.InvalidControlStructure);
 
             if (_interchangeMarker < 0 || _interchangeMarker > 1)
                 throw exception;

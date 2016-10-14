@@ -29,6 +29,14 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParsingException"/> class.
         /// </summary>
+        public MessageParsingException(ErrorCodes errorCode, string message)
+            : base(errorCode, message)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageParsingException"/> class.
+        /// </summary>
         public MessageParsingException(ErrorCodes errorCode, Exception ex) : base(errorCode, ex)
         {
         }

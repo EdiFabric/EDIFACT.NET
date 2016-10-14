@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
 {
@@ -33,7 +34,8 @@ namespace EdiFabric.Framework
             }
         }
 
-        internal static object Analyze(this List<SegmentContext> segments, Separators separators, Type type, string rulesAssemblyName)
+        internal static object Analyze(this List<SegmentContext> segments, Separators separators, Type type,
+            string rulesAssemblyName)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
@@ -52,94 +54,72 @@ namespace EdiFabric.Framework
                 if (segment.IsControl) continue;
 
                 Logger.Log(string.Format("Segment to match: {0}", segment.LogName));
-                try
-                {
-                    // Jump back to HL segment if needed
-                    if (segment.IsJump)
-                        segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                // Jump back to HL segment if needed
+                if (segment.IsJump)
+                    segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
 
-                    var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
-                    if (currSeg == null)
-                        throw new Exception(
-                            string.Format(
-                                "Segment {0} was not found after segment {1} in class {2}.",
-                                segment.Value, segmentPosition.EdiName, type.Name));
-                    
-                    var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
-                    instancePosition = instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
-                    foreach (var parseTree in segmentTree)
-                    {
-                        instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
-                        if (parseTree.Prefix == Prefixes.S)
-                            instancePosition.ParseSegment(segment.Value, separators);
-                    }
+                var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
+                if (currSeg == null)
+                    throw new ParsingException(ErrorCodes.SegmentNotFound, segment.Value);
 
-                    segmentPosition = currSeg;
-                }
-                catch (Exception ex)
+                var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
+                instancePosition =
+                    instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
+                foreach (var parseTree in segmentTree)
                 {
-                    throw new Exception("Failed at line: " + segment.Value, ex);
+                    instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
+                    if (parseTree.Prefix == Prefixes.S)
+                        instancePosition.ParseSegment(segment.Value, separators);
                 }
+                segmentPosition = currSeg;
                 Logger.Log(string.Format("Matched segment: {0}", segmentPosition.Name));
             }
 
             return instancePosition.Root().ToInstance();
         }
 
-        internal static Type ToX12Type(this List<SegmentContext> segments, Separators separators, string rulesAssemblyName, string rulesNamespacePrefix)
+        internal static Type ToX12Type(this List<SegmentContext> segments, Separators separators,
+            string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
-           
-            string version;
-            string tag;
 
-            try
-            {
-                var gs = segments.Single(es => es.Tag == SegmentTags.GS);
-                var ediCompositeDataElementsGs = gs.Value.GetDataElements(separators);
-                version = ediCompositeDataElementsGs[7];
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Invalid GS segment.", ex);
-            }
+            var gs = segments.SingleOrDefault(es => es.Tag == SegmentTags.GS);
+            if (gs == null)
+                throw new ParsingException(ErrorCodes.GsNotFound);
+            var ediCompositeDataElementsGs = gs.Value.GetDataElements(separators);
+            if (ediCompositeDataElementsGs.Count() < 8)
+                throw new ParsingException(ErrorCodes.GsInvalid);
+            var version = ediCompositeDataElementsGs[7];
 
-            try
-            {
-                var st = segments.Single(es => es.Tag == SegmentTags.ST);
-                var ediCompositeDataElementsSt = st.Value.GetDataElements(separators);
-                tag = ediCompositeDataElementsSt[0];
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Invalid ST segment.", ex);
-            }
+            var st = segments.SingleOrDefault(es => es.Tag == SegmentTags.ST);
+            if (st == null)
+                throw new ParsingException(ErrorCodes.StNotFound);
+            var ediCompositeDataElementsSt = st.Value.GetDataElements(separators);
+            var tag = ediCompositeDataElementsSt[0];
 
             return ToType(Formats.X12, version, tag, rulesAssemblyName, rulesNamespacePrefix);
         }
 
-        internal static Type ToEdifactType(this List<SegmentContext> segments, Separators separators, string rulesAssemblyName, string rulesNamespacePrefix)
+        internal static Type ToEdifactType(this List<SegmentContext> segments, Separators separators,
+            string rulesAssemblyName, string rulesNamespacePrefix)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
+
+            var unh = segments.SingleOrDefault(es => es.Tag == SegmentTags.UNH);
+            if (unh == null)
+                throw new ParsingException(ErrorCodes.UnhNotFound);
+            var ediCompositeDataElements = unh.Value.GetDataElements(separators);
+            if (ediCompositeDataElements.Count() < 2)
+                throw new ParsingException(ErrorCodes.UnhInvalid);
+            var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(separators);
+            if (ediDataElements.Count() < 3)
+                throw new ParsingException(ErrorCodes.UnhInvalid);
+
+            var tag = ediDataElements[0];
+            var version = ediDataElements[1] + ediDataElements[2];
             
-            string version;
-            string tag;
-            try
-            {
-                var unh = segments.Single(es => es.Tag == SegmentTags.UNH);
-                var ediCompositeDataElements = unh.Value.GetDataElements(separators);
-                var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(separators);
-
-                tag = ediDataElements[0];
-                version = ediDataElements[1] + ediDataElements[2];
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Invalid UNH segment.", ex);
-            }
-
             return ToType(Formats.Edifact, version, tag, rulesAssemblyName, rulesNamespacePrefix);
         }
 
@@ -149,19 +129,25 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
             
             var rulesAssembly = rulesAssemblyName ?? RulesAssembly;
-            if(string.IsNullOrEmpty(rulesAssembly)) throw new Exception("Fully qualified EDI rules assembly name is blank.");
+            if(string.IsNullOrEmpty(rulesAssembly)) throw new ParsingException(ErrorCodes.RulesAssemblyNameNotSet);
             var namespacePrefix = rulesNamespacePrefix ?? "EdiFabric.Rules";
             var typeFullName = namespacePrefix.TrimEnd('.') + "." + format + version + tag;
             typeFullName = typeFullName + ".M_" + tag;
-            var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
+            var errorMsg = string.Format(
+                            "Type '{0}' was not found in assembly '{1}'.",
+                            typeFullName, rulesAssemblyName);
+            try
+            {
+                var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
+                if (systemType == null)
+                    throw new ParsingException(ErrorCodes.TypeNotFound, errorMsg);
 
-            if (systemType == null)
-                throw new Exception(
-                    string.Format(
-                        "Type '{0}' was not found in assembly '{1}'.",
-                        typeFullName, rulesAssemblyName));
-
-            return systemType;
+                return systemType;
+            }
+            catch (Exception)
+            {
+                throw new ParsingException(ErrorCodes.TypeNotFound, errorMsg);
+            }
         }
 
         internal static string[] GetDataElements(this string segment, Separators separators)

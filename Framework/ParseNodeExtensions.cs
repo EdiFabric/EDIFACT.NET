@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
 {
@@ -201,7 +202,7 @@ namespace EdiFabric.Framework
         internal static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
         {
             if (segment.Prefix != Prefixes.S)
-                throw new Exception("Not a segment " + segment.Name);
+                throw new Exception(string.Format("Only segments are supported: {0}", segment.Name));
 
             var lastParents = lastFoundSegment.Ancestors();
             var parents = segment.Ancestors().ToList();
@@ -273,9 +274,9 @@ namespace EdiFabric.Framework
                 var currentDataElement = dataElements[deIndex];
                 if (string.IsNullOrEmpty(currentDataElement)) continue;
                 if (dataElementsGrammar.Count <= deIndex)
-                    throw new Exception(
+                    throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
                         string.Format(
-                            "More data elements ({0}) were found in segment {1} than in the rule class ({2}).",
+                            "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
                             dataElements.Length, line, dataElementsGrammar.Count));
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
 
@@ -297,9 +298,11 @@ namespace EdiFabric.Framework
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
                         if (componentDataElementsGrammar.Count <= cdeIndex)
-                            throw new Exception(
-                                string.Format("More data elements ({0}) were found in segment {1} than in the rule class {2}.",
-                                    componentDataElements.Length, currentComponentDataElement, componentDataElementsGrammar.Count));
+                            throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
+                                string.Format(
+                                    "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
+                                    componentDataElements.Length, currentComponentDataElement,
+                                    componentDataElementsGrammar.Count));
                         var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
 
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,
@@ -315,10 +318,10 @@ namespace EdiFabric.Framework
             if (parseNode == null) throw new ArgumentNullException("parseNode");
 
             var root = Activator.CreateInstance(parseNode.Type);
-            var instanceLinks = new Dictionary<string, object> { { parseNode.Path, root } };
-            var stack = new Stack<ParseNode>(new[] { parseNode });            
+            var instanceLinks = new Dictionary<string, object> {{parseNode.Path, root}};
+            var stack = new Stack<ParseNode>(new[] {parseNode});
             var listTypes = new Dictionary<string, IList>();
-            
+
             while (stack.Any())
             {
                 var currentNode = stack.Pop();
@@ -328,12 +331,15 @@ namespace EdiFabric.Framework
                 if (!instanceLinks.TryGetValue(path, out currentInstance))
                     throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
 
-                foreach (var nodeChild in currentNode.Children) 
-                {                    
+                foreach (var nodeChild in currentNode.Children)
+                {
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
+                    if (propertyInfo == null)
+                        throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
+                                currentNode.Type.Name));
                     if (nodeChild.Prefix == Prefixes.D)
                     {
-                        propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);                                              
+                        propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);
                     }
                     else
                     {
@@ -344,7 +350,7 @@ namespace EdiFabric.Framework
                             IList list;
                             if (!listTypes.TryGetValue(repPath, out list))
                             {
-                                list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(nodeChild.Type));
+                                list = (IList) Activator.CreateInstance(typeof (List<>).MakeGenericType(nodeChild.Type));
                                 propertyInfo.SetValue(currentInstance, list, null);
 
                                 listTypes.Add(repPath, list);
@@ -360,8 +366,8 @@ namespace EdiFabric.Framework
                         }
 
                         instanceLinks.Add(nodeChild.Path, child);
-                        stack.Push(nodeChild);                        
-                    }                    
+                        stack.Push(nodeChild);
+                    }
                 }
 
                 instanceLinks.Remove(path);
