@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
@@ -26,11 +27,12 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public class EdiReader : IDisposable
     {
+        private readonly Object _lockObject = new Object();
         private readonly StreamReader _streamReader;
         private readonly string _rulesAssemblyName;
         private readonly string _rulesNamespacePrefix;
-        private Separators _separators;
         private char[] _trims = { '\r', '\n', ' ' };
+        private Separators _separators;
         private SegmentContext _lastGroupHeader;
         private int _interchangeMarker;
         private int _groupMarker;
@@ -94,56 +96,68 @@ namespace EdiFabric.Framework.Readers
                     switch (segmentContext.Tag)
                     {
                         case SegmentTags.UNZ:
-                            _separators = null;
+                            lock (_lockObject)
+                            {
+                                _separators = null;
+                            }
                             Item = new EdiControl<S_UNZ>(segmentContext.Value, _separators);
                             result = true;
-                            _interchangeMarker--;
+                            Interlocked.Decrement(ref _interchangeMarker);
                             break;
                         case SegmentTags.IEA:
-                            _separators = null;
+                            lock (_lockObject)
+                            {
+                                _separators = null;
+                            }
                             Item = new EdiControl<S_IEA>(segmentContext.Value, _separators);
                             result = true;
-                            _interchangeMarker--;
+                            Interlocked.Decrement(ref _interchangeMarker);
                             break;
                         case SegmentTags.UNA:
                             break;
                         case SegmentTags.UNB:
                             Item = new EdiControl<S_UNB>(segmentContext.Value, _separators);
                             result = true;
-                            _interchangeMarker++;
+                            Interlocked.Increment(ref _interchangeMarker);
                             break;
                         case SegmentTags.UNG:
                             Item = new EdiControl<S_UNG>(segmentContext.Value, _separators);
                             result = true;
-                            _groupMarker++;
+                            Interlocked.Increment(ref _groupMarker);
                             break;
                         case SegmentTags.UNE:
                             Item = new EdiControl<S_UNE>(segmentContext.Value, _separators);
                             result = true;
-                            _groupMarker--;
+                            Interlocked.Decrement(ref _groupMarker);
                             break;
                         case SegmentTags.ISA:
                             Item = new EdiControl<S_ISA>(segmentContext.Value, _separators);
                             result = true;
-                            _interchangeMarker++;
+                            Interlocked.Increment(ref _interchangeMarker);
                             break;
                         case SegmentTags.GE:
-                            _lastGroupHeader = null;
+                            lock (_lockObject)
+                            {
+                                _lastGroupHeader = null;
+                            }
                             Item = new EdiControl<S_GE>(segmentContext.Value, _separators);
                             result = true;
-                            _groupMarker--;
+                            Interlocked.Decrement(ref _groupMarker);
                             break;
                         case SegmentTags.GS:
-                            _lastGroupHeader = segmentContext;
+                            lock (_lockObject)
+                            {
+                                _lastGroupHeader = segmentContext;
+                            }
                             Item = new EdiControl<S_GS>(segmentContext.Value, _separators);
                             result = true;
-                            _groupMarker++;
+                            Interlocked.Increment(ref _groupMarker);
                             break;
                         case SegmentTags.UNT:
                             currentMessage.Add(segmentContext);
                             Item = ParseEdifact(currentMessage);
                             result = true;
-                            _messageMarker--;
+                            Interlocked.Decrement(ref _messageMarker);
                             currentMessage.Clear();
                             break;
                         case SegmentTags.SE:
@@ -151,13 +165,13 @@ namespace EdiFabric.Framework.Readers
                             currentMessage.Add(_lastGroupHeader);
                             Item = ParseX12(currentMessage);
                             result = true;
-                            _messageMarker--;
+                            Interlocked.Decrement(ref _messageMarker);
                             currentMessage.Clear();
                             break;
                         case SegmentTags.UNH:
                         case SegmentTags.ST:
                             currentMessage.Add(segmentContext);
-                            _messageMarker++;
+                            Interlocked.Increment(ref _messageMarker);
                             break;
                         default:
                             currentMessage.Add(segmentContext);
@@ -253,8 +267,11 @@ namespace EdiFabric.Framework.Readers
             var header = _streamReader.ReadControl(first3);
             if (header.Item2 != null && _separators == null)
             {
-                _separators = header.Item2;
-                _trims = _trims.Except(new[] {_separators.Segment}).ToArray();
+                lock (_lockObject)
+                {
+                    _separators = header.Item2;
+                    _trims = _trims.Except(new[] {_separators.Segment}).ToArray();
+                }
             }
 
             if (_separators == null)
