@@ -36,28 +36,30 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
 
             var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
-            if (dataElements.Length < 2) throw new ParsingException(ErrorCodes.BlankSegment);
-
+            
             Name = dataElements[0];
             Value = ediSegment;
 
             // UNA segments don't have values
             if (ediSegment.StartsWith(SegmentTags.UNA.ToString())) Name = SegmentTags.UNA.ToString();
 
-            // Handle blank segments, e.g. BHT+'
-            var firstComponentDataElements = dataElements[1].Split(new[] {separators.ComponentDataElement},
-                StringSplitOptions.None);
-            FirstValue = firstComponentDataElements[0];
-            if (dataElements.Length > 2)
+            if (dataElements.Length > 1)
             {
-                var secondComponentDataElements =
-                    dataElements[2].Split(new[] {separators.ComponentDataElement},
-                        StringSplitOptions.None);
-                SecondValue = secondComponentDataElements[0];
+                // Handle blank segments, e.g. BHT+'
+                var firstComponentDataElements = dataElements[1].Split(new[] {separators.ComponentDataElement},
+                    StringSplitOptions.None);
+                FirstValue = firstComponentDataElements[0];
+                if (dataElements.Length > 2)
+                {
+                    var secondComponentDataElements =
+                        dataElements[2].Split(new[] {separators.ComponentDataElement},
+                            StringSplitOptions.None);
+                    SecondValue = secondComponentDataElements[0];
+                }
+                if (Name == Hl && !string.IsNullOrEmpty(dataElements[2]))
+                    ParentId = dataElements[2];
             }
-            if (Name == Hl && !string.IsNullOrEmpty(dataElements[2])) 
-                ParentId = dataElements[2];
-            
+
             IsJump = Jump();
             Tag = ediSegment.ToSegmentTag(separators);
             IsControl = Control();

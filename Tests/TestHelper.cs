@@ -60,17 +60,8 @@ namespace EdiFabric.Tests
         {
             using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
             {
-                return ediReader.ReadToNextMessage().ToList();
-            }
-        }
-
-        public static IEnumerable<EdiItem> ParseMultiple(string sample, Encoding encoding = null,
-            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
-        {
-            using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
-            {
                 return ediReader.ReadToEnd().ToList();
-            }
+             }
         }
         
         public static EdifactInterchange GenerateEdifact<T>(string sample)

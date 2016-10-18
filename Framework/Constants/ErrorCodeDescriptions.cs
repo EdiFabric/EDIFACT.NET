@@ -25,8 +25,6 @@ namespace EdiFabric.Framework.Constants
                     return "Missing trailers.";
                 case ErrorCodes.SegmentTerminatorNotFound:
                     return "Segment terminator was not found.";
-                case ErrorCodes.BlankSegment:
-                    return "Segment is blank.";
                 case ErrorCodes.RulesAssemblyNameNotSet:
                     return "Rules assembly name is blank. It must be set in the .config or passed explicitly.";
                 case ErrorCodes.TypeNotFound:

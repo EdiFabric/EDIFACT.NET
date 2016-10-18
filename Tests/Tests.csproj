@@ -286,6 +286,24 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MissingGroupTrailer.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MissingInterchangeTrailer.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_MissingGroupTrailer.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_MissingInterchangeTrailer.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_ValidAndInvalidMessage.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

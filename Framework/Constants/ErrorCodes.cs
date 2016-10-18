@@ -42,11 +42,6 @@ namespace EdiFabric.Framework.Constants
         SegmentTerminatorNotFound,
 
         /// <summary>
-        /// Segment is blank
-        /// </summary>
-        BlankSegment,
-
-        /// <summary>
         /// The name of the rules assembly was not set in config
         /// </summary>
         RulesAssemblyNameNotSet,

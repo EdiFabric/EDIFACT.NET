@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Items;
+using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.X12002040810;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -208,7 +210,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.ParseMultiple(sample).ToList();
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<EdiMessage>().Count() == 2);
@@ -234,7 +236,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.ParseMultiple(sample).ToList();
+            var ediItems = TestHelper.Parse(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<EdiMessage>().Count() == 2);
@@ -324,7 +326,7 @@ namespace EdiFabric.Tests
             var expectedXmlInterchange2 = XElement.Load(TestHelper.Load(expectedInterchange2), LoadOptions.PreserveWhitespace);
 
             // ACT
-            var items = TestHelper.ParseMultiple(sample).ToList();
+            var items = TestHelper.Parse(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(items.Count == 10);
@@ -357,7 +359,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidTrailers.txt";
 
             // ACT
-            var ediItems = TestHelper.ParseMultiple(sample);
+            var ediItems = TestHelper.Parse(sample);
 
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
@@ -383,10 +385,162 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidSegment.txt";
 
             // ACT
-            var ediItems = TestHelper.ParseMultiple(sample);
+            var ediItems = TestHelper.Parse(sample);
 
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestParseWithRulesAssemblyName()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.Parse(sample, null, "EdiFabric.Rules").ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
+            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestParseWithMessageRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.ReadNextMessage())
+                {
+                    // ASSERT
+                    Assert.IsNotNull(ediReader.Item);
+                    Assert.IsTrue(ediReader.Item.Value is M_810);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestParseWithGroupRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
+            var ediItems = new List<EdiItem>();
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                    if (!(ediReader.Item is EdiControl<S_GE>)) continue;
+
+                    // ASSERT
+                    Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<EdiControl<S_GE>>().SingleOrDefault());
+                    ediItems.Clear();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestParseWithInterchangeRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediItems = new List<EdiItem>();
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                    if (!(ediReader.Item is EdiControl<S_IEA>)) continue;
+
+                    // ASSERT
+                    Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<EdiControl<S_IEA>>().SingleOrDefault());
+                    ediItems.Clear();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestParseWithMissingGroupTrailer()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingGroupTrailer.txt";
+            var ediItems = new List<EdiItem>();
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                }
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<EdiControl<S_GE>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestParseWithMissingInterchangeTrailer()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
+            var ediItems = new List<EdiItem>();
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                }
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiControl<S_GE>>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<EdiControl<S_IEA>>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<EdiMessage>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestParseWithValidAndInvalidMessageRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                var ediItems = ediReader.ReadToEnd().ToList();
+
+                // ASSERT
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_GE>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_IEA>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiError>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiMessage>().SingleOrDefault());
+
+            }
         }
     }
 }
