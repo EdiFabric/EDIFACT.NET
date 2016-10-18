@@ -103,7 +103,7 @@ namespace EdiFabric.Framework
                 result = result + str;
             }
 
-            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value)))
+            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value), StringComparison.OrdinalIgnoreCase))
                 result = result.TrimEnd(separators.Escape.Value);
 
             return result;
@@ -135,7 +135,7 @@ namespace EdiFabric.Framework
         private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
         {
             var result = input.TrimEnd(separator);
-            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString()))
+            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString(), StringComparison.OrdinalIgnoreCase))
                 result = result + separator;
 
             return result;
@@ -428,7 +428,7 @@ namespace EdiFabric.Framework
                     instanceRoot.Descendants()
                         .SingleOrDefault(
                             d =>
-                                d.Name.StartsWith("S_HL") &&
+                                d.Name.StartsWith("S_HL", StringComparison.OrdinalIgnoreCase) &&
                                 d.Children.First().Value == parentId);
                 if(hlParent == null)
                     throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
@@ -441,7 +441,7 @@ namespace EdiFabric.Framework
             }
             
             // Root HL, start from it
-            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL"));
+            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL", StringComparison.OrdinalIgnoreCase));
         }
 
         internal static ParseNode Root(this ParseNode parseNode)

@@ -84,7 +84,7 @@ namespace EdiFabric.Framework
             if (propertyInfo == null) throw new ArgumentNullException("propertyInfo");
 
             var systemType = propertyInfo.GetSystemType();
-            var name = propertyInfo.Name.StartsWith(Prefixes.D.ToString())
+            var name = propertyInfo.Name.StartsWith(Prefixes.D.ToString(), StringComparison.OrdinalIgnoreCase)
                 ? propertyInfo.Name
                 : systemType.Name;
             var val = value as string;
@@ -92,7 +92,7 @@ namespace EdiFabric.Framework
             if (value != null && value.GetType().IsEnum)
             {
                 val = value.ToString();
-                if (val.StartsWith("Item"))
+                if (val.StartsWith("Item", StringComparison.OrdinalIgnoreCase))
                     val = val.Substring(4);
             }
             
@@ -102,7 +102,7 @@ namespace EdiFabric.Framework
         public static ParseNode BuldTree(Type type, bool lazyLoadSegment) 
         {
             if (type == null) throw new ArgumentNullException("type");
-            if (type.Name.StartsWith(Prefixes.D.ToString()))
+            if (type.Name.StartsWith(Prefixes.D.ToString(), StringComparison.OrdinalIgnoreCase))
                 throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
@@ -138,7 +138,7 @@ namespace EdiFabric.Framework
             if (instance == null) throw new ArgumentNullException("instance");
 
             var type = instance.GetType();
-            if (type.Name.StartsWith(Prefixes.D.ToString()))
+            if (type.Name.StartsWith(Prefixes.D.ToString(), StringComparison.OrdinalIgnoreCase))
                 throw new Exception(string.Format("DataElement is not supported: {0}", type.Name));
 
             var root = new ParseNode(type);
@@ -164,8 +164,8 @@ namespace EdiFabric.Framework
                         var currentProperty = propertyInfo.PropertyType.GetProperty("Item");
                         var currentList = propertyInfo.GetValue(currentInstance) as IList;
 
-                        if (currentList == null && !currentProperty.Name.StartsWith(Prefixes.D.ToString()) &&
-                            !currentProperty.Name.StartsWith(Prefixes.C.ToString())) continue;
+                        if (currentList == null && !currentProperty.Name.StartsWith(Prefixes.D.ToString(), StringComparison.OrdinalIgnoreCase) &&
+                            !currentProperty.Name.StartsWith(Prefixes.C.ToString(), StringComparison.OrdinalIgnoreCase)) continue;
 
                         if (currentList == null || currentList.Count == 0)
                         {
@@ -186,8 +186,8 @@ namespace EdiFabric.Framework
                     else
                     {
                         var currentValue = propertyInfo.GetValue(currentInstance);
-                        if (currentValue == null && !propertyInfo.Name.StartsWith(Prefixes.D.ToString()) &&
-                            !propertyInfo.Name.StartsWith(Prefixes.C.ToString())) continue;
+                        if (currentValue == null && !propertyInfo.Name.StartsWith(Prefixes.D.ToString(), StringComparison.OrdinalIgnoreCase) &&
+                            !propertyInfo.Name.StartsWith(Prefixes.C.ToString(), StringComparison.OrdinalIgnoreCase)) continue;
 
                         var childParseTree = currentNode.AddChild(propertyInfo, currentValue);
                         if (currentValue == null) continue;
