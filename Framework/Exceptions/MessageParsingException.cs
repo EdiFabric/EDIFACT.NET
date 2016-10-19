@@ -16,12 +16,15 @@ namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
     /// Parsing exceptions for messages.
+    /// Only thrown when parsing messages.
     /// </summary>
     public class MessageParsingException : ParsingException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParsingException"/> class.
+        /// The error message is what corresponds to the error code.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
         public MessageParsingException(ErrorCodes errorCode) : base(errorCode)
         {
         }
@@ -29,6 +32,8 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParsingException"/> class.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The error message.</param>
         public MessageParsingException(ErrorCodes errorCode, string message)
             : base(errorCode, message)
         {
@@ -36,7 +41,10 @@ namespace EdiFabric.Framework.Exceptions
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParsingException"/> class.
+        /// The error message is what corresponds to the error code.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="ex">The inner exception.</param>
         public MessageParsingException(ErrorCodes errorCode, Exception ex) : base(errorCode, ex)
         {
         }

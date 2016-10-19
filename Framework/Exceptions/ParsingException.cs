@@ -27,6 +27,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
         public ParsingException(ErrorCodes errorCode) : base(errorCode.ToDescription())
         {
             ErrorCode = errorCode;
@@ -35,6 +36,8 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The error message.</param>
         public ParsingException(ErrorCodes errorCode, string message)
             : base(message)
         {
@@ -44,6 +47,8 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="ex">The inner exception.</param>
         public ParsingException(ErrorCodes errorCode, Exception ex)
             : base(errorCode.ToDescription(), ex)
         {
@@ -53,6 +58,9 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The error message.</param>
+        /// <param name="ex">The inner exception.</param>
         public ParsingException(ErrorCodes errorCode, string message, Exception ex)
             : base(message, ex)
         {

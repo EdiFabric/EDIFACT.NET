@@ -77,7 +77,7 @@ namespace EdiFabric.Framework.Constants
         UnhNotFound,
 
         /// <summary>
-        /// Missing segment at position
+        /// Missing segment
         /// </summary>
         SegmentNotFound,
 

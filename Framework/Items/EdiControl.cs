@@ -17,6 +17,7 @@ namespace EdiFabric.Framework.Items
     /// <summary>
     /// EDI control segment.
     /// </summary>
+    /// <typeparam name="T">The type of the control.</typeparam>
     public class EdiControl<T> : EdiItem where T : IEdiControl
     {
         /// <summary>
