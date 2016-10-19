@@ -84,9 +84,6 @@
     <Compile Include="Constants\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Constants\ErrorContexts.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Controls\IEdiControl.cs">
       <SubType>Code</SubType>
     </Compile>

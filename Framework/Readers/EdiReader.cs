@@ -201,7 +201,7 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Reads the stream to the end.
         /// </summary>
-        /// <returns>All the messages that were found in the stream.</returns>
+        /// <returns>All items that were found in the stream.</returns>
         public IEnumerable<EdiItem> ReadToEnd()
         {
             while (Read())
@@ -212,10 +212,9 @@ namespace EdiFabric.Framework.Readers
 
         /// <summary>
         /// Reads the stream until the end of a message.
-        /// Breaks on message exception or invalid interchange content.
         /// </summary>
         /// <returns>
-        /// A collection of EDI items.
+        /// If a message was read or a message error was thrown.
         /// </returns>
         public bool ReadNextMessage()
         {

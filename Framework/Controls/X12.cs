@@ -128,7 +128,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents an EDI X12 group.
+    /// This class represents X12 group.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
     public class X12Group<T> : EdiContainer<S_GS, T, S_GE>, IEdiGroup
@@ -149,7 +149,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents an EDI X12 interchange.
+    /// This class represents X12 interchange.
     /// </summary>
     public class X12Interchange : EdiContainer<S_ISA, IEdiGroup, S_IEA> 
     {

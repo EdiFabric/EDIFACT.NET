@@ -20,7 +20,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents an EDI interchange or group
     /// </summary>
     /// <typeparam name="T">The header type.</typeparam>
-    /// <typeparam name="TU">The items type - the group type if the container is an interchange, or the messages type if the container is a group.</typeparam>
+    /// <typeparam name="TU">The items type - can be group or message.</typeparam>
     /// <typeparam name="TV">The trailer type.</typeparam>
     public class EdiContainer<T, TU, TV> 
     {

@@ -242,7 +242,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents an EDI EDIFACT group.
+    /// This class represents EDIFACT group.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
     public class EdifactGroup<T> : EdiContainer<S_UNG, T, S_UNE>, IEdiGroup
@@ -262,7 +262,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents an EDI EDIFACT interchange.
+    /// This class represents EDIFACT interchange.
     /// </summary>
     public class EdifactInterchange : EdiContainer<S_UNB, IEdiGroup, S_UNZ>
     {

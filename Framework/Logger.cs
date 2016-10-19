@@ -44,7 +44,7 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Thread unsafe logging.
+        /// Logs to file.
         /// </summary>
         /// <param name="text">
         /// The text to be logged.
