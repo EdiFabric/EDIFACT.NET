@@ -2,7 +2,7 @@
   <S_ST>
     <D_ST01_TransactionSetIdentifierCode>837</D_ST01_TransactionSetIdentifierCode>
     <D_ST02_TransactionSetControlNumber>D_ST02_T1</D_ST02_TransactionSetControlNumber>
-    <D_ST03_ImplementationGuideVersionName>D_ST03_ImplementationGuideVersionName1</D_ST03_ImplementationGuideVersionName>
+    <D_ST03_ImplementationGuideVersionName>005010X222A1</D_ST03_ImplementationGuideVersionName>
   </S_ST>
   <S_BHT_BeginningofHierarchicalTransaction>
     <D_BHT01_HierarchicalStructureCode>0019</D_BHT01_HierarchicalStructureCode>

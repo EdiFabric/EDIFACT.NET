@@ -1,6 +1,6 @@
 ISA*00*          *00*          *ZZ*010101010      *33*7306849549     *110406*0857*^*00501*000000312*1*P*>~
 GS*HC*010101010*7306849549*20110406*0857*312*X*005010X222A1~
-ST*837*D_ST02_T1*D_ST03_ImplementationGuideVersionName1~
+ST*837*D_ST02_T1*005010X222A1~
 BHT*0019*00*D_BHT03_OriginatorApplicationTransactionIdentifie1*D_BHT041*D_BHT051*D_BHT06_ClaimorEncounterIdentifier1~
 NM1*41*1*D_NM103_SubmitterLastorOrganizationName1*D_NM104_SubmitterFirstName1*D_NM105_SubmitterMiddleN1*D_NM106_N1*D_NM107_N1*D_NM108_IdentificationCodeQualifier1*D_NM109_SubmitterIdentifier1*D_NM110_EntityRelationshipCode1*D_NM111_EntityIdentifierCode1*D_NM112_NameLastorOrganizationName1~
 PER*IC*D_PER02_SubmitterContactName1*D_PER03_CommunicationNumberQualifier1*D_PER04_CommunicationNumber1*D_PER05_CommunicationNumberQualifier1*D_PER06_CommunicationNumber1*D_PER07_CommunicationNumberQualifier1*D_PER08_CommunicationNumber1*D_PER09_ContactInqu1~

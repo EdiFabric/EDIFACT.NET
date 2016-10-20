@@ -542,5 +542,26 @@ namespace EdiFabric.Tests
 
             }
         }
+
+        [TestMethod]
+        public void TestParseWithVersionFromSt()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_VersionFromSt.txt";
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                var ediItems = ediReader.ReadToEnd().ToList();
+
+                // ASSERT
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_GE>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiControl<S_IEA>>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<EdiMessage>().SingleOrDefault());
+
+            }
+        }
     }
 }

@@ -98,6 +98,11 @@ namespace EdiFabric.Framework
             var ediCompositeDataElementsSt = st.Value.GetDataElements(separators);
             var tag = ediCompositeDataElementsSt[0];
 
+            if (ediCompositeDataElementsSt.Count() == 3)
+            {
+                version = ediCompositeDataElementsSt[2];
+            }
+
             return ToType(Formats.X12, version, tag, rulesAssemblyName, rulesNamespacePrefix);
         }
 

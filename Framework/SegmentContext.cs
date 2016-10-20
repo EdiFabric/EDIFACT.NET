@@ -35,7 +35,10 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
 
             var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
-            
+            // Support for blank/situational segments
+            if (dataElements[0] == ediSegment)
+                dataElements[0] = dataElements[0].TrimEnd(separators.Segment);
+
             Name = dataElements[0];
             Value = ediSegment;
 
