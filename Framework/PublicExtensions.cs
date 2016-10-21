@@ -9,9 +9,13 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -24,43 +28,48 @@ namespace EdiFabric.Framework
     /// </summary>
     public static class PublicExtensions
     {
+        private static readonly string XsdAssemblyName;
         private static readonly ConcurrentDictionary<string, XmlSerializer> SerializerCache =
             new ConcurrentDictionary<string, XmlSerializer>();
 
-        /// <summary>
-        /// Validates an EDIFACT instance.
-        /// It serializes the instance to XML and validates the XML against the specified XSD.
-        /// </summary>
-        /// <param name="message">The instance to validate.</param>
-        /// <param name="xsd">The XSD to validate against.</param>
-        /// <typeparam name="T">The type of the instance.</typeparam>
-        /// <returns>List of errors. An empty list if instance is valid.</returns>
-        public static IEnumerable<string> ValidateEdifact<T>(this T message, Stream xsd)
+        static PublicExtensions()
         {
-            return message.Validate(xsd, "www.edifabric.com/edifact");
+            try
+            {
+                XsdAssemblyName = ConfigurationManager.AppSettings["EdiFabric.XsdAssemblyName"];
+            }
+            catch(Exception)
+            {
+                // ignored
+            }
         }
 
         /// <summary>
-        /// Validates an X12 instance.
-        /// It serializes the instance to XML and validates the XML against the specified XSD.
+        /// Validates an instance against XSD.
         /// </summary>
-        /// <param name="message">The instance to validate.</param>
-        /// <param name="xsd">The XSD to validate against.</param>
-        /// <typeparam name="T">The type of the instance.</typeparam>
-        /// <returns>List of errors. An empty list if instance is valid.</returns>
-        public static IEnumerable<string> ValidateX12<T>(this T message, Stream xsd)
+        /// <param name="message">The EDI instance.</param>
+        /// <param name="xsd">The XSD to validate against. This is optional. 
+        /// If not specified an XSD is loaded from the specified XSD assembly in the config.
+        /// </param>
+        /// <returns>A collection of validation errors.</returns>
+        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
+        public static IEnumerable<string> Validate(this object message, Stream xsd = null)
         {
-            return message.Validate(xsd, "www.edifabric.com/x12");
-        }
+            if(message == null)
+                throw new ArgumentNullException("message");
 
-        private static IEnumerable<string> Validate<T>(this T message, Stream xsd, string nameSpace)
-        {
             var result = new List<string>();
             var schemas = new XmlSchemaSet();
-            var xDoc = message.Serialize(nameSpace);
+            var xDoc = message.Serialize();
+            if (xDoc.Root == null)
+                throw new Exception("Failed to serialize instance.");
+
+            if (xsd == null)
+                xsd = message.LoadXsd();
+
             using (var reader = XmlReader.Create(xsd))
             {
-                schemas.Add(nameSpace, reader);
+                schemas.Add(xDoc.Root.Name.Namespace.NamespaceName, reader);
                 xDoc.Validate(schemas, (o, e) => result.Add(e.Message));
             }
 
@@ -68,30 +77,26 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Serializes an instance to XML
+        /// Serializes an instance into XML.
         /// </summary>
         /// <param name="instance">The instance to serialize.</param>
-        /// <typeparam name="T">The type of the instance.</typeparam>
-        /// <returns>The serialized instance as XML.</returns>
-        public static XDocument SerializeEdifact<T>(this T instance)
+        /// <returns>The instance serialized to XML.</returns>
+        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
+        public static XDocument Serialize(this object instance)
         {
-            return instance.Serialize("www.edifabric.com/edifact");
-        }
+            if (instance == null)
+                throw new ArgumentNullException("instance");
 
-        /// <summary>
-        /// Serializes an instance to XML
-        /// </summary>
-        /// <param name="instance">The instance to serialize.</param>
-        /// <typeparam name="T">The type of the instance.</typeparam>
-        /// <returns>The serialized instance as XML.</returns>
-        public static XDocument SerializeX12<T>(this T instance)
-        {
-            return instance.Serialize("www.edifabric.com/x12");
-        }
-
-        private static XDocument Serialize<T>(this T instance, string nameSpace)
-        {
-            var type = typeof (T);
+            var type = instance.GetType();
+            
+            var nameSpace = "www.edifabric.com/";
+            if (type.FullName.Contains("X12"))
+                nameSpace += "x12";
+            else if (type.FullName.Contains("Edifact"))
+                nameSpace += "edifact";
+            else
+                nameSpace = type.Namespace;
+            
             var serializer = SerializerCache.GetOrAdd(type.FullName, new XmlSerializer(type, nameSpace));
             using (var ms = new MemoryStream())
             {
@@ -99,6 +104,49 @@ namespace EdiFabric.Framework
                 ms.Position = 0;
                 return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
             }
+        }
+
+        private static Stream LoadXsd(this object message)
+        {
+            if (XsdAssemblyName == null)
+                throw new Exception("XsdAssemblyName not specified in config.");
+
+            var type = message.GetType();
+            var parts = type.FullName.Split('.');
+
+            if(parts.Length < 2)
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", type));
+
+            string format;
+            var version = parts[parts.Length - 2];
+            var tag = parts.Last().Replace("M_", "");
+            if (version.StartsWith("X12", StringComparison.Ordinal))
+            {
+                version = version.Replace("X12", "");
+                format = "X12";
+            }
+            else if (version.StartsWith("Edifact", StringComparison.Ordinal))
+            {
+                version = version.Replace("Edifact", "");
+                format = "EDIFACT";
+            }
+            else
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", type));
+
+            version = version.Replace(tag, "");
+
+            var xsdName = "EF_" + format + "_" + version + "_" + tag + ".xsd";
+
+            var result = Assembly.Load(new AssemblyName(XsdAssemblyName))
+                    .GetManifestResourceStream(string.Format("{0}.{1}", XsdAssemblyName, xsdName));
+
+            if (result == null)
+                throw new Exception(
+                    string.Format(
+                        "Unable to load xsd {0} from project {1}. Ensure that the xsd exist in that project and its Build Action is set to Embedded Resource",
+                        xsdName, XsdAssemblyName));
+
+            return result;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Items;
 using EdiFabric.Rules.X12004010X098A1837;
@@ -11,8 +12,6 @@ namespace EdiFabric.Tests
     [TestClass]
     public class TestHipaa
     {
-        public const string TargetNamespace = "www.edifabric.com/x12";
-
         [TestMethod]
         public void TestParse4010()
         {
@@ -28,8 +27,8 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
-            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            var parsedXml = ediItems.OfType<EdiMessage>().Single().Value.Serialize();
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
         [TestMethod]
@@ -61,8 +60,8 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
-            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            var parsedXml = ediItems.OfType<EdiMessage>().Single().Value.Serialize();
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
         [TestMethod]
@@ -94,8 +93,8 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
-            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            var parsedXml = ediItems.OfType<EdiMessage>().Single().Value.Serialize();
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
         [TestMethod]
@@ -127,8 +126,8 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_ISA>>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<EdiControl<S_GS>>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<EdiMessage>().Single().Value, TargetNamespace);
-            Assert.AreEqual(parsedXml.ToString(), expectedXml.ToString());
+            var parsedXml = ediItems.OfType<EdiMessage>().Single().Value.Serialize();
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
         [TestMethod]
