@@ -133,8 +133,8 @@ namespace EdiFabric.Framework.Readers
                             break;
                         case SegmentTags.IEA:
                             _interchangeMarker--;
-                            _separators = null;
                             Item = new EdiControl<S_IEA>(segmentContext.Value, _separators);
+                            _separators = null;
                             result = true;
                             break;
                         // EDIFACT
@@ -170,8 +170,8 @@ namespace EdiFabric.Framework.Readers
                             break;
                         case SegmentTags.UNZ:
                             _interchangeMarker--;
-                            _separators = null;
                             Item = new EdiControl<S_UNZ>(segmentContext.Value, _separators);
+                            _separators = null;
                             result = true;
                             break;
                         default:
