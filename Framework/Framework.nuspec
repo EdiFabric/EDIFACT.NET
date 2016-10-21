@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>6.7.9</version>
+    <version>6.8.0</version>
     <title>The Ultimate EDI Parser for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://edifabric.com/wp-content/uploads/2011/07/logoBLACK.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.NET framework for parsing and generation of EDI messages.</description>
-    <releaseNotes>Full overhaul to remove dependence on XML.</releaseNotes>
+    <releaseNotes>Auto set for message trailer.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>.NET EDI Parser EDIFACT X12 HIPAA</tags>
   </metadata>
