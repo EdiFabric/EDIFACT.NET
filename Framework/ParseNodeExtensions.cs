@@ -454,5 +454,50 @@ namespace EdiFabric.Framework
             return parseNode.Parent != null && parseNode.Parent.Name == "S_ISA" &&
                    parseNode.Name == "D_726_11";
         }
+
+        internal static string MessageControlNumber(this IEnumerable<ParseNode> segments)
+        {
+            var msgHeader =
+                segments.SingleOrDefault(
+                    s =>
+                        s.Name.StartsWith("S_UNH", StringComparison.Ordinal) ||
+                        s.Name.StartsWith("S_ST", StringComparison.Ordinal));
+
+            ParseNode controlNumber = null;
+            if (msgHeader != null && msgHeader.Name == "S_UNH")
+            {
+                controlNumber = msgHeader.Children.ElementAt(0);
+            }
+
+            if (msgHeader != null && msgHeader.Name == "S_ST")
+            {
+                controlNumber = msgHeader.Children.ElementAt(1);
+            }
+
+            if (msgHeader == null || controlNumber == null)
+                throw new Exception("Invalid control structure. UNH or ST was not found.");
+
+            return controlNumber.Value;
+        }
+
+        internal static string ApplyMessageTrailer(this string segment, string controlNumber, string segmentsCount, Separators separators)
+        {
+            string tag = null;
+            if (segment.StartsWith("UNT" + separators.DataElement, StringComparison.Ordinal))
+            {
+                tag = "UNT";
+            }
+
+            if (segment.StartsWith("SE" + separators.DataElement, StringComparison.Ordinal))
+            {
+                tag = "SE";
+            }
+
+            if (!string.IsNullOrEmpty(tag))
+                return tag + separators.DataElement + segmentsCount + separators.DataElement + controlNumber +
+                       separators.Segment;
+
+            return segment;
+        }
     }
 }

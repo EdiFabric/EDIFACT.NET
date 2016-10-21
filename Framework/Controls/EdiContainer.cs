@@ -99,7 +99,7 @@ namespace EdiFabric.Framework.Controls
                 result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
-                result.AddRange(ToEdi(item, currentSeparators));
+                result.AddRange(ToEdi(item, currentSeparators, true));
             }
             if (Trailer != null)
                 result.AddRange(ToEdi(Trailer, currentSeparators));
@@ -112,12 +112,23 @@ namespace EdiFabric.Framework.Controls
         /// </summary>
         /// <param name="item">The message.</param>
         /// <param name="separators">The EDI separators.</param>
+        /// <param name="isMessage">If it is a message item.</param>
         /// <returns>The collection of EDI segments.</returns>
-        protected static IEnumerable<string> ToEdi(object item, Separators separators)
+        protected static IEnumerable<string> ToEdi(object item, Separators separators, bool isMessage = false)
         {
             var parseTree = ParseNode.BuldTree(item);
-            var segments = parseTree.Descendants().Where(d => d.Prefix == Prefixes.S).Reverse();
-            return segments.Select(segment => segment.GenerateSegment(separators));
+            var segments = parseTree.Descendants().Where(d => d.Prefix == Prefixes.S).Reverse().ToList();
+
+            if (!isMessage) return segments.Select(segment => segment.GenerateSegment(separators));
+            
+            var segmentsNumber = segments.Count().ToString();
+            var controlNumber = segments.MessageControlNumber();
+
+            return
+                segments.Select(
+                    segment =>
+                        segment.GenerateSegment(separators)
+                            .ApplyMessageTrailer(controlNumber, segmentsNumber, separators));
         }
     }
 }

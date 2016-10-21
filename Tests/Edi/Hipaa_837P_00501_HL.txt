@@ -3005,6 +3005,6 @@ N4*D_N401_AmbulancePick_upCityNa2*D2*D_N403_Ambulan2*D_2*D_N405_LocationQualifie
 NM1*45*2*D_NM103_AmbulanceDrop_offLocation2*D_NM104_NameFirst2*D_NM105_NameMiddle2*D_NM106_N2*D_NM107_N2*D_NM108_IdentificationCodeQualifier2*D_NM109_IdentificationCode2*D_NM110_EntityRelationshipCode2*D_NM111_EntityIdentifierCode2*D_NM112_NameLastorOrganizationName2~
 N3*D_N301_AmbulanceDrop_offAddressLine2*D_N302_AmbulanceDrop_offAddressLine2~
 N4*D_N401_AmbulanceDrop_offCityN2*D2*D_N403_Ambulan2*D_2*D_N405_LocationQualifier2*D_N406_LocationIdentifier2*D_2~
-SE*3010*0001~
+SE*3006*D_ST02_T1~
 GE*1*312~
 IEA*1*000000312~

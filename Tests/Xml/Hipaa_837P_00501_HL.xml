@@ -41197,7 +41197,7 @@
     </G_TS837_2000B>
   </G_TS837_2000A>
   <S_SE>
-    <D_SE01_TransactionSegmentCount>3010</D_SE01_TransactionSegmentCount>
-    <D_SE02_TransactionSetControlNumber>0001</D_SE02_TransactionSetControlNumber>
+    <D_SE01_TransactionSegmentCount>3006</D_SE01_TransactionSegmentCount>
+    <D_SE02_TransactionSetControlNumber>D_ST02_T1</D_SE02_TransactionSetControlNumber>
   </S_SE>
 </M_837>
