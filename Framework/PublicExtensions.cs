@@ -88,15 +88,13 @@ namespace EdiFabric.Framework
                 throw new ArgumentNullException("instance");
 
             var type = instance.GetType();
-            
-            var nameSpace = "www.edifabric.com/";
+
+            var nameSpace = type.Namespace;
             if (type.FullName.Contains("X12"))
-                nameSpace += "x12";
-            else if (type.FullName.Contains("Edifact"))
-                nameSpace += "edifact";
-            else
-                nameSpace = type.Namespace;
-            
+                nameSpace = "www.edifabric.com/x12";
+            if (type.FullName.Contains("Edifact"))
+                nameSpace = "www.edifabric.com/edifact";
+           
             var serializer = SerializerCache.GetOrAdd(type.FullName, new XmlSerializer(type, nameSpace));
             using (var ms = new MemoryStream())
             {

@@ -103,7 +103,7 @@ namespace EdiFabric.Framework
                 result = result + str;
             }
 
-            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value), StringComparison.OrdinalIgnoreCase))
+            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value), StringComparison.Ordinal))
                 result = result.TrimEnd(separators.Escape.Value);
 
             return result;
@@ -135,7 +135,7 @@ namespace EdiFabric.Framework
         private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
         {
             var result = input.TrimEnd(separator);
-            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString(), StringComparison.Ordinal))
                 result = result + separator;
 
             return result;
@@ -336,38 +336,35 @@ namespace EdiFabric.Framework
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
                     if (propertyInfo == null)
                         throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
-                                currentNode.Type.Name));
-                    if (nodeChild.Prefix == Prefixes.D)
+                            currentNode.Type.Name));
+
+                    var child = nodeChild.Prefix == Prefixes.D
+                        ? propertyInfo.GetPropertyValue(nodeChild.Value)
+                        : Activator.CreateInstance(nodeChild.Type);
+
+                    if (propertyInfo.IsList())
                     {
-                        propertyInfo.SetValue(currentInstance, propertyInfo.GetPropertyValue(nodeChild.Value), null);
+                        var repPath = nodeChild.Parent.Path + nodeChild.Name;
+                        IList list;
+                        if (!listTypes.TryGetValue(repPath, out list))
+                        {
+                            list = (IList) Activator.CreateInstance(typeof (List<>).MakeGenericType(nodeChild.Type));
+                            propertyInfo.SetValue(currentInstance, list, null);
+
+                            listTypes.Add(repPath, list);
+                        }
+
+                        list.Add(child);
                     }
                     else
                     {
-                        object child;
-                        if (propertyInfo.IsList())
-                        {
-                            var repPath = nodeChild.Parent.Path + nodeChild.Name;
-                            IList list;
-                            if (!listTypes.TryGetValue(repPath, out list))
-                            {
-                                list = (IList) Activator.CreateInstance(typeof (List<>).MakeGenericType(nodeChild.Type));
-                                propertyInfo.SetValue(currentInstance, list, null);
-
-                                listTypes.Add(repPath, list);
-                            }
-
-                            child = Activator.CreateInstance(nodeChild.Type);
-                            list.Add(child);
-                        }
-                        else
-                        {
-                            child = Activator.CreateInstance(nodeChild.Type);
-                            propertyInfo.SetValue(currentInstance, child, null);
-                        }
-
-                        instanceLinks.Add(nodeChild.Path, child);
-                        stack.Push(nodeChild);
+                        propertyInfo.SetValue(currentInstance, child, null);
                     }
+
+                    if (nodeChild.Prefix == Prefixes.D) continue;
+
+                    instanceLinks.Add(nodeChild.Path, child);
+                    stack.Push(nodeChild);
                 }
 
                 instanceLinks.Remove(path);
@@ -428,7 +425,7 @@ namespace EdiFabric.Framework
                     instanceRoot.Descendants()
                         .SingleOrDefault(
                             d =>
-                                d.Name.StartsWith("S_HL", StringComparison.OrdinalIgnoreCase) &&
+                                d.Name.StartsWith("S_HL", StringComparison.Ordinal) &&
                                 d.Children.First().Value == parentId);
                 if(hlParent == null)
                     throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
@@ -441,7 +438,7 @@ namespace EdiFabric.Framework
             }
             
             // Root HL, start from it
-            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL", StringComparison.OrdinalIgnoreCase));
+            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL", StringComparison.Ordinal));
         }
 
         internal static ParseNode Root(this ParseNode parseNode)

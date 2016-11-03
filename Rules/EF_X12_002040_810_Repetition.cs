@@ -151,7 +151,7 @@ namespace EdiFabric.Rules.Rep.X12002040810
     public class S_REF
     {
         [XmlElement(Order = 0)]
-        public string D_128_1 { get; set; }
+        public List<string> D_128_1 { get; set; }
         [XmlElement("C_127_2", Order = 1)]
         public List<C_127_2> C_127_2 { get; set; }
         [XmlElement(Order = 2)]

@@ -43,7 +43,7 @@ namespace EdiFabric.Framework
             Value = ediSegment;
 
             // UNA segments don't have values
-            if (ediSegment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.OrdinalIgnoreCase)) Name = SegmentTags.UNA.ToString();
+            if (ediSegment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.Ordinal)) Name = SegmentTags.UNA.ToString();
 
             if (dataElements.Length > 1)
             {

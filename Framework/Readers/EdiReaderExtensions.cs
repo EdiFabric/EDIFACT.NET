@@ -30,10 +30,10 @@ namespace EdiFabric.Framework.Readers
                     var symbol = (char)reader.Read();
                     line = line + symbol;
 
-                    if (line.EndsWith(separators.Segment.ToString(), StringComparison.OrdinalIgnoreCase))
+                    if (line.EndsWith(separators.Segment.ToString(), StringComparison.Ordinal))
                     {
                         if (separators.Escape.HasValue &&
-                            line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment), StringComparison.OrdinalIgnoreCase))
+                            line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment), StringComparison.Ordinal))
                         {
                             continue;
                         }
@@ -165,7 +165,7 @@ namespace EdiFabric.Framework.Readers
             if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
                 return SegmentTags.Regular;
 
-            if (segment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.OrdinalIgnoreCase)) return SegmentTags.UNA;
+            if (segment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.Ordinal)) return SegmentTags.UNA;
 
             var segmentTag = separators != null
                 ? segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault()

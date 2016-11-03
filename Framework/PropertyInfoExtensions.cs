@@ -76,7 +76,7 @@ namespace EdiFabric.Framework
             if (propertyInfo.IsList())
                 return new List<string>();
 
-            if (!propertyInfo.Name.StartsWith(Prefixes.C.ToString(), StringComparison.OrdinalIgnoreCase)) 
+            if (!propertyInfo.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal)) 
                 return propertyInfo.GetProperyEnumValues().ToList();
             
             var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();

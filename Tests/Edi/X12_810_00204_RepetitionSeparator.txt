@@ -7,7 +7,7 @@ NTE*GEN*is either an exempt or a reverse charge transaction.~
 NTE*GEN*This supply is exempt from VAT according to the section 64 of the Czec~
 NTE*GEN*h VAT Act.~
 CUR*SE*USD~
-REF*61*noval*Adobe VAT Number~
+REF*61!62*noval*Adobe VAT Number~
 REF*CO*121212>a!133>b~
 REF*VN*0070861270>c!123>d*Something~
 N1*II*ADOBE SYSTEMS INCORPORATED*91*0000012137~
