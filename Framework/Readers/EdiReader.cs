@@ -34,7 +34,7 @@ namespace EdiFabric.Framework.Readers
         private int _interchangeMarker;
         private int _groupMarker;
         private int _messageMarker;
-
+        
         /// <summary>
         /// The currently read item.
         /// </summary>
@@ -52,16 +52,15 @@ namespace EdiFabric.Framework.Readers
         /// Initializes a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>       
-        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
-        private EdiReader(Stream ediStream, Encoding encoding, string rulesAssemblyName, string rulesNamespacePrefix)
+        /// <param name="settings">The additional settings.</param>
+        private EdiReader(Stream ediStream, ReaderSettings settings)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
+            if (settings == null) throw new ArgumentNullException("settings");
 
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
-            _rulesAssemblyName = rulesAssemblyName;
-            _rulesNamespacePrefix = rulesNamespacePrefix;
+            _streamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
+            _rulesAssemblyName = settings.RulesAssemblyName;
+            _rulesNamespacePrefix = settings.RulesNamespacePrefix;
             _interchangeMarker = 0;
             _groupMarker = 0;
             _messageMarker = 0;
@@ -71,13 +70,11 @@ namespace EdiFabric.Framework.Readers
         /// Factory method to initialize a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        /// <param name="rulesAssemblyName">The full assembly name of the assembly containing the EDI classes. The default is Edifabric.Rules.</param>        
-        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is Edifabric.Rules.</param>
+        /// <param name="settings">The additional settings.</param>
         /// <returns>A new instance of the <see cref="EdiReader"/> class.</returns>
-        public static EdiReader Create(Stream ediStream, Encoding encoding = null, string rulesAssemblyName = null, string rulesNamespacePrefix = null)
+        public static EdiReader Create(Stream ediStream, ReaderSettings settings = null)
         {
-            return new EdiReader(ediStream, encoding, rulesAssemblyName, rulesNamespacePrefix);
+            return new EdiReader(ediStream, settings ?? new ReaderSettings());
         }
 
         /// <summary>
@@ -85,7 +82,7 @@ namespace EdiFabric.Framework.Readers
         /// Items can be: control segment, message or error.
         /// </summary>
         /// <returns>If a new message was read.</returns>
-        public bool Read()
+        public bool Read(Action<object> collect = null)
         {
             var currentMessage = new List<SegmentContext>();
             var result = false;
@@ -193,6 +190,8 @@ namespace EdiFabric.Framework.Readers
                 result = true;
                 currentMessage.Clear();
             }
+
+            if (collect != null && result) collect(Item);
 
             return result;
         }

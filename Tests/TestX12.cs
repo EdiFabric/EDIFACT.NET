@@ -30,6 +30,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -91,6 +92,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<Rules.Rep.X12002040810.M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -127,6 +129,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -146,6 +149,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -218,6 +222,7 @@ namespace EdiFabric.Tests
                 var message = item as M_810;
                 if (message == null) continue;
                 var parsedXml = message.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
         }
@@ -244,6 +249,7 @@ namespace EdiFabric.Tests
                 var message = item as M_810;
                 if (message == null) continue;
                 var parsedXml = message.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
         }
@@ -280,8 +286,10 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXmlInterchange = ediItems.OfType<S_ISA>().First().Serialize();
+            Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
             var parsedXmlGroup = ediItems.OfType<S_GS>().First().Serialize();
+            Assert.IsNotNull(parsedXmlGroup.Root);
             Assert.AreEqual(parsedXmlGroup.Root.ToString(), expectedXmlGroup.ToString());
         }
 
@@ -301,6 +309,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -327,14 +336,17 @@ namespace EdiFabric.Tests
             Assert.IsTrue(items.OfType<S_GE>().Count() == 2);
             Assert.IsTrue(items.OfType<S_IEA>().Count() == 2);
             var parsedXmlInterchange = items.OfType<S_ISA>().First().Serialize();
+            Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
             var parsedXmlInterchange2 = items.OfType<S_ISA>().Last().Serialize();
+            Assert.IsNotNull(parsedXmlInterchange2.Root);
             Assert.AreEqual(parsedXmlInterchange2.Root.ToString(), expectedXmlInterchange2.ToString());
             foreach (var item in items.OfType<M_810>())
             {
                 Assert.IsNotNull(item);
                 Assert.IsNotNull(item);
                 var parsedXml = item.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
         }
@@ -394,6 +406,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
             var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
@@ -532,5 +545,29 @@ namespace EdiFabric.Tests
 
             }
         }
+
+        [TestMethod]
+        public void TestParseWithCollection()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediItems = new List<object>();
+
+            // ACT
+            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            {
+                while (ediReader.Read(ediItems.Add))
+                {
+                }
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<S_GS>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<M_810>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<S_GE>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<S_IEA>().Count() == 2);
+        }
     }
 }
+

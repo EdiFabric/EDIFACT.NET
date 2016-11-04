@@ -425,20 +425,23 @@ namespace EdiFabric.Framework
                     instanceRoot.Descendants()
                         .SingleOrDefault(
                             d =>
-                                d.Name.StartsWith("S_HL", StringComparison.Ordinal) &&
+                                (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)) &&
                                 d.Children.First().Value == parentId);
-                if(hlParent == null)
+                if (hlParent == null)
                     throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
 
                 var hl = grammarRoot.Descendants().Single(pt => pt.Name == hlParent.Name);
-                if(hl.IndexInParent() != 0)
+                if (hl.IndexInParent() != 0)
                     throw new Exception(string.Format("HL with id = {0} is not the first segment.", parentId));
-                
+
                 return hl.Parent.Children.ElementAt(1);
             }
-            
+
             // Root HL, start from it
-            return grammarRoot.Descendants().Reverse().First(d => d.Name.StartsWith("S_HL", StringComparison.Ordinal));
+            return
+                grammarRoot.Descendants()
+                    .Reverse()
+                    .First(d => (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)));
         }
 
         internal static ParseNode Root(this ParseNode parseNode)
@@ -457,8 +460,8 @@ namespace EdiFabric.Framework
             var msgHeader =
                 segments.SingleOrDefault(
                     s =>
-                        s.Name.StartsWith("S_UNH", StringComparison.Ordinal) ||
-                        s.Name.StartsWith("S_ST", StringComparison.Ordinal));
+                        s.Name == "S_UNH" || s.Name.StartsWith("S_UNH_", StringComparison.Ordinal) ||
+                        s.Name == "S_ST" || s.Name.StartsWith("S_ST_", StringComparison.Ordinal));
 
             ParseNode controlNumber = null;
             if (msgHeader != null && msgHeader.Name == "S_UNH")

@@ -34,12 +34,19 @@ namespace EdiFabric.Tests
         public static IEnumerable<object> Parse(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
-            using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
+            using (
+                var ediReader = EdiReader.Create(Load(sample),
+                    new ReaderSettings
+                    {
+                        Encoding = encoding,
+                        RulesAssemblyName = rulesAssemblyName,
+                        RulesNamespacePrefix = rulesNameSpacePrefix
+                    }))
             {
                 return ediReader.ReadToEnd().ToList();
-             }
+            }
         }
-        
+
         public static EdifactInterchange GenerateEdifact<T>(string sample)
         {
             var items = Parse(sample).ToList();

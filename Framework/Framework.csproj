@@ -91,6 +91,7 @@
     <Compile Include="Constants\Formats.cs" />
     <Compile Include="ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
+    <Compile Include="Readers\ReaderSettings.cs" />
     <Compile Include="SegmentContext.cs" />
     <Compile Include="ParseNode.cs" />
     <Compile Include="MessageLexer.cs" />
