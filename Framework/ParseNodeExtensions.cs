@@ -123,13 +123,16 @@ namespace EdiFabric.Framework
             if (separators == null) throw new ArgumentNullException("separators");
             if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
 
+            if (!separators.RepetitionDataElement.HasValue)
+                return new [] {value};
+
             if (!separators.Escape.HasValue)
             {
-                return value.Split(separators.RepetitionDataElement);
+                return value.Split(separators.RepetitionDataElement.Value);
             }
 
             return value.SplitWithEscape(separators.Escape.Value,
-                separators.RepetitionDataElement).ToArray();
+                separators.RepetitionDataElement.Value).ToArray();
         }
 
         private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)

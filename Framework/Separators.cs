@@ -41,10 +41,10 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Separator for repetitions of data elements.
         /// </summary>
-        public char RepetitionDataElement { get; private set; }
+        public char? RepetitionDataElement { get; private set; }
 
         internal Separators(char segment, char componentDataElement, char dataElement,
-            char repetitionDataElement, char? escape)
+            char? repetitionDataElement, char? escape)
         {
             ComponentDataElement = componentDataElement;
             DataElement = dataElement;
@@ -62,7 +62,7 @@ namespace EdiFabric.Framework
         /// <param name="repetitionDataElement">Separator for repetitions of data elements.</param>
         /// <returns>A new instance of the <see cref="Separators"/> class.</returns>
         public static Separators SeparatorsX12(char segment, char componentDataElement, char dataElement,
-            char repetitionDataElement)
+            char? repetitionDataElement)
         {
             return new Separators(segment, componentDataElement, dataElement, repetitionDataElement, null);
         }
@@ -77,7 +77,7 @@ namespace EdiFabric.Framework
         /// <param name="escape">Release indicator for escaping terminators.</param>
         /// <returns>A new instance of the <see cref="Separators"/> class.</returns>
         public static Separators SeparatorsEdifact(char segment, char componentDataElement, char dataElement,
-            char repetitionDataElement, char? escape)
+            char? repetitionDataElement, char? escape)
         {
             return new Separators(segment, componentDataElement, dataElement, repetitionDataElement, escape);
         }

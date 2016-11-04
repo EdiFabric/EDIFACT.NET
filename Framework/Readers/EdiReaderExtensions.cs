@@ -79,7 +79,7 @@ namespace EdiFabric.Framework.Readers
             {
                 char dataElement;
                 char componentDataElement;
-                char repetitionDataElement;
+                char? repetitionDataElement = null;
                 char segment;
                 char? escape;
                 switch (segmentName.ToSegmentTag())
@@ -91,9 +91,8 @@ namespace EdiFabric.Framework.Readers
                         if (isaElements[15].Count() != 2)
                             throw new ParsingException(ErrorCodes.SegmentTerminatorNotFound);
                         componentDataElement = isaElements[15].First();
-                        repetitionDataElement = isaElements[10].First() != 'U'
-                            ? isaElements[10].First()
-                            : Separators.DefaultSeparatorsX12().RepetitionDataElement;
+                        if (isaElements[10].First() != 'U')
+                            repetitionDataElement = isaElements[10].First();
                         segment = isaElements[15].Last();
                         separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                             repetitionDataElement);
