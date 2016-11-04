@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Framework.Controls;
-using EdiFabric.Framework.Items;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Tests
@@ -32,7 +31,7 @@ namespace EdiFabric.Tests
             return list.Aggregate("", (current, item) => current + item + postFix);
         }
 
-        public static IEnumerable<EdiItem> Parse(string sample, Encoding encoding = null,
+        public static IEnumerable<object> Parse(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
             using (var ediReader = EdiReader.Create(Load(sample), encoding, rulesAssemblyName, rulesNameSpacePrefix))
@@ -45,10 +44,10 @@ namespace EdiFabric.Tests
         {
             var items = Parse(sample).ToList();
 
-            var ung = items.OfType<EdiControl<S_UNG>>().SingleOrDefault();
-            var group = new EdifactGroup<T>(ung != null ? ung.Parse() : null);
-            group.AddItem(items.OfType<EdiMessage>().Select(i => i.Value).OfType<T>().Single());
-            var interchange = new EdifactInterchange(items.OfType<EdiControl<S_UNB>>().Single().Parse());
+            var ung = items.OfType<S_UNG>().SingleOrDefault();
+            var group = new EdifactGroup<T>(ung ?? null);
+            group.AddItem(items.OfType<T>().Single());
+            var interchange = new EdifactInterchange(items.OfType<S_UNB>().Single());
             interchange.AddItem(group);
 
             return interchange;
@@ -58,9 +57,9 @@ namespace EdiFabric.Tests
         {
             var items = Parse(sample, null, null, rulesNameSpacePrefix).ToList();
 
-            var group = new X12Group<T>(items.OfType<EdiControl<S_GS>>().Single().Parse());
-            group.AddItem(items.OfType<EdiMessage>().Select(i => i.Value).OfType<T>().Single());
-            var interchange = new X12Interchange(items.OfType<EdiControl<S_ISA>>().Single().Parse());
+            var group = new X12Group<T>(items.OfType<S_GS>().Single());
+            group.AddItem(items.OfType<T>().Single());
+            var interchange = new X12Interchange(items.OfType<S_ISA>().Single());
             interchange.AddItem(group);
 
             return interchange;

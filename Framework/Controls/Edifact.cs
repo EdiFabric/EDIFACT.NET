@@ -19,7 +19,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the EDIFACT interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNB : IEdiControl
+    public class S_UNB
     {
         [XmlElement(Order = 0)]
         public C_S001 C_S001 { get; set; }
@@ -137,7 +137,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the EDIFACT group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNG : IEdiControl
+    public class S_UNG
     {
         [XmlElement(Order = 0)]
         public string D_0038_1 { get; set; }
@@ -219,7 +219,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the EDIFACT group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNE : IEdiControl
+    public class S_UNE
     {
         [XmlElement(Order = 0)]
         public string D_0060_1 { get; set; }
@@ -232,7 +232,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the EDIFACT interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
-    public class S_UNZ : IEdiControl
+    public class S_UNZ
     {
         [XmlElement(Order = 0)]
         public string D_0036_1 { get; set; }

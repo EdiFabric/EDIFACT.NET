@@ -17,7 +17,6 @@ using System.Text;
 using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Items;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -39,7 +38,7 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// The currently read item.
         /// </summary>
-        public EdiItem Item { get; private set; }
+        public object Item { get; private set; }
 
         /// <summary>
         /// End of stream reached.
@@ -104,13 +103,13 @@ namespace EdiFabric.Framework.Readers
                         // X12
                         case SegmentTags.ISA:
                             _interchangeMarker++;
-                            Item = new EdiControl<S_ISA>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_ISA>(_separators);
                             result = true;
                             break;
                         case SegmentTags.GS:
                             _groupMarker++;
                             _lastGroupHeader = segmentContext;
-                            Item = new EdiControl<S_GS>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_GS>(_separators);
                             result = true;
                             break;
                         case SegmentTags.ST:
@@ -128,12 +127,12 @@ namespace EdiFabric.Framework.Readers
                         case SegmentTags.GE:
                             _groupMarker--;
                             _lastGroupHeader = null;
-                            Item = new EdiControl<S_GE>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_GE>(_separators);
                             result = true;
                             break;
                         case SegmentTags.IEA:
                             _interchangeMarker--;
-                            Item = new EdiControl<S_IEA>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_IEA>(_separators);
                             _separators = null;
                             result = true;
                             break;
@@ -144,12 +143,12 @@ namespace EdiFabric.Framework.Readers
                             break;
                         case SegmentTags.UNB:
                             _interchangeMarker++;
-                            Item = new EdiControl<S_UNB>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_UNB>(_separators);
                             result = true;
                             break;
                         case SegmentTags.UNG:
                             _groupMarker++;
-                            Item = new EdiControl<S_UNG>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_UNG>(_separators);
                             result = true;
                             break;
                         case SegmentTags.UNH:
@@ -165,12 +164,12 @@ namespace EdiFabric.Framework.Readers
                             break;
                         case SegmentTags.UNE:
                             _groupMarker--;
-                            Item = new EdiControl<S_UNE>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_UNE>(_separators);
                             result = true;
                             break;
                         case SegmentTags.UNZ:
                             _interchangeMarker--;
-                            Item = new EdiControl<S_UNZ>(segmentContext.Value, _separators);
+                            Item = segmentContext.Value.ParseSegment<S_UNZ>(_separators);
                             _separators = null;
                             result = true;
                             break;
@@ -184,13 +183,13 @@ namespace EdiFabric.Framework.Readers
             }
             catch (ParsingException ex)
             {
-                Item = new EdiError(ex);
+                Item = ex;
                 result = true;
                 currentMessage.Clear();
             }
             catch (Exception ex)
             {
-                Item = new EdiError(new ParsingException(ErrorCodes.Unknown, ex.Message, ex));
+                Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
                 result = true;
                 currentMessage.Clear();
             }
@@ -202,30 +201,12 @@ namespace EdiFabric.Framework.Readers
         /// Reads the stream to the end.
         /// </summary>
         /// <returns>All items that were found in the stream.</returns>
-        public IEnumerable<EdiItem> ReadToEnd()
+        public IEnumerable<object> ReadToEnd()
         {
             while (Read())
             {
                 yield return Item;
             }
-        }
-
-        /// <summary>
-        /// Reads the stream until the end of a message.
-        /// </summary>
-        /// <returns>
-        /// If a message was read or a message error was thrown.
-        /// </returns>
-        public bool ReadNextMessage()
-        {
-            while (Read())
-            {
-                if (Item is EdiMessage ||
-                    (Item is EdiError && ((EdiError) Item).Value is MessageParsingException))
-                    return true;
-            }
-
-            return false;
         }
 
         private string ReadSegment()
@@ -246,50 +227,23 @@ namespace EdiFabric.Framework.Readers
             return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
         }
 
-        private EdiItem ParseX12(List<SegmentContext> currentMessage)
+        private object ParseX12(List<SegmentContext> currentMessage)
         {
-            try
-            {
-                var type = currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-                var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
-
-                return new EdiMessage(messageInstance, _separators);
-            }
-            catch (Exception ex)
-            {
-                var exception = ex as ParsingException;
-                if (exception != null)
-                    throw new MessageParsingException(exception.ErrorCode, ex);
-
-                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
-            }           
+            var type = currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
+            return currentMessage.Analyze(_separators, type, _rulesAssemblyName);
         }
 
-        private EdiItem ParseEdifact(List<SegmentContext> currentMessage)
+        private object ParseEdifact(List<SegmentContext> currentMessage)
         {
-            try
-            {
-                var type = currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-                var messageInstance = currentMessage.Analyze(_separators, type, _rulesAssemblyName);
-
-                return new EdiMessage(messageInstance, _separators);
-            }
-            catch (Exception ex)
-            {
-                var exception = ex as ParsingException;
-                if (exception != null)
-                    throw new MessageParsingException(exception.ErrorCode, ex);
-
-                throw new MessageParsingException(ErrorCodes.InvalidInterchangeContent, ex);
-            }
+            var type = currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
+            return currentMessage.Analyze(_separators, type, _rulesAssemblyName);
         }
 
         private bool IsBreakingError()
         {
-            var ediError = Item as EdiError;
-            if (ediError == null) return false;
-            var error = (ParsingException) ediError.Value;
-
+            var error = Item as ParsingException;
+            if (error == null) return false;
+            
             return error.ErrorCode == ErrorCodes.InvalidControlStructure ||
                    error.ErrorCode == ErrorCodes.InvalidInterchangeContent ||
                    error.ErrorCode == ErrorCodes.ImproperEndOfFile ||

@@ -19,7 +19,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the X12 interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_ISA : IEdiControl
+    public class S_ISA 
     {
         [XmlElement(Order = 0)]
         public string D_744_1 { get; set; }
@@ -74,7 +74,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the X12 group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GS : IEdiControl
+    public class S_GS 
     {
         [XmlElement(Order = 0)]
         public string D_479_1 { get; set; }
@@ -105,7 +105,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the X12 group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GE : IEdiControl
+    public class S_GE 
     {
         [XmlElement(Order = 0)]
         public string D_97_1 { get; set; }
@@ -118,7 +118,7 @@ namespace EdiFabric.Framework.Controls
     /// This class represents the X12 interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_IEA : IEdiControl
+    public class S_IEA 
     {
         [XmlElement(Order = 0)]
         public string D_405_1 { get; set; }

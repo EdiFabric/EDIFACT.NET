@@ -81,22 +81,10 @@
     <Compile Include="Constants\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\IEdiControl.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Exceptions\MessageParsingException.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\ParsingException.cs" />
-    <Compile Include="Items\EdiControl.cs" />
     <Compile Include="Controls\IEdiGroup.cs" />
-    <Compile Include="Items\EdiError.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\EdiItem.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Constants\SegmentTags.cs" />
-    <Compile Include="Items\EdiMessage.cs" />
     <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Constants\Prefixes.cs" />
