@@ -288,6 +288,8 @@ namespace EdiFabric.Framework
                     : currentDataElement.GetRepetitions(separators);
                 foreach (var repetition in repetitions)
                 {
+                    if (string.IsNullOrEmpty(repetition)) continue;
+
                     var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
                         currentDataElementGrammar.Name,
                         currentDataElementGrammar.Prefix == Prefixes.D ? repetition.UnEscapeLine(separators) : null);

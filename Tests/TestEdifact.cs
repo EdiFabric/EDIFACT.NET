@@ -733,5 +733,25 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<M_INVOIC>().Count() == 2);
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().Count() == 2);
         }
+
+        [TestMethod]
+        public void TestParseWithBlankRepetition()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BlankRepetition.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.Parse(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<S_UNG>().SingleOrDefault());
+            var parsedXml = ediItems.OfType<M_INVOIC>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+        }
     }
 }

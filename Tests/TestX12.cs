@@ -568,6 +568,46 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_GE>().Count() == 2);
             Assert.IsNotNull(ediItems.OfType<S_IEA>().Count() == 2);
         }
+
+        [TestMethod]
+        public void TestParseWithNoRepetition()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_NoRepetition.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_NoRepetition.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.Parse(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+        }
+
+        [TestMethod]
+        public void TestParseWithBlankRepetition()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetition.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.Parse(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            var parsedXml = ediItems.OfType<M_810>().Single().Serialize();
+            Assert.IsNotNull(parsedXml.Root);
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+        }
     }
 }
 
