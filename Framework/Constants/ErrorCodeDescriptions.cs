@@ -22,7 +22,7 @@ namespace EdiFabric.Framework.Constants
                 case ErrorCodes.InvalidInterchangeContent:
                     return "Missing or invalid segments.";
                 case ErrorCodes.ImproperEndOfFile:
-                    return "Missing trailers.";
+                    return "Improper end of file.";
                 case ErrorCodes.SegmentTerminatorNotFound:
                     return "Segment terminator was not found.";
                 case ErrorCodes.RulesAssemblyNameNotSet:
@@ -43,6 +43,8 @@ namespace EdiFabric.Framework.Constants
                     return "Segment was not found.";
                 case ErrorCodes.DataElementsNumberMismatch:
                     return "Number of data elements is different in the class.";
+                case ErrorCodes.NoInterchangeFound:
+                    return "No valid interchange was found.";
                 default:
                     return "Unknown error.";
             }

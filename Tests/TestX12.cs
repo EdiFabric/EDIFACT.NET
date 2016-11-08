@@ -397,6 +397,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -409,7 +410,7 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(!ediItems.Any());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]

@@ -597,7 +597,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<M_INVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -610,7 +610,7 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(!ediItems.Any());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]

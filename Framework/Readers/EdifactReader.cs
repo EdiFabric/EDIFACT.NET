@@ -39,10 +39,11 @@ namespace EdiFabric.Framework.Readers
         {
             return new EdifactReader(ediStream, settings ?? new ReaderSettings());
         }
-        
-        protected override bool TryReadControl(string segmentName, out string probed)
+
+        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
+            separators = null;
 
             try
             {
@@ -52,7 +53,7 @@ namespace EdiFabric.Framework.Readers
                     if (IsUnb(probed, Separators.DefaultSeparatorsEdifact().DataElement,
                         Separators.DefaultSeparatorsEdifact().ComponentDataElement))
                     {
-                        Separators = Separators.DefaultSeparatorsEdifact();
+                        separators = Separators.DefaultSeparatorsEdifact();
                         return true;
                     }
                 }
@@ -71,7 +72,7 @@ namespace EdiFabric.Framework.Readers
                     var tmp = StreamReader.Read(9, Trims);
                     if (IsUnb(tmp, dataElement, componentDataElement))
                     {
-                        Separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
+                        separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
                             repetitionDataElement, escape);
 
                         probed = tmp;
@@ -96,11 +97,9 @@ namespace EdiFabric.Framework.Readers
                     CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNB:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNB>(Separators);
                     break;
                 case SegmentTags.UNG:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNG>(Separators);
                     break;
                 case SegmentTags.UNH:
@@ -114,16 +113,12 @@ namespace EdiFabric.Framework.Readers
                 case SegmentTags.UNT:
                     CurrentMessage.Add(segmentContext);
                     Item = ParseMessage();
-                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNE:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNE>(Separators);
                     break;
                 case SegmentTags.UNZ:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNZ>(Separators);
-                    Separators = null;
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);

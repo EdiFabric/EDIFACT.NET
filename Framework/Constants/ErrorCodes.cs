@@ -91,6 +91,9 @@ namespace EdiFabric.Framework.Constants
         /// </summary>
         SegmentNotDefined,
 
-        
+        /// <summary>
+        /// No interchange was found
+        /// </summary>
+        NoInterchangeFound
     }
 }

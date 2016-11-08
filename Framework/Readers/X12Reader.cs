@@ -41,9 +41,10 @@ namespace EdiFabric.Framework.Readers
             return new X12Reader(ediStream, settings ?? new ReaderSettings());
         }
 
-        protected override bool TryReadControl(string segmentName, out string probed)
+        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
+            separators = null;
 
             try
             {
@@ -63,7 +64,7 @@ namespace EdiFabric.Framework.Readers
                         repetitionDataElement = isaElements[10].First();
                     var segment = isaElements[15].Last();
 
-                    Separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
+                    separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                         repetitionDataElement);
 
                     return true;
@@ -84,12 +85,10 @@ namespace EdiFabric.Framework.Readers
             {
                 // X12
                 case SegmentTags.ISA:
-                    CurrentMessage.Clear();
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
                     break;
                 case SegmentTags.GS:
-                    CurrentMessage.Clear();
                     _currentGs = segmentContext;
                     Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
                     break;
@@ -106,18 +105,14 @@ namespace EdiFabric.Framework.Readers
                     CurrentMessage.Add(segmentContext);
                     CurrentMessage.Add(_currentGs);
                     Item = ParseMessage();
-                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.GE:
-                    CurrentMessage.Clear();
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
                     break;
                 case SegmentTags.IEA:
-                    CurrentMessage.Clear();
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
-                    Separators = null;
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);

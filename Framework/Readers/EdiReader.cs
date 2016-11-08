@@ -24,24 +24,37 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        protected readonly List<SegmentContext> CurrentMessage = new List<SegmentContext>();
-        protected readonly StreamReader StreamReader;
-        protected readonly string RulesAssemblyName;
-        protected readonly string RulesNamespacePrefix;
-
         /// <summary>
-        /// Symbols to discard while reading.
+        /// The list of segments that are currently being collected.
+        /// </summary>
+        protected List<SegmentContext> CurrentMessage { get; private set; }
+        /// <summary>
+        /// The EDI stream reader.
+        /// </summary>
+        protected StreamReader StreamReader { get; private set; }
+        /// <summary>
+        /// The name of the assembly containing the rules classes.
+        /// </summary>
+        protected string RulesAssemblyName { get; private set; }
+        /// <summary>
+        /// The prefix of each of the rules classes.
+        /// </summary>
+        protected string RulesNamespacePrefix { get; private set; }
+        /// <summary>
+        /// The separators.
+        /// </summary>
+        protected Separators Separators { get; private set; }
+        /// <summary>
+        /// Symbols to skip over when reading from the stream.
         /// </summary>
         protected char[] Trims
         {
             get
             {
-                char[] trims = {'\r', '\n', ' '};
-                return Separators != null ? trims.Except(new[] {Separators.Segment}).ToArray() : trims;
+                char[] trims = { '\r', '\n', ' ' };
+                return Separators != null ? trims.Except(new[] { Separators.Segment }).ToArray() : trims;
             }
         }
-            
-        protected Separators Separators;
 
         /// <summary>
         /// The currently read item.
@@ -69,6 +82,7 @@ namespace EdiFabric.Framework.Readers
             StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
             RulesAssemblyName = settings.RulesAssemblyName;
             RulesNamespacePrefix = settings.RulesNamespacePrefix;
+            CurrentMessage = new List<SegmentContext>();
          }
 
         /// <summary>
@@ -85,9 +99,11 @@ namespace EdiFabric.Framework.Readers
                 while (StreamReader.Peek() >= 0 && Item == null)
                 {
                     var currentSegment = ReadSegment();
-                    if (Separators == null || string.IsNullOrEmpty(currentSegment)) break;
+                    if (Separators != null && !string.IsNullOrEmpty(currentSegment))
+                        ProcessSegment(currentSegment);
 
-                    ProcessSegment(currentSegment);
+                    if(Separators == null && Item == null)
+                        throw new ParsingException(ErrorCodes.NoInterchangeFound);
                 }
 
                 if (StreamReader.EndOfStream && CurrentMessage.Any(s => !s.IsControl))
@@ -96,12 +112,14 @@ namespace EdiFabric.Framework.Readers
             catch (ParsingException ex)
             {
                 Item = ex;
-                CurrentMessage.Clear();
             }
             catch (Exception ex)
             {
                 Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
-                CurrentMessage.Clear();
+            }
+            finally
+            {
+                CurrentMessage.Clear(); 
             }
 
             if (collect != null && Item != null) collect(Item);
@@ -127,8 +145,9 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="segmentName">The probed segment name.</param>
         /// <param name="probed">The probed text.</param>
+        /// <param name="separators">The new separators.</param>
         /// <returns>If an interchange header was found.</returns>
-        protected abstract bool TryReadControl(string segmentName, out string probed);
+        protected abstract bool TryReadControl(string segmentName, out string probed, out Separators separators);
 
         /// <summary>
         /// Parses control segments and messages. 
@@ -154,9 +173,11 @@ namespace EdiFabric.Framework.Readers
                 if (line.Length > 2)
                 {
                     string probed;
+                    Separators separators;
                     var last3 = line.Substring(line.Length - 3);
-                    if (TryReadControl(last3, out probed))
+                    if (TryReadControl(last3, out probed, out separators))
                     {
+                        Separators = separators;
                         line = probed;
                     }
                     else
@@ -170,7 +191,7 @@ namespace EdiFabric.Framework.Readers
                 if (line.Count() > 10000)
                 {
                     line = "";
-                    Separators = null;
+                    continue;
                 }
 
                 if (Separators == null)
