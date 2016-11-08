@@ -332,6 +332,6 @@ namespace EdiFabric.Framework.Readers
         {
             return parseNode.Parent != null && parseNode.Parent.Name == "S_ISA" &&
                    parseNode.Name == "D_726_11";
-        }
+        }        
     }
 }

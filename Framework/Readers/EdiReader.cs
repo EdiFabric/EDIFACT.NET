@@ -24,6 +24,7 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
+        private string _remaining;
         /// <summary>
         /// The list of segments that are currently being collected.
         /// </summary>
@@ -78,7 +79,9 @@ namespace EdiFabric.Framework.Readers
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (settings == null) throw new ArgumentNullException("settings");
+            if (!ediStream.CanSeek) throw new Exception("Only streams supporting seek are supported");
 
+            _remaining = "";
             StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
             RulesAssemblyName = settings.RulesAssemblyName;
             RulesNamespacePrefix = settings.RulesNamespacePrefix;
@@ -164,17 +167,21 @@ namespace EdiFabric.Framework.Readers
         protected string ReadSegment()
         {
             var line = "";
+            
 
             while (StreamReader.Peek() >= 0)
             {
-                var symbol = StreamReader.Read(1);
+                var symbol = string.IsNullOrEmpty(_remaining)
+                    ? StreamReader.Read(1)
+                    : ReadFifo();
                 line = line + symbol;
 
                 if (line.Length > 2)
                 {
-                    string probed;
+                    
                     Separators separators;
                     var last3 = line.Substring(line.Length - 3);
+                    string probed;
                     if (TryReadControl(last3, out probed, out separators))
                     {
                         Separators = separators;
@@ -182,8 +189,11 @@ namespace EdiFabric.Framework.Readers
                     }
                     else
                     {
-                        if(!string.IsNullOrEmpty(probed))
-                            line = line.Substring(0, line.Length - 3) + probed;
+                        if (!string.IsNullOrEmpty(probed))
+                        {
+                            _remaining += probed.Substring(3);
+                        }
+                        //    line = line.Substring(0, line.Length - 3) + probed;
                     }                    
                 }
 
@@ -218,6 +228,17 @@ namespace EdiFabric.Framework.Readers
             }
 
             return line.Trim(Trims);
+        }
+
+        private string ReadFifo()
+        {
+            var result = "";
+            if (!string.IsNullOrEmpty(_remaining))
+            {
+                result = _remaining.Substring(0, 1);
+                _remaining = _remaining.Substring(1);
+            }
+            return result;
         }
 
         /// <summary>

@@ -86,6 +86,7 @@
     <EmbeddedResource Include="Edi\X12_810_00204_BOM.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_InvalidHeader.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment.txt" />
+    <EmbeddedResource Include="Edi\X12_810_00204_MultipleInvalidMessages.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_TrailingBlanks.txt" />
     <EmbeddedResource Include="Xsd\EdifactEnvelope.xsd" />
     <EmbeddedResource Include="Xsd\X12Envelope.xsd" />
@@ -320,6 +321,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_BlankRepetition.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_MultipleInvalidInterchanges.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Xml\X12_810_00204_Probe.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

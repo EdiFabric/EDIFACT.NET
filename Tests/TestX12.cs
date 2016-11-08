@@ -669,6 +669,61 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestParseX12WithMultipleInvalidInterchanges()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+            
+            // ACT
+            var items = TestHelper.ParseX12(sample).ToList();
+
+            // ASSERT
+            Assert.IsTrue(items.OfType<M_810>().Count() == 3);
+            Assert.IsTrue(items.OfType<S_ISA>().Count() == 2);
+            Assert.IsTrue(items.OfType<S_GS>().Count() == 3);
+            Assert.IsTrue(items.OfType<S_GE>().Count() == 3);
+            Assert.IsTrue(items.OfType<S_IEA>().Count() == 2);
+            Assert.IsNull(items.OfType<ParsingException>().SingleOrDefault());
+
+            foreach (var msg in items.OfType<M_810>())
+            {
+                var parsedXml = msg.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
+                Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void TestParseX12WithMultipleInvalidIMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidMessages.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_Probe.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.ParseX12(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
+
+            foreach (var msg in ediItems.OfType<M_810>())
+            {
+                var parsedXml = msg.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
+                Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+            }
+        }
     }
 }
 
