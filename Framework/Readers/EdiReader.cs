@@ -105,12 +105,11 @@ namespace EdiFabric.Framework.Readers
                     if (Separators != null && !string.IsNullOrEmpty(currentSegment))
                         ProcessSegment(currentSegment);
 
-                    if(Separators == null && Item == null)
-                        throw new ParsingException(ErrorCodes.NoInterchangeFound);
-                }
-
-                if (StreamReader.EndOfStream && CurrentMessage.Any(s => !s.IsControl))
-                    throw new ParsingException(ErrorCodes.ImproperEndOfFile);
+                    if (Separators != null || Item != null) continue;
+                    
+                    Item = new ParsingException(ErrorCodes.NoInterchangeFound);
+                    CurrentMessage.Clear();
+                }               
             }
             catch (ParsingException ex)
             {
@@ -120,9 +119,11 @@ namespace EdiFabric.Framework.Readers
             {
                 Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
             }
-            finally
+
+            if (StreamReader.EndOfStream && CurrentMessage.Any(s => !s.IsControl))
             {
-                CurrentMessage.Clear(); 
+                Item = new ParsingException(ErrorCodes.ImproperEndOfFile);
+                CurrentMessage.Clear();
             }
 
             if (collect != null && Item != null) collect(Item);
@@ -168,7 +169,6 @@ namespace EdiFabric.Framework.Readers
         {
             var line = "";
             
-
             while (StreamReader.Peek() >= 0)
             {
                 var symbol = string.IsNullOrEmpty(_remaining)
@@ -178,7 +178,6 @@ namespace EdiFabric.Framework.Readers
 
                 if (line.Length > 2)
                 {
-                    
                     Separators separators;
                     var last3 = line.Substring(line.Length - 3);
                     string probed;
@@ -190,11 +189,8 @@ namespace EdiFabric.Framework.Readers
                     else
                     {
                         if (!string.IsNullOrEmpty(probed))
-                        {
                             _remaining += probed.Substring(3);
-                        }
-                        //    line = line.Substring(0, line.Length - 3) + probed;
-                    }                    
+                    }
                 }
 
                 // Segment terminator may never be reached
@@ -232,12 +228,11 @@ namespace EdiFabric.Framework.Readers
 
         private string ReadFifo()
         {
-            var result = "";
-            if (!string.IsNullOrEmpty(_remaining))
-            {
-                result = _remaining.Substring(0, 1);
-                _remaining = _remaining.Substring(1);
-            }
+            if (string.IsNullOrEmpty(_remaining)) 
+                return "";
+
+            var result = _remaining.Substring(0, 1);
+            _remaining = _remaining.Substring(1);
             return result;
         }
 

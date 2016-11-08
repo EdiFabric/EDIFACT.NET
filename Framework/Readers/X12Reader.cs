@@ -87,10 +87,12 @@ namespace EdiFabric.Framework.Readers
                 case SegmentTags.ISA:
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.GS:
                     _currentGs = segmentContext;
                     Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.ST:
                     if (CurrentMessage.Any(s => !s.IsControl))
@@ -105,14 +107,17 @@ namespace EdiFabric.Framework.Readers
                     CurrentMessage.Add(segmentContext);
                     CurrentMessage.Add(_currentGs);
                     Item = ParseMessage();
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.GE:
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.IEA:
                     _currentGs = null;
                     Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);

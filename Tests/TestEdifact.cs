@@ -842,5 +842,61 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestParseEdifactWithMultipleInvalidInterchanges()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+            
+            // ACT
+            var items = TestHelper.ParseEdifact(sample).ToList();
+
+            // ASSERT
+            Assert.IsTrue(items.OfType<S_UNB>().Count() == 2);
+            Assert.IsNull(items.OfType<S_UNG>().SingleOrDefault());
+            Assert.IsTrue(items.OfType<M_INVOIC>().Count() == 3);
+            Assert.IsNull(items.OfType<S_UNE>().SingleOrDefault());
+            Assert.IsTrue(items.OfType<S_UNZ>().Count() == 2);
+            Assert.IsNotNull(items.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsTrue(items.Count == 8);
+          foreach (var item in items.OfType<M_INVOIC>())
+            {
+                Assert.IsNotNull(item);
+                var parsedXml = item.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
+                Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void TestParseEdifactWithMultipleInvalidMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInvalidMessages.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_Probe.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var items = TestHelper.ParseEdifact(sample).ToList();
+
+            // ASSERT
+            Assert.IsTrue(items.OfType<S_UNB>().Count() == 1);
+            Assert.IsNull(items.OfType<S_UNG>().SingleOrDefault());
+            Assert.IsTrue(items.OfType<M_INVOIC>().Count() == 2);
+            Assert.IsNull(items.OfType<S_UNE>().SingleOrDefault());
+            Assert.IsTrue(items.OfType<S_UNZ>().Count() == 1);
+            Assert.IsTrue(items.OfType<ParsingException>().Count() == 2);
+            Assert.IsTrue(items.Count == 6);
+            foreach (var item in items.OfType<M_INVOIC>())
+            {
+                Assert.IsNotNull(item);
+                var parsedXml = item.Serialize();
+                Assert.IsNotNull(parsedXml.Root);
+                Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+            }
+        }
     }
 }

@@ -24,6 +24,23 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class EdifactReader : EdiReader
     {
+        private static readonly List<string> SyntaxId = new List<string>
+        {
+            "UNOA",
+            "UNOB",
+            "UNOC",
+            "UNOD",
+            "UNOE",
+            "UNOF",
+            "UNOG",
+            "UNOH",
+            "UNOI",
+            "UNOJ",
+            "UNOX",
+            "UNOY",
+            "KECA"
+        };
+
         private EdifactReader(Stream ediStream, ReaderSettings settings)
             : base(ediStream, settings)
         {
@@ -61,7 +78,7 @@ namespace EdiFabric.Framework.Readers
                 if (segmentName == "UNA")
                 {
                     var una = StreamReader.Read(6);
-                    probed = una;
+                    probed = segmentName + una;
                     var unaChars = una.ToArray();
                     var componentDataElement = unaChars[0];
                     var dataElement = unaChars[1];
@@ -70,11 +87,11 @@ namespace EdiFabric.Framework.Readers
                     var segment = unaChars[5];
 
                     var tmp = StreamReader.Read(9, Trims);
+                    probed += tmp;
                     if (IsUnb(tmp, dataElement, componentDataElement))
                     {
                         separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
                             repetitionDataElement, escape);
-
                         probed = tmp;
                         return true;
                     }
@@ -97,9 +114,11 @@ namespace EdiFabric.Framework.Readers
                     CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNB:
+                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNB>(Separators);
                     break;
                 case SegmentTags.UNG:
+                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNG>(Separators);
                     break;
                 case SegmentTags.UNH:
@@ -113,12 +132,15 @@ namespace EdiFabric.Framework.Readers
                 case SegmentTags.UNT:
                     CurrentMessage.Add(segmentContext);
                     Item = ParseMessage();
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNE:
                     Item = segmentContext.Value.ParseSegment<S_UNE>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNZ:
                     Item = segmentContext.Value.ParseSegment<S_UNZ>(Separators);
+                    CurrentMessage.Clear();
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);
@@ -158,24 +180,7 @@ namespace EdiFabric.Framework.Readers
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)
         {
-            var syntaxId = new List<string>
-            {
-                "UNOA",
-                "UNOB",
-                "UNOC",
-                "UNOD",
-                "UNOE",
-                "UNOF",
-                "UNOG",
-                "UNOH",
-                "UNOI",
-                "UNOJ",
-                "UNOX",
-                "UNOY",
-                "KECA"
-            };
-
-            return syntaxId.Select(e => "UNB" + dataElementSep + e + componentSep).ToList().Contains(toCompare);
+            return SyntaxId.Select(e => "UNB" + dataElementSep + e + componentSep).ToList().Contains(toCompare);
         }
     }
 }
