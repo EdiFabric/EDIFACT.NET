@@ -90,14 +90,12 @@
     <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Constants\Prefixes.cs" />
-    <Compile Include="Constants\Formats.cs" />
     <Compile Include="ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\ReaderSettings.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="SegmentContext.cs" />
     <Compile Include="ParseNode.cs" />
-    <Compile Include="MessageLexer.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="Controls\Edifact.cs" />
     <Compile Include="Controls\X12.cs" />

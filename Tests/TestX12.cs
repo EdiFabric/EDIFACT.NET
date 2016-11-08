@@ -409,7 +409,7 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
-            Assert.IsTrue(ediItems.Count == 0);
+            Assert.IsTrue(!ediItems.Any());
         }
 
         [TestMethod]

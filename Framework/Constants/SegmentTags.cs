@@ -11,7 +11,10 @@
 
 namespace EdiFabric.Framework.Constants
 {
-    enum SegmentTags
+    /// <summary>
+    /// Enum of control segment tags.
+    /// </summary>
+    public enum SegmentTags
     {
         Regular,
         UNA,

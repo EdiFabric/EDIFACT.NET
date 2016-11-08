@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -22,6 +24,7 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
+        protected readonly List<SegmentContext> CurrentMessage = new List<SegmentContext>();
         protected readonly StreamReader StreamReader;
         protected readonly string RulesAssemblyName;
         protected readonly string RulesNamespacePrefix;
@@ -73,7 +76,38 @@ namespace EdiFabric.Framework.Readers
         /// Items can be: control segment, message or error.
         /// </summary>
         /// <returns>If a new message was read.</returns>
-        public abstract bool Read(Action<object> collect = null);
+        public bool Read(Action<object> collect = null)
+        {
+            Item = null;
+
+            try
+            {
+                while (StreamReader.Peek() >= 0 && Item == null)
+                {
+                    var currentSegment = ReadSegment();
+                    if (Separators == null || string.IsNullOrEmpty(currentSegment)) break;
+
+                    ProcessSegment(currentSegment);
+                }
+
+                if (StreamReader.EndOfStream && CurrentMessage.Any(s => !s.IsControl))
+                    throw new ParsingException(ErrorCodes.ImproperEndOfFile);
+            }
+            catch (ParsingException ex)
+            {
+                Item = ex;
+                CurrentMessage.Clear();
+            }
+            catch (Exception ex)
+            {
+                Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
+                CurrentMessage.Clear();
+            }
+
+            if (collect != null && Item != null) collect(Item);
+
+            return Item != null;
+        }
 
         /// <summary>
         /// Reads the stream to the end.
@@ -92,10 +126,22 @@ namespace EdiFabric.Framework.Readers
         /// Sets the separators if header was found.
         /// </summary>
         /// <param name="segmentName">The probed segment name.</param>
-        /// <param name="header">The interchange header.</param>
+        /// <param name="probed">The probed text.</param>
         /// <returns>If an interchange header was found.</returns>
-        protected abstract bool TryReadControl(string segmentName, out string header);
+        protected abstract bool TryReadControl(string segmentName, out string probed);
 
+        /// <summary>
+        /// Parses control segments and messages. 
+        /// </summary>
+        /// <param name="segment">The current segment.</param>
+        protected abstract void ProcessSegment(string segment);
+        
+        /// <summary>
+        /// Reads a segment from the stream.
+        /// </summary>
+        /// <returns>
+        /// The segment found.
+        /// </returns>
         protected string ReadSegment()
         {
             var line = "";
@@ -121,7 +167,7 @@ namespace EdiFabric.Framework.Readers
                 }
 
                 // Segment terminator may never be reached
-                if (line.Count() > 1024)
+                if (line.Count() > 10000)
                 {
                     line = "";
                     Separators = null;

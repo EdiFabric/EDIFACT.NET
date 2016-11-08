@@ -1,16 +1,60 @@
-﻿namespace EdiFabric.Framework.Exceptions
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+namespace EdiFabric.Framework.Exceptions
 {
+    /// <summary>
+    /// The error context of what and where had failed. 
+    /// </summary>
     public class ParsingDetails
     {
-        public bool MessageDefined = true;
+        /// <summary>
+        /// Whether the message is supported in the rules class.
+        /// </summary>
+        public bool MessageSupported = true;
+        /// <summary>
+        /// The segment tag.
+        /// </summary>
         public string SegmentName { get; set; }
+        /// <summary>
+        /// The 1 based segment position within the message.
+        /// </summary>
         public int SegmentPosition { get; set; }
-        public bool SegmentDefined { get; set; }
+        /// <summary>
+        /// Whether the segment is supported in the rules class.
+        /// </summary>
+        public bool SegmentSupported { get; set; }
+        /// <summary>
+        /// The original segment line.
+        /// </summary>
         public string SegmentValue { get; set; }
+        /// <summary>
+        /// The name of the data element.
+        /// </summary>
         public string DataElementName { get; set; }
+        /// <summary>
+        /// The position of the data element within the segment.
+        /// </summary>
         public int DataElementPosition { get; set; }
+        /// <summary>
+        /// The position of the component data element within the data element.
+        /// </summary>
         public int ComponentDataElementPosition { get; set; }
+        /// <summary>
+        /// The position of the repetition data element.
+        /// </summary>
         public int RepetitionDataElementPosition { get; set; }
+        /// <summary>
+        /// The value of the data element that failed to be parsed.
+        /// </summary>
         public string DataElementValue { get; set; }
     }
 }

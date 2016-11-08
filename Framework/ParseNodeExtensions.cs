@@ -14,7 +14,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
 {
@@ -89,26 +88,6 @@ namespace EdiFabric.Framework
                 .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
         }
 
-        private static string UnEscapeLine(this string line, Separators separators)
-        {
-            if (string.IsNullOrEmpty(line))
-                return string.Empty;
-
-            var result = string.Empty;
-            var temp = separators.Escape.HasValue
-                ? line.SplitWithEscape(separators.Escape.Value, separators.Escape.Value)
-                : new List<string> {line};
-            foreach (var str in temp)
-            {
-                result = result + str;
-            }
-
-            if (separators.Escape.HasValue && !line.EndsWith(string.Concat(separators.Escape.Value, separators.Escape.Value), StringComparison.Ordinal))
-                result = result.TrimEnd(separators.Escape.Value);
-
-            return result;
-        }
-
         private static bool IsSeparator(this char value, Separators separators)
         {
             return separators.ComponentDataElement == value ||
@@ -116,23 +95,6 @@ namespace EdiFabric.Framework
                    separators.Escape == value ||
                    separators.RepetitionDataElement == value ||
                    separators.Segment == value;
-        }
-
-        private static string[] GetRepetitions(this string value, Separators separators)
-        {
-            if (separators == null) throw new ArgumentNullException("separators");
-            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
-
-            if (!separators.RepetitionDataElement.HasValue)
-                return new [] {value};
-
-            if (!separators.Escape.HasValue)
-            {
-                return value.Split(separators.RepetitionDataElement.Value);
-            }
-
-            return value.SplitWithEscape(separators.Escape.Value,
-                separators.RepetitionDataElement.Value).ToArray();
         }
 
         private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
@@ -260,64 +222,7 @@ namespace EdiFabric.Framework
                     nodes.Push(n);
             }
         }
-
-        internal static void ParseSegment(this ParseNode parseNode, string line, Separators separators)
-        {
-            if (parseNode == null) throw new ArgumentNullException("parseNode");
-            if (string.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
-            if (separators == null) throw new ArgumentNullException("separators");
-
-            if (parseNode.Prefix != Prefixes.S)
-                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));           
-
-            var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children;
-            var dataElements = line.GetDataElements(separators);
-            for (var deIndex = 0; deIndex < dataElements.Length; deIndex++)
-            {
-                var currentDataElement = dataElements[deIndex];
-                if (string.IsNullOrEmpty(currentDataElement)) continue;
-                if (dataElementsGrammar.Count <= deIndex)
-                    throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
-                        string.Format(
-                            "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
-                            dataElements.Length, line, dataElementsGrammar.Count));
-                var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
-
-                var repetitions = currentDataElementGrammar.IsX12RepetitionSeparator()
-                    ? new[] { currentDataElement }
-                    : currentDataElement.GetRepetitions(separators);
-                foreach (var repetition in repetitions)
-                {
-                    if (string.IsNullOrEmpty(repetition)) continue;
-
-                    var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
-                        currentDataElementGrammar.Name,
-                        currentDataElementGrammar.Prefix == Prefixes.D ? repetition.UnEscapeLine(separators) : null);
-
-                    if (currentDataElementGrammar.Prefix != Prefixes.C) continue;
-
-                    var componentDataElementsGrammar = currentDataElementGrammar.Children;
-                    var componentDataElements = repetition.GetComponentDataElements(separators);
-                    for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
-                    {
-                        var currentComponentDataElement = componentDataElements[cdeIndex];
-                        if (string.IsNullOrEmpty(currentComponentDataElement)) continue;
-                        if (componentDataElementsGrammar.Count <= cdeIndex)
-                            throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
-                                string.Format(
-                                    "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
-                                    componentDataElements.Length, currentComponentDataElement,
-                                    componentDataElementsGrammar.Count));
-                        var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
-
-                        childParseNode.AddChild(currentComponentDataElementGrammar.Type,
-                            currentComponentDataElementGrammar.Name,
-                            currentComponentDataElement.UnEscapeLine(separators));
-                    }
-                }
-            }
-        }
-
+        
         internal static object ToInstance(this ParseNode parseNode)
         {
             if (parseNode == null) throw new ArgumentNullException("parseNode");
@@ -452,12 +357,6 @@ namespace EdiFabric.Framework
         internal static ParseNode Root(this ParseNode parseNode)
         {
             return parseNode.Ancestors().Last(); 
-        }
-
-        private static bool IsX12RepetitionSeparator(this ParseNode parseNode)
-        {
-            return parseNode.Parent != null && parseNode.Parent.Name == "S_ISA" &&
-                   parseNode.Name == "D_726_11";
         }
 
         internal static string MessageControlNumber(this IEnumerable<ParseNode> segments)

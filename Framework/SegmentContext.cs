@@ -15,20 +15,55 @@ using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework
 {
-    class SegmentContext
+    /// <summary>
+    /// Extends a segment line with additional attributes inferred from the segment.
+    /// </summary>
+    public class SegmentContext
     {
         private const string Hl = "HL";
 
+        /// <summary>
+        /// Segment name.
+        /// </summary>
         public string Name { get; private set; }
+        /// <summary>
+        /// The value of the first data element.
+        /// </summary>
         public string FirstValue { get; private set; }
+        /// <summary>
+        /// The value of the second data element.
+        /// </summary>
         public string SecondValue { get; private set; }
+        /// <summary>
+        /// The id of the parent HL if any.
+        /// </summary>
         public string ParentId { get; private set; }
+        /// <summary>
+        /// The original segment line.
+        /// </summary>
         public string Value { get; private set; }
+        /// <summary>
+        /// If it is HL that is not a direct child of its parent.
+        /// </summary>
         public bool IsJump{ get; private set; }
+        /// <summary>
+        /// If it is a control segment.
+        /// </summary>
         public bool IsControl{ get; private set; }
+        /// <summary>
+        /// Descriptive name for logging.
+        /// </summary>
         public string LogName { get; private set; }
+        /// <summary>
+        /// The segment name as tag.
+        /// </summary>
         public SegmentTags Tag { get; private set; }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentContext"/> class.
+        /// </summary>
+        /// <param name="ediSegment">The segment line.</param>
+        /// <param name="separators">The separators.</param>
         public SegmentContext(string ediSegment, Separators separators)
         {
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");

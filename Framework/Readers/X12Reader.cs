@@ -1,5 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Constants;
@@ -13,7 +24,6 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class X12Reader : EdiReader
     {
-        private readonly List<SegmentContext> _currentMessage = new List<SegmentContext>();
         private SegmentContext _currentGs;
 
         private X12Reader(Stream ediStream, ReaderSettings settings) : base(ediStream, settings)
@@ -29,100 +39,6 @@ namespace EdiFabric.Framework.Readers
         public static X12Reader Create(Stream ediStream, ReaderSettings settings = null)
         {
             return new X12Reader(ediStream, settings ?? new ReaderSettings());
-        }
-
-        /// <summary>
-        /// Reads an EDI item from the stream.
-        /// Items can be: control segment, message or error.
-        /// </summary>
-        /// <returns>If a new message was read.</returns>
-        public override bool Read(Action<object> collect = null)
-        {
-            Item = null;
-
-            try
-            {
-                while (StreamReader.Peek() >= 0 && Item == null)
-                {
-                    var currentSegment = ReadSegment();
-                    if (Separators == null || string.IsNullOrEmpty(currentSegment)) break;
-
-                    var segmentContext = new SegmentContext(currentSegment, Separators);
-                    switch (segmentContext.Tag)
-                    {
-                        // X12
-                        case SegmentTags.ISA:
-                            _currentMessage.Clear();
-                            _currentGs = null;
-                            Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
-                            break;
-                        case SegmentTags.GS:
-                            _currentMessage.Clear();
-                            _currentGs = segmentContext;
-                            Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
-                            break;
-                        case SegmentTags.ST:
-                            if (_currentMessage.Any(s => !s.IsControl))
-                            {
-                                _currentMessage.Add(_currentGs);
-                                Item = ParseMessage(_currentMessage);
-                                _currentMessage.Clear();
-                            }
-                            _currentMessage.Add(segmentContext);
-                            break;
-                        case SegmentTags.SE:
-                            _currentMessage.Add(segmentContext);
-                            _currentMessage.Add(_currentGs);
-                            Item = ParseMessage(_currentMessage);
-                            _currentMessage.Clear();
-                            break;
-                        case SegmentTags.GE:
-                            _currentMessage.Clear();
-                            _currentGs = null;
-                            Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
-                            break;
-                        case SegmentTags.IEA:
-                            _currentMessage.Clear();
-                            _currentGs = null;
-                            Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
-                            Separators = null;
-                            break;
-                        default:
-                            _currentMessage.Add(segmentContext);
-                            break;
-                    }
-                }
-
-                if (StreamReader.EndOfStream && _currentMessage.Any(s => !s.IsControl))
-                    throw new ParsingException(ErrorCodes.ImproperEndOfFile);
-            }
-            catch (ParsingException ex)
-            {
-                Item = ex;
-                _currentMessage.Clear();
-            }
-            catch (Exception ex)
-            {
-                Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
-                _currentMessage.Clear();
-            }
-
-            if (collect != null && Item != null) collect(Item);
-
-            return Item != null;
-        }
-
-        private object ParseMessage(List<SegmentContext> currentMessage)
-        {
-            try
-            {
-                var type = currentMessage.ToX12Type(Separators, RulesAssemblyName, RulesNamespacePrefix);
-                return currentMessage.Analyze(Separators, type, RulesAssemblyName);
-            }
-            catch (Exception ex)
-            {
-                return new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
-            }
         }
 
         protected override bool TryReadControl(string segmentName, out string probed)
@@ -149,7 +65,7 @@ namespace EdiFabric.Framework.Readers
 
                     Separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
                         repetitionDataElement);
-                    
+
                     return true;
                 }
             }
@@ -157,8 +73,92 @@ namespace EdiFabric.Framework.Readers
             {
                 // ignored
             }
-            
+
             return false;
+        }
+
+        protected override void ProcessSegment(string segment)
+        {
+            var segmentContext = new SegmentContext(segment, Separators);
+            switch (segmentContext.Tag)
+            {
+                // X12
+                case SegmentTags.ISA:
+                    CurrentMessage.Clear();
+                    _currentGs = null;
+                    Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
+                    break;
+                case SegmentTags.GS:
+                    CurrentMessage.Clear();
+                    _currentGs = segmentContext;
+                    Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
+                    break;
+                case SegmentTags.ST:
+                    if (CurrentMessage.Any(s => !s.IsControl))
+                    {
+                        CurrentMessage.Add(_currentGs);
+                        Item = ParseMessage();
+                        CurrentMessage.Clear();
+                    }
+                    CurrentMessage.Add(segmentContext);
+                    break;
+                case SegmentTags.SE:
+                    CurrentMessage.Add(segmentContext);
+                    CurrentMessage.Add(_currentGs);
+                    Item = ParseMessage();
+                    CurrentMessage.Clear();
+                    break;
+                case SegmentTags.GE:
+                    CurrentMessage.Clear();
+                    _currentGs = null;
+                    Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
+                    break;
+                case SegmentTags.IEA:
+                    CurrentMessage.Clear();
+                    _currentGs = null;
+                    Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
+                    Separators = null;
+                    break;
+                default:
+                    CurrentMessage.Add(segmentContext);
+                    break;
+            }
+        }
+
+        private object ParseMessage()
+        {
+            try
+            {
+                return CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+            }
+            catch (Exception ex)
+            {
+                return new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
+            }
+        }
+
+        private Type ToType()
+        {
+            var gs = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.GS);
+            if (gs == null)
+                throw new ParsingException(ErrorCodes.GsNotFound);
+            var ediCompositeDataElementsGs = gs.Value.GetDataElements(Separators);
+            if (ediCompositeDataElementsGs.Count() < 8)
+                throw new ParsingException(ErrorCodes.GsInvalid);
+            var version = ediCompositeDataElementsGs[7];
+
+            var st = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.ST);
+            if (st == null)
+                throw new ParsingException(ErrorCodes.StNotFound);
+            var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
+            var tag = ediCompositeDataElementsSt[0];
+
+            if (ediCompositeDataElementsSt.Count() == 3)
+            {
+                version = ediCompositeDataElementsSt[2];
+            }
+
+            return EdiReaderExtensions.ToType("X12", version, tag, RulesAssemblyName, RulesNamespacePrefix);
         }
     }
 }
