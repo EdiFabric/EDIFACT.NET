@@ -13,56 +13,11 @@ using System;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Readers
 {
     internal static class EdiReaderExtensions
     {
-        internal static string ReadSegment(this StreamReader reader, Separators separators)
-        {
-            try
-            {
-                var line = "";
-
-                while (reader.Peek() >= 0)
-                {
-                    var symbol = (char)reader.Read();
-                    line = line + symbol;
-
-                    if (line.EndsWith(separators.Segment.ToString(), StringComparison.Ordinal))
-                    {
-                        if (separators.Escape.HasValue &&
-                            line.EndsWith(string.Concat(separators.Escape.Value, separators.Segment), StringComparison.Ordinal))
-                        {
-                            continue;
-                        }
-
-                        int index = line.LastIndexOf(separators.Segment.ToString(), StringComparison.Ordinal);
-                        if (index > 0)
-                        {
-                            line = line.Remove(index);
-                        }
-
-                        if (!string.IsNullOrEmpty(line))
-                            break;
-                    }
-                }
-
-                return line.Trim('\r', '\n');
-            }
-            catch (Exception ex)
-            {
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, ex);
-            }
-            
-        }
-
-        internal static T ParseSegment<T>(this SegmentContext segmentContext, Separators separators)
-        {
-            return segmentContext.Value.ParseSegment<T>(separators);
-        }
-
         internal static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
             var parseNode = ParseNode.BuldTree(typeof(T), false);
@@ -70,123 +25,47 @@ namespace EdiFabric.Framework.Readers
             return (T)parseNode.ToInstance();
         }
 
-        internal static Tuple<string, Separators> ReadControl(this StreamReader reader, string segmentName)
-        {
-            string header = null;
-            Separators separators = null;
-
-            try
-            {
-                char dataElement;
-                char componentDataElement;
-                char? repetitionDataElement = null;
-                char segment;
-                char? escape;
-                switch (segmentName.ToSegmentTag())
-                {
-                    case SegmentTags.ISA:
-                        dataElement = reader.Read(1)[0];
-                        var isa = reader.ReadIsa(dataElement);
-                        var isaElements = isa.Split(dataElement);
-                        if (isaElements[15].Count() != 2)
-                            throw new ParsingException(ErrorCodes.SegmentTerminatorNotFound);
-                        componentDataElement = isaElements[15].First();
-                        if (isaElements[10].First() != 'U')
-                            repetitionDataElement = isaElements[10].First();
-                        segment = isaElements[15].Last();
-                        separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
-                            repetitionDataElement);
-                        header = segmentName + dataElement + isa;
-                        break;
-                    case SegmentTags.UNB:
-                        var defaultSeparators = Separators.DefaultSeparatorsEdifact();
-                        componentDataElement = defaultSeparators.ComponentDataElement;
-                        dataElement = defaultSeparators.DataElement;
-                        escape = defaultSeparators.Escape;
-                        repetitionDataElement = defaultSeparators.RepetitionDataElement;
-                        segment = defaultSeparators.Segment;
-
-                        separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
-                            repetitionDataElement, escape);
-                        header = segmentName + reader.ReadSegment(separators);
-                        break;
-                    case SegmentTags.UNA:
-                        var una = reader.Read(6);
-                        var unaChars = una.ToArray();
-                        componentDataElement = unaChars[0];
-                        dataElement = unaChars[1];
-                        escape = unaChars[3];
-                        repetitionDataElement = Separators.DefaultSeparatorsEdifact().RepetitionDataElement;
-                        segment = unaChars[5];
-
-                        separators = Separators.SeparatorsEdifact(segment, componentDataElement, dataElement,
-                            repetitionDataElement, escape);
-                        header = segmentName + una;
-                        break;
-                }
-
-                return new Tuple<string, Separators>(header, separators);
-
-            }
-            catch (Exception ex)
-            {
-                if (ex is ParsingException)
-                    throw;
-
-                throw new ParsingException(ErrorCodes.InvalidControlStructure, ex);
-            }
-        }
-
         internal static string Read(this StreamReader reader, int bytes, char[] trims)
         {
-            try
+            string result = null;
+            var counter = 0;
+            while (counter < bytes && !reader.EndOfStream)
             {
-                string result = null;
-                var counter = 0;
-                while (counter < bytes && !reader.EndOfStream)
-                {
-                    var symbol = reader.Read(1).Trim(trims);
-                    if (!string.IsNullOrEmpty(symbol))
-                        counter += 1;
-                    result += symbol;
-                }
-
-                return result;
+                var symbol = reader.Read(1).Trim(trims);
+                if (!string.IsNullOrEmpty(symbol))
+                    counter += 1;
+                result += symbol;
             }
-            catch (Exception ex)
-            {
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, ex);
-            }           
+
+            return result;
         }
 
-        internal static SegmentTags ToSegmentTag(this string segment, Separators separators = null)
+        internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
         {
             if (string.IsNullOrEmpty(segment) || string.IsNullOrWhiteSpace(segment) || segment.Length < 3)
                 return SegmentTags.Regular;
 
             if (segment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.Ordinal)) return SegmentTags.UNA;
 
-            var segmentTag = separators != null
-                ? segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault()
-                : segment.ToUpper().TrimStart().Substring(0, 3);
+            var segmentTag = segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault();
 
             SegmentTags tag;
             return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
         }
 
-        private static string Read(this StreamReader reader, int bytes)
+        internal static string Read(this StreamReader reader, int bytes)
         {
             var result = new char[bytes];
             reader.Read(result, 0, result.Length);
             return string.Concat(result);
         }
 
-        private static string ReadIsa(this StreamReader reader, char dataElementSeparator)
+        internal static string ReadIsa(this StreamReader reader, char dataElementSeparator)
         {
             var line = "";
             var counter = 0;
 
-            while (reader.Peek() >= 0 && counter < 15)
+            while (reader.Peek() >= 0 && counter < 15 && line.Length < 100)
             {
                 var symbol = (char) reader.Read();
                 line = line + symbol;

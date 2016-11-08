@@ -14,38 +14,43 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using EdiFabric.Framework.Constants;
-using EdiFabric.Framework.Controls;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
     /// Parses EDI messages into .NET objects.
     /// </summary>
-    public class EdiReader : IDisposable
+    public abstract class EdiReader : IDisposable
     {
-        private readonly StreamReader _streamReader;
-        private readonly string _rulesAssemblyName;
-        private readonly string _rulesNamespacePrefix;
-        private char[] _trims = { '\r', '\n', ' ' };
-        private Separators _separators;
-        private SegmentContext _lastGroupHeader;
-        private int _interchangeMarker;
-        private int _groupMarker;
-        private int _messageMarker;
-        
+        protected readonly StreamReader StreamReader;
+        protected readonly string RulesAssemblyName;
+        protected readonly string RulesNamespacePrefix;
+
+        /// <summary>
+        /// Symbols to discard while reading.
+        /// </summary>
+        protected char[] Trims
+        {
+            get
+            {
+                char[] trims = {'\r', '\n', ' '};
+                return Separators != null ? trims.Except(new[] {Separators.Segment}).ToArray() : trims;
+            }
+        }
+            
+        protected Separators Separators;
+
         /// <summary>
         /// The currently read item.
         /// </summary>
-        public object Item { get; private set; }
-
+        public object Item { get; protected set; }
+        
         /// <summary>
         /// End of stream reached.
         /// </summary>
         public bool EndOfStream
         {
-            get { return _streamReader.EndOfStream; }
+            get { return StreamReader.EndOfStream; }
         }
 
         /// <summary>
@@ -53,148 +58,22 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="settings">The additional settings.</param>
-        private EdiReader(Stream ediStream, ReaderSettings settings)
+        protected EdiReader(Stream ediStream, ReaderSettings settings)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (settings == null) throw new ArgumentNullException("settings");
 
-            _streamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
-            _rulesAssemblyName = settings.RulesAssemblyName;
-            _rulesNamespacePrefix = settings.RulesNamespacePrefix;
-            _interchangeMarker = 0;
-            _groupMarker = 0;
-            _messageMarker = 0;
-        }
-
-        /// <summary>
-        /// Factory method to initialize a new instance of the <see cref="EdiReader"/> class.
-        /// </summary>
-        /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="settings">The additional settings.</param>
-        /// <returns>A new instance of the <see cref="EdiReader"/> class.</returns>
-        public static EdiReader Create(Stream ediStream, ReaderSettings settings = null)
-        {
-            return new EdiReader(ediStream, settings ?? new ReaderSettings());
-        }
+            StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
+            RulesAssemblyName = settings.RulesAssemblyName;
+            RulesNamespacePrefix = settings.RulesNamespacePrefix;
+         }
 
         /// <summary>
         /// Reads an EDI item from the stream.
         /// Items can be: control segment, message or error.
         /// </summary>
         /// <returns>If a new message was read.</returns>
-        public bool Read(Action<object> collect = null)
-        {
-            var currentMessage = new List<SegmentContext>();
-            var result = false;
-
-            try
-            {
-                while (_streamReader.Peek() >= 0 && !result && !IsBreakingError())
-                {
-                    var currentSegment = ReadSegment();
-                    if (string.IsNullOrEmpty(currentSegment)) break;
-
-                    var segmentContext = new SegmentContext(currentSegment, _separators);
-                    switch (segmentContext.Tag)
-                    {
-                        // X12
-                        case SegmentTags.ISA:
-                            _interchangeMarker++;
-                            Item = segmentContext.Value.ParseSegment<S_ISA>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.GS:
-                            _groupMarker++;
-                            _lastGroupHeader = segmentContext;
-                            Item = segmentContext.Value.ParseSegment<S_GS>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.ST:
-                            _messageMarker++;
-                            currentMessage.Add(segmentContext);
-                            break;
-                        case SegmentTags.SE:
-                            _messageMarker--;
-                            currentMessage.Add(segmentContext);
-                            currentMessage.Add(_lastGroupHeader);
-                            Item = ParseX12(currentMessage);
-                            result = true;
-                            currentMessage.Clear();
-                            break;
-                        case SegmentTags.GE:
-                            _groupMarker--;
-                            _lastGroupHeader = null;
-                            Item = segmentContext.Value.ParseSegment<S_GE>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.IEA:
-                            _interchangeMarker--;
-                            Item = segmentContext.Value.ParseSegment<S_IEA>(_separators);
-                            _separators = null;
-                            result = true;
-                            break;
-                        // EDIFACT
-                        case SegmentTags.UNA:
-                            if (_interchangeMarker != 0)
-                                throw ControlException();
-                            break;
-                        case SegmentTags.UNB:
-                            _interchangeMarker++;
-                            Item = segmentContext.Value.ParseSegment<S_UNB>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.UNG:
-                            _groupMarker++;
-                            Item = segmentContext.Value.ParseSegment<S_UNG>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.UNH:
-                            _messageMarker++;
-                            currentMessage.Add(segmentContext);
-                            break;
-                        case SegmentTags.UNT:
-                            _messageMarker--;
-                            currentMessage.Add(segmentContext);
-                            Item = ParseEdifact(currentMessage);
-                            result = true;
-                            currentMessage.Clear();
-                            break;
-                        case SegmentTags.UNE:
-                            _groupMarker--;
-                            Item = segmentContext.Value.ParseSegment<S_UNE>(_separators);
-                            result = true;
-                            break;
-                        case SegmentTags.UNZ:
-                            _interchangeMarker--;
-                            Item = segmentContext.Value.ParseSegment<S_UNZ>(_separators);
-                            _separators = null;
-                            result = true;
-                            break;
-                        default:
-                            currentMessage.Add(segmentContext);
-                            break;
-                    }
-
-                    ValidateControlStructure();
-                }
-            }
-            catch (ParsingException ex)
-            {
-                Item = ex;
-                result = true;
-                currentMessage.Clear();
-            }
-            catch (Exception ex)
-            {
-                Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
-                result = true;
-                currentMessage.Clear();
-            }
-
-            if (collect != null && result) collect(Item);
-
-            return result;
-        }
+        public abstract bool Read(Action<object> collect = null);
 
         /// <summary>
         /// Reads the stream to the end.
@@ -208,62 +87,70 @@ namespace EdiFabric.Framework.Readers
             }
         }
 
-        private string ReadSegment()
-        {
-            var first3 = _streamReader.Read(3, _trims);
+        /// <summary>
+        /// Probes for interchange header.
+        /// Sets the separators if header was found.
+        /// </summary>
+        /// <param name="segmentName">The probed segment name.</param>
+        /// <param name="header">The interchange header.</param>
+        /// <returns>If an interchange header was found.</returns>
+        protected abstract bool TryReadControl(string segmentName, out string header);
 
-            if (string.IsNullOrEmpty(first3)) return null;
-            var header = _streamReader.ReadControl(first3);
-            if (header.Item2 != null && _separators == null)
+        protected string ReadSegment()
+        {
+            var line = "";
+
+            while (StreamReader.Peek() >= 0)
             {
-                _separators = header.Item2;
-                _trims = _trims.Except(new[] {_separators.Segment}).ToArray();
+                var symbol = StreamReader.Read(1);
+                line = line + symbol;
+
+                if (line.Length > 2)
+                {
+                    string probed;
+                    var last3 = line.Substring(line.Length - 3);
+                    if (TryReadControl(last3, out probed))
+                    {
+                        line = probed;
+                    }
+                    else
+                    {
+                        if(!string.IsNullOrEmpty(probed))
+                            line = line.Substring(0, line.Length - 3) + probed;
+                    }                    
+                }
+
+                // Segment terminator may never be reached
+                if (line.Count() > 1024)
+                {
+                    line = "";
+                    Separators = null;
+                }
+
+                if (Separators == null)
+                    continue;
+
+                if (line.EndsWith(Separators.Segment.ToString(), StringComparison.Ordinal))
+                {
+                    if (Separators.Escape.HasValue &&
+                        line.EndsWith(string.Concat(Separators.Escape.Value, Separators.Segment),
+                            StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
+                    int index = line.LastIndexOf(Separators.Segment.ToString(), StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        line = line.Remove(index);
+                    }
+
+                    if (!string.IsNullOrEmpty(line))
+                        break;
+                }
             }
 
-            if (_separators == null)
-                throw new ParsingException(ErrorCodes.InvalidControlStructure);
-
-            return header.Item1 ?? first3 + _streamReader.ReadSegment(_separators);
-        }
-
-        private object ParseX12(List<SegmentContext> currentMessage)
-        {
-            var type = currentMessage.ToX12Type(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-            return currentMessage.Analyze(_separators, type, _rulesAssemblyName);
-        }
-
-        private object ParseEdifact(List<SegmentContext> currentMessage)
-        {
-            var type = currentMessage.ToEdifactType(_separators, _rulesAssemblyName, _rulesNamespacePrefix);
-            return currentMessage.Analyze(_separators, type, _rulesAssemblyName);
-        }
-
-        private bool IsBreakingError()
-        {
-            var error = Item as ParsingException;
-            if (error == null) return false;
-            
-            return error.ErrorCode == ErrorCodes.InvalidControlStructure ||
-                   error.ErrorCode == ErrorCodes.InvalidInterchangeContent ||
-                   error.ErrorCode == ErrorCodes.ImproperEndOfFile ||
-                   error.ErrorCode == ErrorCodes.SegmentTerminatorNotFound;
-        }
-
-        private void ValidateControlStructure()
-        {
-            if (_interchangeMarker < 0 || _interchangeMarker > 1)
-                throw ControlException();
-            if (_groupMarker < 0 || _groupMarker > 1 || (_groupMarker == 1 && _interchangeMarker == 0))
-                throw ControlException();
-            if (_messageMarker < 0 || _messageMarker > 1 || (_messageMarker == 1 && _interchangeMarker == 0))
-                throw ControlException();
-        }
-
-        private ParsingException ControlException()
-        {
-            return _streamReader.EndOfStream
-                ? new ParsingException(ErrorCodes.ImproperEndOfFile)
-                : new ParsingException(ErrorCodes.InvalidControlStructure);
+            return line.Trim(Trims);
         }
 
         /// <summary>
@@ -271,8 +158,8 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         public void Dispose()
         {
-            if (_streamReader != null)
-                _streamReader.Dispose();
+            if (StreamReader != null)
+                StreamReader.Dispose();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace EdiFabric.Tests
     public class TestEdifact
     {
         [TestMethod]
-        public void TestParse()
+        public void TestParseEdifact()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
@@ -24,7 +24,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -50,13 +50,13 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithValidationFailure()
+        public void TestParseEdifactWithValidationFailure()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
             
             // ACT
-            var message = TestHelper.Parse(sample).OfType<M_INVOIC>().Single();
+            var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
             var brokenRules = message.Validate();
 
             // ASSERT
@@ -64,13 +64,13 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithValidation()
+        public void TestParseEdifactWithValidation()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Valid.txt";
             
             // ACT
-            var message = TestHelper.Parse(sample).OfType<M_INVOIC>().Single();
+            var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
             var brokenRules = message.Validate();
 
             // ASSERT
@@ -78,7 +78,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithDefaultUna()
+        public void TestParseEdifactWithDefaultUna()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_DefaultUNA.txt";
@@ -86,7 +86,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -98,7 +98,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithNonDefaultUna()
+        public void TestParseEdifactWithNonDefaultUna()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
@@ -106,7 +106,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -118,7 +118,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithLf()
+        public void TestParseEdifactWithLf()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_LF.txt";
@@ -126,7 +126,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample, Encoding.UTF8).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample, Encoding.UTF8).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -157,20 +157,20 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithError()
+        public void TestParseEdifactWithError()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BadSegment.txt";
 
             // ACT
-            var ediItems = TestHelper.Parse(sample);
+            var ediItems = TestHelper.ParseEdifact(sample);
 
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]
-        public void TestParseWithGroup()
+        public void TestParseEdifactWithGroup()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Group.txt";
@@ -178,7 +178,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -190,7 +190,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithGroupAndMultipleMessages()
+        public void TestParseEdifactWithGroupAndMultipleMessages()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
@@ -198,7 +198,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<M_INVOIC>().Count() == 2);
@@ -217,7 +217,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithMultipleGroups()
+        public void TestParseEdifactWithMultipleGroups()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
@@ -225,7 +225,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<M_INVOIC>().Count() == 2);
@@ -244,7 +244,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithMultipleMessages()
+        public void TestParseEdifactWithMultipleMessages()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
@@ -252,7 +252,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<M_INVOIC>().Count() == 2);
@@ -271,7 +271,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithEscapedSegmentTerminator()
+        public void TestParseEdifactWithEscapedSegmentTerminator()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
@@ -279,7 +279,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -319,7 +319,7 @@ namespace EdiFabric.Tests
         }
         
         [TestMethod]
-        public void TestParseWithEscapedEscape()
+        public void TestParseEdifactWithEscapedEscape()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
@@ -327,7 +327,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -367,7 +367,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithRepeatingDataElement()
+        public void TestParseEdifactWithRepeatingDataElement()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
@@ -375,7 +375,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -401,7 +401,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithEscapedRepetiton()
+        public void TestParseEdifactWithEscapedRepetiton()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
@@ -409,7 +409,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -449,7 +449,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithHeaders()
+        public void TestParseEdifactWithHeaders()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Group.txt";
@@ -459,7 +459,7 @@ namespace EdiFabric.Tests
             var expectedXmlInterchange = XElement.Load(TestHelper.Load(expectedInterchange));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -474,7 +474,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithTrailingBlanks()
+        public void TestParseEdifactWithTrailingBlanks()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_TrailingBlanks.txt";
@@ -482,7 +482,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -495,7 +495,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithMultipleInterchange()
+        public void TestParseEdifactWithMultipleInterchange()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
@@ -507,7 +507,7 @@ namespace EdiFabric.Tests
             var expectedXmlInterchange2 = XElement.Load(TestHelper.Load(expectedInterchange2));
 
             // ACT
-            var items = TestHelper.Parse(sample).ToList();
+            var items = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(items.Count == 6);
@@ -527,26 +527,26 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithInvalidTrailers()
+        public void TestParseEdifactWithInvalidTrailers()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_InvalidTrailers.txt";
 
             // ACT
-            var ediItems = TestHelper.Parse(sample);
+            var ediItems = TestHelper.ParseEdifact(sample);
 
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]
-        public void TestParseWithInvalidHeader()
+        public void TestParseEdifactWithInvalidHeader()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_InvalidHeader.txt";
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsTrue(ediItems.Count() == 1);
@@ -554,13 +554,13 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithInvalidSegment()
+        public void TestParseEdifactWithInvalidSegment()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_InvalidSegment.txt";
 
             // ACT
-            var ediItems = TestHelper.Parse(sample);
+            var ediItems = TestHelper.ParseEdifact(sample);
 
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
@@ -581,7 +581,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithRulesAssemblyName()
+        public void TestParseEdifactWithRulesAssemblyName()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
@@ -589,7 +589,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample, null, "EdiFabric.Rules").ToList();
+            var ediItems = TestHelper.ParseEdifact(sample, null, "EdiFabric.Rules").ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -602,14 +602,14 @@ namespace EdiFabric.Tests
 
         
         [TestMethod]
-        public void TestParseWithGroupRead()
+        public void TestParseEdifactWithGroupRead()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 while (ediReader.Read())
                 {
@@ -625,14 +625,14 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithInterchangeRead()
+        public void TestParseEdifactWithInterchangeRead()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 while (ediReader.Read())
                 {
@@ -648,14 +648,14 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithMissingGroupTrailer()
+        public void TestParseEdifactWithMissingGroupTrailer()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MissingGroupTrailer.txt";
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 while (ediReader.Read())
                 {
@@ -671,14 +671,14 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithMissingInterchangeTrailer()
+        public void TestParseEdifactWithMissingInterchangeTrailer()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MissingInterchangeTrailer.txt";
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 while (ediReader.Read())
                 {
@@ -694,13 +694,13 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithValidAndInvalidMessageRead()
+        public void TestParseEdifactWithValidAndInvalidMessageRead()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt";
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 var ediItems = ediReader.ReadToEnd().ToList();
 
@@ -714,14 +714,14 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithCollection()
+        public void TestParseEdifactWithCollection()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdiReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
             {
                 while (ediReader.Read(ediItems.Add))
                 {
@@ -735,7 +735,7 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
-        public void TestParseWithBlankRepetition()
+        public void TestParseEdifactWithBlankRepetition()
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_BlankRepetition.txt";
@@ -743,7 +743,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseEdifact(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);

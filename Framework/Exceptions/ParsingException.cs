@@ -25,12 +25,19 @@ namespace EdiFabric.Framework.Exceptions
         public ErrorCodes ErrorCode { get; private set; }
 
         /// <summary>
+        /// The parsing details.
+        /// </summary>
+        public ParsingDetails Details { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
         /// <param name="errorCode">The error code.</param>
-        public ParsingException(ErrorCodes errorCode) : base(errorCode.ToDescription())
+        /// <param name="details">The parsing details.</param>
+        public ParsingException(ErrorCodes errorCode, ParsingDetails details = null) : base(errorCode.ToDescription())
         {
             ErrorCode = errorCode;
+            Details = details;
         }
 
         /// <summary>
@@ -38,10 +45,12 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The error message.</param>
-        public ParsingException(ErrorCodes errorCode, string message)
+        /// /// <param name="details">The parsing details.</param>
+        public ParsingException(ErrorCodes errorCode, string message, ParsingDetails details = null)
             : base(message)
         {
             ErrorCode = errorCode;
+            Details = details;
         }
 
         /// <summary>
@@ -49,10 +58,12 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="errorCode">The error code.</param>
         /// <param name="ex">The inner exception.</param>
-        public ParsingException(ErrorCodes errorCode, Exception ex)
+        /// /// <param name="details">The parsing details.</param>
+        public ParsingException(ErrorCodes errorCode, Exception ex, ParsingDetails details = null)
             : base(errorCode.ToDescription(), ex)
         {
             ErrorCode = errorCode;
+            Details = details;
         }
 
         /// <summary>
@@ -61,10 +72,12 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="ex">The inner exception.</param>
-        public ParsingException(ErrorCodes errorCode, string message, Exception ex)
+        /// /// <param name="details">The parsing details.</param>
+        public ParsingException(ErrorCodes errorCode, string message, Exception ex, ParsingDetails details = null)
             : base(message, ex)
         {
             ErrorCode = errorCode;
+            Details = details;
         }
     }
 }

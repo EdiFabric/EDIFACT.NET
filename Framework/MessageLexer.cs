@@ -60,7 +60,12 @@ namespace EdiFabric.Framework
 
                 var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                 if (currSeg == null)
+                {
+                    if(messageGrammar.Descendants().Any(d => d.Name == segment.Name))
+                        throw new ParsingException(ErrorCodes.SegmentNotDefined, segment.Value);
+                    
                     throw new ParsingException(ErrorCodes.SegmentNotFound, segment.Value);
+                }
 
                 var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
                 instancePosition =

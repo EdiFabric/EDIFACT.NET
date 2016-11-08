@@ -31,11 +31,27 @@ namespace EdiFabric.Tests
             return list.Aggregate("", (current, item) => current + item + postFix);
         }
 
-        public static IEnumerable<object> Parse(string sample, Encoding encoding = null,
+        public static IEnumerable<object> ParseX12(string sample, Encoding encoding = null,
             string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
         {
             using (
-                var ediReader = EdiReader.Create(Load(sample),
+                var ediReader = X12Reader.Create(Load(sample),
+                    new ReaderSettings
+                    {
+                        Encoding = encoding,
+                        RulesAssemblyName = rulesAssemblyName,
+                        RulesNamespacePrefix = rulesNameSpacePrefix
+                    }))
+            {
+                return ediReader.ReadToEnd().ToList();
+            }
+        }
+
+        public static IEnumerable<object> ParseEdifact(string sample, Encoding encoding = null,
+            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
+        {
+            using (
+                var ediReader = EdifactReader.Create(Load(sample),
                     new ReaderSettings
                     {
                         Encoding = encoding,
@@ -49,7 +65,7 @@ namespace EdiFabric.Tests
 
         public static EdifactInterchange GenerateEdifact<T>(string sample)
         {
-            var items = Parse(sample).ToList();
+            var items = ParseEdifact(sample).ToList();
 
             var ung = items.OfType<S_UNG>().SingleOrDefault();
             var group = new EdifactGroup<T>(ung ?? null);
@@ -62,7 +78,7 @@ namespace EdiFabric.Tests
 
         public static X12Interchange GenerateX12<T>(string sample, string rulesNameSpacePrefix = null)
         {
-            var items = Parse(sample, null, null, rulesNameSpacePrefix).ToList();
+            var items = ParseX12(sample, null, null, rulesNameSpacePrefix).ToList();
 
             var group = new X12Group<T>(items.OfType<S_GS>().Single());
             group.AddItem(items.OfType<T>().Single());

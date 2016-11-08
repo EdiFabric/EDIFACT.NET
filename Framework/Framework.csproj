@@ -81,8 +81,10 @@
     <Compile Include="Constants\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Exceptions\ParsingDetails.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Controls\IEdiGroup.cs" />
+    <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Constants\SegmentTags.cs" />
     <Compile Include="Controls\EdiContainer.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\ReaderSettings.cs" />
+    <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="SegmentContext.cs" />
     <Compile Include="ParseNode.cs" />
     <Compile Include="MessageLexer.cs" />

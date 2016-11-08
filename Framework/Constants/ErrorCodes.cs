@@ -85,5 +85,12 @@ namespace EdiFabric.Framework.Constants
         /// Data elements count is different
         /// </summary>
         DataElementsNumberMismatch,
+
+        /// <summary>
+        /// Segment not defined in class
+        /// </summary>
+        SegmentNotDefined,
+
+        
     }
 }

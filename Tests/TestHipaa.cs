@@ -20,7 +20,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -54,7 +54,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -88,7 +88,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -122,7 +122,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var ediItems = TestHelper.Parse(sample).ToList();
+            var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
             Assert.IsNotNull(ediItems);
