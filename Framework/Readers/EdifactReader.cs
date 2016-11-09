@@ -13,9 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -111,69 +111,77 @@ namespace EdiFabric.Framework.Readers
                 return;
 
             var segmentContext = new SegmentContext(segment, Separators);
+
+            if (Flush(segmentContext, SegmentTags.UNH))
+                return;
+
             switch (segmentContext.Tag)
             {
                 case SegmentTags.UNA:
-                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNB:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNB>(Separators);
                     break;
                 case SegmentTags.UNG:
-                    CurrentMessage.Clear();
                     Item = segmentContext.Value.ParseSegment<S_UNG>(Separators);
                     break;
                 case SegmentTags.UNH:
-                    if (CurrentMessage.Any(s => !s.IsControl))
-                    {
-                        Item = ParseMessage();
-                        CurrentMessage.Clear();
-                    }
                     CurrentMessage.Add(segmentContext);
                     break;
                 case SegmentTags.UNT:
-                    CurrentMessage.Add(segmentContext);
-                    Item = ParseMessage();
-                    CurrentMessage.Clear();
+                    try
+                    {
+                        CurrentMessage.Add(segmentContext);
+                        Item = CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+                    }
+                    finally
+                    {
+                        CurrentMessage.Clear();
+                    }
                     break;
                 case SegmentTags.UNE:
                     Item = segmentContext.Value.ParseSegment<S_UNE>(Separators);
-                    CurrentMessage.Clear();
                     break;
                 case SegmentTags.UNZ:
                     Item = segmentContext.Value.ParseSegment<S_UNZ>(Separators);
-                    CurrentMessage.Clear();
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);
                     break;
             }
         }
-
-        private object ParseMessage()
-        {
-            try
-            {
-                return CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
-            }
-            catch (Exception ex)
-            {
-                return new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
-            }
-        }
-
-        private Type ToType()
+        
+        protected override Type ToType()
         {
             var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.UNH);
             if (unh == null)
-                throw new ParsingException(ErrorCodes.UnhNotFound);
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "UNH was not found.");
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
-                throw new ParsingException(ErrorCodes.UnhInvalid);
+            {
+                var pd = new ErrorContext
+                {
+                    SegmentName = "UNH",
+                    SegmentPosition = 1,
+                    SegmentSupported = true
+                };
+
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
+                    "UNH is invalid. Too little data elements.", unh.Value, pd);
+            }
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
-                throw new ParsingException(ErrorCodes.UnhInvalid);
+            {
+                var pd = new ErrorContext
+                {
+                    SegmentName = "UNH",
+                    SegmentPosition = 1,
+                    SegmentSupported = true
+                };
+
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
+                    "UNH is invalid. Unable to read message type or version.", unh.Value, pd);
+            }
 
             var tag = ediDataElements[0];
             var version = ediDataElements[1] + ediDataElements[2];

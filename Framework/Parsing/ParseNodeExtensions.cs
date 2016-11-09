@@ -13,9 +13,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Framework.Constants;
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Parsing
 {
     static class ParseNodeExtensions
     {
@@ -382,26 +381,6 @@ namespace EdiFabric.Framework
                 throw new Exception("Invalid control structure. UNH or ST was not found.");
 
             return controlNumber.Value;
-        }
-
-        internal static string ApplyMessageTrailer(this string segment, string controlNumber, string segmentsCount, Separators separators)
-        {
-            string tag = null;
-            if (segment.StartsWith("UNT" + separators.DataElement, StringComparison.Ordinal))
-            {
-                tag = "UNT";
-            }
-
-            if (segment.StartsWith("SE" + separators.DataElement, StringComparison.Ordinal))
-            {
-                tag = "SE";
-            }
-
-            if (!string.IsNullOrEmpty(tag))
-                return tag + separators.DataElement + segmentsCount + separators.DataElement + controlNumber +
-                       separators.Segment;
-
-            return segment;
-        }
+        }       
     }
 }

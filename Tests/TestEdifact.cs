@@ -885,12 +885,11 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.IsTrue(items.OfType<S_UNB>().Count() == 1);
             Assert.IsNull(items.OfType<S_UNG>().SingleOrDefault());
-            Assert.IsTrue(items.OfType<M_INVOIC>().Count() == 2);
+            Assert.IsTrue(items.OfType<M_INVOIC>().Count() == 3);
             Assert.IsNull(items.OfType<S_UNE>().SingleOrDefault());
             Assert.IsTrue(items.OfType<S_UNZ>().Count() == 1);
             Assert.IsTrue(items.OfType<ParsingException>().Count() == 2);
-            Assert.IsTrue(items.Count == 6);
-            foreach (var item in items.OfType<M_INVOIC>())
+            foreach (var item in items.OfType<M_INVOIC>().Skip(1))
             {
                 Assert.IsNotNull(item);
                 var parsedXml = item.Serialize();

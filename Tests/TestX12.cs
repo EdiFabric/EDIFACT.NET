@@ -687,7 +687,7 @@ namespace EdiFabric.Tests
             Assert.IsTrue(items.OfType<S_GS>().Count() == 3);
             Assert.IsTrue(items.OfType<S_GE>().Count() == 3);
             Assert.IsTrue(items.OfType<S_IEA>().Count() == 2);
-            Assert.IsNull(items.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsNotNull(items.OfType<ParsingException>().SingleOrDefault());
 
             foreach (var msg in items.OfType<M_810>())
             {
@@ -712,12 +712,12 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<M_810>().Count() == 3);
             Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
 
-            foreach (var msg in ediItems.OfType<M_810>())
+            foreach (var msg in ediItems.OfType<M_810>().Skip(1))
             {
                 var parsedXml = msg.Serialize();
                 Assert.IsNotNull(parsedXml.Root);

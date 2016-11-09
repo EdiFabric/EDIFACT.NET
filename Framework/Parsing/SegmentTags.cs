@@ -9,7 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Constants
+namespace EdiFabric.Framework.Parsing
 {
     /// <summary>
     /// Enum of control segment tags.

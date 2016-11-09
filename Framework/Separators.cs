@@ -9,7 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Framework.Constants;
+using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework
 {

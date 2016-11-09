@@ -15,9 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
-using EdiFabric.Framework.Constants;
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Parsing
 {
     static class PropertyInfoExtensions
     {

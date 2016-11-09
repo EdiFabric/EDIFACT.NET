@@ -9,7 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Constants
+namespace EdiFabric.Framework.Parsing
 {
     enum Prefixes
     {

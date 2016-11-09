@@ -14,8 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -24,7 +24,11 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        private readonly Queue<char> _buffer; 
+        protected SegmentContext CurrentGroupHeader;
+        /// <summary>
+        /// Internal buffer.
+        /// </summary>
+        protected Queue<char> Buffer { get; private set; } 
         /// <summary>
         /// The list of segments that are currently being collected.
         /// </summary>
@@ -84,7 +88,7 @@ namespace EdiFabric.Framework.Readers
             RulesAssemblyName = settings.RulesAssemblyName;
             RulesNamespacePrefix = settings.RulesNamespacePrefix;
             CurrentMessage = new List<SegmentContext>();
-            _buffer = new Queue<char>();           
+            Buffer = new Queue<char>();           
          }
 
         /// <summary>
@@ -98,14 +102,13 @@ namespace EdiFabric.Framework.Readers
 
             try
             {
-                while (StreamReader.Peek() >= 0 && Item == null)
+                while ((!StreamReader.EndOfStream || Buffer.Any()) && Item == null)
                 {
                     ProcessSegment(ReadSegment());
                     
                     if (Separators != null) continue;
                     
-                    Item = new ParsingException(ErrorCodes.NoInterchangeFound);
-                    CurrentMessage.Clear();
+                    Item = new ParsingException(ErrorCodes.InvalidControlStructure, "No valid interchange header was found.");
                 }               
             }
             catch (ParsingException ex)
@@ -117,9 +120,9 @@ namespace EdiFabric.Framework.Readers
                 Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
             }
 
-            if (StreamReader.EndOfStream && CurrentMessage.Any(s => !s.IsControl))
+            if (StreamReader.EndOfStream && CurrentMessage.Any())
             {
-                Item = new ParsingException(ErrorCodes.ImproperEndOfFile);
+                Item = new ParsingException(ErrorCodes.ImproperEndOfFile, "Unprocessed segments before the end of file.");
                 CurrentMessage.Clear();
             }
 
@@ -155,6 +158,12 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="segment">The current segment.</param>
         protected abstract void ProcessSegment(string segment);
+
+        /// <summary>
+        /// Extracts the message type and version and builds the rules message type.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Type ToType();
         
         /// <summary>
         /// Reads a segment from the stream.
@@ -165,11 +174,11 @@ namespace EdiFabric.Framework.Readers
         protected string ReadSegment()
         {
             var line = "";
-            
-            while (StreamReader.Peek() >= 0)
+
+            while (!StreamReader.EndOfStream || Buffer.Any())
             {
-                var symbol = _buffer.Any()
-                    ? _buffer.Dequeue().ToString()
+                var symbol = Buffer.Any()
+                    ? Buffer.Dequeue().ToString()
                     : StreamReader.Read(1);
 
                 line = line + symbol;
@@ -188,7 +197,7 @@ namespace EdiFabric.Framework.Readers
                     {
                         if (!string.IsNullOrEmpty(probed))
                             foreach (var c in probed.Skip(3))
-                                _buffer.Enqueue(c);
+                                Buffer.Enqueue(c);
                     }
                 }
 
@@ -223,6 +232,37 @@ namespace EdiFabric.Framework.Readers
             }
 
             return line.Trim(Trims);
+        }
+
+        /// <summary>
+        /// Tries to parse what had been collected before a new message starts.
+        /// </summary>
+        /// <param name="segmentContext">The current segment.</param>
+        /// <param name="tag">The start new message tag.</param>
+        /// <returns>If flushed.</returns>
+        protected bool Flush(SegmentContext segmentContext, SegmentTags tag)
+        {
+            if ((segmentContext.IsControl || segmentContext.Tag == tag) && CurrentMessage.Any())
+            {
+                foreach (var c in segmentContext.Value)
+                    Buffer.Enqueue(c);
+                Buffer.Enqueue(Separators.Segment);
+
+                try
+                {
+                    if(CurrentGroupHeader != null)
+                        CurrentMessage.Add(CurrentGroupHeader);
+                    Item = CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+                }
+                finally
+                {
+                    CurrentMessage.Clear();
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

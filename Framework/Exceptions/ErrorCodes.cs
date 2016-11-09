@@ -9,40 +9,56 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Constants
+namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// The segment within the acknowledgment and the format.
+    /// System error codes for all know error conditions.
     /// </summary>
-    public enum ErrorContexts
+    public enum ErrorCodes
     {
         /// <summary>
         /// N/A
         /// </summary>
         Unknown,
+
         /// <summary>
-        /// X12 TA1
+        /// Invalid control structure
         /// </summary>
-        X12Ta1,
+        InvalidControlStructure,
+
         /// <summary>
-        /// EDIFACT CONTRL
+        /// Invalid interchange content
         /// </summary>
-        EdifactContrl,
+        InvalidInterchangeContent,
+
         /// <summary>
-        /// X12 997 AK304 Error Codes
+        /// Improper end of file
         /// </summary>
-        X12997Ak3,
+        ImproperEndOfFile,
+
         /// <summary>
-        /// X12 997 AK403 Error Codes
+        /// The name of the rules assembly was not set 
         /// </summary>
-        X12997Ak4,
+        RulesAssemblyNameNotSet,
+
         /// <summary>
-        /// X12 997 AK502 through AK506 Error Codes
+        /// Unexpected message
         /// </summary>
-        X12997Ak5,
+        UnexpectedMessage,
+
         /// <summary>
-        /// X12 997 AK905 through AK909 Error Codes
+        /// Unexpected segment
         /// </summary>
-        X12997Ak9
+        UnexpectedSegment,
+
+        /// <summary>
+        /// Data elements are too many
+        /// </summary>
+        DataElementsTooMany,
+
+        /// <summary>
+        /// Data elements are too many
+        /// </summary>
+        UnableToResolveHl
     }
 }

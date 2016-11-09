@@ -14,8 +14,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using EdiFabric.Framework.Constants;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -84,7 +84,7 @@ namespace EdiFabric.Framework.Readers
 
             while (reader.Peek() >= 0 && counter < 15 && line.Length < 100)
             {
-                var symbol = (char) reader.Read();
+                var symbol = reader.Read(1)[0];
                 line = line + symbol;
 
                 if (dataElementSeparator == symbol)
@@ -102,7 +102,9 @@ namespace EdiFabric.Framework.Readers
             if (String.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
 
             var rulesAssembly = rulesAssemblyName ?? RulesAssembly;
-            if (String.IsNullOrEmpty(rulesAssembly)) throw new ParsingException(ErrorCodes.RulesAssemblyNameNotSet);
+            if (String.IsNullOrEmpty(rulesAssembly))
+                throw new ParsingException(ErrorCodes.RulesAssemblyNameNotSet,
+                    "The name of the rules assembly was neither set in .config nor passed explicitly.");
             var namespacePrefix = rulesNamespacePrefix ?? "EdiFabric.Rules";
             var typeFullName = namespacePrefix.TrimEnd('.') + "." + format + version + tag;
             typeFullName = typeFullName + ".M_" + tag;
@@ -113,13 +115,13 @@ namespace EdiFabric.Framework.Readers
             {
                 var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
                 if (systemType == null)
-                    throw new ParsingException(ErrorCodes.TypeNotFound, errorMsg);
+                    throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
 
                 return systemType;
             }
             catch (Exception)
             {
-                throw new ParsingException(ErrorCodes.TypeNotFound, errorMsg);
+                throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
             }
         }
 
@@ -207,15 +209,44 @@ namespace EdiFabric.Framework.Readers
                 Logger.Log(String.Format("Segment to match: {0}", segment.LogName));
                 // Jump back to HL segment if needed
                 if (segment.IsJump)
-                    segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                {
+                    try
+                    {
+                        segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                    }
+                    catch (Exception ex)
+                    {
+                        var ec = new ErrorContext
+                        {
+                            SegmentName = segment.Name,
+                            SegmentSupported = true,
+                            SegmentPosition = segments.IndexOf(segment) + 1
+                        };
+
+                        throw new ParsingException(ErrorCodes.UnableToResolveHl,
+                             "Unable to resolve HL.", ex, segment.Value, ec);
+                    }                   
+                }
 
                 var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                 if (currSeg == null)
                 {
-                    if (messageGrammar.Descendants().Any(d => d.Name == segment.Name))
-                        throw new ParsingException(ErrorCodes.SegmentNotDefined, segment.Value);
+                    var ec = new ErrorContext
+                    {
+                        SegmentName = segment.Name,
+                        SegmentSupported = true,
+                        SegmentPosition = segments.IndexOf(segment) + 1
+                    };
 
-                    throw new ParsingException(ErrorCodes.SegmentNotFound, segment.Value);
+                    if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
+                    {
+                        ec.SegmentSupported = false;
+                        throw new ParsingException(ErrorCodes.UnexpectedSegment,
+                            "Segment is not supported in rules class.", segment.Value, ec);                        
+                    }
+
+                    throw new ParsingException(ErrorCodes.UnexpectedSegment,
+                             "Segment was not in the correct position according to the rules class.", segment.Value, ec);
                 }
 
                 var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
@@ -250,10 +281,17 @@ namespace EdiFabric.Framework.Readers
                 var currentDataElement = dataElements[deIndex];
                 if (String.IsNullOrEmpty(currentDataElement)) continue;
                 if (dataElementsGrammar.Count <= deIndex)
-                    throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
-                        String.Format(
-                            "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
-                            dataElements.Length, line, dataElementsGrammar.Count));
+                {
+                    var ec = new ErrorContext
+                    {
+                        SegmentName = parseNode.EdiName,
+                        SegmentSupported = true,
+                        SegmentPosition = parseNode.IndexInParent() + 1
+                    };
+
+                    throw new ParsingException(ErrorCodes.DataElementsTooMany, "Too many data elements in segment.", line, ec);
+                }
+
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
 
                 var repetitions = currentDataElementGrammar.IsX12RepetitionSeparator()
@@ -276,11 +314,16 @@ namespace EdiFabric.Framework.Readers
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (String.IsNullOrEmpty(currentComponentDataElement)) continue;
                         if (componentDataElementsGrammar.Count <= cdeIndex)
-                            throw new ParsingException(ErrorCodes.DataElementsNumberMismatch,
-                                String.Format(
-                                    "Number of data elements ({0}) in segment {1} is greater than the number of data elements ({2}) in the rule class.",
-                                    componentDataElements.Length, currentComponentDataElement,
-                                    componentDataElementsGrammar.Count));
+                        {
+                            var ec = new ErrorContext
+                            {
+                                SegmentName = parseNode.EdiName,
+                                SegmentSupported = true,
+                                SegmentPosition = parseNode.IndexInParent() + 1
+                            };
+
+                            throw new ParsingException(ErrorCodes.DataElementsTooMany, "Too many data elements in segment.", line, ec);
+                        }
                         var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
 
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,

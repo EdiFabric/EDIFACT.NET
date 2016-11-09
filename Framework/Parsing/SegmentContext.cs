@@ -10,10 +10,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using EdiFabric.Framework.Constants;
+using System.Linq;
 using EdiFabric.Framework.Readers;
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Parsing
 {
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the segment.
@@ -74,7 +74,7 @@ namespace EdiFabric.Framework
             if (dataElements[0] == ediSegment)
                 dataElements[0] = dataElements[0].TrimEnd(separators.Segment);
 
-            Name = dataElements[0];
+            Name = string.Concat(dataElements[0].Take(3));
             Value = ediSegment;
 
             // UNA segments don't have values

@@ -14,12 +14,8 @@ namespace EdiFabric.Framework.Exceptions
     /// <summary>
     /// The error context of what and where had failed. 
     /// </summary>
-    public class ParsingDetails
+    public class ErrorContext
     {
-        /// <summary>
-        /// Whether the message is supported in the rules class.
-        /// </summary>
-        public bool MessageSupported = true;
         /// <summary>
         /// The segment tag.
         /// </summary>
@@ -32,10 +28,6 @@ namespace EdiFabric.Framework.Exceptions
         /// Whether the segment is supported in the rules class.
         /// </summary>
         public bool SegmentSupported { get; set; }
-        /// <summary>
-        /// The original segment line.
-        /// </summary>
-        public string SegmentValue { get; set; }
         /// <summary>
         /// The name of the data element.
         /// </summary>
