@@ -80,6 +80,9 @@ namespace EdiFabric.Framework.Readers
 
         protected override void ProcessSegment(string segment)
         {
+            if (string.IsNullOrEmpty(segment) || Separators == null)
+                return;
+
             var segmentContext = new SegmentContext(segment, Separators);
             switch (segmentContext.Tag)
             {

@@ -24,7 +24,7 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        private string _remaining;
+        private readonly Queue<char> _buffer; 
         /// <summary>
         /// The list of segments that are currently being collected.
         /// </summary>
@@ -79,13 +79,12 @@ namespace EdiFabric.Framework.Readers
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (settings == null) throw new ArgumentNullException("settings");
-            if (!ediStream.CanSeek) throw new Exception("Only streams supporting seek are supported");
-
-            _remaining = "";
+            
             StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
             RulesAssemblyName = settings.RulesAssemblyName;
             RulesNamespacePrefix = settings.RulesNamespacePrefix;
             CurrentMessage = new List<SegmentContext>();
+            _buffer = new Queue<char>();           
          }
 
         /// <summary>
@@ -101,11 +100,9 @@ namespace EdiFabric.Framework.Readers
             {
                 while (StreamReader.Peek() >= 0 && Item == null)
                 {
-                    var currentSegment = ReadSegment();
-                    if (Separators != null && !string.IsNullOrEmpty(currentSegment))
-                        ProcessSegment(currentSegment);
-
-                    if (Separators != null || Item != null) continue;
+                    ProcessSegment(ReadSegment());
+                    
+                    if (Separators != null) continue;
                     
                     Item = new ParsingException(ErrorCodes.NoInterchangeFound);
                     CurrentMessage.Clear();
@@ -171,15 +168,16 @@ namespace EdiFabric.Framework.Readers
             
             while (StreamReader.Peek() >= 0)
             {
-                var symbol = string.IsNullOrEmpty(_remaining)
-                    ? StreamReader.Read(1)
-                    : ReadFifo();
+                var symbol = _buffer.Any()
+                    ? _buffer.Dequeue().ToString()
+                    : StreamReader.Read(1);
+
                 line = line + symbol;
 
                 if (line.Length > 2)
                 {
-                    Separators separators;
                     var last3 = line.Substring(line.Length - 3);
+                    Separators separators;
                     string probed;
                     if (TryReadControl(last3, out probed, out separators))
                     {
@@ -189,7 +187,8 @@ namespace EdiFabric.Framework.Readers
                     else
                     {
                         if (!string.IsNullOrEmpty(probed))
-                            _remaining += probed.Substring(3);
+                            foreach (var c in probed.Skip(3))
+                                _buffer.Enqueue(c);
                     }
                 }
 
@@ -224,16 +223,6 @@ namespace EdiFabric.Framework.Readers
             }
 
             return line.Trim(Trims);
-        }
-
-        private string ReadFifo()
-        {
-            if (string.IsNullOrEmpty(_remaining)) 
-                return "";
-
-            var result = _remaining.Substring(0, 1);
-            _remaining = _remaining.Substring(1);
-            return result;
         }
 
         /// <summary>
