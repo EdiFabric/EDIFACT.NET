@@ -724,6 +724,25 @@ namespace EdiFabric.Tests
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
         }
+
+        [TestMethod]
+        public void TestValidationRules()
+        {
+            // ARRANGE
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_Validation.xml";
+            var expected = TestHelper.Deserialize<Rules.Rep.X12002040810.M_810>(TestHelper.Load(expectedResult));
+
+            // ACT
+            var errors = expected.Validate().ToList();
+
+            // ASSERT
+            Assert.IsTrue(errors.Count() == 9);
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementLengthWrong));
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.UnexpectedItem));
+        }
     }
 }
 

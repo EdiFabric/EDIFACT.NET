@@ -322,6 +322,7 @@ namespace EdiFabric.Framework.Readers
                                 DataElementPosition = currentDataElementGrammar.IndexInParent() + 1,
                                 ComponentDataElementPosition = currentComponentDataElementGrammar.IndexInParent() + 1,
                                 DataElementValue = currentComponentDataElement,
+                                RepetitionPosition = repetitions.ToList().IndexOf(repetition) + 1
                             };
 
                             throw new ParsingException(ErrorCodes.ComponentDataElementsTooMany, "Too many component data elements.", line, ec);

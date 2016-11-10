@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// General parsing exceptions.
+    /// Parsing exception.
     /// </summary>
     public class ParsingException : Exception
     {
@@ -29,7 +29,7 @@ namespace EdiFabric.Framework.Exceptions
         public string FailedLine { get; private set; }
 
         /// <summary>
-        /// The parsing details.
+        /// The error context.
         /// </summary>
         public ErrorContext ErrorContext { get; private set; }
 

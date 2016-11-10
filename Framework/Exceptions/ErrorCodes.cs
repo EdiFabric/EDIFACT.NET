@@ -70,16 +70,11 @@ namespace EdiFabric.Framework.Exceptions
         /// Data elements are too many
         /// </summary>
         UnableToResolveHl,
-        
-        /// <summary>
-        /// Too many repetitions.
-        /// </summary>
-        TooManyRepetitions,
 
         /// <summary>
-        /// Required is missing.
+        /// Unexpected segment or data element
         /// </summary>
-        RequiredMissing,
+        UnexpectedItem,
 
         /// <summary>
         /// DataElement length is wrong.

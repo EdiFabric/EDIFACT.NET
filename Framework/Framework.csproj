@@ -81,6 +81,7 @@
     <Compile Include="Exceptions\ErrorContext.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Controls\IEdiGroup.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Parsing\SegmentTags.cs" />

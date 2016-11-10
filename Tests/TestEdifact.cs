@@ -914,9 +914,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
             Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
             Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.RequiredMissing));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.TooManyRepetitions));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.UnexpectedSegment));
+            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.UnexpectedItem));
         }
     }
 }

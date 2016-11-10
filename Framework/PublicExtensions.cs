@@ -57,12 +57,12 @@ namespace EdiFabric.Framework
         /// </param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static IEnumerable<ParsingException> Validate(this object message, Stream xsd = null)
+        public static IEnumerable<ValidationException> Validate(this object message, Stream xsd = null)
         {
             if (message == null)
                 throw new ArgumentNullException("message");
 
-            var result = new List<ParsingException>();
+            var result = new List<ValidationException>();
             var schemas = new XmlSchemaSet();
             var xDoc = message.Serialize();
             if (xDoc.Root == null)
@@ -76,7 +76,7 @@ namespace EdiFabric.Framework
                 schemas.Add(xDoc.Root.Name.Namespace.NamespaceName, reader);
                 xDoc.Validate(schemas,
                     (o, e) =>
-                        result.Add(new ParsingException(MapErrorCode(GetErrorCode(e)), e.Message, null, BuildContext(o))));
+                        result.Add(new ValidationException(MapErrorCode(GetErrorCode(e)), e.Message, BuildContext(o))));
             }
 
             return result;
@@ -158,7 +158,6 @@ namespace EdiFabric.Framework
             try
             {
                 var failedElement = sender as XElement;
-
                 if (failedElement != null && failedElement.Document != null)
                 {
                     var messageSegments =
@@ -210,7 +209,8 @@ namespace EdiFabric.Framework
             context.SegmentPosition = segments.IndexOf(parent) + 1;
             context.DataElementName = element.Name.LocalName;
             context.DataElementPosition = parent.Elements().ToList().IndexOf(element) + 1;
-                
+            context.RepetitionPosition = failedElement.ElementsBeforeSelf().Count(e => e.Name == failedElement.Name) + 1;
+            
             if (context.DataElementName.StartsWith("D_", StringComparison.Ordinal))
                 context.DataElementValue = element.Value;
 
@@ -230,13 +230,14 @@ namespace EdiFabric.Framework
             if (failedElement.Name.LocalName.StartsWith("G_", StringComparison.Ordinal) ||
                 failedElement.Name.LocalName.StartsWith("U_", StringComparison.Ordinal))
                 forLoop = true;
-            
+
             if (segment != null)
                 return new ErrorContext
                 {
                     SegmentName = segment.Name.LocalName,
                     SegmentPosition = segments.IndexOf(segment) + 1,
-                    SegmentForLoop = forLoop
+                    SegmentForLoop = forLoop,
+                    RepetitionPosition = failedElement.ElementsBeforeSelf().Count(e => e.Name == failedElement.Name) + 1
                 };
 
             return null;
@@ -265,11 +266,10 @@ namespace EdiFabric.Framework
                 case "Sch_EnumerationConstraintFailed":
                     return ErrorCodes.DataElementValueWrong;
                 case "Sch_InvalidElementContent":
-                    return ErrorCodes.TooManyRepetitions;
                 case "Sch_InvalidElementContentExpecting":
-                    return ErrorCodes.RequiredMissing;
+                case "Sch_IncompleteContent":
                 case "Sch_IncompleteContentExpecting":
-                    return ErrorCodes.UnexpectedSegment;
+                    return ErrorCodes.UnexpectedItem;
             }
 
             return ErrorCodes.Unknown;

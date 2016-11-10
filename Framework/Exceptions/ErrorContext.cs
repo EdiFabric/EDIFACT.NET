@@ -48,5 +48,9 @@ namespace EdiFabric.Framework.Exceptions
         /// The value of the data element that failed to be parsed.
         /// </summary>
         public string DataElementValue { get; set; }
+        /// <summary>
+        /// The position of the item within the parent.
+        /// </summary>
+        public int RepetitionPosition { get; set; }
     }
 }
