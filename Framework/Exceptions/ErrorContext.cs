@@ -27,7 +27,11 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Whether the segment is supported in the rules class.
         /// </summary>
-        public bool SegmentSupported { get; set; }
+        public bool SegmentNotSupported { get; set; }
+        /// <summary>
+        /// Whether the segment is for a loop.
+        /// </summary>
+        public bool SegmentForLoop { get; set; }
         /// <summary>
         /// The name of the data element.
         /// </summary>
@@ -40,10 +44,6 @@ namespace EdiFabric.Framework.Exceptions
         /// The position of the component data element within the data element.
         /// </summary>
         public int ComponentDataElementPosition { get; set; }
-        /// <summary>
-        /// The position of the repetition data element.
-        /// </summary>
-        public int RepetitionDataElementPosition { get; set; }
         /// <summary>
         /// The value of the data element that failed to be parsed.
         /// </summary>

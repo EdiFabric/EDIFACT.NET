@@ -163,7 +163,6 @@ namespace EdiFabric.Framework.Readers
                 {
                     SegmentName = "UNH",
                     SegmentPosition = 1,
-                    SegmentSupported = true
                 };
 
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
@@ -176,7 +175,6 @@ namespace EdiFabric.Framework.Readers
                 {
                     SegmentName = "UNH",
                     SegmentPosition = 1,
-                    SegmentSupported = true
                 };
 
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,

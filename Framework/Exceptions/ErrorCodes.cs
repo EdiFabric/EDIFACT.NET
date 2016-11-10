@@ -52,13 +52,54 @@ namespace EdiFabric.Framework.Exceptions
         UnexpectedSegment,
 
         /// <summary>
+        /// Unexpected segment
+        /// </summary>
+        UnrecognizedSegment,
+
+        /// <summary>
         /// Data elements are too many
         /// </summary>
         DataElementsTooMany,
 
         /// <summary>
+        /// Component data elements are too many
+        /// </summary>
+        ComponentDataElementsTooMany,
+
+        /// <summary>
         /// Data elements are too many
         /// </summary>
-        UnableToResolveHl
+        UnableToResolveHl,
+        
+        /// <summary>
+        /// Too many repetitions.
+        /// </summary>
+        TooManyRepetitions,
+
+        /// <summary>
+        /// Required is missing.
+        /// </summary>
+        RequiredMissing,
+
+        /// <summary>
+        /// DataElement length is wrong.
+        /// </summary>
+        DataElementLengthWrong,
+
+        /// <summary>
+        /// DataElement is too short.
+        /// </summary>
+        DataElementTooShort,
+
+        /// <summary>
+        /// DataElement is too long.
+        /// </summary>
+        DataElementTooLong,
+
+        /// <summary>
+        /// DataElement value is wrong.
+        /// </summary>
+        DataElementValueWrong
+
     }
 }

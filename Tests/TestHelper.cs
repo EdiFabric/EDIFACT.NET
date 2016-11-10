@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Serialization;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Readers;
 
@@ -29,6 +30,16 @@ namespace EdiFabric.Tests
         public static string AsString(IEnumerable<string> list, string postFix)
         {
             return list.Aggregate("", (current, item) => current + item + postFix);
+        }
+
+        public static T Deserialize<T>(Stream stream)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+
+            using (var reader = new StreamReader(stream))
+            {
+                return (T) serializer.Deserialize(reader);
+            }
         }
 
         public static IEnumerable<object> ParseX12(string sample, Encoding encoding = null,

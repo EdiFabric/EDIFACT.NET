@@ -219,7 +219,6 @@ namespace EdiFabric.Framework.Readers
                         var ec = new ErrorContext
                         {
                             SegmentName = segment.Name,
-                            SegmentSupported = true,
                             SegmentPosition = segments.IndexOf(segment) + 1
                         };
 
@@ -234,14 +233,13 @@ namespace EdiFabric.Framework.Readers
                     var ec = new ErrorContext
                     {
                         SegmentName = segment.Name,
-                        SegmentSupported = true,
                         SegmentPosition = segments.IndexOf(segment) + 1
                     };
 
                     if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
                     {
-                        ec.SegmentSupported = false;
-                        throw new ParsingException(ErrorCodes.UnexpectedSegment,
+                        ec.SegmentNotSupported = true;
+                        throw new ParsingException(ErrorCodes.UnrecognizedSegment,
                             "Segment is not supported in rules class.", segment.Value, ec);                        
                     }
 
@@ -285,7 +283,6 @@ namespace EdiFabric.Framework.Readers
                     var ec = new ErrorContext
                     {
                         SegmentName = parseNode.EdiName,
-                        SegmentSupported = true,
                         SegmentPosition = parseNode.IndexInParent() + 1
                     };
 
@@ -313,19 +310,23 @@ namespace EdiFabric.Framework.Readers
                     {
                         var currentComponentDataElement = componentDataElements[cdeIndex];
                         if (String.IsNullOrEmpty(currentComponentDataElement)) continue;
+
+                        var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
                         if (componentDataElementsGrammar.Count <= cdeIndex)
                         {
                             var ec = new ErrorContext
                             {
                                 SegmentName = parseNode.EdiName,
-                                SegmentSupported = true,
-                                SegmentPosition = parseNode.IndexInParent() + 1
+                                SegmentPosition = parseNode.IndexInParent() + 1,
+                                DataElementName = currentComponentDataElementGrammar.Name,
+                                DataElementPosition = currentDataElementGrammar.IndexInParent() + 1,
+                                ComponentDataElementPosition = currentComponentDataElementGrammar.IndexInParent() + 1,
+                                DataElementValue = currentComponentDataElement,
                             };
 
-                            throw new ParsingException(ErrorCodes.DataElementsTooMany, "Too many data elements in segment.", line, ec);
+                            throw new ParsingException(ErrorCodes.ComponentDataElementsTooMany, "Too many component data elements.", line, ec);
                         }
-                        var currentComponentDataElementGrammar = componentDataElementsGrammar.ElementAt(cdeIndex);
-
+                        
                         childParseNode.AddChild(currentComponentDataElementGrammar.Type,
                             currentComponentDataElementGrammar.Name,
                             currentComponentDataElement.UnEscapeLine(separators));
