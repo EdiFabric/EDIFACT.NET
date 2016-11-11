@@ -29,10 +29,6 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         public bool SegmentNotSupported { get; set; }
         /// <summary>
-        /// Whether the segment is for a loop.
-        /// </summary>
-        public bool SegmentForLoop { get; set; }
-        /// <summary>
         /// The name of the data element.
         /// </summary>
         public string DataElementName { get; set; }

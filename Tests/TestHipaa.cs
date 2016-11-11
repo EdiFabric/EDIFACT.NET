@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -145,6 +146,24 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-        }  
+        }
+
+        [TestMethod]
+        public void TestValidationRules()
+        {
+            // ARRANGE
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_Validation.xml";
+            var expected = TestHelper.Deserialize <Rules.X12005010X222A1837.M_837> (TestHelper.Load(expectedResult));
+
+            // ACT
+            var errors = expected.Validate().ToList();
+
+            // ASSERT
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.RequiredMissing));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.Unexpected));
+        }
     }
 }

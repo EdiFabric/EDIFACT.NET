@@ -72,9 +72,14 @@ namespace EdiFabric.Framework.Exceptions
         UnableToResolveHl,
 
         /// <summary>
-        /// Unexpected segment or data element
+        /// Missing required item
         /// </summary>
-        UnexpectedItem,
+        RequiredMissing,
+
+        /// <summary>
+        /// Unexpected item
+        /// </summary>
+        Unexpected,
 
         /// <summary>
         /// DataElement length is wrong.

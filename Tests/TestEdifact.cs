@@ -909,12 +909,12 @@ namespace EdiFabric.Tests
             var errors = expected.Validate().ToList();
 
             // ASSERT
-            Assert.IsTrue(errors.Count() == 9);
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementLengthWrong));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
-            Assert.IsNotNull(errors.Any(e => e.ErrorCode == ErrorCodes.UnexpectedItem));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementLengthWrong));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.RequiredMissing));
+            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.Unexpected));
         }
     }
 }
