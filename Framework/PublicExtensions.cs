@@ -423,25 +423,6 @@ namespace EdiFabric.Framework
 
                                     return BuildOtherContext(childElement, failedElement);
                                 }
-
-                                //if (match.Any() && Decimal.ToInt32(childElement.MaxOccurs) < match.Count &&
-                                //    failedElement.Document != null)
-                                //{
-                                //    var extraElement = match[Decimal.ToInt32(childElement.MaxOccurs)];
-                                //    var segments = failedElement.Document.Descendants()
-                                //        .Where(
-                                //            d =>
-                                //                d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal) ||
-                                //                d.Name.LocalName == extraElement.Name.LocalName)
-                                //        .ToList();
-
-                                //    return new ErrorContext
-                                //    {
-                                //        SegmentName = extraElement.Name.LocalName,
-                                //        SegmentPosition = segments.IndexOf(extraElement) + 1,
-                                //        RepetitionPosition = Decimal.ToInt32(childElement.MaxOccurs) + 1
-                                //    };
-                                //}
                             }
                         }
                     }
