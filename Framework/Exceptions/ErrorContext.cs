@@ -17,6 +17,14 @@ namespace EdiFabric.Framework.Exceptions
     public class ErrorContext
     {
         /// <summary>
+        /// The message type.
+        /// </summary>
+        public string MessageName { get; set; }
+        /// <summary>
+        /// The message control number.
+        /// </summary>
+        public string MessageControlNumber { get; set; }
+        /// <summary>
         /// The segment tag.
         /// </summary>
         public string SegmentName { get; set; }

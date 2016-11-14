@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework.Exceptions;
@@ -21,20 +20,6 @@ namespace EdiFabric.Framework.Readers
 {
     internal static class EdiReaderExtensions
     {
-        private static readonly string RulesAssembly;
-
-        static EdiReaderExtensions()
-        {
-            try
-            {
-                RulesAssembly = ConfigurationManager.AppSettings["EdiFabric.RulesAssemblyName"];
-            }
-            catch(Exception)
-            {
-                // ignored
-            }
-        }
-
         internal static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
             var parseNode = ParseNode.BuldTree(typeof(T), false);
@@ -94,35 +79,6 @@ namespace EdiFabric.Framework.Readers
             }
 
             return line + reader.Read(2);
-        }
-
-        internal static Type ToType(string format, string version, string tag, string rulesAssemblyName, string rulesNamespacePrefix)
-        {
-            if (String.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
-            if (String.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
-
-            var rulesAssembly = rulesAssemblyName ?? RulesAssembly;
-            if (String.IsNullOrEmpty(rulesAssembly))
-                throw new ParsingException(ErrorCodes.RulesAssemblyNameNotSet,
-                    "The name of the rules assembly was neither set in .config nor passed explicitly.");
-            var namespacePrefix = rulesNamespacePrefix ?? "EdiFabric.Rules";
-            var typeFullName = namespacePrefix.TrimEnd('.') + "." + format + version + tag;
-            typeFullName = typeFullName + ".M_" + tag;
-            var errorMsg = String.Format(
-                            "Type '{0}' was not found in assembly '{1}'.",
-                            typeFullName, rulesAssemblyName);
-            try
-            {
-                var systemType = Type.GetType(typeFullName + ", " + rulesAssembly);
-                if (systemType == null)
-                    throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
-
-                return systemType;
-            }
-            catch (Exception)
-            {
-                throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
-            }
         }
 
         internal static string[] GetDataElements(this string segment, Separators separators)
@@ -187,34 +143,50 @@ namespace EdiFabric.Framework.Readers
             yield return input.Substring(startOfSegment);
         }
 
-        internal static object Analyze(this List<SegmentContext> segments, Separators separators, Type type,
-            string rulesAssemblyName)
+        internal static object Analyze(this List<SegmentContext> segments, Separators separators,
+            MessageContext messageContext)
         {
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
-            if (type == null) throw new ArgumentNullException("type");
+            if (messageContext == null) throw new ArgumentNullException("messageContext");
 
-            var messageGrammar = ParseNode.BuldTree(type, true);
-
-            if (messageGrammar.Prefix != Prefixes.M)
-                throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
-
-            var segmentPosition = messageGrammar.Children.First();
-            var instancePosition = new ParseNode(type);
-
-            foreach (var segment in segments)
+            try
             {
-                if (segment.IsControl) continue;
+                var messageGrammar = ParseNode.BuldTree(messageContext.Type, true);
 
-                Logger.Log(String.Format("Segment to match: {0}", segment.LogName));
-                // Jump back to HL segment if needed
-                if (segment.IsJump)
+                if (messageGrammar.Prefix != Prefixes.M)
+                    throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
+
+                var segmentPosition = messageGrammar.Children.First();
+                var instancePosition = new ParseNode(messageContext.Type);
+
+                foreach (var segment in segments)
                 {
-                    try
+                    if (segment.IsControl) continue;
+
+                    Logger.Log(String.Format("Segment to match: {0}", segment.LogName));
+                    // Jump back to HL segment if needed
+                    if (segment.IsJump)
                     {
-                        segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                        try
+                        {
+                            segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            var ec = new ErrorContext
+                            {
+                                SegmentName = segment.Name,
+                                SegmentPosition = segments.IndexOf(segment) + 1
+                            };
+
+                            throw new ParsingException(ErrorCodes.UnableToResolveHl,
+                                "Unable to resolve HL.", ex, segment.Value, ec);
+                        }
                     }
-                    catch (Exception ex)
+
+                    var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
+                    if (currSeg == null)
                     {
                         var ec = new ErrorContext
                         {
@@ -222,45 +194,55 @@ namespace EdiFabric.Framework.Readers
                             SegmentPosition = segments.IndexOf(segment) + 1
                         };
 
-                        throw new ParsingException(ErrorCodes.UnableToResolveHl,
-                             "Unable to resolve HL.", ex, segment.Value, ec);
-                    }                   
-                }
+                        if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
+                        {
+                            ec.SegmentNotSupported = true;
+                            throw new ParsingException(ErrorCodes.UnrecognizedSegment,
+                                "Segment is not supported in rules class.", segment.Value, ec);
+                        }
 
-                var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
-                if (currSeg == null)
-                {
-                    var ec = new ErrorContext
-                    {
-                        SegmentName = segment.Name,
-                        SegmentPosition = segments.IndexOf(segment) + 1
-                    };
-
-                    if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
-                    {
-                        ec.SegmentNotSupported = true;
-                        throw new ParsingException(ErrorCodes.UnrecognizedSegment,
-                            "Segment is not supported in rules class.", segment.Value, ec);                        
+                        throw new ParsingException(ErrorCodes.UnexpectedSegment,
+                            "Segment was not in the correct position according to the rules class.", segment.Value, ec);
                     }
 
-                    throw new ParsingException(ErrorCodes.UnexpectedSegment,
-                             "Segment was not in the correct position according to the rules class.", segment.Value, ec);
+                    var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
+                    instancePosition =
+                        instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
+                    foreach (var parseTree in segmentTree)
+                    {
+                        instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
+                        if (parseTree.Prefix == Prefixes.S)
+                            instancePosition.ParseSegment(segment.Value, separators);
+                    }
+                    segmentPosition = currSeg;
+                    Logger.Log(String.Format("Matched segment: {0}", segmentPosition.Name));
                 }
 
-                var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
-                instancePosition =
-                    instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
-                foreach (var parseTree in segmentTree)
-                {
-                    instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
-                    if (parseTree.Prefix == Prefixes.S)
-                        instancePosition.ParseSegment(segment.Value, separators);
-                }
-                segmentPosition = currSeg;
-                Logger.Log(String.Format("Matched segment: {0}", segmentPosition.Name));
+                return instancePosition.Root().ToInstance();
+
             }
+            catch (ParsingException ex)
+            {
+                var errorContext = new ErrorContext
+                {
+                    MessageName = messageContext.Tag,
+                    MessageControlNumber = messageContext.ControlNumber
+                };
 
-            return instancePosition.Root().ToInstance();
+                if (ex.ErrorContext != null)
+                {
+                    errorContext.ComponentDataElementPosition = ex.ErrorContext.ComponentDataElementPosition;
+                    errorContext.DataElementName = ex.ErrorContext.DataElementName;
+                    errorContext.DataElementPosition = ex.ErrorContext.DataElementPosition;
+                    errorContext.DataElementValue = ex.ErrorContext.DataElementValue;
+                    errorContext.RepetitionPosition = ex.ErrorContext.RepetitionPosition;
+                    errorContext.SegmentName = ex.ErrorContext.SegmentName;
+                    errorContext.SegmentNotSupported = ex.ErrorContext.SegmentNotSupported;
+                    errorContext.SegmentPosition = ex.ErrorContext.SegmentPosition;
+                }
+
+                throw new ParsingException(ex.ErrorCode, ex.Message, ex.FailedLine, errorContext);
+            }
         }
 
         internal static void ParseSegment(this ParseNode parseNode, string line, Separators separators)

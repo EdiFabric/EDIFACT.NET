@@ -71,30 +71,55 @@ namespace EdiFabric.Framework
             if (xDoc.Root == null)
                 throw new Exception("Failed to serialize instance.");
 
-            var schemas = xsd == null
-                ? XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName))
-                : NewSchemaSet(xsd, xDoc.Root.Name.Namespace.NamespaceName);
+            var schemas = NewSchemaSet(xsd ?? message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName);
+
+            string messageName;
+            string controlNumber;
+            if (!TryGetMessageId(xDoc.Root, out messageName, out controlNumber))
+            {
+                throw new Exception("Failed to extract message type or control number.");
+            }
 
             xDoc.Validate(schemas,
                 (o, e) =>
                 {
-                    var errorCode = MapErrorCode(GetErrorCode(e));
-                    var errorContext = BuildContext(o as XElement, schemas, errorCode);
-                    if (errorCode == ErrorCodes.Unexpected)
-                    {
-                        if (errorContext.SegmentPosition == 0)
-                            errorCode = ErrorCodes.RequiredMissing;
-
-                        if (!string.IsNullOrEmpty(errorContext.DataElementName) &&
-                            errorContext.DataElementPosition == 0)
-                            errorCode = ErrorCodes.RequiredMissing;
-                    }
-                    result.Add(new ValidationException(errorCode, e.Message, errorContext));
-                }, true);
+                    result.Add(BuildValidationException(o, e, schemas, messageName, controlNumber));
+                });
 
 
             return result;
+        }
+
+        private static bool TryGetMessageId(XElement xml, out string messageName, out string controlNumber)
+        {
+            try
+            {
+                var st =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_ST", StringComparison.Ordinal));
+                if (st != null)
+                {
+                    messageName = st.Elements().ElementAt(0).Value;
+                    controlNumber = st.Elements().ElementAt(1).Value;
+                    return true;
+                }
+                var unh =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNH", StringComparison.Ordinal));
+                if (unh != null)
+                {
+                    controlNumber = unh.Elements().ElementAt(0).Value;
+                    messageName = unh.Elements().ElementAt(1).Elements().ElementAt(0).Value;
+                    return true;
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            messageName = null;
+            controlNumber = null;
+
+            return false;
         }
 
         private static XmlSchemaSet NewSchemaSet(Stream xsd, string nameSpace)
@@ -108,6 +133,26 @@ namespace EdiFabric.Framework
             }
 
             return schemas;
+        }
+
+        private static ValidationException BuildValidationException(object o, ValidationEventArgs e,
+            XmlSchemaSet schemas, string messageName, string controlNumber)
+        {
+            var errorCode = MapErrorCode(GetErrorCode(e));
+            var errorContext = BuildContext(o as XElement, schemas, errorCode);
+            if (errorCode == ErrorCodes.Unexpected)
+            {
+                if (errorContext.SegmentPosition == 0)
+                    errorCode = ErrorCodes.RequiredMissing;
+
+                if (!string.IsNullOrEmpty(errorContext.DataElementName) &&
+                    errorContext.DataElementPosition == 0)
+                    errorCode = ErrorCodes.RequiredMissing;
+            }
+            errorContext.MessageName = messageName;
+            errorContext.MessageControlNumber = controlNumber;
+
+            return new ValidationException(errorCode, e.Message, errorContext);
         }
 
         /// <summary>

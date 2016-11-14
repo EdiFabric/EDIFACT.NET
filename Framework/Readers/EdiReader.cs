@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,35 +25,14 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        protected SegmentContext CurrentGroupHeader;
-        /// <summary>
-        /// Internal buffer.
-        /// </summary>
-        protected Queue<char> Buffer { get; private set; } 
-        /// <summary>
-        /// The list of segments that are currently being collected.
-        /// </summary>
-        protected List<SegmentContext> CurrentMessage { get; private set; }
-        /// <summary>
-        /// The EDI stream reader.
-        /// </summary>
-        protected StreamReader StreamReader { get; private set; }
-        /// <summary>
-        /// The name of the assembly containing the rules classes.
-        /// </summary>
-        protected string RulesAssemblyName { get; private set; }
-        /// <summary>
-        /// The prefix of each of the rules classes.
-        /// </summary>
-        protected string RulesNamespacePrefix { get; private set; }
-        /// <summary>
-        /// The separators.
-        /// </summary>
-        protected Separators Separators { get; private set; }
-        /// <summary>
-        /// Symbols to skip over when reading from the stream.
-        /// </summary>
-        protected char[] Trims
+        internal SegmentContext CurrentGroupHeader;
+        internal Queue<char> Buffer { get; private set; } 
+        internal List<SegmentContext> CurrentMessage { get; private set; }
+        internal StreamReader StreamReader { get; private set; }
+        internal string RulesAssemblyName { get; private set; }
+        internal string RulesNamespacePrefix { get; private set; }
+        internal Separators Separators { get; private set; }
+        internal char[] Trims
         {
             get
             {
@@ -60,7 +40,6 @@ namespace EdiFabric.Framework.Readers
                 return Separators != null ? trims.Except(new[] { Separators.Segment }).ToArray() : trims;
             }
         }
-
         /// <summary>
         /// The currently read item.
         /// </summary>
@@ -85,8 +64,8 @@ namespace EdiFabric.Framework.Readers
             if (settings == null) throw new ArgumentNullException("settings");
             
             StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
-            RulesAssemblyName = settings.RulesAssemblyName;
-            RulesNamespacePrefix = settings.RulesNamespacePrefix;
+            RulesAssemblyName = settings.RulesAssemblyName ?? ConfigurationManager.AppSettings["EdiFabric.RulesAssemblyName"]; 
+            RulesNamespacePrefix = settings.RulesNamespacePrefix ?? "EdiFabric.Rules";
             CurrentMessage = new List<SegmentContext>();
             Buffer = new Queue<char>();           
          }
@@ -151,19 +130,19 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>If an interchange header was found.</returns>
-        protected abstract bool TryReadControl(string segmentName, out string probed, out Separators separators);
+        internal abstract bool TryReadControl(string segmentName, out string probed, out Separators separators);
 
         /// <summary>
         /// Parses control segments and messages. 
         /// </summary>
         /// <param name="segment">The current segment.</param>
-        protected abstract void ProcessSegment(string segment);
+        internal abstract void ProcessSegment(string segment);
 
         /// <summary>
-        /// Extracts the message type and version and builds the rules message type.
+        /// Extracts the message context.
         /// </summary>
-        /// <returns></returns>
-        protected abstract Type ToType();
+        /// <returns>The ediFabric type for this transaction set.</returns>
+        internal abstract MessageContext BuildContext();
         
         /// <summary>
         /// Reads a segment from the stream.
@@ -171,7 +150,7 @@ namespace EdiFabric.Framework.Readers
         /// <returns>
         /// The segment found.
         /// </returns>
-        protected string ReadSegment()
+        internal string ReadSegment()
         {
             var line = "";
 
@@ -240,7 +219,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="segmentContext">The current segment.</param>
         /// <param name="tag">The start new message tag.</param>
         /// <returns>If flushed.</returns>
-        protected bool Flush(SegmentContext segmentContext, SegmentTags tag)
+        internal bool Flush(SegmentContext segmentContext, SegmentTags tag)
         {
             if ((segmentContext.IsControl || segmentContext.Tag == tag) && CurrentMessage.Any())
             {
@@ -250,9 +229,9 @@ namespace EdiFabric.Framework.Readers
 
                 try
                 {
-                    if(CurrentGroupHeader != null)
+                    if (CurrentGroupHeader != null)
                         CurrentMessage.Add(CurrentGroupHeader);
-                    Item = CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+                    Item = CurrentMessage.Analyze(Separators, BuildContext());
                 }
                 finally
                 {

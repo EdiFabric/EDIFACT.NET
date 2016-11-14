@@ -14,7 +14,7 @@ namespace EdiFabric.Framework.Parsing
     /// <summary>
     /// Enum of control segment tags.
     /// </summary>
-    public enum SegmentTags
+    enum SegmentTags
     {
         Regular,
         UNA,

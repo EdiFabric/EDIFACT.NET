@@ -57,7 +57,7 @@ namespace EdiFabric.Framework.Readers
             return new EdifactReader(ediStream, settings ?? new ReaderSettings());
         }
 
-        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
+        internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
             separators = null;
@@ -105,7 +105,7 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        internal override void ProcessSegment(string segment)
         {
             if (string.IsNullOrEmpty(segment) || Separators == null)
                 return;
@@ -132,7 +132,7 @@ namespace EdiFabric.Framework.Readers
                     try
                     {
                         CurrentMessage.Add(segmentContext);
-                        Item = CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+                        Item = CurrentMessage.Analyze(Separators, BuildContext());
                     }
                     finally
                     {
@@ -150,8 +150,8 @@ namespace EdiFabric.Framework.Readers
                     break;
             }
         }
-        
-        protected override Type ToType()
+
+        internal override MessageContext BuildContext()
         {
             var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.UNH);
             if (unh == null)
@@ -159,32 +159,21 @@ namespace EdiFabric.Framework.Readers
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
             {
-                var pd = new ErrorContext
-                {
-                    SegmentName = "UNH",
-                    SegmentPosition = 1,
-                };
-
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
-                    "UNH is invalid. Too little data elements.", unh.Value, pd);
+                    "UNH is invalid. Too little data elements.", unh.Value);
             }
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
             {
-                var pd = new ErrorContext
-                {
-                    SegmentName = "UNH",
-                    SegmentPosition = 1,
-                };
-
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
-                    "UNH is invalid. Unable to read message type or version.", unh.Value, pd);
+                    "UNH is invalid. Unable to read message type or version.", unh.Value);
             }
 
             var tag = ediDataElements[0];
             var version = ediDataElements[1] + ediDataElements[2];
+            var controlNumber = ediCompositeDataElements[0];
 
-            return EdiReaderExtensions.ToType("Edifact", version, tag, RulesAssemblyName, RulesNamespacePrefix);
+            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssemblyName, RulesNamespacePrefix);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

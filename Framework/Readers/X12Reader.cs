@@ -39,7 +39,7 @@ namespace EdiFabric.Framework.Readers
             return new X12Reader(ediStream, settings ?? new ReaderSettings());
         }
 
-        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
+        internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
             separators = null;
@@ -76,7 +76,7 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        internal override void ProcessSegment(string segment)
         {
             if (string.IsNullOrEmpty(segment) || Separators == null)
                 return;
@@ -88,7 +88,6 @@ namespace EdiFabric.Framework.Readers
 
             switch (segmentContext.Tag)
             {
-                // X12
                 case SegmentTags.ISA:
                     Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
                     break;
@@ -103,8 +102,7 @@ namespace EdiFabric.Framework.Readers
                     try
                     {
                         CurrentMessage.Add(segmentContext);
-                        CurrentMessage.Add(CurrentGroupHeader);
-                        Item = CurrentMessage.Analyze(Separators, ToType(), RulesAssemblyName);
+                        Item = CurrentMessage.Analyze(Separators, BuildContext());
                     }
                     finally 
                     {
@@ -129,12 +127,11 @@ namespace EdiFabric.Framework.Readers
             }
         }
 
-        protected override Type ToType()
+        internal override MessageContext BuildContext()
         {
-            var gs = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.GS);
-            if (gs == null)
+            if (CurrentGroupHeader == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS was not found.");
-            var ediCompositeDataElementsGs = gs.Value.GetDataElements(Separators);
+            var ediCompositeDataElementsGs = CurrentGroupHeader.Value.GetDataElements(Separators);
             if (ediCompositeDataElementsGs.Count() < 8)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
@@ -144,13 +141,15 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST was not found.");
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
             var tag = ediCompositeDataElementsSt[0];
-
             if (ediCompositeDataElementsSt.Count() == 3)
             {
                 version = ediCompositeDataElementsSt[2];
             }
+            if(ediCompositeDataElementsSt.Count() < 2)
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
+            var controlNumber = ediCompositeDataElementsSt[1];
 
-            return EdiReaderExtensions.ToType("X12", version, tag, RulesAssemblyName, RulesNamespacePrefix);
-        }
+            return new MessageContext(tag, controlNumber, version, "X12", RulesAssemblyName, RulesNamespacePrefix);
+       }
     }
 }

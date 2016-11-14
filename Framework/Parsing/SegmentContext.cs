@@ -18,7 +18,7 @@ namespace EdiFabric.Framework.Parsing
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the segment.
     /// </summary>
-    public class SegmentContext
+    class SegmentContext
     {
         private const string Hl = "HL";
 
