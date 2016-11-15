@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -152,18 +151,19 @@ namespace EdiFabric.Tests
         public void TestValidationRules()
         {
             // ARRANGE
-            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_Validation.xml";
-            var expected = TestHelper.Deserialize <Rules.X12005010X222A1837.M_837> (TestHelper.Load(expectedResult));
+            const string sample = "EdiFabric.Tests.Xml.Hipaa_837P_00501_Validation.xml";
+            var obj = TestHelper.Deserialize<Rules.X12005010X222A1837.M_837>(TestHelper.Load(sample));
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_ValidationExpected.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var errors = expected.Validate().ToList();
+            var error = obj.Validate();
 
             // ASSERT
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.RequiredMissing));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.Unexpected));
+            Assert.IsNotNull(error);
+            var root = error.Flatten().ToList().Serialize().Root;
+            Assert.IsNotNull(root);
+            Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }
     }
 }

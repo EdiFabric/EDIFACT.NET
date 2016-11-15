@@ -78,7 +78,9 @@
     <Compile Include="Exceptions\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\ErrorContext.cs" />
+    <Compile Include="Exceptions\DataElementErrorContext.cs" />
+    <Compile Include="Exceptions\SegmentErrorContext.cs" />
+    <Compile Include="Exceptions\MessageErrorContext.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Controls\IEdiGroup.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />

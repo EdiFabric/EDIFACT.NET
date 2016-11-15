@@ -49,7 +49,8 @@ namespace EdiFabric.Framework.Parsing
             {
                 var systemType = Type.GetType(typeFullName + ", " + RulesAssemblyName);
                 if (systemType == null)
-                    throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
+                    throw new ParsingException(ErrorCodes.InvalidInterchangeContent, errorMsg, null,
+                        new MessageErrorContext(Tag, ControlNumber, ErrorCodes.UnexpectedMessage));
 
                 return systemType;
             }

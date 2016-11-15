@@ -55,104 +55,43 @@ namespace EdiFabric.Framework
         /// Validates an instance against XSD.
         /// </summary>
         /// <param name="message">The EDI instance.</param>
-        /// <param name="xsd">The XSD to validate against. This is optional. 
-        /// If not specified an XSD is loaded from the specified XSD assembly in the config.
-        /// </param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static IEnumerable<ValidationException> Validate(this object message, Stream xsd = null)
+        public static ValidationException Validate(this object message)
         {
             if (message == null)
                 throw new ArgumentNullException("message");
 
-            var result = new List<ValidationException>();
-            
             var xDoc = message.Serialize();
             if (xDoc.Root == null)
                 throw new Exception("Failed to serialize instance.");
 
-            var schemas = NewSchemaSet(xsd ?? message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName);
+            var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
+                NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
 
             string messageName;
             string controlNumber;
-            if (!TryGetMessageId(xDoc.Root, out messageName, out controlNumber))
+            string format;
+            if (!TryGetMessageContext(xDoc.Root, out messageName, out controlNumber, out format))
             {
-                throw new Exception("Failed to extract message type or control number.");
+                throw new Exception("Failed to extract message context.");
             }
 
+            var messageContext = new MessageErrorContext(messageName, controlNumber);
             xDoc.Validate(schemas,
                 (o, e) =>
                 {
-                    result.Add(BuildValidationException(o, e, schemas, messageName, controlNumber));
+                    var errorCode = MapErrorCode(GetErrorCode(e));
+                    var segmentContext = BuildContext(o as XElement, schemas, errorCode);
+                    messageContext.Add(segmentContext);
                 });
 
+            if (messageContext.Codes.Any() || messageContext.Errors.Any())
+                return new ValidationException("Validation Errors.", messageContext);
 
-            return result;
-        }
-
-        private static bool TryGetMessageId(XElement xml, out string messageName, out string controlNumber)
-        {
-            try
-            {
-                var st =
-                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_ST", StringComparison.Ordinal));
-                if (st != null)
-                {
-                    messageName = st.Elements().ElementAt(0).Value;
-                    controlNumber = st.Elements().ElementAt(1).Value;
-                    return true;
-                }
-                var unh =
-                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNH", StringComparison.Ordinal));
-                if (unh != null)
-                {
-                    controlNumber = unh.Elements().ElementAt(0).Value;
-                    messageName = unh.Elements().ElementAt(1).Elements().ElementAt(0).Value;
-                    return true;
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            messageName = null;
-            controlNumber = null;
-
-            return false;
-        }
-
-        private static XmlSchemaSet NewSchemaSet(Stream xsd, string nameSpace)
-        {
-            var schemas = new XmlSchemaSet();
-
-            using (var reader = XmlReader.Create(xsd))
-            {
-                schemas.Add(nameSpace, reader);
-                schemas.Compile();
-            }
-
-            return schemas;
-        }
-
-        private static ValidationException BuildValidationException(object o, ValidationEventArgs e,
-            XmlSchemaSet schemas, string messageName, string controlNumber)
-        {
-            var errorCode = MapErrorCode(GetErrorCode(e));
-            var errorContext = BuildContext(o as XElement, schemas, errorCode);
-            if (errorCode == ErrorCodes.Unexpected)
-            {
-                if (errorContext.SegmentPosition == 0)
-                    errorCode = ErrorCodes.RequiredMissing;
-
-                if (!string.IsNullOrEmpty(errorContext.DataElementName) &&
-                    errorContext.DataElementPosition == 0)
-                    errorCode = ErrorCodes.RequiredMissing;
-            }
-            errorContext.MessageName = messageName;
-            errorContext.MessageControlNumber = controlNumber;
-
-            return new ValidationException(errorCode, e.Message, errorContext);
+            // TODO: add message structure validation
+            
+            return null;
         }
 
         /// <summary>
@@ -226,24 +165,40 @@ namespace EdiFabric.Framework
             return result;
         }
 
-        private static ErrorContext BuildContext(XElement failedElement, XmlSchemaSet schemas, ErrorCodes errorCode)
+        private static XmlSchemaSet NewSchemaSet(Stream xsd, string nameSpace)
+        {
+            var schemas = new XmlSchemaSet();
+
+            using (var reader = XmlReader.Create(xsd))
+            {
+                schemas.Add(nameSpace, reader);
+                schemas.Compile();
+            }
+
+            return schemas;
+        }
+
+        private static bool TryGetMessageContext(XElement xml, out string messageName, out string controlNumber, out string format)
         {
             try
             {
-                if (failedElement != null && failedElement.Document != null)
+                var st =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_ST", StringComparison.Ordinal));
+                if (st != null)
                 {
-                    if (failedElement.Name.LocalName.StartsWith("D_", StringComparison.Ordinal))
-                    {
-                        return BuildDataElementContext(failedElement.Name.LocalName, failedElement.Parent, failedElement.Value);
-                    }
-
-                    if (errorCode == ErrorCodes.Unexpected && failedElement.Parent != null)
-                        return ResolveUnexpected(failedElement.Parent, schemas);
-
-                    if (errorCode == ErrorCodes.RequiredMissing)
-                        return ResolveUnexpected(failedElement, schemas);
-
-                    return null;
+                    messageName = st.Elements().ElementAt(0).Value;
+                    controlNumber = st.Elements().ElementAt(1).Value;
+                    format = "X12";
+                    return true;
+                }
+                var unh =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNH", StringComparison.Ordinal));
+                if (unh != null)
+                {
+                    controlNumber = unh.Elements().ElementAt(0).Value;
+                    messageName = unh.Elements().ElementAt(1).Elements().ElementAt(0).Value;
+                    format = "Edifact";
+                    return true;
                 }
             }
             catch
@@ -251,139 +206,11 @@ namespace EdiFabric.Framework
                 // ignored
             }
 
-            return null;
-        }
+            messageName = null;
+            controlNumber = null;
+            format = null;
 
-        private static ErrorContext BuildDataElementContext(string failedElement, XElement originalParent, string value)
-        {
-            if (originalParent == null || originalParent.Parent == null)
-                return null;
-
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
-
-            if (originalParent.Document == null)
-                return null;
-
-            var segments = originalParent.Document.Descendants()
-                            .Where(d => d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
-                            .ToList();
-            
-            var context = new ErrorContext();
-
-            var parent = originalParent;
-            if (originalParent.Name.LocalName.StartsWith("C_", StringComparison.Ordinal))
-            {
-                parent = originalParent.Parent;
-                if (parent == null)
-                    return null;
-
-                if (element != null)
-                {
-                    context.ComponentDataElementPosition = originalParent.Elements().ToList().IndexOf(element) + 1;
-                    context.DataElementPosition = parent.Elements().ToList().IndexOf(originalParent) + 1;
-                }
-            }
-            else
-            {
-                if (element != null)
-                    context.DataElementPosition = originalParent.Elements().ToList().IndexOf(element) + 1;
-            }
-
-            context.SegmentName = ExtractName(parent.Name.LocalName);
-            context.SegmentPosition = segments.IndexOf(parent) + 1;
-            context.DataElementName = ExtractName(failedElement);
-            if(element != null)
-                context.RepetitionPosition = element.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1;
-            context.DataElementValue = value;
-
-            return context;
-        }
-
-        private static ErrorContext BuildCompositeDataElementContext(string failedElement, XElement originalParent)
-        {
-            if (failedElement == null || originalParent == null || originalParent.Document == null)
-                return null;
-
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
-
-            if (originalParent.Document == null)
-                return null;
-
-            var segments = originalParent.Document.Descendants()
-                .Where(
-                    d =>
-                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
-                .ToList();
-
-            var dataElementPosition = element != null ? originalParent.Elements().ToList().IndexOf(element) + 1 : 0;
-            var repetitionPosition = element != null ? element.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1 : 0 ; 
-
-            return new ErrorContext
-            {
-                DataElementName = ExtractName(failedElement),
-                DataElementPosition = dataElementPosition,
-                ComponentDataElementPosition = dataElementPosition,
-                RepetitionPosition = repetitionPosition,
-                SegmentName = ExtractName(originalParent.Name.LocalName),
-                SegmentPosition = segments.IndexOf(originalParent) + 1
-            };
-        }
-
-        private static ErrorContext BuildSegmentContext(string failedElement, XElement originalParent)
-        {
-            if (failedElement == null || originalParent == null || originalParent.Document == null)
-                return null;
-            
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
-
-            if (originalParent.Document == null)
-                return null;
-
-            var segments = originalParent.Document.Descendants()
-                .Where(
-                    d =>
-                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
-                .ToList();
-
-            var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
-            var repetitionPosition = element != null ? element.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1 : 0; 
-
-            return new ErrorContext
-            {
-                SegmentName = ExtractName(failedElement),
-                SegmentPosition = segmentPosition,
-                RepetitionPosition = repetitionPosition
-            };
-        }
-
-        private static ErrorContext BuildOtherContext(XmlSchemaElement failedXsdElement, XElement originalParent)
-        {
-            if (failedXsdElement == null || originalParent == null || originalParent.Document == null)
-                return null;
-
-            var failedElement = failedXsdElement.QualifiedName.Name;
-
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
-
-            if (originalParent.Document == null)
-                return null;
-
-            var segments = originalParent.Document.Descendants()
-                .Where(
-                    d =>
-                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal) ||
-                        d.Name.LocalName == failedElement)
-                .ToList();
-
-            var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
-            var repetitionPosition = element != null ? element.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1 : 0;
-            
-            return new ErrorContext
-            {
-                SegmentName = ExtractName(GetName(failedXsdElement)),
-                SegmentPosition = segmentPosition,
-                RepetitionPosition = repetitionPosition
-            };
+            return false;
         }
 
         private static string GetErrorCode(ValidationEventArgs e)
@@ -391,9 +218,9 @@ namespace EdiFabric.Framework
             if (ValidationRes == null || e.Exception == null) return null;
 
             if (e.Exception.InnerException != null)
-                return (string) ValidationRes.GetValue(e.Exception.InnerException);
-            
-            return (string) ValidationRes.GetValue(e.Exception);
+                return (string)ValidationRes.GetValue(e.Exception.InnerException);
+
+            return (string)ValidationRes.GetValue(e.Exception);
         }
 
         private static ErrorCodes MapErrorCode(string errorCode)
@@ -418,8 +245,141 @@ namespace EdiFabric.Framework
 
             return ErrorCodes.Unknown;
         }
+        
+        private static SegmentErrorContext BuildContext(XElement failedElement, XmlSchemaSet schemas, ErrorCodes errorCode)
+        {
+            if (failedElement == null)
+                return null;
 
-        private static ErrorContext ResolveUnexpected(XElement failedElement, XmlSchemaSet schemas)
+            try
+            {
+                if (failedElement.Name.LocalName.StartsWith("D_", StringComparison.Ordinal))
+                    return BuildDataElementContext(failedElement.Name.LocalName, failedElement.Parent,
+                        failedElement.Value, errorCode);
+
+                if (errorCode == ErrorCodes.Unexpected)
+                    return ResolveUnexpected(failedElement.Parent, schemas, errorCode);
+
+                if (errorCode == ErrorCodes.RequiredMissing)
+                    return ResolveUnexpected(failedElement, schemas, errorCode);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
+        }
+
+        private static SegmentErrorContext BuildDataElementContext(string failedElement, XElement originalParent, string value, ErrorCodes errorCode)
+        {
+            if (failedElement == null || originalParent == null || originalParent.Parent == null || originalParent.Document == null)
+                return null;
+
+            //var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            var segments = originalParent.Document.Descendants()
+                            .Where(d => d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
+                            .ToList();
+
+            var parent = originalParent.Name.LocalName.StartsWith("C_", StringComparison.Ordinal)
+                ? originalParent.Parent
+                : originalParent;
+            var context = new SegmentErrorContext(ExtractName(parent.Name.LocalName), segments.IndexOf(parent) + 1);
+            
+            string dataElementName = ExtractName(failedElement);
+            int componentDataElementPosition = 0;
+            int dataElementPosition = 0;
+            int repetitionDataElementPosition = 0;
+            var lastElement = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            var firstElement = originalParent.Elements().FirstOrDefault(e => e.Name.LocalName == failedElement);
+            if (lastElement != null && firstElement != null)
+            {
+                if (originalParent.Name.LocalName.StartsWith("C_", StringComparison.Ordinal))
+                {
+                    componentDataElementPosition = originalParent.Elements().ToList().IndexOf(lastElement) + 1;
+                    dataElementPosition = parent.Elements().ToList().IndexOf(originalParent) + 1;
+                }
+                else
+                {
+                    dataElementPosition = parent.Elements().ToList().IndexOf(firstElement) + 1;
+                }
+
+                repetitionDataElementPosition = lastElement.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1;
+            }
+            var newErroCode = dataElementPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
+            context.Add(dataElementName, dataElementPosition, newErroCode, componentDataElementPosition, repetitionDataElementPosition, value);
+            
+            return context;
+        }
+
+        private static SegmentErrorContext BuildCompositeDataElementContext(string failedElement, XElement originalParent, ErrorCodes errorCode)
+        {
+            if (failedElement == null || originalParent == null || originalParent.Document == null)
+                return null;
+            
+            var segments = originalParent.Document.Descendants()
+                .Where(
+                    d =>
+                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
+                .ToList();
+
+            int dataElementPosition = 0;
+            int repetitionPosition = 0;
+            var lastElement = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            var firstElement = originalParent.Elements().FirstOrDefault(e => e.Name.LocalName == failedElement);
+            if (lastElement != null && firstElement != null)
+            {
+                dataElementPosition = originalParent.Elements().ToList().IndexOf(firstElement) + 1;
+                repetitionPosition = lastElement.ElementsBeforeSelf().Count(e => e.Name.LocalName == failedElement) + 1;
+            }
+
+            var newErroCode = dataElementPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
+            var context = new SegmentErrorContext(ExtractName(originalParent.Name.LocalName), segments.IndexOf(originalParent) + 1);
+            context.Add(ExtractName(failedElement), dataElementPosition, newErroCode, 0, repetitionPosition, null);
+
+            return context;
+        }
+
+        private static SegmentErrorContext BuildSegmentContext(string failedElement, XElement originalParent, ErrorCodes errorCode)
+        {
+            if (failedElement == null || originalParent == null || originalParent.Document == null)
+                return null;
+            
+            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            var segments = originalParent.Document.Descendants()
+                .Where(
+                    d =>
+                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
+                .ToList();
+
+            var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
+            var newErroCode = segmentPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
+
+            return new SegmentErrorContext(ExtractName(failedElement), segmentPosition, newErroCode);
+        }
+
+        private static SegmentErrorContext BuildOtherContext(XmlSchemaElement failedXsdElement, XElement originalParent, ErrorCodes errorCode)
+        {
+            if (failedXsdElement == null || originalParent == null || originalParent.Document == null)
+                return null;
+
+            var failedElement = failedXsdElement.QualifiedName.Name;
+
+            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            var segments = originalParent.Document.Descendants()
+                .Where(
+                    d =>
+                        d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal) ||
+                        d.Name.LocalName == failedElement)
+                .ToList();
+
+            var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
+            var newErroCode = segmentPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
+
+            return new SegmentErrorContext(ExtractName(GetName(failedXsdElement)), segmentPosition, newErroCode);
+        }
+
+        private static SegmentErrorContext ResolveUnexpected(XElement failedElement, XmlSchemaSet schemas, ErrorCodes errorCode)
         {
             foreach (XmlSchema schema in schemas.Schemas())
             {
@@ -456,17 +416,17 @@ namespace EdiFabric.Framework
                                 {
                                     if (childElement.QualifiedName.Name.StartsWith("S_", StringComparison.Ordinal))
                                         return BuildSegmentContext(childElement.QualifiedName.Name,
-                                            failedElement);
+                                            failedElement, errorCode);
 
                                     if (childElement.QualifiedName.Name.StartsWith("C_", StringComparison.Ordinal))
                                         return BuildCompositeDataElementContext(childElement.QualifiedName.Name,
-                                            failedElement);
+                                            failedElement, errorCode);
 
                                     if (childElement.QualifiedName.Name.StartsWith("D_", StringComparison.Ordinal))
                                         return BuildDataElementContext(childElement.QualifiedName.Name,
-                                            failedElement, null);
+                                            failedElement, null, errorCode);
 
-                                    return BuildOtherContext(childElement, failedElement);
+                                    return BuildOtherContext(childElement, failedElement, errorCode);
                                 }
                             }
                         }

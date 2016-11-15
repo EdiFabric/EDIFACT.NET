@@ -1,6 +1,6 @@
 <M_837 xmlns="www.edifabric.com/x12">
   <S_ST>
-    <!--<D_ST01_TransactionSetIdentifierCode>837</D_ST01_TransactionSetIdentifierCode>-->
+    <D_ST01_TransactionSetIdentifierCode>837</D_ST01_TransactionSetIdentifierCode>
     <D_ST02_TransactionSetControlNumber>D_ST02_T1</D_ST02_TransactionSetControlNumber>
     <D_ST03_ImplementationGuideVersionName>005010X222A1</D_ST03_ImplementationGuideVersionName>
   </S_ST>
@@ -16,6 +16,7 @@
     <G_TS837_1000A>
       <S_NM1_SubmitterName>
         <D_NM101_EntityIdentifierCode>41</D_NM101_EntityIdentifierCode>
+        <D_NM102_EntityTypeQualifier>2</D_NM102_EntityTypeQualifier>
         <D_NM103_SubmitterLastorOrganizationName>D_NM103_SubmitterLastorOrganizationName1</D_NM103_SubmitterLastorOrganizationName>
         <D_NM104_SubmitterFirstName>D_NM104_SubmitterFirstName1</D_NM104_SubmitterFirstName>
         <D_NM105_SubmitterMiddleNameorInitial>D_NM105_SubmitterMiddleN1</D_NM105_SubmitterMiddleNameorInitial>
@@ -289,14 +290,6 @@
             <D_REF01_ReferenceIdentificationQualifier>EI</D_REF01_ReferenceIdentificationQualifier>
             <D_REF02_Pay_ToPlanTaxIdentificationNumber>D_REF02_Pay_ToPlanTaxIdentificationNumber1</D_REF02_Pay_ToPlanTaxIdentificationNumber>
             <D_REF03_Description>D_REF03_Description1</D_REF03_Description>
-            <C_C040_ReferenceIdentifier_4>
-              <D_C04001_ReferenceIdentificationQualifier>00</D_C04001_ReferenceIdentificationQualifier>
-              <D_C04002_ReferenceIdentification>D_C04002_ReferenceIdentification1</D_C04002_ReferenceIdentification>
-              <D_C04003_ReferenceIdentificationQualifier>00</D_C04003_ReferenceIdentificationQualifier>
-              <D_C04004_ReferenceIdentification>D_C04004_ReferenceIdentification1</D_C04004_ReferenceIdentification>
-              <D_C04005_ReferenceIdentificationQualifier>00</D_C04005_ReferenceIdentificationQualifier>
-              <D_C04006_ReferenceIdentification>D_C04006_ReferenceIdentification1</D_C04006_ReferenceIdentification>
-            </C_C040_ReferenceIdentifier_4>
             <C_C040_ReferenceIdentifier_4>
               <D_C04001_ReferenceIdentificationQualifier>00</D_C04001_ReferenceIdentificationQualifier>
               <D_C04002_ReferenceIdentification>D_C04002_ReferenceIdentification1</D_C04002_ReferenceIdentification>

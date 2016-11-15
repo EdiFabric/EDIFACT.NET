@@ -46,6 +46,8 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         UnexpectedMessage,
 
+        SegmentErrors,
+
         /// <summary>
         /// Unexpected segment
         /// </summary>
@@ -56,6 +58,8 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         UnrecognizedSegment,
 
+        DataElementErrors,
+
         /// <summary>
         /// Data elements are too many
         /// </summary>
@@ -65,11 +69,6 @@ namespace EdiFabric.Framework.Exceptions
         /// Component data elements are too many
         /// </summary>
         ComponentDataElementsTooMany,
-
-        /// <summary>
-        /// Data elements are too many
-        /// </summary>
-        UnableToResolveHl,
 
         /// <summary>
         /// Missing required item

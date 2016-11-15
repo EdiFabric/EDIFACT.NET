@@ -31,7 +31,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// The error context.
         /// </summary>
-        public ErrorContext ErrorContext { get; private set; }
+        public MessageErrorContext ErrorContext { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
@@ -40,7 +40,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="message">The error message.</param>
         /// <param name="failedLine">The line that failed.</param>
         /// <param name="context">The error context.</param>
-        public ParsingException(ErrorCodes errorCode, string message, string failedLine = null, ErrorContext context = null)
+        public ParsingException(ErrorCodes errorCode, string message, string failedLine = null, MessageErrorContext context = null)
             : base(message)
         {
             ErrorCode = errorCode;
@@ -56,7 +56,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="ex">The inner exception.</param>
         /// <param name="failedLine">The line that failed.</param>
         /// <param name="context">The error context.</param>
-        public ParsingException(ErrorCodes errorCode, string message, Exception ex, string failedLine = null, ErrorContext context = null)
+        public ParsingException(ErrorCodes errorCode, string message, Exception ex, string failedLine = null, MessageErrorContext context = null)
             : base(message, ex)
         {
             ErrorCode = errorCode;

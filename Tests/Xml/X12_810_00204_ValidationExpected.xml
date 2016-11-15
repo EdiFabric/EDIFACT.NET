@@ -1,0 +1,12 @@
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="System.Collections.Generic">
+  <string>[Message 810 with ControlNr 166061414] [Segment BIG with Position 2] [DataElement 245 with Position 1 and Value 2007] failed with DataElementTooShort .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment BIG with Position 2] [DataElement 323 with Position 3 and Value 20070149] failed with DataElementTooLong .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment BIG with Position 2] [DataElement 640 with Position 5 and Value 12] failed with DataElementValueWrong .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment CUR with Position 7] [DataElement 100 with Position 2 and Value USDG] failed with DataElementLengthWrong .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment REF with Position 8] [DataElement 128 with Position 1 and RepetitionPosition 2 and Value 62] failed with Unexpected .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment REF with Position 9] [DataElement 127 with Position 0] failed with RequiredMissing .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment REF with Position 10] [DataElement 127 with Position 0] failed with RequiredMissing .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment N2 with Position 18] failed with Unexpected .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment N1 with Position 0] failed with RequiredMissing .</string>
+  <string>[Message 810 with ControlNr 166061414] [Segment TDS with Position 0] failed with RequiredMissing .</string>
+</ArrayOfString>

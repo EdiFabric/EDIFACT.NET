@@ -64,7 +64,7 @@ namespace EdiFabric.Tests
             var brokenRules = message.Validate();
 
             // ASSERT
-            Assert.IsTrue(brokenRules.Any());
+            Assert.IsNotNull(brokenRules);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace EdiFabric.Tests
             var brokenRules = message.Validate();
 
             // ASSERT
-            Assert.IsFalse(brokenRules.Any());
+            Assert.IsNull(brokenRules);
         }
 
         [TestMethod]
@@ -902,19 +902,19 @@ namespace EdiFabric.Tests
         public void TestValidationRules()
         {
             // ARRANGE
-            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_Validation.xml";
-            var expected = TestHelper.Deserialize<M_INVOIC>(TestHelper.Load(expectedResult));
+            const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_Validation.xml";
+            var obj = TestHelper.Deserialize<M_INVOIC>(TestHelper.Load(sample));
+            const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_ValidationExpected.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var errors = expected.Validate().ToList();
+            var error = obj.Validate();
 
             // ASSERT
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementLengthWrong));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooLong));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementTooShort));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.DataElementValueWrong));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.RequiredMissing));
-            Assert.IsTrue(errors.Any(e => e.ErrorCode == ErrorCodes.Unexpected));
+            Assert.IsNotNull(error);
+            var root = error.Flatten().ToList().Serialize().Root;
+            Assert.IsNotNull(root);
+            Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }
     }
 }

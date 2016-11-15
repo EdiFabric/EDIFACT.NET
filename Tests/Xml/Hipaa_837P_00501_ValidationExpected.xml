@@ -1,0 +1,9 @@
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="System.Collections.Generic">
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 0] failed with RequiredMissing .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PRV with Position 6] [DataElement PRV04 with Position 4 and Value D16] failed with DataElementTooLong .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment CUR with Position 7] [DataElement CUR03 with Position 3 and Value D_C] failed with DataElementTooShort .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment N4 with Position 10] [DataElement N404 with Position 4 and Value D_1D_N406_LocationIdentifier1D_N406_LocationIdentifier1D_N406_LocationIdentifier1] failed with DataElementTooLong .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 15] [DataElement PER03 with Position 3 and Value FX5] failed with DataElementValueWrong .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 16] failed with Unexpected .</string>
+  <string>[Message 837 with ControlNr D_ST02_T1] [Segment NM1 with Position 0] failed with RequiredMissing .</string>
+</ArrayOfString>
