@@ -1,14 +1,16 @@
 ﻿<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="System.Collections.Generic">
-  <string>[Message INVOIC with ControlNr 509010117] [Segment UNH with Position 1] [DataElement 0070 with Position 3 and Value 123] failed with DataElementTooLong .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment UNH with Position 1] [DataElement 0073 with Position 3 and ComponentPosition 2 and Value 456] failed with DataElementLengthWrong .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment BGM with Position 2] [DataElement 1004 with Position 2] failed with DataElementTooShort .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment BGM with Position 2] [DataElement 1225 with Position 3 and Value AP] failed with DataElementValueWrong .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment NAD with Position 11] [DataElement 3124 with Position 3 and Value 80803] failed with Unexpected .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment DTM with Position 18] failed with Unexpected .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment COM with Position 20] [DataElement C076 with Position 1 and RepetitionPosition 4] failed with Unexpected .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment COM with Position 22] [DataElement C076 with Position 0] failed with RequiredMissing .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment CTA with Position 37] failed with Unexpected .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment PAT with Position 0] failed with RequiredMissing .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment PIA with Position 40] [DataElement 4347 with Position 0] failed with RequiredMissing .</string>
-  <string>[Message INVOIC with ControlNr 509010117] [Segment UNS with Position 0] failed with RequiredMissing .</string>
+  <string>[INVOIC with control nr 509010117] Number of included segments does not match actual count.</string>
+  <string>[INVOIC with control nr 509010117] Transaction set control number in header and trailer do not match.</string>
+  <string>[UNH at pos 1] [0070 at pos 3 with value 123] Data element is too long.</string>
+  <string>[UNH at pos 1] [0073 at pos 3 and at component pos 2 with value 456] Data element has incorrect length.</string>
+  <string>[BGM at pos 2] [1004 at pos 2] Data element is too short.</string>
+  <string>[BGM at pos 2] [1225 at pos 3 with value AP] Invalid code value.</string>
+  <string>[NAD at pos 11] [3124 at pos 3 with value 80803] Item exceeds maximum use.</string>
+  <string>[DTM at pos 18] Item exceeds maximum use.</string>
+  <string>[COM at pos 20] [C076 at pos 1 and at repetition pos 4] Item exceeds maximum use.</string>
+  <string>[COM at pos 22] [C076] Mandatory item is missing</string>
+  <string>[CTA at pos 37] Item exceeds maximum use.</string>
+  <string>[PAT] Mandatory item is missing</string>
+  <string>[PIA at pos 40] [4347] Mandatory item is missing</string>
+  <string>[UNS] Mandatory item is missing</string>
 </ArrayOfString>

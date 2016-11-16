@@ -22,83 +22,104 @@ namespace EdiFabric.Framework.Exceptions
         Unknown,
 
         /// <summary>
-        /// Invalid control structure
+        /// Interchange control structure is invalid.
         /// </summary>
         InvalidControlStructure,
 
         /// <summary>
-        /// Invalid interchange content
+        /// Invalid interchange content.
         /// </summary>
         InvalidInterchangeContent,
 
         /// <summary>
-        /// Improper end of file
+        /// Unprocessed segments found before the end of the file.
         /// </summary>
         ImproperEndOfFile,
 
         /// <summary>
-        /// The name of the rules assembly was not set 
+        /// The rules assembly is not set. 
         /// </summary>
         RulesAssemblyNameNotSet,
 
         /// <summary>
-        /// Unexpected message
+        /// Transaction set is not supported.
         /// </summary>
         UnexpectedMessage,
 
-        SegmentErrors,
-
         /// <summary>
-        /// Unexpected segment
+        /// Segment is not expected at this position.
         /// </summary>
         UnexpectedSegment,
 
         /// <summary>
-        /// Unexpected segment
+        /// Segment is not in defined transaction set.
         /// </summary>
         UnrecognizedSegment,
 
-        DataElementErrors,
-
         /// <summary>
-        /// Data elements are too many
+        /// Too many data elements.
         /// </summary>
         DataElementsTooMany,
 
         /// <summary>
-        /// Component data elements are too many
+        /// Too many component data elements.
         /// </summary>
         ComponentDataElementsTooMany,
 
         /// <summary>
-        /// Missing required item
+        /// Mandatory item is missing.
         /// </summary>
         RequiredMissing,
 
         /// <summary>
-        /// Unexpected item
+        /// Item exceeds maximum use.
         /// </summary>
         Unexpected,
 
         /// <summary>
-        /// DataElement length is wrong.
+        /// Data element has incorrect length.
         /// </summary>
         DataElementLengthWrong,
 
         /// <summary>
-        /// DataElement is too short.
+        /// Data element is too short.
         /// </summary>
         DataElementTooShort,
 
         /// <summary>
-        /// DataElement is too long.
+        /// Data element is too long.
         /// </summary>
         DataElementTooLong,
 
         /// <summary>
-        /// DataElement value is wrong.
+        /// Invalid code value.
         /// </summary>
-        DataElementValueWrong
+        DataElementValueWrong,
+
+        /// <summary>
+        /// Message validation failed.
+        /// </summary>
+        ValidationFailed,
+
+        /// <summary>
+        /// Transaction set trailer missing.
+        /// </summary>
+        MessageTrailerMissing,
+
+        /// <summary>
+        /// Missing or invalid transaction set identifier.
+        /// </summary>
+        InvalidTransactionSetIdentifier,
+
+        /// <summary>
+        /// Transaction set control number in header and trailer do not match.
+        /// </summary>
+        ControlNumberNotMatching,
+
+        /// <summary>
+        /// Number of included segments does not match actual count.
+        /// </summary>
+        SegmentsCountNotMatching
 
     }
 }

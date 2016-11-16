@@ -1,9 +1,10 @@
 <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="System.Collections.Generic">
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 0] failed with RequiredMissing .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PRV with Position 6] [DataElement PRV04 with Position 4 and Value D16] failed with DataElementTooLong .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment CUR with Position 7] [DataElement CUR03 with Position 3 and Value D_C] failed with DataElementTooShort .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment N4 with Position 10] [DataElement N404 with Position 4 and Value D_1D_N406_LocationIdentifier1D_N406_LocationIdentifier1D_N406_LocationIdentifier1] failed with DataElementTooLong .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 15] [DataElement PER03 with Position 3 and Value FX5] failed with DataElementValueWrong .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment PER with Position 16] failed with Unexpected .</string>
-  <string>[Message 837 with ControlNr D_ST02_T1] [Segment NM1 with Position 0] failed with RequiredMissing .</string>
+  <string>[837 with control nr D_ST02_T1] Transaction set trailer missing.</string>
+  <string>[PER] Mandatory item is missing</string>
+  <string>[PRV at pos 6] [PRV04 at pos 4 with value D16] Data element is too long.</string>
+  <string>[CUR at pos 7] [CUR03 at pos 3 with value D_C] Data element is too short.</string>
+  <string>[N4 at pos 10] [N404 at pos 4 with value D_1D_N406_LocationIdentifier1D_N406_LocationIdentifier1D_N406_LocationIdentifier1] Data element is too long.</string>
+  <string>[PER at pos 15] [PER03 at pos 3 with value FX5] Invalid code value.</string>
+  <string>[PER at pos 16] Item exceeds maximum use.</string>
+  <string>[NM1] Mandatory item is missing</string>
 </ArrayOfString>

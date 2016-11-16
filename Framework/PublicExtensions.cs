@@ -59,39 +59,46 @@ namespace EdiFabric.Framework
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
         public static ValidationException Validate(this object message)
         {
-            if (message == null)
-                throw new ArgumentNullException("message");
-
-            var xDoc = message.Serialize();
-            if (xDoc.Root == null)
-                throw new Exception("Failed to serialize instance.");
-
-            var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
-
-            string messageName;
-            string controlNumber;
-            string format;
-            if (!TryGetMessageContext(xDoc.Root, out messageName, out controlNumber, out format))
+            try
             {
-                throw new Exception("Failed to extract message context.");
-            }
+                if (message == null)
+                    throw new ArgumentNullException("message");
 
-            var messageContext = new MessageErrorContext(messageName, controlNumber);
-            xDoc.Validate(schemas,
-                (o, e) =>
+                var xDoc = message.Serialize();
+                if (xDoc.Root == null)
+                    throw new Exception("Failed to serialize instance.");
+
+                var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
+                    NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
+
+                string messageName;
+                string controlNumber;
+                string format;
+                if (!TryGetMessageContext(xDoc.Root, out messageName, out controlNumber, out format))
                 {
-                    var errorCode = MapErrorCode(GetErrorCode(e));
-                    var segmentContext = BuildContext(o as XElement, schemas, errorCode);
-                    messageContext.Add(segmentContext);
-                });
+                    throw new Exception("Failed to extract message name or control number.");
+                }
 
-            if (messageContext.Codes.Any() || messageContext.Errors.Any())
-                return new ValidationException("Validation Errors.", messageContext);
+                var messageContext = new MessageErrorContext(messageName, controlNumber);
+                xDoc.Validate(schemas,
+                    (o, e) =>
+                    {
+                        var errorCode = MapErrorCode(GetErrorCode(e));
+                        var segmentContext = BuildContext(o as XElement, schemas, errorCode);
+                        messageContext.Add(segmentContext);
+                    });
 
-            // TODO: add message structure validation
-            
-            return null;
+                foreach (var code in ValidateStructure(xDoc.Root, controlNumber, format))
+                    messageContext.Add(code);
+                
+                return new ValidationException("Validation successful.", messageContext);
+            }
+            catch (Exception ex)
+            {
+                var messageId = message != null ? message.GetType().FullName : "Message is null";
+                var messageContext = new MessageErrorContext(messageId, null, ErrorCodes.ValidationFailed);
+                return new ValidationException("Validation failed.", messageContext, ex);
+            }
         }
 
         /// <summary>
@@ -180,35 +187,37 @@ namespace EdiFabric.Framework
 
         private static bool TryGetMessageContext(XElement xml, out string messageName, out string controlNumber, out string format)
         {
-            try
+            messageName = null;
+            controlNumber = null;
+            format = null;
+
+            if (xml.Elements().Any())
             {
                 var st =
-                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_ST", StringComparison.Ordinal));
-                if (st != null)
+                    xml.Elements()
+                        .SingleOrDefault(e => e.Name.LocalName.StartsWith("S_ST", StringComparison.Ordinal));
+                if (st != null && st.Elements().Any())
                 {
                     messageName = st.Elements().ElementAt(0).Value;
-                    controlNumber = st.Elements().ElementAt(1).Value;
+                    if (st.Elements().Count() > 1)
+                        controlNumber = st.Elements().ElementAt(1).Value;
                     format = "X12";
                     return true;
                 }
                 var unh =
-                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNH", StringComparison.Ordinal));
-                if (unh != null)
+                    xml.Elements()
+                        .SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNH", StringComparison.Ordinal));
+                if (unh != null && unh.Elements().Any())
                 {
-                    controlNumber = unh.Elements().ElementAt(0).Value;
-                    messageName = unh.Elements().ElementAt(1).Elements().ElementAt(0).Value;
-                    format = "Edifact";
-                    return true;
+                    if (unh.Elements().Count() > 1)
+                    {
+                        controlNumber = unh.Elements().ElementAt(0).Value;
+                        messageName = unh.Elements().ElementAt(1).Elements().ElementAt(0).Value;
+                        format = "Edifact";
+                        return true;
+                    }
                 }
             }
-            catch
-            {
-                // ignored
-            }
-
-            messageName = null;
-            controlNumber = null;
-            format = null;
 
             return false;
         }
@@ -345,13 +354,13 @@ namespace EdiFabric.Framework
             if (failedElement == null || originalParent == null || originalParent.Document == null)
                 return null;
             
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
             var segments = originalParent.Document.Descendants()
                 .Where(
                     d =>
                         d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
                 .ToList();
-
+            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            
             var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
             var newErroCode = segmentPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
 
@@ -365,14 +374,14 @@ namespace EdiFabric.Framework
 
             var failedElement = failedXsdElement.QualifiedName.Name;
 
-            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
             var segments = originalParent.Document.Descendants()
                 .Where(
                     d =>
                         d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal) ||
                         d.Name.LocalName == failedElement)
                 .ToList();
-
+            var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
+            
             var segmentPosition = element != null ? segments.IndexOf(element) + 1 : 0;
             var newErroCode = segmentPosition == 0 ? ErrorCodes.RequiredMissing : errorCode;
 
@@ -476,6 +485,62 @@ namespace EdiFabric.Framework
                 return name;
 
             return parts[1];
+        }
+
+        private static IEnumerable<ErrorCodes> ValidateStructure(XElement xml, string controlNumber, string format)
+        {
+            var result = new List<ErrorCodes>();
+            if (string.IsNullOrEmpty(controlNumber))
+                result.Add(ErrorCodes.InvalidTransactionSetIdentifier);
+
+            XElement trailer = null;
+
+            if (format == "X12")
+                trailer =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_SE", StringComparison.Ordinal));
+
+            if (format == "Edifact")
+                trailer =
+                    xml.Elements().SingleOrDefault(e => e.Name.LocalName.StartsWith("S_UNT", StringComparison.Ordinal));
+
+            if (trailer == null)
+            {
+                result.Add(ErrorCodes.MessageTrailerMissing);
+                return result;
+            }
+
+            if (trailer.Elements().Count() != 2)
+            {
+                result.Add(ErrorCodes.InvalidTransactionSetIdentifier);
+                return result;
+            }
+
+            var trailerControlNumber = trailer.Elements().ElementAt(1).Value;
+            var numberOfSegments = trailer.Elements().ElementAt(0).Value;
+
+            if (string.IsNullOrEmpty(trailerControlNumber) || string.IsNullOrEmpty(numberOfSegments))
+            {
+                result.Add(ErrorCodes.InvalidTransactionSetIdentifier);
+                return result;
+            }
+
+            int trailerSegmentsNumber;
+            if (!Int32.TryParse(numberOfSegments, out trailerSegmentsNumber))
+            {
+                result.Add(ErrorCodes.InvalidTransactionSetIdentifier);
+                return result;
+            }
+
+            var messageSegmentsNumber = xml.Descendants().Count(d =>
+                d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal));
+
+            if (messageSegmentsNumber != trailerSegmentsNumber)
+                result.Add(ErrorCodes.SegmentsCountNotMatching);
+
+            if (controlNumber != trailerControlNumber)
+                result.Add(ErrorCodes.ControlNumberNotMatching);
+
+            return result;
         }
     }
 }

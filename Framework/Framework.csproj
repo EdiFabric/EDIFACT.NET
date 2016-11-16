@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">
       <SubType>Code</SubType>
     </Compile>
