@@ -124,53 +124,35 @@ namespace EdiFabric.Framework.Controls
             if (!isMessage) return result;
             
             var controlNumber = segments.MessageControlNumber();
-            SetTrailer(result, separators, item.GetType().FullName.Contains(".X12"), controlNumber);
+            var trailerTag = item.GetType().FullName.Contains(".X12") ? "SE" : "UNT";
+            SetTrailer(result, separators, trailerTag, controlNumber);
 
             return result;
         }
 
-        private static void SetTrailer(List<string> segments, Separators separators, bool isX12, string controlNumber)
+        private static void SetTrailer(List<string> segments, Separators separators, string trailerTag, string controlNumber)
         {
             if (segments.Any())
             {
                 var segmentsCount = segments.Count();
-                
+
                 string trailer = null;
-                if (isX12)
-                {
-                    if (segments.Last().StartsWith("SE" + separators.DataElement, StringComparison.Ordinal) ||
-                        segments.Last().StartsWith("SE" + separators.Segment, StringComparison.Ordinal))
-                        trailer = segments.Last();
 
-                    if (trailer != null)
-                        segments.Remove(trailer);
-                    else
-                        segmentsCount = segmentsCount + 1;
-                    
-                    trailer = "SE" + separators.DataElement + segmentsCount + separators.DataElement +
-                              controlNumber +
-                              separators.Segment;
+                if (segments.Last().StartsWith(trailerTag + separators.DataElement, StringComparison.Ordinal) ||
+                    segments.Last().StartsWith(trailerTag + separators.Segment, StringComparison.Ordinal))
+                    trailer = segments.Last();
 
-                    segments.Add(trailer);
-                    
-                }
+                if (trailer != null)
+                    segments.Remove(trailer);
                 else
-                {
-                    if (segments.Last().StartsWith("UNT" + separators.DataElement, StringComparison.Ordinal) ||
-                         segments.Last().StartsWith("UNT" + separators.Segment, StringComparison.Ordinal))
-                        trailer = segments.Last();
+                    segmentsCount = segmentsCount + 1;
 
-                    if (trailer != null)
-                        segments.Remove(trailer);
-                    else
-                        segmentsCount = segmentsCount + 1;
+                var pad = (controlNumber.Length > 4) ? 9 : 4;
+                trailer = trailerTag + separators.DataElement + segmentsCount + separators.DataElement +
+                          controlNumber.PadLeft(pad, '0') +
+                          separators.Segment;
 
-                    trailer = "UNT" + separators.DataElement + segmentsCount + separators.DataElement +
-                              controlNumber +
-                              separators.Segment;
-
-                    segments.Add(trailer);
-                }
+                segments.Add(trailer);
             }
         }
     }

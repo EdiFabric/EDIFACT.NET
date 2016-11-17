@@ -184,12 +184,12 @@ namespace EdiFabric.Framework.Readers
                     if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
                     {
                         errorContext.Add(segment.Name, segments.IndexOf(segment) + 1, ErrorCodes.UnrecognizedSegment);
-                        throw new ParsingException(ErrorCodes.UnrecognizedSegment,
+                        throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
                             "Segment is not supported in rules class.", segment.Value, errorContext);
                     }
 
                     errorContext.Add(segment.Name, segments.IndexOf(segment) + 1, ErrorCodes.UnexpectedSegment);
-                    throw new ParsingException(ErrorCodes.UnexpectedSegment,
+                    throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
                         "Segment was not in the correct position according to the rules class.", segment.Value,
                         errorContext);
                 }

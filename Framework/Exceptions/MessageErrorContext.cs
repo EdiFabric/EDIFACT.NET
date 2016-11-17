@@ -57,8 +57,6 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="controlNumber">The message control number.</param>
         public MessageErrorContext(string name, string controlNumber)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-            
             Name = name;
             ControlNumber = controlNumber;
         }
@@ -71,8 +69,6 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="errorCode">The error code.</param>
         public MessageErrorContext(string name, string controlNumber, ErrorCodes errorCode) : this(name, controlNumber)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-            
             _codes.Add(errorCode);
         }
 

@@ -59,11 +59,11 @@ namespace EdiFabric.Framework
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
         public static ValidationException Validate(this object message)
         {
-            try
-            {
-                if (message == null)
+            if (message == null)
                     throw new ArgumentNullException("message");
 
+            try
+            {
                 var xDoc = message.Serialize();
                 if (xDoc.Root == null)
                     throw new Exception("Failed to serialize instance.");
@@ -95,9 +95,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                var messageId = message != null ? message.GetType().FullName : "Message is null";
-                var messageContext = new MessageErrorContext(messageId, null, ErrorCodes.ValidationFailed);
-                return new ValidationException("Validation failed.", messageContext, ex);
+                return new ValidationException("Validation failed.", null, ex);
             }
         }
 
