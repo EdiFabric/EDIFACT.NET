@@ -119,7 +119,22 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Number of included segments does not match actual count.
         /// </summary>
-        SegmentsCountNotMatching
+        SegmentsCountNotMatching,
+
+        /// <summary>
+        /// Invalid transaction set control number.
+        /// </summary>
+        DuplicateMessageControlNumber,
+
+        /// <summary>
+        /// Segment has data element errors.
+        /// </summary>
+        SegmentWithErrors,
+
+        /// <summary>
+        /// One or more segments in error.
+        /// </summary>
+        MessageWithErrors
 
     }
 }

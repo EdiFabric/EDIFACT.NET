@@ -6,9 +6,9 @@
   <string>[BIG at pos 2] [640 at pos 5 with value 12] Invalid code value.</string>
   <string>[CUR at pos 7] [100 at pos 2 with value USDG] Data element has incorrect length.</string>
   <string>[REF at pos 8] [128 at pos 1 and at repetition pos 2 with value 62] Item exceeds maximum use.</string>
-  <string>[REF at pos 9] [127] Mandatory item is missing</string>
-  <string>[REF at pos 10] [127] Mandatory item is missing</string>
+  <string>[REF at pos 9] [127] Mandatory item is missing.</string>
+  <string>[REF at pos 10] [127] Mandatory item is missing.</string>
   <string>[N2 at pos 18] Item exceeds maximum use.</string>
-  <string>[N1] Mandatory item is missing</string>
-  <string>[TDS] Mandatory item is missing</string>
+  <string>[N1] Mandatory item is missing.</string>
+  <string>[TDS] Mandatory item is missing.</string>
 </ArrayOfString>

@@ -45,7 +45,13 @@
                 case ErrorCodes.SegmentsCountNotMatching:
                     return "Number of included segments does not match actual count.";
                 case ErrorCodes.InvalidInterchangeContent:
-                    return "Invalid interchange content.";
+                    return "Invalid interchange content acknowledgment.";
+                case ErrorCodes.DuplicateMessageControlNumber:
+                    return "Invalid transaction set control number.";
+                case ErrorCodes.SegmentWithErrors:
+                    return "Segment has data element errors.";
+                case ErrorCodes.MessageWithErrors:
+                    return "One or more segments in error.";
             }
 
             return errorCode.ToString();

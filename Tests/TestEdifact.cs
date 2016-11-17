@@ -61,10 +61,12 @@ namespace EdiFabric.Tests
             
             // ACT
             var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
-            var brokenRules = message.Validate();
+            var validationResults = message.Validate();
 
             // ASSERT
-            Assert.IsNotNull(brokenRules);
+            Assert.IsNotNull(validationResults);
+            Assert.IsNotNull(validationResults.ErrorContext);
+            Assert.IsTrue(validationResults.ErrorContext.Errors.Any() || validationResults.ErrorContext.Codes.Any());
         }
 
         [TestMethod]
@@ -75,10 +77,13 @@ namespace EdiFabric.Tests
             
             // ACT
             var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
-            var brokenRules = message.Validate();
+            var validationResults = message.Validate();
 
             // ASSERT
-            Assert.IsNull(brokenRules);
+            Assert.IsNotNull(validationResults);
+            Assert.IsNotNull(validationResults.ErrorContext);
+            Assert.IsFalse(validationResults.ErrorContext.Errors.Any());
+            Assert.IsFalse(validationResults.ErrorContext.Codes.Any());
         }
 
         [TestMethod]

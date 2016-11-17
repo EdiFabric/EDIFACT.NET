@@ -8,9 +8,9 @@
   <string>[NAD at pos 11] [3124 at pos 3 with value 80803] Item exceeds maximum use.</string>
   <string>[DTM at pos 18] Item exceeds maximum use.</string>
   <string>[COM at pos 20] [C076 at pos 1 and at repetition pos 4] Item exceeds maximum use.</string>
-  <string>[COM at pos 22] [C076] Mandatory item is missing</string>
+  <string>[COM at pos 22] [C076] Mandatory item is missing.</string>
   <string>[CTA at pos 37] Item exceeds maximum use.</string>
-  <string>[PAT] Mandatory item is missing</string>
-  <string>[PIA at pos 40] [4347] Mandatory item is missing</string>
-  <string>[UNS] Mandatory item is missing</string>
+  <string>[PAT] Mandatory item is missing.</string>
+  <string>[PIA at pos 40] [4347] Mandatory item is missing.</string>
+  <string>[UNS] Mandatory item is missing.</string>
 </ArrayOfString>

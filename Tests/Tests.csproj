@@ -88,8 +88,6 @@
     <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_MultipleInvalidMessages.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204_TrailingBlanks.txt" />
-    <EmbeddedResource Include="Xsd\EdifactEnvelope.xsd" />
-    <EmbeddedResource Include="Xsd\X12Envelope.xsd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A.xml">

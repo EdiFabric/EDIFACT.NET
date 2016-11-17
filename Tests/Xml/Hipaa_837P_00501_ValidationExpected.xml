@@ -1,10 +1,10 @@
 <ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="System.Collections.Generic">
   <string>[837 with control nr D_ST02_T1] Transaction set trailer missing.</string>
-  <string>[PER] Mandatory item is missing</string>
+  <string>[PER] Mandatory item is missing.</string>
   <string>[PRV at pos 6] [PRV04 at pos 4 with value D16] Data element is too long.</string>
   <string>[CUR at pos 7] [CUR03 at pos 3 with value D_C] Data element is too short.</string>
   <string>[N4 at pos 10] [N404 at pos 4 with value D_1D_N406_LocationIdentifier1D_N406_LocationIdentifier1D_N406_LocationIdentifier1] Data element is too long.</string>
   <string>[PER at pos 15] [PER03 at pos 3 with value FX5] Invalid code value.</string>
   <string>[PER at pos 16] Item exceeds maximum use.</string>
-  <string>[NM1] Mandatory item is missing</string>
+  <string>[NM1] Mandatory item is missing.</string>
 </ArrayOfString>
