@@ -50,7 +50,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        public DataElementErrorContext(string name, int position, ErrorCodes code, int componentPosition,
+        internal DataElementErrorContext(string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {
             Name = name;
