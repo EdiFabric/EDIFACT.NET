@@ -1,6 +1,9 @@
 ﻿namespace EdiFabric.Framework.Controls
 {
-    interface IEdiControl
+    /// <summary>
+    /// Identifies a control segment.
+    /// </summary>
+    public interface IEdiControl
     {
     }
 }
