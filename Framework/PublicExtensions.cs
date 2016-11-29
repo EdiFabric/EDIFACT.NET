@@ -62,22 +62,24 @@ namespace EdiFabric.Framework
             if (message == null)
                     throw new ArgumentNullException("message");
 
+            string messageName = null;
+            string controlNumber = null;
             try
             {
                 var xDoc = message.Serialize();
                 if (xDoc.Root == null)
                     throw new Exception("Failed to serialize instance.");
 
-                var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
-
-                string messageName;
-                string controlNumber;
                 string format;
                 if (!TryGetMessageContext(xDoc.Root, out messageName, out controlNumber, out format))
                 {
                     throw new Exception("Failed to extract message name or control number.");
                 }
+
+                if(XsdCache.Count > 20) XsdCache.Clear();
+
+                var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
+                    NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,
@@ -95,6 +97,13 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
+                if (!string.IsNullOrEmpty(messageName) && !string.IsNullOrEmpty(controlNumber))
+                {
+                    var messageContext = new MessageErrorContext(messageName, controlNumber);
+                    messageContext.Add(ErrorCodes.Unknown);
+                    return new ValidationException("Validation failed.", messageContext, ex);
+                }
+
                 return new ValidationException("Validation failed.", null, ex);
             }
         }
@@ -118,6 +127,7 @@ namespace EdiFabric.Framework
             if (type.FullName.Contains("Edifact"))
                 nameSpace = "www.edifabric.com/edifact";
 
+            if (SerializerCache.Count > 20) SerializerCache.Clear();
             var serializer = SerializerCache.GetOrAdd(type.FullName, new XmlSerializer(type, nameSpace));
             using (var ms = new MemoryStream())
             {

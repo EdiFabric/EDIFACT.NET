@@ -25,6 +25,14 @@ namespace EdiFabric.Framework.Exceptions
         public MessageErrorContext ErrorContext { get; private set; }
 
         /// <summary>
+        /// If it has errors.
+        /// </summary>
+        public bool HasErrors
+        {
+            get { return ErrorContext != null && ErrorContext.HasErrors; }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValidationException"/> class.
         /// </summary>
         /// <param name="message">The error message.</param>

@@ -52,6 +52,10 @@
                     return "Segment has data element errors.";
                 case ErrorCodes.MessageWithErrors:
                     return "One or more segments in error.";
+                case ErrorCodes.DuplicateGroupControlNumber:
+                    return "Invalid group control number.";
+                case ErrorCodes.DuplicateInterchangeControlNumber:
+                    return "Invalid interchange control number.";
             }
 
             return errorCode.ToString();

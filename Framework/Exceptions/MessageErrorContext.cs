@@ -33,6 +33,13 @@ namespace EdiFabric.Framework.Exceptions
         private readonly List<ErrorCodes> _codes = new List<ErrorCodes>();
 
         /// <summary>
+        /// If it has errors.
+        /// </summary>
+        public bool HasErrors {
+            get { return Errors.Any() || Codes.Any(); }
+        }
+
+        /// <summary>
         /// The error codes.
         /// </summary>
         public IReadOnlyCollection<ErrorCodes> Codes

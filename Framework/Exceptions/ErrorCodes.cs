@@ -134,7 +134,17 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// One or more segments in error.
         /// </summary>
-        MessageWithErrors
+        MessageWithErrors,
+
+        /// <summary>
+        /// Invalid group control number.
+        /// </summary>
+        DuplicateGroupControlNumber,
+
+        /// <summary>
+        /// Invalid interchange control number.
+        /// </summary>
+        DuplicateInterchangeControlNumber
 
     }
 }
