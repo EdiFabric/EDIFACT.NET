@@ -380,6 +380,9 @@ namespace EdiFabric.Framework.Parsing
             if (msgHeader == null || controlNumber == null)
                 throw new Exception("Invalid control structure. UNH or ST was not found.");
 
+            if (String.IsNullOrEmpty(controlNumber.Value))
+                throw new Exception("Invalid control number.");
+
             return controlNumber.Value;
         }       
     }
