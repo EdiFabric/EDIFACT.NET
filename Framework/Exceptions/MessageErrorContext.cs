@@ -9,7 +9,6 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -86,7 +85,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
         /// <param name="errorCode">The error code.</param>
-        public void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
+        internal void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
         {
             var key = segmentName + segmentPosition;
             if (_errors.ContainsKey(key))
@@ -110,7 +109,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        public void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
+        internal void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {
             var key = segmentName + segmentPosition;
@@ -149,7 +148,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Adds error code.
         /// </summary>
         /// <param name="errorCode">The error code.</param>
-        internal void Add(ErrorCodes errorCode)
+        public void Add(ErrorCodes errorCode)
         {
             _codes.Add(errorCode);
         }
