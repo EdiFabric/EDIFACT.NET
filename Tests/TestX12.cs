@@ -117,9 +117,9 @@ namespace EdiFabric.Tests
             var interchange = TestHelper.GenerateX12<Rules.Rep.X12002040810.M_810>(sample, "EdiFabric.Rules.Rep");
 
             // ACT
-            var defaultSeparators = Separators.DefaultSeparatorsX12();
-            var newSeparators = Separators.SeparatorsX12(defaultSeparators.Segment,
-                '>', defaultSeparators.DataElement, '!');
+            var defaultSeparators = Separators.DefaultX12();
+            var newSeparators = new Separators(defaultSeparators.Segment,
+                '>', defaultSeparators.DataElement, '!', null);
             var ediSegments = interchange.GenerateEdi(newSeparators);
 
             // ASSERT
@@ -182,9 +182,9 @@ namespace EdiFabric.Tests
             var interchange = TestHelper.GenerateX12<M_810>(sample);
 
             // ACT
-            var defaultSeparators = Separators.DefaultSeparatorsX12();
-            var newSeparators = Separators.SeparatorsX12('\n',
-                '>', defaultSeparators.DataElement, defaultSeparators.RepetitionDataElement);
+            var defaultSeparators = Separators.DefaultX12();
+            var newSeparators = new Separators('\n',
+                '>', defaultSeparators.DataElement, defaultSeparators.RepetitionDataElement, null);
             var ediSegments = interchange.GenerateEdi(newSeparators);
 
             // ASSERT
@@ -206,23 +206,6 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void TestGenerateWithNoGroup()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-            var items = TestHelper.ParseX12(sample).ToList();
-
-            var group = new X12Group<M_810>(null);
-            group.AddItem(items.OfType<M_810>().Single());
-            var interchange = new X12Interchange(items.OfType<S_ISA>().Single());
-            interchange.AddItem(group);
-            
-            // ACT
-            interchange.GenerateEdi();
         }
 
         [TestMethod]
@@ -601,30 +584,6 @@ namespace EdiFabric.Tests
                 Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
                 Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             }
-        }
-
-        [TestMethod]
-        public void TestParseX12WithCollection()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
-            var ediItems = new List<object>();
-
-            // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample)))
-            {
-                while (ediReader.Read(ediItems.Add))
-                {
-                }
-            }
-
-            // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<S_GS>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<M_810>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<S_GE>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().Count() == 2);
-            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
         [TestMethod]

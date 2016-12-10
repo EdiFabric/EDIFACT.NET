@@ -256,7 +256,7 @@ namespace EdiFabric.Framework.Controls
             {
                 D_0060_1 = i.ToString(),
                 D_0048_2 = ung.D_0048_5
-            }, Separators.DefaultSeparatorsEdifact())
+            }, Separators.DefaultEdifact())
         {
         }
     }
@@ -275,7 +275,7 @@ namespace EdiFabric.Framework.Controls
             {
                 D_0036_1 = i.ToString(),
                 D_0020_2 = unb.D_0020_5
-            }, Separators.DefaultSeparatorsEdifact())
+            }, Separators.DefaultEdifact())
         {
             if (header == null) throw new Exception("UNB header is null.");
         }
@@ -288,7 +288,7 @@ namespace EdiFabric.Framework.Controls
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
-            var currentSeparators = separators ?? Separators.DefaultSeparatorsEdifact();
+            var currentSeparators = separators ?? Separators.DefaultEdifact();
             if (separators != null)
             {
                result.Add(separators.ToUna()); 

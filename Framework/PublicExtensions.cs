@@ -27,7 +27,7 @@ namespace EdiFabric.Framework
     /// <summary>
     /// This class contains XML serialization and validation functionality.
     /// </summary>
-    public static class PublicExtensions
+    public static class PublicExtensions 
     {
         private static readonly string XsdAssemblyName;
         private static readonly FieldInfo ValidationRes;
@@ -59,8 +59,23 @@ namespace EdiFabric.Framework
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
         public static ValidationException Validate(this object message)
         {
+            return message.Validate(LoadXsd(message.GetType().FullName));
+        }
+
+        /// <summary>
+        /// Validates an instance against XSD.
+        /// </summary>
+        /// <param name="message">The EDI instance.</param>
+        /// <param name="xsd">The xsd.</param>
+        /// <returns>A collection of validation errors.</returns>
+        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
+        public static ValidationException Validate(this object message, Stream xsd)
+        {
             if (message == null)
                     throw new ArgumentNullException("message");
+
+            if (xsd == null)
+                throw new ArgumentNullException("xsd");
 
             string messageName = null;
             string controlNumber = null;
@@ -79,7 +94,7 @@ namespace EdiFabric.Framework
                 if(XsdCache.Count > 20) XsdCache.Clear();
 
                 var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(message.LoadXsd(), xDoc.Root.Name.Namespace.NamespaceName));
+                    NewSchemaSet(xsd, xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,
@@ -137,16 +152,15 @@ namespace EdiFabric.Framework
             }
         }
 
-        private static Stream LoadXsd(this object message)
+        private static Stream LoadXsd(string name)
         {
             if (XsdAssemblyName == null)
                 throw new Exception("XsdAssemblyName not specified in config.");
 
-            var type = message.GetType();
-            var parts = type.FullName.Split('.');
+            var parts = name.Split('.');
 
             if (parts.Length < 2)
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", type));
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", name));
 
             string format;
             var version = parts[parts.Length - 2];
@@ -162,7 +176,7 @@ namespace EdiFabric.Framework
                 format = "EDIFACT";
             }
             else
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", type));
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", name));
 
             version = version.Replace(tag, "");
 
@@ -293,7 +307,6 @@ namespace EdiFabric.Framework
             if (failedElement == null || originalParent == null || originalParent.Parent == null || originalParent.Document == null)
                 return null;
 
-            //var element = originalParent.Elements().LastOrDefault(e => e.Name.LocalName == failedElement);
             var segments = originalParent.Document.Descendants()
                             .Where(d => d.Name.LocalName.StartsWith("S_", StringComparison.Ordinal))
                             .ToList();

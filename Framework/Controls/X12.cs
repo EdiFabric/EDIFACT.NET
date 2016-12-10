@@ -142,9 +142,8 @@ namespace EdiFabric.Framework.Controls
             {
                 D_97_1 = i.ToString(),
                 D_28_2 = gs.D_28_6
-            }, Separators.DefaultSeparatorsX12())
+            }, Separators.DefaultX12())
         {
-            if(header == null) throw new Exception("GS header is null.");
         }
     }
 
@@ -162,7 +161,7 @@ namespace EdiFabric.Framework.Controls
             {
                 D_405_1 = i.ToString(),
                 D_709_2 = header.D_709_13
-            }, Separators.DefaultSeparatorsX12())
+            }, Separators.DefaultX12())
         {
             if (header == null) throw new Exception("ISA header is null.");
         }
@@ -175,7 +174,7 @@ namespace EdiFabric.Framework.Controls
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
-            var currentSeparators = separators ?? Separators.DefaultSeparatorsX12();
+            var currentSeparators = separators ?? Separators.DefaultX12();
 
             Header.D_701_16 = currentSeparators.ComponentDataElement.ToString();
             if (Header.D_726_11 != "U")

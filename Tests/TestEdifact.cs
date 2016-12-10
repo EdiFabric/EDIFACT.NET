@@ -165,8 +165,8 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
             const string expectedResult = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
             var interchange = TestHelper.GenerateEdifact<M_INVOIC>(sample);
-            var defaultSeparators = Separators.DefaultSeparatorsEdifact();
-            var newSeparators = Separators.SeparatorsEdifact(defaultSeparators.Segment,
+            var defaultSeparators = Separators.DefaultEdifact();
+            var newSeparators = new Separators(defaultSeparators.Segment,
                 defaultSeparators.ComponentDataElement, '|', defaultSeparators.RepetitionDataElement,
                 defaultSeparators.Escape);
             
@@ -797,31 +797,6 @@ namespace EdiFabric.Tests
                 Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
 
             }
-        }
-
-        [TestMethod]
-        public void TestParseEdifactWithCollection()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
-            var ediItems = new List<object>();
-
-            // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
-            {
-                while (ediReader.Read(ediItems.Add))
-                {
-                }
-            }
-
-            // ASSERT
-            
-            Assert.IsNull(ediItems.OfType<S_UNG>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_UNB>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<M_INVOIC>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<S_UNZ>().Count() == 2);
         }
 
         [TestMethod]

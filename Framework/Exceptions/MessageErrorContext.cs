@@ -86,7 +86,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
         /// <param name="errorCode">The error code.</param>
-        internal void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
+        public void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
         {
             var key = segmentName + segmentPosition;
             if (_errors.ContainsKey(key))
@@ -110,7 +110,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        internal void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
+        public void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {
             var key = segmentName + segmentPosition;

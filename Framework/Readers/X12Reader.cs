@@ -62,8 +62,8 @@ namespace EdiFabric.Framework.Readers
                         repetitionDataElement = isaElements[10].First();
                     var segment = isaElements[15].Last();
 
-                    separators = Separators.SeparatorsX12(segment, componentDataElement, dataElement,
-                        repetitionDataElement);
+                    separators = new Separators(segment, componentDataElement, dataElement,
+                        repetitionDataElement, null);
 
                     return true;
                 }

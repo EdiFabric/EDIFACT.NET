@@ -74,9 +74,8 @@ namespace EdiFabric.Framework.Readers
         /// Reads an EDI item from the stream.
         /// Items can be: control segment, message or error.
         /// </summary>
-        /// <param name="collect">Items collector.</param>
         /// <returns>If a new message was read.</returns>
-        public bool Read(Action<object> collect = null)
+        public bool Read()
         {
             Item = null;
 
@@ -105,8 +104,6 @@ namespace EdiFabric.Framework.Readers
                 Item = new ParsingException(ErrorCodes.ImproperEndOfFile, "Unprocessed segments before the end of file.");
                 CurrentMessage.Clear();
             }
-
-            if (collect != null && Item != null) collect(Item);
 
             return Item != null;
         }
