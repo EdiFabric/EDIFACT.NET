@@ -43,6 +43,14 @@ namespace EdiFabric.Framework
         /// </summary>
         public char? RepetitionDataElement { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Separators"/> class.
+        /// </summary>
+        /// <param name="segment">Segment separator.</param>
+        /// <param name="componentDataElement">Component data element separator.</param>
+        /// <param name="dataElement">Data element separator.</param>
+        /// <param name="repetitionDataElement">Repetition separator.</param>
+        /// <param name="escape">Escape delimiter.</param>
         public Separators(char segment, char componentDataElement, char dataElement,
             char? repetitionDataElement, char? escape)
         {

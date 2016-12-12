@@ -52,7 +52,7 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
-        /// Validates an instance against XSD.
+        /// Validates an instance against XSD added as embedded resource.
         /// </summary>
         /// <param name="message">The EDI instance.</param>
         /// <returns>A collection of validation errors.</returns>
