@@ -27,7 +27,7 @@ namespace EdiFabric.Framework
     /// <summary>
     /// This class contains XML serialization and validation functionality.
     /// </summary>
-    public static class PublicExtensions 
+    public class EdiValidation 
     {
         private static readonly string XsdAssemblyName;
         private static readonly FieldInfo ValidationRes;
@@ -38,7 +38,7 @@ namespace EdiFabric.Framework
         private static readonly ConcurrentDictionary<string, XmlSchemaSet> XsdCache =
             new ConcurrentDictionary<string, XmlSchemaSet>();
 
-        static PublicExtensions()
+        static EdiValidation()
         {
             try
             {
@@ -57,9 +57,9 @@ namespace EdiFabric.Framework
         /// <param name="message">The EDI instance.</param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static ValidationException Validate(this object message)
+        public static ValidationException Validate(object message)
         {
-            return message.Validate(LoadXsd(message.GetType().FullName));
+            return Validate(message, LoadXsd(GetXsdName(message)));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace EdiFabric.Framework
         /// <param name="xsd">The xsd.</param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static ValidationException Validate(this object message, Stream xsd)
+        public static ValidationException Validate(object message, Stream xsd)
         {
             if (message == null)
                     throw new ArgumentNullException("message");
@@ -81,7 +81,7 @@ namespace EdiFabric.Framework
             string controlNumber = null;
             try
             {
-                var xDoc = message.Serialize();
+                var xDoc = Serialize(message);
                 if (xDoc.Root == null)
                     throw new Exception("Failed to serialize instance.");
 
@@ -124,12 +124,46 @@ namespace EdiFabric.Framework
         }
 
         /// <summary>
+        /// Gets the xsd name from the type name.
+        /// </summary>
+        /// <param name="message">The message instance.</param>
+        /// <returns>The xsd name.</returns>
+        public static string GetXsdName(object message)
+        {
+            var typeName = message.GetType().FullName;
+            var parts = typeName.Split('.');
+
+            if (parts.Length < 2)
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
+
+            string format;
+            var version = parts[parts.Length - 2];
+            var tag = parts.Last().Replace("M_", "");
+            if (version.StartsWith("X12", StringComparison.Ordinal))
+            {
+                version = version.Replace("X12", "");
+                format = "X12";
+            }
+            else if (version.StartsWith("Edifact", StringComparison.Ordinal))
+            {
+                version = version.Replace("Edifact", "");
+                format = "EDIFACT";
+            }
+            else
+                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
+
+            version = version.Replace(tag, "");
+
+            return "EF_" + format + "_" + version + "_" + tag + ".xsd";
+        }
+
+        /// <summary>
         /// Serializes an instance into XML.
         /// </summary>
         /// <param name="instance">The instance to serialize.</param>
         /// <returns>The instance serialized to XML.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static XDocument Serialize(this object instance)
+        public static XDocument Serialize(object instance)
         {
             if (instance == null)
                 throw new ArgumentNullException("instance");
@@ -152,36 +186,8 @@ namespace EdiFabric.Framework
             }
         }
 
-        private static Stream LoadXsd(string name)
+        private static Stream LoadXsd(string xsdName)
         {
-            if (XsdAssemblyName == null)
-                throw new Exception("XsdAssemblyName not specified in config.");
-
-            var parts = name.Split('.');
-
-            if (parts.Length < 2)
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", name));
-
-            string format;
-            var version = parts[parts.Length - 2];
-            var tag = parts.Last().Replace("M_", "");
-            if (version.StartsWith("X12", StringComparison.Ordinal))
-            {
-                version = version.Replace("X12", "");
-                format = "X12";
-            }
-            else if (version.StartsWith("Edifact", StringComparison.Ordinal))
-            {
-                version = version.Replace("Edifact", "");
-                format = "EDIFACT";
-            }
-            else
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", name));
-
-            version = version.Replace(tag, "");
-
-            var xsdName = "EF_" + format + "_" + version + "_" + tag + ".xsd";
-
             var result = Assembly.Load(new AssemblyName(XsdAssemblyName))
                 .GetManifestResourceStream(string.Format("{0}.{1}", XsdAssemblyName, xsdName));
 
