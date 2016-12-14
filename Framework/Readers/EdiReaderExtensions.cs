@@ -181,7 +181,7 @@ namespace EdiFabric.Framework.Readers
                 var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                 if (currSeg == null)
                 {
-                    if (messageGrammar.Descendants().All(d => d.Name != segment.Name))
+                    if (messageGrammar.Descendants().All(d => d.EdiName != segment.Name))
                     {
                         errorContext.Add(segment.Name, segments.IndexOf(segment) + 1, ErrorCodes.UnrecognizedSegment);
                         throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
