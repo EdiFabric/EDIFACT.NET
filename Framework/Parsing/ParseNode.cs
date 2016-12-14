@@ -108,15 +108,16 @@ namespace EdiFabric.Framework.Parsing
             {
                 var currentNode = stack.Pop();
 
-                var properties = currentNode.Type.GetProperties().Sort();
-                if (currentNode.Prefix == Prefixes.S)
-                {
-                    if (properties.Count > 0)
-                        currentNode._firstChildValues = properties[0].GetProperyValues();
-                    if (properties.Count > 1)
-                        currentNode._secondChildValues = properties[1].GetProperyValues();
+                if (currentNode.Prefix == Prefixes.D) continue;
 
-                    if (lazyLoadSegment) continue;
+                var properties = currentNode.Type.GetProperties().Sort();
+                if (currentNode.Prefix == Prefixes.S && lazyLoadSegment)
+                {
+                    var firstTwo = properties.GetPropertyValues();
+                    currentNode._firstChildValues = firstTwo.Item1;
+                    currentNode._secondChildValues = firstTwo.Item2;
+
+                    continue;
                 }
 
                 foreach (var propertyInfo in properties)
@@ -149,8 +150,8 @@ namespace EdiFabric.Framework.Parsing
                 object currentInstance;
                 if (!instanceLinks.TryGetValue(path, out currentInstance))
                     throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
-                
-                if (currentInstance == null) continue;
+
+                if (currentInstance == null || currentNode.Prefix == Prefixes.D) continue;
 
                 var properties = currentNode.Type.GetProperties().Sort();
                 foreach (var propertyInfo in properties)

@@ -20,24 +20,14 @@ namespace EdiFabric.Framework.Parsing
 {
     static class PropertyInfoExtensions
     {
-        internal static List<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
+        internal static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
-            var dictionary = new SortedDictionary<int, PropertyInfo>();
-
-            foreach (var propertyInfo in propertyInfos)
-            {
-                var attributes = Attribute.GetCustomAttributes(propertyInfo);
-                if (attributes.OfType<XmlIgnoreAttribute>().Any())
-                    continue;
-
-                var elementAttribute = attributes.OfType<XmlElementAttribute>().FirstOrDefault();
-                if (elementAttribute != null)
-                {
-                    dictionary.Add(elementAttribute.Order, propertyInfo);
-                }
-            }               
-
-            return dictionary.Select(v => v.Value).ToList();
+            return propertyInfos.OrderBy(
+                p =>
+                    p.GetCustomAttributes(typeof(XmlElementAttribute), false)
+                        .Cast<XmlElementAttribute>()
+                        .Select(a => a.Order)
+                        .FirstOrDefault());           
         }
 
         internal static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
@@ -70,16 +60,38 @@ namespace EdiFabric.Framework.Parsing
             return propertyInfo.PropertyType;
         }
 
-        internal static List<string> GetProperyValues(this PropertyInfo propertyInfo)
+        internal static Tuple<List<string>, List<string>> GetPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
+        {
+            List<string> element0 = null;
+            List<string> element1 = null;
+            
+            int i = 0;            
+            var firstTwo = propertyInfos.Take(2);
+            foreach (var item in firstTwo)
+            {
+                if (i == 0)
+                {
+                    element0 = item.GetPropertyValues().ToList();
+                }
+                if (i == 1)
+                {
+                    element1 = item.GetPropertyValues().ToList();
+                }
+                i++;
+            }
+
+            return new Tuple<List<string>, List<string>>(element0 ?? new List<string>(), element1 ?? new List<string>());
+        }
+
+        internal static IEnumerable<string> GetPropertyValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.IsList())
                 return new List<string>();
 
             if (!propertyInfo.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal)) 
                 return propertyInfo.GetProperyEnumValues().ToList();
-            
-            var complexProperties = propertyInfo.PropertyType.GetProperties().Sort();
-            return complexProperties[0].GetProperyEnumValues().ToList();
+
+            return propertyInfo.PropertyType.GetProperties().Sort().First().GetProperyEnumValues();
         }
 
         internal static bool IsList(this PropertyInfo propertyInfo)
