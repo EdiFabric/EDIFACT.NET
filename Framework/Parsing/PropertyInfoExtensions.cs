@@ -30,7 +30,7 @@ namespace EdiFabric.Framework.Parsing
                         .FirstOrDefault());           
         }
 
-        internal static IEnumerable<string> GetProperyEnumValues(this PropertyInfo propertyInfo)
+        internal static IEnumerable<string> GetPropertyEnumValues(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType.IsEnum)
             {
@@ -50,17 +50,7 @@ namespace EdiFabric.Framework.Parsing
             }
         }
 
-        internal static Type GetSystemType(this PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.IsList())
-            {
-                return propertyInfo.PropertyType.GetGenericArguments()[0];
-            }
-
-            return propertyInfo.PropertyType;
-        }
-
-        internal static Tuple<List<string>, List<string>> GetPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
+        internal static Tuple<List<string>, List<string>> GetFirstTwoPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
         {
             List<string> element0 = null;
             List<string> element1 = null;
@@ -69,37 +59,28 @@ namespace EdiFabric.Framework.Parsing
             var firstTwo = propertyInfos.Take(2);
             foreach (var item in firstTwo)
             {
+                var currItem = item;
+                if (item.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal))
+                    currItem = item.PropertyType.GetProperties().Sort().First();
+                if (!currItem.PropertyType.IsEnum)
+                {
+                    i++;
+                    continue;
+                }
                 if (i == 0)
                 {
-                    element0 = item.GetPropertyValues().ToList();
+                    element0 = currItem.GetPropertyEnumValues().ToList();
                 }
                 if (i == 1)
                 {
-                    element1 = item.GetPropertyValues().ToList();
+                    element1 = currItem.GetPropertyEnumValues().ToList();
                 }
                 i++;
             }
 
             return new Tuple<List<string>, List<string>>(element0 ?? new List<string>(), element1 ?? new List<string>());
         }
-
-        internal static IEnumerable<string> GetPropertyValues(this PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.IsList())
-                return new List<string>();
-
-            if (!propertyInfo.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal)) 
-                return propertyInfo.GetProperyEnumValues().ToList();
-
-            return propertyInfo.PropertyType.GetProperties().Sort().First().GetProperyEnumValues();
-        }
-
-        internal static bool IsList(this PropertyInfo propertyInfo)
-        {
-            return typeof (IList).IsAssignableFrom(propertyInfo.PropertyType)
-                   && propertyInfo.PropertyType.IsGenericType;
-        }
-
+        
         internal static object GetPropertyValue(this PropertyInfo propertyInfo, string value)
         {
             if (!propertyInfo.PropertyType.IsEnum) return value;

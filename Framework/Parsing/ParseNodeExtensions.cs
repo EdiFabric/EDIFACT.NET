@@ -251,7 +251,7 @@ namespace EdiFabric.Framework.Parsing
                         ? propertyInfo.GetPropertyValue(nodeChild.Value)
                         : Activator.CreateInstance(nodeChild.Type);
 
-                    if (propertyInfo.IsList())
+                    if (propertyInfo.PropertyType.IsGenericType)
                     {
                         var repPath = nodeChild.Parent.Path + nodeChild.Name;
                         IList list;

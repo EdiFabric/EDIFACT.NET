@@ -82,7 +82,10 @@ namespace EdiFabric.Framework.Parsing
         {
             if (propertyInfo == null) throw new ArgumentNullException("propertyInfo");
 
-            var systemType = propertyInfo.GetSystemType();
+            var systemType = propertyInfo.PropertyType;
+            if (systemType.IsGenericType)
+                systemType = systemType.GenericTypeArguments.First();
+            
             var val = value as string;
 
             if (value != null && value.GetType().IsEnum)
@@ -113,7 +116,7 @@ namespace EdiFabric.Framework.Parsing
                 var properties = currentNode.Type.GetProperties().Sort();
                 if (currentNode.Prefix == Prefixes.S && lazyLoadSegment)
                 {
-                    var firstTwo = properties.GetPropertyValues();
+                    var firstTwo = properties.GetFirstTwoPropertyValues();
                     currentNode._firstChildValues = firstTwo.Item1;
                     currentNode._secondChildValues = firstTwo.Item2;
 
@@ -156,7 +159,7 @@ namespace EdiFabric.Framework.Parsing
                 var properties = currentNode.Type.GetProperties().Sort();
                 foreach (var propertyInfo in properties)
                 {
-                    if (propertyInfo.IsList())
+                    if (propertyInfo.PropertyType.IsGenericType)
                     {
                         var currentList = propertyInfo.GetValue(currentInstance) as IList;
                         if (currentList == null && !propertyInfo.Name.StartsWith(Prefixes.D.ToString(), StringComparison.Ordinal) &&
