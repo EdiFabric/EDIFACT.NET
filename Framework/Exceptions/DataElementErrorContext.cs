@@ -9,11 +9,16 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("EdiFabric.Tests")]
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
     /// The error context of what and where had failed. 
     /// </summary>
+    [Serializable]
     public class DataElementErrorContext
     {
         /// <summary>

@@ -10,28 +10,77 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Runtime.Serialization;
 
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
     /// Parsing exception.
     /// </summary>
-    public class ParsingException : Exception
+    [Serializable]
+    public class ParsingException : Exception, ISerializable
     {
         /// <summary>
         /// The error code.
         /// </summary>
-        public ErrorCodes ErrorCode { get; private set; }
+        public ErrorCodes ErrorCode
+        {
+            get
+            {
+                return ((ErrorCodes)Data["ErrorCode"]);
+            }
+
+            private set
+            {
+                Data["ErrorCode"] = value;
+            }
+        }
 
         /// <summary>
         /// The line that failed.
         /// </summary>
-        public string FailedLine { get; private set; }
+        public string FailedLine
+        {
+            get
+            {
+                return (Data.Contains("FailedLine")) ? (string)Data["FailedLine"] : null;
+            }
+
+            private set
+            {
+                if (value == null && Data.Contains("FailedLine"))
+                {
+                    Data.Remove("FailedLine");
+                }
+                else
+                {
+                    Data["FailedLine"] = value;
+                }
+            }
+        }
 
         /// <summary>
         /// The error context.
         /// </summary>
-        public MessageErrorContext ErrorContext { get; private set; }
+        public MessageErrorContext ErrorContext
+        {
+            get
+            {
+                return (Data.Contains("ErrorContext")) ? (MessageErrorContext)Data["ErrorContext"] : null;
+            }
+
+            private set
+            {
+                if (value == null && Data.Contains("MessageErrorContext"))
+                {
+                    Data.Remove("MessageErrorContext");
+                }
+                else
+                {
+                    Data["MessageErrorContext"] = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
@@ -63,5 +112,25 @@ namespace EdiFabric.Framework.Exceptions
             FailedLine = failedLine;
             ErrorContext = context;
         }
+
+
+        #region ISerializable Implementation
+
+        
+
+        /// <summary>
+        /// Deserialization constructor
+        /// </summary>
+        protected ParsingException(SerializationInfo info, StreamingContext context) : base (info, context)
+        {
+        }
+       
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+
+        #endregion ISerializable
+
     }
 }

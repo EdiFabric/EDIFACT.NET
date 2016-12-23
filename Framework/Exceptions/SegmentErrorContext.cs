@@ -9,6 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace EdiFabric.Framework.Exceptions
@@ -16,6 +17,7 @@ namespace EdiFabric.Framework.Exceptions
     /// <summary>
     /// The error context of what and where had failed. 
     /// </summary>
+    [Serializable]
     public class SegmentErrorContext
     {
         /// <summary>
