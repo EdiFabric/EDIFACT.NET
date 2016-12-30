@@ -122,6 +122,7 @@ namespace EdiFabric.Framework.Controls
             var result = segments.Select(segment => segment.GenerateSegment(separators)).ToList();
             
             if (!isMessage) return result;
+            if (parseTree.EdiName == "TA1") return result;
             
             var controlNumber = segments.MessageControlNumber();
             var trailerTag = item.GetType().FullName.Contains(".X12") ? "SE" : "UNT";

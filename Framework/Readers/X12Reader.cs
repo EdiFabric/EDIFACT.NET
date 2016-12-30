@@ -129,6 +129,12 @@ namespace EdiFabric.Framework.Readers
 
         internal override MessageContext BuildContext()
         {
+            var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
+            if (ta1 != null)
+            {
+                return new MessageContext("TA1", "", "", "X12", RulesAssemblyName, RulesNamespacePrefix);
+            }
+
             if (CurrentGroupHeader == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS was not found.");
             var ediCompositeDataElementsGs = CurrentGroupHeader.Value.GetDataElements(Separators);
