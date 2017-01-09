@@ -129,10 +129,13 @@ namespace EdiFabric.Framework.Readers
 
         internal override MessageContext BuildContext()
         {
-            var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
-            if (ta1 != null)
+            if (CurrentMessage.Count == 1)
             {
-                return new MessageContext("TA1", "", "", "X12", RulesAssemblyName, RulesNamespacePrefix);
+                var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
+                if (ta1 != null)
+                {
+                    return new MessageContext("TA1", "", "", "X12", RulesAssemblyName, RulesNamespacePrefix);
+                }
             }
 
             if (CurrentGroupHeader == null)
