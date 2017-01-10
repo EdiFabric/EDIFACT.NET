@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using EdiFabric.Framework.Exceptions;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using EdiFabric.Framework.Exceptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
 {
@@ -23,9 +22,7 @@ namespace EdiFabric.Tests
 
             AssertTwoDataElementErrorsAreEqual(context, copy);
         }
-
-
-
+        
         [TestMethod]
         public void TestSerializationOfSegmentErrorContext()
         {
@@ -43,10 +40,7 @@ namespace EdiFabric.Tests
 
             AssertTwoSegmentErrorsAreEqual(context, copy);
         }
-
-
-
-
+        
         [TestMethod]
         public void TestSerializationOfMessageErrorContext()
         {
@@ -113,11 +107,8 @@ namespace EdiFabric.Tests
             //var copy = new ParsingException(ErrorCodes.ControlNumberNotMatching, "message2");
             
             AssertTwoParsingExceptionsAreEqual(ex, copy);
-
-
         }
-
-
+        
         void AssertTwoDataElementErrorsAreEqual(DataElementErrorContext context, DataElementErrorContext other)
         {
             Assert.AreEqual(context.Code, other.Code);
@@ -173,8 +164,7 @@ namespace EdiFabric.Tests
                 AssertTwoSegmentErrorsAreEqual(contextErrorsArray[i], copyErrorsArray[i]);
             }
         }
-
-
+        
         void AssertTwoParsingExceptionsAreEqual(ParsingException ex, ParsingException other)
         {
             Assert.AreEqual(ex.ErrorCode, other.ErrorCode);
@@ -183,8 +173,5 @@ namespace EdiFabric.Tests
             Assert.AreEqual(ex.Message, other.Message);
             Assert.AreEqual(ex.StackTrace, other.StackTrace);
         }
-    
-
-
     }
 }

@@ -10,9 +10,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("EdiFabric.Tests")]
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>

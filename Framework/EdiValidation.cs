@@ -31,6 +31,8 @@ namespace EdiFabric.Framework
     {
         private static readonly string XsdAssemblyName;
         private static readonly FieldInfo ValidationRes;
+        private static readonly int SerializerCacheMax;
+        private static readonly int XsdCacheMax;
 
         private static readonly ConcurrentDictionary<string, XmlSerializer> SerializerCache =
             new ConcurrentDictionary<string, XmlSerializer>();
@@ -44,6 +46,10 @@ namespace EdiFabric.Framework
             {
                 XsdAssemblyName = ConfigurationManager.AppSettings["EdiFabric.XsdAssemblyName"];
                 ValidationRes = typeof(XmlSchemaException).GetField("res", BindingFlags.NonPublic | BindingFlags.Instance);
+                var serCache = ConfigurationManager.AppSettings["EdiFabric.SerializerCacheMax"];
+                SerializerCacheMax = serCache != null ? int.Parse(serCache) : 20;
+                var xsdCache = ConfigurationManager.AppSettings["EdiFabric.XsdCacheMax"];
+                XsdCacheMax = xsdCache != null ? int.Parse(xsdCache) : 20;
             }
             catch (Exception)
             {
@@ -59,23 +65,23 @@ namespace EdiFabric.Framework
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
         public static ValidationException Validate(object message)
         {
-            return Validate(message, LoadXsd(GetXsdName(message)));
+            return Validate(message, LoadXsd);
         }
 
         /// <summary>
         /// Validates an instance against XSD.
         /// </summary>
         /// <param name="message">The EDI instance.</param>
-        /// <param name="xsd">The xsd.</param>
+        /// <param name="loadXsd">The xsd loader.</param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static ValidationException Validate(object message, Stream xsd)
+        public static ValidationException Validate(object message, Func<string, Stream> loadXsd)
         {
             if (message == null)
-                    throw new ArgumentNullException("message");
+                throw new ArgumentNullException("message");
 
-            if (xsd == null)
-                throw new ArgumentNullException("xsd");
+            if (loadXsd == null)
+                throw new ArgumentNullException("loadXsd");
 
             string messageName = null;
             string controlNumber = null;
@@ -91,10 +97,10 @@ namespace EdiFabric.Framework
                     throw new Exception("Failed to extract message name or control number.");
                 }
 
-                if(XsdCache.Count > 20) XsdCache.Clear();
+                if (XsdCache.Count > XsdCacheMax) XsdCache.Clear();
 
                 var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(xsd, xDoc.Root.Name.Namespace.NamespaceName));
+                    NewSchemaSet(loadXsd(GetXsdName(message)), xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,
@@ -176,7 +182,7 @@ namespace EdiFabric.Framework
             if (type.FullName.Contains("Edifact"))
                 nameSpace = "www.edifabric.com/edifact";
 
-            if (SerializerCache.Count > 20) SerializerCache.Clear();
+            if (SerializerCache.Count > SerializerCacheMax) SerializerCache.Clear();
             var serializer = SerializerCache.GetOrAdd(type.FullName, new XmlSerializer(type, nameSpace));
             using (var ms = new MemoryStream())
             {
