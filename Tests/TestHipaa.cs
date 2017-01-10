@@ -165,5 +165,25 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(root);
             Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestParse5010Lfnm1Lisa()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_LF.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_LF.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.ParseX12(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            var parsedXml = EdiValidation.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            Assert.IsNotNull(parsedXml.Root);
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+        }
     }
 }

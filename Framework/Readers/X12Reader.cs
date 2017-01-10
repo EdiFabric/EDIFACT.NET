@@ -49,7 +49,7 @@ namespace EdiFabric.Framework.Readers
                 if (segmentName == "ISA")
                 {
                     var dataElement = StreamReader.Read(1)[0];
-                    var isa = StreamReader.ReadIsa(dataElement);
+                    var isa = StreamReader.Read(102);
                     probed = segmentName + dataElement + isa;
                     var isaElements = isa.Split(dataElement);
                     if (isaElements.Length != 16)

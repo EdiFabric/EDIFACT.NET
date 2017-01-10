@@ -62,25 +62,6 @@ namespace EdiFabric.Framework.Readers
             return String.Concat(result);
         }
 
-        internal static string ReadIsa(this StreamReader reader, char dataElementSeparator)
-        {
-            var line = "";
-            var counter = 0;
-
-            while (reader.Peek() >= 0 && counter < 15 && line.Length < 100)
-            {
-                var symbol = reader.Read(1)[0];
-                line = line + symbol;
-
-                if (dataElementSeparator == symbol)
-                {
-                    counter = counter + 1;
-                }
-            }
-
-            return line + reader.Read(2);
-        }
-
         internal static string[] GetDataElements(this string segment, Separators separators)
         {
             if (String.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
