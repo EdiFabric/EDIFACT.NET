@@ -339,11 +339,12 @@ namespace EdiFabric.Framework.Parsing
                 if (hlParent == null)
                     throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
 
-                var hl = grammarRoot.Descendants().Single(pt => pt.Name == hlParent.Name);
-                if (hl.IndexInParent() != 0)
-                    throw new Exception(string.Format("HL with id = {0} is not the first segment.", parentId));
+                var nextSegment = grammarRoot.Descendants().Reverse().FindNextSegment(pt => pt.Name == hlParent.Name);
 
-                return hl.Parent.Children.ElementAt(1);
+                if (nextSegment == null)
+                    throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
+
+                return nextSegment;                
             }
 
             // Root HL, start from it
@@ -351,6 +352,23 @@ namespace EdiFabric.Framework.Parsing
                 grammarRoot.Descendants()
                     .Reverse()
                     .First(d => (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)));
+        }
+
+        private static ParseNode FindNextSegment(this IEnumerable<ParseNode> items, Predicate<ParseNode> matchPredicate)
+        {
+            using (var iter = items.GetEnumerator())
+            {
+                while (iter.MoveNext())
+                {
+                    if (matchPredicate(iter.Current))
+                    {
+                        if (iter.MoveNext())
+                            return iter.Current;
+                    }                   
+                }
+            }
+
+            return null;
         }
 
         internal static ParseNode Root(this ParseNode parseNode)
