@@ -128,6 +128,28 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
+    /// This class represents the X12 technical ack.
+    /// </summary>
+    [XmlRoot(Namespace = "www.edifabric.com/x12")]
+    public class S_TA1 : IEdiControl
+    {
+        [XmlElement(Order = 0)]
+        public string D_TA101_1 { get; set; }
+
+        [XmlElement(Order = 1)]
+        public string D_TA102_2 { get; set; }
+
+        [XmlElement(Order = 2)]
+        public string D_TA103_3 { get; set; }
+
+        [XmlElement(Order = 3)]
+        public string D_TA104_4 { get; set; }
+
+        [XmlElement(Order = 4)]
+        public string D_TA105_5 { get; set; }
+    }  
+
+    /// <summary>
     /// This class represents X12 group.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>

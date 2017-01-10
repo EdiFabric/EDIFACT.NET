@@ -91,6 +91,9 @@ namespace EdiFabric.Framework.Readers
                 case SegmentTags.ISA:
                     Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
                     break;
+                case SegmentTags.TA1:
+                    Item = segmentContext.Value.ParseSegment<S_TA1>(Separators);
+                    break;
                 case SegmentTags.GS:
                     Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
                     CurrentGroupHeader = segmentContext;

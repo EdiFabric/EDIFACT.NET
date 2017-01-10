@@ -29,6 +29,7 @@ namespace EdiFabric.Framework.Parsing
         UNH,
         UNT,
         ST,
-        SE        
+        SE,
+        TA1
     }
 }

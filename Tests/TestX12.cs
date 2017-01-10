@@ -707,6 +707,31 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(root);
             Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }
+
+        [TestMethod]
+        public void TestParseX12WithTa1()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TA1.txt";
+            const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
+            var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
+
+            // ACT
+            var ediItems = TestHelper.ParseX12(sample).ToList();
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_TA1>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_810>().Single());
+            Assert.IsNotNull(parsedXml.Root);
+            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
+        }
     }
 }
 
