@@ -63,7 +63,7 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="name">The message name.</param>
         /// <param name="controlNumber">The message control number.</param>
-        internal MessageErrorContext(string name, string controlNumber)
+        public MessageErrorContext(string name, string controlNumber)
         {
             Name = name;
             ControlNumber = controlNumber;
@@ -75,7 +75,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="name">The message name.</param>
         /// <param name="controlNumber">The message control number.</param>
         /// <param name="errorCode">The error code.</param>
-        internal MessageErrorContext(string name, string controlNumber, ErrorCodes errorCode)
+        public MessageErrorContext(string name, string controlNumber, ErrorCodes errorCode)
             : this(name, controlNumber)
         {
             _codes.Add(errorCode);
@@ -87,7 +87,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
         /// <param name="errorCode">The error code.</param>
-        internal void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
+        public void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
         {
             var key = segmentName + segmentPosition;
             if (_errors.ContainsKey(key))
@@ -111,7 +111,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        internal void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
+        public void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {
             var key = segmentName + segmentPosition;
@@ -131,7 +131,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Merges a segment context into the errors collection.
         /// </summary>
         /// <param name="segmentContext">The segment error context to merge.</param>
-        internal void Add(SegmentErrorContext segmentContext)
+        public void Add(SegmentErrorContext segmentContext)
         {
             var key = segmentContext.Name + segmentContext.Position;
             if (_errors.ContainsKey(key))

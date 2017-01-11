@@ -55,7 +55,7 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="name">The segment name.</param>
         /// <param name="position">The segment position.</param>
-        internal SegmentErrorContext(string name, int position)
+        public SegmentErrorContext(string name, int position)
         {
             Name = name;
             Position = position;
@@ -67,7 +67,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="name">The segment name.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="errorCode">The error code.</param>
-        internal SegmentErrorContext(string name, int position, ErrorCodes errorCode)
+        public SegmentErrorContext(string name, int position, ErrorCodes errorCode)
             : this(name, position)
         {
             _codes.Add(errorCode);
@@ -77,7 +77,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Adds error code.
         /// </summary>
         /// <param name="errorCode">The error code.</param>
-        internal void Add(ErrorCodes errorCode)
+        public void Add(ErrorCodes errorCode)
         {
             _codes.Add(errorCode);
         }
@@ -91,7 +91,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        internal void Add(string name, int position, ErrorCodes code, int componentPosition,
+        public void Add(string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {
             _errors.Add(new DataElementErrorContext(name, position, code, componentPosition, repetitionPosition, value));

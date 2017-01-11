@@ -10,7 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9F13E47B-F989-4436-B1A0-03427571BF44}"
 	ProjectSection(SolutionItems) = preProject
 		Framework\Framework.nuspec = Framework\Framework.nuspec
-		Framework\nuget.exe = Framework\nuget.exe
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules", "Rules\Rules.csproj", "{2B71580C-F607-43DA-904A-527A21397477}"
