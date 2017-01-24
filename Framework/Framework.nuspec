@@ -6,9 +6,9 @@
     <title>The Ultimate EDI Parser for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
-    <licenseUrl>http://edifabric.com/license/</licenseUrl>
+    <licenseUrl>http://edifabric.com/files/eula.pdf</licenseUrl>
     <projectUrl>http://edifabric.com/</projectUrl>
-    <iconUrl>http://edifabric.com/wp-content/uploads/2011/07/logoBLACK.png</iconUrl>
+    <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.NET framework for parsing and generation of EDI messages.</description>
     <releaseNotes>Removed trailer padding</releaseNotes>
