@@ -148,9 +148,8 @@ namespace EdiFabric.Framework.Controls
                 else
                     segmentsCount = segmentsCount + 1;
 
-                var pad = (controlNumber.Length > 4) ? 9 : 4;
                 trailer = trailerTag + separators.DataElement + segmentsCount + separators.DataElement +
-                          controlNumber.PadLeft(pad, '0') +
+                          controlNumber +
                           separators.Segment;
 
                 segments.Add(trailer);
