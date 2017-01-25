@@ -2,11 +2,11 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>7.2.0</version>
+    <version>7.2.1</version>
     <title>The Ultimate EDI Parser for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
-    <licenseUrl>http://edifabric.com/files/eula.pdf</licenseUrl>
+    <licenseUrl>http://edifabric.com/files/lgpl.pdf</licenseUrl>
     <projectUrl>http://edifabric.com/</projectUrl>
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
