@@ -123,10 +123,9 @@ namespace EdiFabric.Framework.Controls
             
             if (!isMessage) return result;
             if (parseTree.EdiName == "TA1") return result;
-            
-            var controlNumber = segments.MessageControlNumber();
-            var trailerTag = item.GetType().FullName.Contains(".X12") ? "SE" : "UNT";
-            SetTrailer(result, separators, trailerTag, controlNumber);
+
+            var trailerValues = segments.PullTrailerValues();
+            SetTrailer(result, separators, trailerValues.Item2, trailerValues.Item1);
 
             return result;
         }

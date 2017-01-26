@@ -86,16 +86,7 @@ namespace EdiFabric.Framework.Parsing
             if (systemType.IsGenericType)
                 systemType = systemType.GenericTypeArguments.First();
             
-            var val = value as string;
-
-            if (value != null && value.GetType().IsEnum)
-            {
-                val = value.ToString();
-                if (val.StartsWith("Item", StringComparison.Ordinal))
-                    val = val.Substring(4);
-            }
-
-            return AddChild(systemType, propertyInfo.Name, val);
+            return AddChild(systemType, propertyInfo.Name, propertyInfo.GetPropertyValue(value));
         }
         
         public static ParseNode BuldTree(Type type, bool lazyLoadSegment) 

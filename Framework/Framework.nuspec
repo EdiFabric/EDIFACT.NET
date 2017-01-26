@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>7.2.1</version>
+    <version>7.2.2</version>
     <title>The Ultimate EDI Parser for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.NET framework for parsing and generation of EDI messages.</description>
-    <releaseNotes>Removed trailer padding</releaseNotes>
+    <releaseNotes>Fix for issue 51</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>.NET EDI Parser EDIFACT X12 HIPAA</tags>
   </metadata>

@@ -10,7 +10,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -61,7 +60,9 @@ namespace EdiFabric.Framework.Parsing
             {
                 var currItem = item;
                 if (item.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal))
-                    currItem = item.PropertyType.GetProperties().Sort().First();
+                    currItem = item.PropertyType.IsGenericType
+                        ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
+                        : item.PropertyType.GetProperties().Sort().First();
                 if (!currItem.PropertyType.IsEnum)
                 {
                     i++;
@@ -89,7 +90,26 @@ namespace EdiFabric.Framework.Parsing
                 return Enum.Parse(propertyInfo.PropertyType, string.Format("Item{0}", value));
             }
 
-            return Enum.Parse(propertyInfo.PropertyType, value);
+            return Enum.Parse(propertyInfo.PropertyType, value.Replace(" ", ""));
+        }
+
+        internal static string GetPropertyValue(this PropertyInfo propertyInfo, object value)
+        {
+            var result = value as string;
+
+            if (value != null && value.GetType().IsEnum)
+            {
+                var field =
+                    propertyInfo.PropertyType.GetFields(BindingFlags.Public | BindingFlags.Static)
+                        .SingleOrDefault(f => f.Name == value.ToString());
+                if (field == null) return value.ToString();
+                var attr =
+                    (XmlEnumAttribute) field.GetCustomAttributes(typeof (XmlEnumAttribute), false).FirstOrDefault();
+                if (attr != null) return attr.Name;
+                return value.ToString();
+            }
+
+            return result;
         }
     }
 }

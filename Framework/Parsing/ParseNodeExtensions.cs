@@ -376,7 +376,7 @@ namespace EdiFabric.Framework.Parsing
             return parseNode.Ancestors().Last(); 
         }
 
-        internal static string MessageControlNumber(this IEnumerable<ParseNode> segments)
+        internal static Tuple<string, string> PullTrailerValues(this IEnumerable<ParseNode> segments)
         {
             var msgHeader =
                 segments.SingleOrDefault(
@@ -385,14 +385,17 @@ namespace EdiFabric.Framework.Parsing
                         s.Name == "S_ST" || s.Name.StartsWith("S_ST_", StringComparison.Ordinal));
 
             ParseNode controlNumber = null;
+            var trailerTag = "";
             if (msgHeader != null && msgHeader.Name == "S_UNH")
             {
                 controlNumber = msgHeader.Children.ElementAt(0);
+                trailerTag = "UNT";
             }
 
             if (msgHeader != null && msgHeader.Name == "S_ST")
             {
                 controlNumber = msgHeader.Children.ElementAt(1);
+                trailerTag = "SE";
             }
 
             if (msgHeader == null || controlNumber == null)
@@ -401,7 +404,10 @@ namespace EdiFabric.Framework.Parsing
             if (String.IsNullOrEmpty(controlNumber.Value))
                 throw new Exception("Invalid control number.");
 
-            return controlNumber.Value;
+            if (String.IsNullOrEmpty(trailerTag))
+                throw new Exception("Invalid trailer tag.");
+
+            return new Tuple<string, string>(controlNumber.Value, trailerTag);
         }       
     }
 }

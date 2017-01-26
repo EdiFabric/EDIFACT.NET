@@ -103,7 +103,7 @@ namespace EdiFabric.Rules.Rep.X12002040810
     public class S_CUR
     {
         [XmlElement(Order = 0)]
-        public string D_98_1 { get; set; }
+        public X12_ID_1 D_98_1 { get; set; }
         [XmlElement(Order = 1)]
         public string D_100_2 { get; set; }
         [XmlElement(Order = 2)]
@@ -144,6 +144,15 @@ namespace EdiFabric.Rules.Rep.X12002040810
         public string D_373_20 { get; set; }
         [XmlElement(Order = 20)]
         public string D_337_21 { get; set; }
+    }
+    [Serializable]
+    [XmlType(Namespace = "www.edifabric.com/x12", AnonymousType = true)]
+    [XmlRoot(Namespace = "www.edifabric.com/x12", IsNullable = false)]
+    public enum X12_ID_1
+    {
+        [XmlEnum("TEST SPACE")]
+        TESTSPACE,
+        SE
     }
     [Serializable]
     [XmlType(AnonymousType = true, Namespace = "www.edifabric.com/x12")]
