@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Readers;
@@ -32,6 +34,28 @@ namespace EdiFabric.Tests
             return list.Aggregate("", (current, item) => current + item + postFix);
         }
 
+        public static XDocument Serialize(object instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException("instance");
+
+            var type = instance.GetType();
+
+            var nameSpace = type.Namespace;
+            if (type.FullName.Contains("X12"))
+                nameSpace = "www.edifabric.com/x12";
+            if (type.FullName.Contains("Edifact"))
+                nameSpace = "www.edifabric.com/edifact";
+
+            var serializer = new XmlSerializer(type, nameSpace);
+            using (var ms = new MemoryStream())
+            {
+                serializer.Serialize(ms, instance);
+                ms.Position = 0;
+                return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
+            }
+        }
+
         public static T Deserialize<T>(Stream stream)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -43,32 +67,24 @@ namespace EdiFabric.Tests
         }
 
         public static IEnumerable<object> ParseX12(string sample, Encoding encoding = null,
-            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
+            string rulesAssembly = null, string rulesNameSpacePrefix = null)
         {
             using (
                 var ediReader = X12Reader.Create(Load(sample),
-                    new ReaderSettings
-                    {
-                        Encoding = encoding,
-                        RulesAssemblyName = rulesAssemblyName,
-                        RulesNamespacePrefix = rulesNameSpacePrefix
-                    }))
+                    new ReaderSettings(rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
+                        encoding ?? Encoding.Default)))
             {
                 return ediReader.ReadToEnd().ToList();
             }
         }
 
         public static IEnumerable<object> ParseEdifact(string sample, Encoding encoding = null,
-            string rulesAssemblyName = null, string rulesNameSpacePrefix = null)
+            string rulesAssembly = null, string rulesNameSpacePrefix = null)
         {
             using (
                 var ediReader = EdifactReader.Create(Load(sample),
-                    new ReaderSettings
-                    {
-                        Encoding = encoding,
-                        RulesAssemblyName = rulesAssemblyName,
-                        RulesNamespacePrefix = rulesNameSpacePrefix
-                    }))
+                    new ReaderSettings(rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
+                        encoding ?? Encoding.Default)))
             {
                 return ediReader.ReadToEnd().ToList();
             }

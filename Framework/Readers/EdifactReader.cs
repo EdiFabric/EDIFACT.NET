@@ -9,7 +9,6 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,9 +51,9 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="settings">The additional settings.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public static EdifactReader Create(Stream ediStream, ReaderSettings settings = null)
+        public static EdifactReader Create(Stream ediStream, ReaderSettings settings)
         {
-            return new EdifactReader(ediStream, settings ?? new ReaderSettings());
+            return new EdifactReader(ediStream, settings);
         }
 
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -173,7 +172,7 @@ namespace EdiFabric.Framework.Readers
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
-            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssemblyName, RulesNamespacePrefix);
+            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssembly, RulesNamespacePrefix);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

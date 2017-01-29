@@ -34,9 +34,9 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="settings">The additional settings.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
-        public static X12Reader Create(Stream ediStream, ReaderSettings settings = null)
+        public static X12Reader Create(Stream ediStream, ReaderSettings settings)
         {
-            return new X12Reader(ediStream, settings ?? new ReaderSettings());
+            return new X12Reader(ediStream, settings);
         }
 
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -137,7 +137,7 @@ namespace EdiFabric.Framework.Readers
                 var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
                 if (ta1 != null)
                 {
-                    return new MessageContext("TA1", "", "", "X12", RulesAssemblyName, RulesNamespacePrefix);
+                    return new MessageContext("TA1", "", "", "X12", RulesAssembly, RulesNamespacePrefix);
                 }
             }
 
@@ -161,7 +161,7 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
             var controlNumber = ediCompositeDataElementsSt[1];
 
-            return new MessageContext(tag, controlNumber, version, "X12", RulesAssemblyName, RulesNamespacePrefix);
+            return new MessageContext(tag, controlNumber, version, "X12", RulesAssembly, RulesNamespacePrefix);
        }
     }
 }

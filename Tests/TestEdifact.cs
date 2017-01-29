@@ -7,6 +7,7 @@ using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
+using EdiFabric.Framework.Validation;
 using EdiFabric.Rules.EdifactD00AINVOIC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,7 +35,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -58,10 +59,10 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A.txt";
-            
+
             // ACT
             var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
-            var validationResults = EdiValidation.Validate(message);
+            var validationResults = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(message);
 
             // ASSERT
             Assert.IsNotNull(validationResults);
@@ -74,10 +75,10 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_Valid.txt";
-            
+
             // ACT
             var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
-            var validationResults = EdiValidation.Validate(message);
+            var validationResults = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(message);
 
             // ASSERT
             Assert.IsNotNull(validationResults);
@@ -105,7 +106,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -129,7 +130,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -153,7 +154,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -169,7 +170,7 @@ namespace EdiFabric.Tests
             var newSeparators = new Separators(defaultSeparators.Segment,
                 defaultSeparators.ComponentDataElement, '|', defaultSeparators.RepetitionDataElement,
                 defaultSeparators.Escape);
-            
+
             // ACT
             var ediSegments = interchange.GenerateEdi(newSeparators);
 
@@ -213,7 +214,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -240,7 +241,7 @@ namespace EdiFabric.Tests
             {
                 var message = item as M_INVOIC;
                 if (message == null) continue;
-                var parsedXml = EdiValidation.Serialize(message);
+                var parsedXml = TestHelper.Serialize(message);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -268,7 +269,7 @@ namespace EdiFabric.Tests
             {
                 var message = item as M_INVOIC;
                 if (message == null) continue;
-                var parsedXml = EdiValidation.Serialize(message);
+                var parsedXml = TestHelper.Serialize(message);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -296,7 +297,7 @@ namespace EdiFabric.Tests
             {
                 var message = item as M_INVOIC;
                 if (message == null) continue;
-                var parsedXml = EdiValidation.Serialize(message);
+                var parsedXml = TestHelper.Serialize(message);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -321,7 +322,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -353,7 +354,7 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
         }
-        
+
         [TestMethod]
         public void TestParseEdifactWithEscapedEscape()
         {
@@ -373,7 +374,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -425,7 +426,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -463,7 +464,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -517,10 +518,10 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXmlInterchange = EdiValidation.Serialize(ediItems.OfType<S_UNB>().First());
+            var parsedXmlInterchange = TestHelper.Serialize(ediItems.OfType<S_UNB>().First());
             Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlGroup = EdiValidation.Serialize(ediItems.OfType<S_UNG>().First());
+            var parsedXmlGroup = TestHelper.Serialize(ediItems.OfType<S_UNG>().First());
             Assert.IsNotNull(parsedXmlGroup.Root);
             Assert.AreEqual(parsedXmlGroup.Root.ToString(), expectedXmlGroup.ToString());
         }
@@ -544,7 +545,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<M_INVOIC>().Count() == 2);
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().First());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().First());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -572,16 +573,16 @@ namespace EdiFabric.Tests
             Assert.IsTrue(items.OfType<S_UNZ>().Count() == 2);
             Assert.IsNull(items.OfType<ParsingException>().SingleOrDefault());
             Assert.IsTrue(items.Count == 6);
-            var parsedXmlInterchange = EdiValidation.Serialize(items.OfType<S_UNB>().First());
+            var parsedXmlInterchange = TestHelper.Serialize(items.OfType<S_UNB>().First());
             Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlInterchange2 = EdiValidation.Serialize(items.OfType<S_UNB>().Last());
+            var parsedXmlInterchange2 = TestHelper.Serialize(items.OfType<S_UNB>().Last());
             Assert.IsNotNull(parsedXmlInterchange2.Root);
             Assert.AreEqual(parsedXmlInterchange2.Root.ToString(), expectedXmlInterchange2.ToString());
             foreach (var item in items.OfType<M_INVOIC>())
             {
                 Assert.IsNotNull(item);
-                var parsedXml = EdiValidation.Serialize(item);
+                var parsedXml = TestHelper.Serialize(item);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -669,12 +670,12 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
 
-        
+
         [TestMethod]
         public void TestParseEdifactWithGroupRead()
         {
@@ -683,13 +684,13 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
             {
                 while (ediReader.Read())
                 {
                     ediItems.Add(ediReader.Item);
                     if (!(ediReader.Item is S_UNE)) continue;
-                    
+
                     // ASSERT
                     Assert.IsNotNull(ediItems.OfType<S_UNG>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<M_INVOIC>().SingleOrDefault());
@@ -708,7 +709,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
             {
                 while (ediReader.Read())
                 {
@@ -735,12 +736,12 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
             {
                 while (ediReader.Read())
                 {
                     ediItems.Add(ediReader.Item);
-                }               
+                }
             }
 
             // ASSERT
@@ -760,7 +761,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
             {
                 while (ediReader.Read())
                 {
@@ -784,7 +785,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt";
 
             // ACT
-            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample)))
+            using (var ediReader = EdifactReader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
             {
                 var ediItems = ediReader.ReadToEnd().ToList();
 
@@ -818,7 +819,7 @@ namespace EdiFabric.Tests
             Assert.IsNull(ediItems.OfType<S_UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_INVOIC>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_INVOIC>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -830,7 +831,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt";
             const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A.xml";
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
-            
+
             // ACT
             var items = TestHelper.ParseEdifact(sample).ToList();
 
@@ -842,10 +843,10 @@ namespace EdiFabric.Tests
             Assert.IsTrue(items.OfType<S_UNZ>().Count() == 2);
             Assert.IsNotNull(items.OfType<ParsingException>().SingleOrDefault());
             Assert.IsTrue(items.Count == 8);
-          foreach (var item in items.OfType<M_INVOIC>())
+            foreach (var item in items.OfType<M_INVOIC>())
             {
                 Assert.IsNotNull(item);
-                var parsedXml = EdiValidation.Serialize(item);
+                var parsedXml = TestHelper.Serialize(item);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -872,7 +873,7 @@ namespace EdiFabric.Tests
             foreach (var item in items.OfType<M_INVOIC>().Skip(1))
             {
                 Assert.IsNotNull(item);
-                var parsedXml = EdiValidation.Serialize(item);
+                var parsedXml = TestHelper.Serialize(item);
                 Assert.IsNotNull(parsedXml.Root);
                 Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
             }
@@ -888,11 +889,11 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var error = EdiValidation.Validate(obj);
+            var error = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(obj);
 
             // ASSERT
             Assert.IsNotNull(error);
-            var root = EdiValidation.Serialize(error.Flatten().ToList()).Root;
+            var root = TestHelper.Serialize(error.Flatten().ToList()).Root;
             Assert.IsNotNull(root);
             Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }

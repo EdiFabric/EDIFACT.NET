@@ -11,10 +11,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
 
@@ -29,9 +28,9 @@ namespace EdiFabric.Framework.Readers
         internal Queue<char> Buffer { get; private set; } 
         internal List<SegmentContext> CurrentMessage { get; private set; }
         internal StreamReader StreamReader { get; private set; }
-        internal string RulesAssemblyName { get; private set; }
-        internal string RulesNamespacePrefix { get; private set; }
         internal Separators Separators { get; private set; }
+        internal Func<MessageContext, Assembly> RulesAssembly { get; private set; }
+        internal Func<MessageContext, string> RulesNamespacePrefix { get; private set; }
         internal char[] Trims
         {
             get
@@ -63,12 +62,12 @@ namespace EdiFabric.Framework.Readers
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (settings == null) throw new ArgumentNullException("settings");
             
-            StreamReader = new StreamReader(ediStream, settings.Encoding ?? Encoding.Default, true);
-            RulesAssemblyName = settings.RulesAssemblyName ?? ConfigurationManager.AppSettings["EdiFabric.RulesAssemblyName"]; 
-            RulesNamespacePrefix = settings.RulesNamespacePrefix ?? "EdiFabric.Rules";
+            StreamReader = new StreamReader(ediStream, settings.Encoding, true);
             CurrentMessage = new List<SegmentContext>();
-            Buffer = new Queue<char>();           
-         }
+            Buffer = new Queue<char>();
+            RulesAssembly = settings.RulesAssembly;
+            RulesNamespacePrefix = settings.RulesNamespacePrefix;
+        }
 
         /// <summary>
         /// Reads an EDI item from the stream.

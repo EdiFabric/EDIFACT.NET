@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,67 +20,52 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Parsing;
 
-namespace EdiFabric.Framework
+namespace EdiFabric.Framework.Validation
 {
     /// <summary>
-    /// This class contains XML serialization and validation functionality.
+    /// This class contains XML validation functionality.
     /// </summary>
-    public class EdiValidation 
+    public class EdiValidator
     {
-        private static readonly string XsdAssemblyName;
-        private static readonly FieldInfo ValidationRes;
-        private static readonly int SerializerCacheMax;
-        private static readonly int XsdCacheMax;
-
+        private static readonly FieldInfo ValidationRes = typeof (XmlSchemaException).GetField("res",
+            BindingFlags.NonPublic | BindingFlags.Instance);
+       
         private static readonly ConcurrentDictionary<string, XmlSerializer> SerializerCache =
             new ConcurrentDictionary<string, XmlSerializer>();
 
         private static readonly ConcurrentDictionary<string, XmlSchemaSet> XsdCache =
             new ConcurrentDictionary<string, XmlSchemaSet>();
 
-        static EdiValidation()
+        public Func<MessageContext, Stream> XsdStream { get; private set; }
+        public int SerializerCacheMax { get; private set; }
+        public int XsdCacheMax { get; private set; }
+
+        public EdiValidator(ValidatorSettings settings)
         {
-            try
-            {
-                XsdAssemblyName = ConfigurationManager.AppSettings["EdiFabric.XsdAssemblyName"];
-                ValidationRes = typeof(XmlSchemaException).GetField("res", BindingFlags.NonPublic | BindingFlags.Instance);
-                var serCache = ConfigurationManager.AppSettings["EdiFabric.SerializerCacheMax"];
-                SerializerCacheMax = serCache != null ? int.Parse(serCache) : 20;
-                var xsdCache = ConfigurationManager.AppSettings["EdiFabric.XsdCacheMax"];
-                XsdCacheMax = xsdCache != null ? int.Parse(xsdCache) : 20;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            if (settings == null) throw new ArgumentNullException("settings");
+
+            XsdStream = settings.XsdStream;
+            SerializerCacheMax = settings.SerializerCacheMax;
+            XsdCacheMax = settings.XsdCacheMax;
         }
 
-        /// <summary>
-        /// Validates an instance against XSD added as embedded resource.
-        /// </summary>
-        /// <param name="message">The EDI instance.</param>
-        /// <returns>A collection of validation errors.</returns>
-        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static ValidationException Validate(object message)
+        public static EdiValidator Create(ValidatorSettings settings)
         {
-            return Validate(message, LoadXsd);
+            return new EdiValidator(settings);
         }
-
+        
         /// <summary>
         /// Validates an instance against XSD.
         /// </summary>
         /// <param name="message">The EDI instance.</param>
-        /// <param name="loadXsd">The xsd loader.</param>
         /// <returns>A collection of validation errors.</returns>
         /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static ValidationException Validate(object message, Func<string, Stream> loadXsd)
+        public ValidationException Validate(object message)
         {
             if (message == null)
                 throw new ArgumentNullException("message");
-
-            if (loadXsd == null)
-                throw new ArgumentNullException("loadXsd");
 
             string messageName = null;
             string controlNumber = null;
@@ -100,7 +84,7 @@ namespace EdiFabric.Framework
                 if (XsdCache.Count > XsdCacheMax) XsdCache.Clear();
 
                 var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(loadXsd(GetXsdName(message)), xDoc.Root.Name.Namespace.NamespaceName));
+                    NewSchemaSet(XsdStream(new MessageContext(message)), xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,
@@ -129,47 +113,7 @@ namespace EdiFabric.Framework
             }
         }
 
-        /// <summary>
-        /// Gets the xsd name from the type name.
-        /// </summary>
-        /// <param name="message">The message instance.</param>
-        /// <returns>The xsd name.</returns>
-        public static string GetXsdName(object message)
-        {
-            var typeName = message.GetType().FullName;
-            var parts = typeName.Split('.');
-
-            if (parts.Length < 2)
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
-
-            string format;
-            var version = parts[parts.Length - 2];
-            var tag = parts.Last().Replace("M_", "");
-            if (version.StartsWith("X12", StringComparison.Ordinal))
-            {
-                version = version.Replace("X12", "");
-                format = "X12";
-            }
-            else if (version.StartsWith("Edifact", StringComparison.Ordinal))
-            {
-                version = version.Replace("Edifact", "");
-                format = "EDIFACT";
-            }
-            else
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
-
-            version = version.Replace(tag, "");
-
-            return "EF_" + format + "_" + version + "_" + tag + ".xsd";
-        }
-
-        /// <summary>
-        /// Serializes an instance into XML.
-        /// </summary>
-        /// <param name="instance">The instance to serialize.</param>
-        /// <returns>The instance serialized to XML.</returns>
-        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
-        public static XDocument Serialize(object instance)
+        private XDocument Serialize(object instance)
         {
             if (instance == null)
                 throw new ArgumentNullException("instance");
@@ -190,20 +134,6 @@ namespace EdiFabric.Framework
                 ms.Position = 0;
                 return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
             }
-        }
-
-        private static Stream LoadXsd(string xsdName)
-        {
-            var result = Assembly.Load(new AssemblyName(XsdAssemblyName))
-                .GetManifestResourceStream(string.Format("{0}.{1}", XsdAssemblyName, xsdName));
-
-            if (result == null)
-                throw new Exception(
-                    string.Format(
-                        "Unable to load xsd {0} from project {1}. Ensure that the xsd exist in that project and its Build Action is set to Embedded Resource.",
-                        xsdName, XsdAssemblyName));
-
-            return result;
         }
 
         private static XmlSchemaSet NewSchemaSet(Stream xsd, string nameSpace)

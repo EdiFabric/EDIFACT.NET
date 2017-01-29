@@ -2,17 +2,17 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>7.2.2</version>
-    <title>The Ultimate EDI Parser for .NET</title>
+    <version>7.3.0</version>
+    <title>The Ultimate EDI Framework for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
     <licenseUrl>http://edifabric.com/files/lgpl.pdf</licenseUrl>
     <projectUrl>http://edifabric.com/</projectUrl>
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>.NET framework for parsing and generation of EDI messages.</description>
-    <releaseNotes>Fix for issue 51</releaseNotes>
-    <copyright>Copyright 2016</copyright>
-    <tags>.NET EDI Parser EDIFACT X12 HIPAA</tags>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>.NET framework for reading and creating of EDI documents.</description>
+    <releaseNotes>Changed how assemblies are loaded</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>.NET EDI Framework EDIFACT X12 HIPAA</tags>
   </metadata>
 </package>

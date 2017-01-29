@@ -130,14 +130,14 @@ namespace EdiFabric.Framework.Readers
             if (segments == null) throw new ArgumentNullException("segments");
             if (separators == null) throw new ArgumentNullException("separators");
             if (messageContext == null) throw new ArgumentNullException("messageContext");
-            
-            var messageGrammar = ParseNode.BuldTree(messageContext.Type, true);
+
+            var messageGrammar = ParseNode.BuldTree(messageContext.SystemType, true);
             if (messageGrammar.Prefix != Prefixes.M)
                 throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
 
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
             var segmentPosition = messageGrammar.Children.First();
-            var instancePosition = new ParseNode(messageContext.Type);
+            var instancePosition = new ParseNode(messageContext.SystemType);
 
             foreach (var segment in segments)
             {

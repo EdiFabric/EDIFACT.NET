@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Validation;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,7 +26,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -60,7 +60,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -94,7 +94,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -128,7 +128,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -157,11 +157,11 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var error = EdiValidation.Validate(obj);
+            var error = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(obj);
 
             // ASSERT
             Assert.IsNotNull(error);
-            var root = EdiValidation.Serialize(error.Flatten().ToList()).Root;
+            var root = TestHelper.Serialize(error.Flatten().ToList()).Root;
             Assert.IsNotNull(root);
             Assert.AreEqual(root.ToString(), expectedXml.ToString());
         }
@@ -181,7 +181,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
-            var parsedXml = EdiValidation.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
