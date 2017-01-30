@@ -20,12 +20,14 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework.Validation
 {
     /// <summary>
     /// Validates EDI objects.
+    /// Caches internally all of the serializers and compiled XSD and clears the caches if the maximum threshold is reached.
+    /// The serializers cache uses the Type.FullName as the key. 
+    /// The XSD cache uses the XsdName as the key.
     /// </summary>
     public class EdiValidator
     {
