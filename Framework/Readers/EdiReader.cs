@@ -14,13 +14,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Parses EDI messages into .NET objects.
+    /// Reads EDI messages into .NET objects.
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
@@ -40,12 +41,12 @@ namespace EdiFabric.Framework.Readers
             }
         }
         /// <summary>
-        /// The currently read item.
+        /// The last item that was read.
         /// </summary>
         public object Item { get; protected set; }
         
         /// <summary>
-        /// End of stream reached.
+        /// Indicates whether the current stream position is at the end of the stream.
         /// </summary>
         public bool EndOfStream
         {
@@ -56,24 +57,44 @@ namespace EdiFabric.Framework.Readers
         /// Initializes a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="settings">The additional settings.</param>
-        protected EdiReader(Stream ediStream, ReaderSettings settings)
+        /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        protected EdiReader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix,
+            Encoding encoding)
+            : this(
+                ediStream, mc => Assembly.Load(rulesAssembly), key => rulesNamespacePrefix ?? "EdiFabric.Rules",
+                encoding ?? Encoding.Default)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdiReader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
+            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
-            if (settings == null) throw new ArgumentNullException("settings");
-            
-            StreamReader = new StreamReader(ediStream, settings.Encoding, true);
+            if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
+            if (rulesNamespacePrefix == null) throw new ArgumentNullException("rulesNamespacePrefix");
+            if (encoding == null) throw new ArgumentNullException("encoding");
+
+            StreamReader = new StreamReader(ediStream, encoding, true);
             CurrentMessage = new List<SegmentContext>();
             Buffer = new Queue<char>();
-            RulesAssembly = settings.RulesAssembly;
-            RulesNamespacePrefix = settings.RulesNamespacePrefix;
+            RulesAssembly = rulesAssembly;
+            RulesNamespacePrefix = rulesNamespacePrefix;
         }
 
         /// <summary>
         /// Reads an EDI item from the stream.
-        /// Items can be: control segment, message or error.
+        /// An EDI item is an IEdiControl or a message or a ParsingException.
         /// </summary>
-        /// <returns>If a new message was read.</returns>
+        /// <returns>Indication if an item was read.</returns>
         public bool Read()
         {
             Item = null;
@@ -126,26 +147,28 @@ namespace EdiFabric.Framework.Readers
         /// <param name="segmentName">The probed segment name.</param>
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
-        /// <returns>If an interchange header was found.</returns>
+        /// <returns>Indicates if an interchange header was found.</returns>
         internal abstract bool TryReadControl(string segmentName, out string probed, out Separators separators);
 
         /// <summary>
-        /// Parses control segments and messages. 
+        /// Converts EDI segments into typed objects. 
         /// </summary>
-        /// <param name="segment">The current segment.</param>
+        /// <param name="segment">The segment to be processed.</param>
         internal abstract void ProcessSegment(string segment);
 
         /// <summary>
-        /// Extracts the message context.
+        /// Extracts the format, the version and the tag of the EDI document.
         /// </summary>
-        /// <returns>The ediFabric type for this transaction set.</returns>
+        /// <returns>The message context.</returns>
         internal abstract MessageContext BuildContext();
         
         /// <summary>
-        /// Reads a segment from the stream.
+        /// Reads from the stream until a non-escaped segment terminator was reached.
+        /// Breaks if no segment terminator was encountered after 10000 symbols were read. 
+        /// This is to avoid loading large and corrupt files. 
         /// </summary>
         /// <returns>
-        /// The segment found.
+        /// An EDI segment.
         /// </returns>
         internal string ReadSegment()
         {
@@ -211,12 +234,14 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// Tries to parse what had been collected before a new message starts.
+        /// Clears the internal cache before trying to process a new message.
+        /// It tries to process what's in the cache in case it's a valid message, before clearing the cache.
+        /// This is for situations where no message trailer was included in the file, however all other segments were present.
         /// </summary>
-        /// <param name="segmentContext">The current segment.</param>
-        /// <param name="tag">The start new message tag.</param>
-        /// <returns>If flushed.</returns>
-        internal bool Flush(SegmentContext segmentContext, SegmentTags tag)
+        /// <param name="segmentContext">The last read segment.</param>
+        /// <param name="tag">The segment ID of the message header.</param>
+        /// <returns>Indicates if there was anything to flush.</returns>
+        internal bool Flush(SegmentContext segmentContext, SegmentId tag)
         {
             if ((segmentContext.IsControl || segmentContext.Tag == tag) && CurrentMessage.Any())
             {

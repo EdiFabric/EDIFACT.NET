@@ -25,7 +25,7 @@ using EdiFabric.Framework.Parsing;
 namespace EdiFabric.Framework.Validation
 {
     /// <summary>
-    /// This class contains XML validation functionality.
+    /// Validates EDI objects.
     /// </summary>
     public class EdiValidator
     {
@@ -38,30 +38,61 @@ namespace EdiFabric.Framework.Validation
         private static readonly ConcurrentDictionary<string, XmlSchemaSet> XsdCache =
             new ConcurrentDictionary<string, XmlSchemaSet>();
 
-        public Func<MessageContext, Stream> XsdStream { get; private set; }
+        private readonly Func<MessageContext, Stream> _xsdStream;
+        /// <summary>
+        /// The maximum number of cached serializers. The cache is cleared when this is exceeded. The default is 20.
+        /// </summary>
         public int SerializerCacheMax { get; private set; }
-        public int XsdCacheMax { get; private set; }
+        /// <summary>
+        /// The maximum number of cached xsd. The cache is cleared when this is exceeded. The default is 20.
+        /// </summary>
+        public int XsdCacheMax{ get; private set; }
 
-        public EdiValidator(ValidatorSettings settings)
+        private EdiValidator(string xsdAssemblyName, int serializerCacheMax, int xsdCacheMax)
+            : this(key => Assembly.Load(xsdAssemblyName)
+                .GetManifestResourceStream(string.Format("{0}.{1}", xsdAssemblyName, key.XsdName)), serializerCacheMax, xsdCacheMax)
         {
-            if (settings == null) throw new ArgumentNullException("settings");
-
-            XsdStream = settings.XsdStream;
-            SerializerCacheMax = settings.SerializerCacheMax;
-            XsdCacheMax = settings.XsdCacheMax;
         }
 
-        public static EdiValidator Create(ValidatorSettings settings)
+        private EdiValidator(Func<MessageContext, Stream> xsdStream, int serializerCacheMax, int xsdCacheMax)
         {
-            return new EdiValidator(settings);
+            if (xsdStream == null) throw new ArgumentNullException("xsdStream");
+
+            _xsdStream = xsdStream;
+            SerializerCacheMax = serializerCacheMax;
+            XsdCacheMax = xsdCacheMax;
+        }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="EdiValidator"/> class.
+        /// </summary>
+        /// <param name="xsdStream">The delegate to return the XSD stream.</param>
+        /// <param name="serializerCacheMax">The maximum number of cached serializers. The cache is cleared when this is exceeded. The default is 20.</param>
+        /// <param name="xsdCacheMax">The maximum number of cached serializers. The cache is cleared when this is exceeded. The default is 20.</param>
+        /// <returns>A new instance of the <see cref="EdiValidator"/> class.</returns>
+        public static EdiValidator Create(Func<MessageContext, Stream> xsdStream, int serializerCacheMax = 20, int xsdCacheMax = 20)
+        {
+            return new EdiValidator(xsdStream, serializerCacheMax, xsdCacheMax);
+        }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="EdiValidator"/> class.
+        /// </summary>
+        /// <param name="xsdAssemblyName">The name of the assembly containing the XSD files.</param>
+        /// <param name="serializerCacheMax">The maximum number of cached serializers. The cache is cleared when this is exceeded. The default is 20.</param>
+        /// <param name="xsdCacheMax">The maximum number of cached serializers. The cache is cleared when this is exceeded. The default is 20.</param>
+        /// <returns>A new instance of the <see cref="EdiValidator"/> class.</returns>
+        public static EdiValidator Create(string xsdAssemblyName, int serializerCacheMax = 20, int xsdCacheMax = 20)
+        {
+            return new EdiValidator(xsdAssemblyName, serializerCacheMax, xsdCacheMax);
         }
         
         /// <summary>
-        /// Validates an instance against XSD.
+        /// Validates EDI document instance.
         /// </summary>
-        /// <param name="message">The EDI instance.</param>
+        /// <param name="message">The EDI document instance.</param>
         /// <returns>A collection of validation errors.</returns>
-        /// <exception cref="Exception">Throws an exception should the instance is not of ediFabric type.</exception>
+        /// <exception cref="Exception">Throws an exception if the instance is not a valid ediFabric spec.</exception>
         public ValidationException Validate(object message)
         {
             if (message == null)
@@ -84,7 +115,7 @@ namespace EdiFabric.Framework.Validation
                 if (XsdCache.Count > XsdCacheMax) XsdCache.Clear();
 
                 var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(XsdStream(new MessageContext(message)), xDoc.Root.Name.Namespace.NamespaceName));
+                    NewSchemaSet(_xsdStream(new MessageContext(message)), xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,

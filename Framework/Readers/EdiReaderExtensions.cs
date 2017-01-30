@@ -42,17 +42,17 @@ namespace EdiFabric.Framework.Readers
             return result;
         }
 
-        internal static SegmentTags ToSegmentTag(this string segment, Separators separators)
+        internal static SegmentId ToSegmentTag(this string segment, Separators separators)
         {
             if (String.IsNullOrEmpty(segment) || String.IsNullOrWhiteSpace(segment) || segment.Length < 3)
-                return SegmentTags.Regular;
+                return SegmentId.Regular;
 
-            if (segment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.Ordinal)) return SegmentTags.UNA;
+            if (segment.StartsWith(SegmentId.UNA.ToString(), StringComparison.Ordinal)) return SegmentId.UNA;
 
             var segmentTag = segment.Split(new[] {separators.DataElement}, StringSplitOptions.None).FirstOrDefault();
 
-            SegmentTags tag;
-            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentTags.Regular;
+            SegmentId tag;
+            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentId.Regular;
         }
 
         internal static string Read(this StreamReader reader, int bytes)

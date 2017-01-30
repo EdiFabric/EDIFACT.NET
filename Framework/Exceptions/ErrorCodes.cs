@@ -12,7 +12,7 @@
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// System error codes for all know error conditions.
+    /// The internal error codes for all known error conditions.
     /// </summary>
     public enum ErrorCodes
     {
@@ -145,6 +145,5 @@ namespace EdiFabric.Framework.Exceptions
         /// Invalid interchange control number.
         /// </summary>
         DuplicateInterchangeControlNumber
-
     }
 }

@@ -96,13 +96,12 @@
     <Compile Include="Parsing\MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
-    <Compile Include="Parsing\SegmentTags.cs" />
+    <Compile Include="Parsing\SegmentId.cs" />
     <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Parsing\Prefixes.cs" />
     <Compile Include="Parsing\ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
-    <Compile Include="Readers\ReaderSettings.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Parsing\SegmentContext.cs" />
     <Compile Include="Parsing\ParseNode.cs" />
@@ -111,7 +110,6 @@
     <Compile Include="Controls\X12.cs" />
     <Compile Include="Parsing\PropertyInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\ValidatorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

@@ -61,7 +61,7 @@ namespace EdiFabric.Tests
 
             // ACT
             var message = TestHelper.ParseX12(sample).OfType<M_810>().Single();
-            var validationResults = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(message);
+            var validationResults = EdiValidator.Create("EdiFabric.Xsd").Validate(message);
 
             // ASSERT
             Assert.IsNotNull(validationResults);
@@ -77,7 +77,7 @@ namespace EdiFabric.Tests
 
             // ACT
             var message = TestHelper.ParseX12(sample).OfType<M_810>().Single();
-            var validationResults = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(message);
+            var validationResults = EdiValidator.Create("EdiFabric.Xsd").Validate(message);
 
             // ASSERT
             Assert.IsNotNull(validationResults);
@@ -454,7 +454,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 while (ediReader.Read())
                 {
@@ -479,7 +479,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 while (ediReader.Read())
                 {
@@ -506,7 +506,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 while (ediReader.Read())
                 {
@@ -531,7 +531,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 while (ediReader.Read())
                 {
@@ -555,7 +555,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 var ediItems = ediReader.ReadToEnd().ToList();
 
@@ -576,7 +576,7 @@ namespace EdiFabric.Tests
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204_VersionFromSt.txt";
 
             // ACT
-            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), new ReaderSettings("EdiFabric.Rules")))
+            using (var ediReader = X12Reader.Create(TestHelper.Load(sample), "EdiFabric.Rules"))
             {
                 var ediItems = ediReader.ReadToEnd().ToList();
 
@@ -703,7 +703,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var error = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(obj);
+            var error = EdiValidator.Create("EdiFabric.Xsd").Validate(obj);
 
             // ASSERT
             Assert.IsNotNull(error);

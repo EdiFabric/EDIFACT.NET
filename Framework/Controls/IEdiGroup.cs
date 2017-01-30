@@ -14,15 +14,15 @@ using System.Collections.Generic;
 namespace EdiFabric.Framework.Controls
 {
     /// <summary>
-    /// EDI container interface.
+    /// Identifies an EDI group.
     /// </summary>
     public interface IEdiGroup
     {
         /// <summary>
-        /// Generates a collection of EDI strings.
+        /// Generates a collection of EDI segments.
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
-        /// <returns>The collection of EDI strings.</returns>
+        /// <returns>The collection of EDI segments.</returns>
         IEnumerable<string> GenerateEdi(Separators separators);
     }
 }

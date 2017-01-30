@@ -157,7 +157,7 @@ namespace EdiFabric.Tests
             var expectedXml = XElement.Load(TestHelper.Load(expectedResult));
 
             // ACT
-            var error = EdiValidator.Create(new ValidatorSettings("EdiFabric.Xsd")).Validate(obj);
+            var error = EdiValidator.Create("EdiFabric.Xsd").Validate(obj);
 
             // ASSERT
             Assert.IsNotNull(error);

@@ -16,16 +16,17 @@ namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
     /// Validation exception.
+    /// Raised during the validation of EDI documents.
     /// </summary>
     public class ValidationException : Exception
     {
         /// <summary>
-        /// The error context.
+        /// The message error context.
         /// </summary>
         public MessageErrorContext ErrorContext { get; private set; }
 
         /// <summary>
-        /// If it has errors.
+        /// Indicates if the message had any errors when validated.
         /// </summary>
         public bool HasErrors
         {
@@ -36,7 +37,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Initializes a new instance of the <see cref="ValidationException"/> class.
         /// </summary>
         /// <param name="message">The error message.</param>
-        /// <param name="context">The error context.</param>
+        /// <param name="context">The message error context.</param>
         public ValidationException(string message, MessageErrorContext context)
             : base(message)
         {
@@ -47,7 +48,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Initializes a new instance of the <see cref="ValidationException"/> class.
         /// </summary>
         /// <param name="message">The error message.</param>
-        /// <param name="context">The error context.</param>
+        /// <param name="context">The message error context.</param>
         /// <param name="ex">The inner exception.</param>
         public ValidationException(string message, MessageErrorContext context, Exception ex)
             : base(message, ex)
@@ -57,9 +58,11 @@ namespace EdiFabric.Framework.Exceptions
 
         /// <summary>
         /// Flattens the error hierarchy.
+        /// Iterates through all errors in all contexts and outputs an easy to read error message
+        /// for each error or code found.
         /// </summary>
         /// <returns>
-        /// Collection of error strings.
+        /// A collection of formatted error messages.
         /// </returns>
         public IEnumerable<string> Flatten()
         {

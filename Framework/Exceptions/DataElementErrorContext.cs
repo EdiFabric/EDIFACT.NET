@@ -14,33 +14,35 @@ using System;
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// The error context of what and where had failed. 
+    /// Information for the position, data and error code of the data element that failed. 
     /// </summary>
     [Serializable]
     public class DataElementErrorContext
     {
         /// <summary>
-        /// The name of the data element.
+        /// The reference number to locate the data element.
         /// </summary>
         public string Name { get; private set; }
         /// <summary>
-        /// The 1 based position of the data element within the segment.
+        /// The relative position of the simple data element, or the relative position
+        /// of a composite data structure in error within the segment, count beginning with 1
+        /// for the position immediately following the segment ID.
         /// </summary>
         public int Position { get; private set; }
         /// <summary>
-        /// The error code.
+        /// The syntax error code.
         /// </summary>
         public ErrorCodes Code { get; private set; }
         /// <summary>
-        /// The value of the data element that failed to be parsed.
+        /// The copy of the data element in error.
         /// </summary>
         public string Value { get; private set; }
         /// <summary>
-        /// The position of the component data element within the data element.
+        /// The component data element position within the composite that is an error.
         /// </summary>
         public int ComponentPosition { get; private set; }
         /// <summary>
-        /// The position of the item within the parent.
+        /// The specific repetition of a data element that is an error.
         /// </summary>
         public int RepetitionPosition { get; private set; }
 
@@ -52,7 +54,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="code">The error code.</param>
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
-        /// <param name="value">The data element value;</param>
+        /// <param name="value">The data element value.</param>
         public DataElementErrorContext(string name, int position, ErrorCodes code, int componentPosition,
             int repetitionPosition, string value)
         {

@@ -16,14 +16,14 @@ using EdiFabric.Framework.Readers;
 namespace EdiFabric.Framework.Parsing
 {
     /// <summary>
-    /// Extends a segment line with additional attributes inferred from the segment.
+    /// Extends a segment line with additional attributes inferred from the data.
     /// </summary>
     class SegmentContext
     {
         private const string Hl = "HL";
 
         /// <summary>
-        /// Segment name.
+        /// The segment ID.
         /// </summary>
         public string Name { get; private set; }
         /// <summary>
@@ -57,7 +57,7 @@ namespace EdiFabric.Framework.Parsing
         /// <summary>
         /// The segment name as tag.
         /// </summary>
-        public SegmentTags Tag { get; private set; }
+        public SegmentId Tag { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentContext"/> class.
@@ -78,7 +78,7 @@ namespace EdiFabric.Framework.Parsing
             Value = ediSegment;
 
             // UNA segments don't have values
-            if (ediSegment.StartsWith(SegmentTags.UNA.ToString(), StringComparison.Ordinal)) Name = SegmentTags.UNA.ToString();
+            if (ediSegment.StartsWith(SegmentId.UNA.ToString(), StringComparison.Ordinal)) Name = SegmentId.UNA.ToString();
 
             if (dataElements.Length > 1)
             {
@@ -121,9 +121,9 @@ namespace EdiFabric.Framework.Parsing
 
         private bool Control()
         {
-            return Tag == SegmentTags.UNB || Tag == SegmentTags.UNG || Tag == SegmentTags.UNE || Tag == SegmentTags.UNZ ||
-                   Tag == SegmentTags.UNA ||
-                   Tag == SegmentTags.ISA || Tag == SegmentTags.GS || Tag == SegmentTags.GE || Tag == SegmentTags.IEA;
+            return Tag == SegmentId.UNB || Tag == SegmentId.UNG || Tag == SegmentId.UNE || Tag == SegmentId.UNZ ||
+                   Tag == SegmentId.UNA ||
+                   Tag == SegmentId.ISA || Tag == SegmentId.GS || Tag == SegmentId.GE || Tag == SegmentId.IEA;
         }
 
         private bool Jump()

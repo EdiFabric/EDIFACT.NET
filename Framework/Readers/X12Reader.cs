@@ -13,6 +13,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
@@ -20,11 +22,18 @@ using EdiFabric.Framework.Parsing;
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Parses X12 messages into .NET objects.
+    /// Reads X12 messages into .NET objects.
     /// </summary>
     public sealed class X12Reader : EdiReader
     {
-        private X12Reader(Stream ediStream, ReaderSettings settings) : base(ediStream, settings)
+        private X12Reader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix, Encoding encoding)
+            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
+        {
+        }
+
+        private X12Reader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
+            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
         {
         }
 
@@ -32,11 +41,27 @@ namespace EdiFabric.Framework.Readers
         /// Factory method to initialize a new instance of the <see cref="X12Reader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="settings">The additional settings.</param>
+        /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
-        public static X12Reader Create(Stream ediStream, ReaderSettings settings)
+        public static X12Reader Create(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix = null, Encoding encoding = null)
         {
-            return new X12Reader(ediStream, settings);
+            return new X12Reader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
+        }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="X12Reader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
+        public static X12Reader Create(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
+            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+        {
+            return new X12Reader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
 
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -83,25 +108,25 @@ namespace EdiFabric.Framework.Readers
 
             var segmentContext = new SegmentContext(segment, Separators);
             
-            if (Flush(segmentContext, SegmentTags.ST))
+            if (Flush(segmentContext, SegmentId.ST))
                 return;
 
             switch (segmentContext.Tag)
             {
-                case SegmentTags.ISA:
+                case SegmentId.ISA:
                     Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
                     break;
-                case SegmentTags.TA1:
+                case SegmentId.TA1:
                     Item = segmentContext.Value.ParseSegment<S_TA1>(Separators);
                     break;
-                case SegmentTags.GS:
+                case SegmentId.GS:
                     Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
                     CurrentGroupHeader = segmentContext;
                     break;
-                case SegmentTags.ST:
+                case SegmentId.ST:
                     CurrentMessage.Add(segmentContext);                   
                     break;
-                case SegmentTags.SE:
+                case SegmentId.SE:
                     try
                     {
                         CurrentMessage.Add(segmentContext);
@@ -112,10 +137,10 @@ namespace EdiFabric.Framework.Readers
                         CurrentMessage.Clear();                  
                     }
                     break;
-                case SegmentTags.GE:
+                case SegmentId.GE:
                     Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
                     break;
-                case SegmentTags.IEA:
+                case SegmentId.IEA:
                     Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
                     break;
                 default:
@@ -125,7 +150,7 @@ namespace EdiFabric.Framework.Readers
 
             if (segmentContext.IsControl)
             {
-                if (segmentContext.Tag != SegmentTags.GS)
+                if (segmentContext.Tag != SegmentId.GS)
                     CurrentGroupHeader = null;
             }
         }
@@ -148,7 +173,7 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
 
-            var st = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.ST);
+            var st = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentId.ST);
             if (st == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST was not found.");
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);

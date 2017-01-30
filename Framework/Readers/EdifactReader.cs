@@ -9,9 +9,12 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
@@ -19,7 +22,7 @@ using EdiFabric.Framework.Parsing;
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Parses Edifact messages into .NET objects.
+    /// Reads Edifact messages into .NET objects.
     /// </summary>
     public sealed class EdifactReader : EdiReader
     {
@@ -40,8 +43,14 @@ namespace EdiFabric.Framework.Readers
             "KECA"
         };
 
-        private EdifactReader(Stream ediStream, ReaderSettings settings)
-            : base(ediStream, settings)
+        private EdifactReader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix, Encoding encoding)
+            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
+        {
+        }
+
+        private EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
+            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
         {
         }
 
@@ -49,11 +58,27 @@ namespace EdiFabric.Framework.Readers
         /// Factory method to initialize a new instance of the <see cref="EdifactReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="settings">The additional settings.</param>
+        /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public static EdifactReader Create(Stream ediStream, ReaderSettings settings)
+        public static EdifactReader Create(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix = null, Encoding encoding = null)
         {
-            return new EdifactReader(ediStream, settings);
+            return new EdifactReader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
+        }
+
+        /// <summary>
+        /// Factory method to initialize a new instance of the <see cref="EdifactReader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
+        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
+        public static EdifactReader Create(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
+            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+        {
+            return new EdifactReader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
 
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -111,23 +136,23 @@ namespace EdiFabric.Framework.Readers
 
             var segmentContext = new SegmentContext(segment, Separators);
 
-            if (Flush(segmentContext, SegmentTags.UNH))
+            if (Flush(segmentContext, SegmentId.UNH))
                 return;
 
             switch (segmentContext.Tag)
             {
-                case SegmentTags.UNA:
+                case SegmentId.UNA:
                     break;
-                case SegmentTags.UNB:
+                case SegmentId.UNB:
                     Item = segmentContext.Value.ParseSegment<S_UNB>(Separators);
                     break;
-                case SegmentTags.UNG:
+                case SegmentId.UNG:
                     Item = segmentContext.Value.ParseSegment<S_UNG>(Separators);
                     break;
-                case SegmentTags.UNH:
+                case SegmentId.UNH:
                     CurrentMessage.Add(segmentContext);
                     break;
-                case SegmentTags.UNT:
+                case SegmentId.UNT:
                     try
                     {
                         CurrentMessage.Add(segmentContext);
@@ -138,10 +163,10 @@ namespace EdiFabric.Framework.Readers
                         CurrentMessage.Clear();
                     }
                     break;
-                case SegmentTags.UNE:
+                case SegmentId.UNE:
                     Item = segmentContext.Value.ParseSegment<S_UNE>(Separators);
                     break;
-                case SegmentTags.UNZ:
+                case SegmentId.UNZ:
                     Item = segmentContext.Value.ParseSegment<S_UNZ>(Separators);
                     break;
                 default:
@@ -152,7 +177,7 @@ namespace EdiFabric.Framework.Readers
 
         internal override MessageContext BuildContext()
         {
-            var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentTags.UNH);
+            var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentId.UNH);
             if (unh == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "UNH was not found.");
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);

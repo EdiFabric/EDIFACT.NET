@@ -15,25 +15,25 @@ using System.Collections.Generic;
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// The error context of what and where had failed. 
+    /// Information for the data, error codes and the context of the data elements that failed.
     /// </summary>
     [Serializable]
     public class SegmentErrorContext
     {
         /// <summary>
-        /// The segment tag.
+        /// The segment ID.
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// The 1 based segment position within the message.
+        /// The numerical count position of the data segment from the start of the transaction set.
+        /// The transaction set header is count position 1.
         /// </summary>
         public int Position { get; private set; }
 
         private readonly List<ErrorCodes> _codes = new List<ErrorCodes>();
-
         /// <summary>
-        /// The error codes.
+        /// The syntax error codes.
         /// </summary>
         public IReadOnlyCollection<ErrorCodes> Codes
         {
@@ -41,9 +41,8 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         private readonly List<DataElementErrorContext> _errors = new List<DataElementErrorContext>();
-
         /// <summary>
-        /// The segment errors.
+        /// The data element error contexts.
         /// </summary>
         public IReadOnlyCollection<DataElementErrorContext> Errors
         {
@@ -53,7 +52,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
-        /// <param name="name">The segment name.</param>
+        /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         public SegmentErrorContext(string name, int position)
         {
@@ -64,9 +63,9 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
-        /// <param name="name">The segment name.</param>
+        /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         public SegmentErrorContext(string name, int position, ErrorCodes errorCode)
             : this(name, position)
         {
@@ -74,16 +73,16 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         /// <summary>
-        /// Adds error code.
+        /// Adds a syntax error code to the error codes collection.
         /// </summary>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         public void Add(ErrorCodes errorCode)
         {
             _codes.Add(errorCode);
         }
 
         /// <summary>
-        /// Adds data element context to the errors collection.
+        /// Adds a new data element context into the errors collection.
         /// </summary>
         /// <param name="name">The data element name.</param>
         /// <param name="position">The data element position.</param>

@@ -16,7 +16,7 @@ using System.Xml.Serialization;
 namespace EdiFabric.Framework.Controls
 {
     /// <summary>
-    /// This class represents the X12 interchange header.
+    /// This class represents X12 interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_ISA : IEdiControl
@@ -71,7 +71,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the X12 group header.
+    /// This class represents X12 group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_GS : IEdiControl
@@ -102,7 +102,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the X12 group trailer.
+    /// This class represents X12 group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_GE : IEdiControl
@@ -115,7 +115,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the X12 interchange trailer.
+    /// This class represents X12 interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_IEA : IEdiControl 
@@ -128,7 +128,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the X12 technical ack.
+    /// This class represents X12 technical acknowledgment.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_TA1 : IEdiControl
@@ -151,6 +151,7 @@ namespace EdiFabric.Framework.Controls
 
     /// <summary>
     /// This class represents X12 group.
+    /// Each group can only contain messages of the same type.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
     public class X12Group<T> : EdiContainer<S_GS, T, S_GE>, IEdiGroup
@@ -189,7 +190,9 @@ namespace EdiFabric.Framework.Controls
         }
 
         /// <summary>
-        /// Generates a collection of EDI segments.
+        /// Generates a collection of EDI segments from the header, the items and the trailer.
+        /// ComponentDataElement separator (ISA 16) and RepetitionDataElement separator (ISA 11)
+        /// are discarded if set in the ISA header. Their values are retrieved from the EDI separators.
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
         /// <returns>The collection of EDI segments.</returns>

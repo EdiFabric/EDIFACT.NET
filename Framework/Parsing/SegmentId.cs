@@ -9,12 +9,13 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+// ReSharper disable All
 namespace EdiFabric.Framework.Parsing
 {
     /// <summary>
-    /// Enum of control segment tags.
+    /// Enum of control segment IDs.
     /// </summary>
-    enum SegmentTags
+    enum SegmentId
     {
         Regular,
         UNA,

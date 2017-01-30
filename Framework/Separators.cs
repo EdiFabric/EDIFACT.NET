@@ -87,7 +87,7 @@ namespace EdiFabric.Framework
         /// <returns>The separators.</returns>
         internal string ToUna()
         {
-            return SegmentTags.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
+            return SegmentId.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
     }
 }

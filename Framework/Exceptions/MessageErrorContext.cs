@@ -16,13 +16,13 @@ using System.Linq;
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// The error context of what and where had failed. 
+    /// Information for the data, error codes and the context of the segments that failed.  
     /// </summary>
     [Serializable]
     public class MessageErrorContext
     {
         /// <summary>
-        /// The message type.
+        /// The type of message (or its tag).
         /// </summary>
         public string Name { get; private set; }
 
@@ -30,18 +30,10 @@ namespace EdiFabric.Framework.Exceptions
         /// The message control number.
         /// </summary>
         public string ControlNumber { get; private set; }
-
+        
         private readonly List<ErrorCodes> _codes = new List<ErrorCodes>();
-
         /// <summary>
-        /// If it has errors.
-        /// </summary>
-        public bool HasErrors {
-            get { return Errors.Any() || Codes.Any(); }
-        }
-
-        /// <summary>
-        /// The error codes.
+        /// The syntax error codes.
         /// </summary>
         public IReadOnlyCollection<ErrorCodes> Codes
         {
@@ -49,19 +41,26 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         private readonly Dictionary<string, SegmentErrorContext> _errors = new Dictionary<string, SegmentErrorContext>();
-
         /// <summary>
-        /// The segment errors.
+        /// The segment error contexts.
         /// </summary>
         public IReadOnlyCollection<SegmentErrorContext> Errors
         {
             get { return _errors.Values.ToList().AsReadOnly(); }
         }
+        
+        /// <summary>
+        /// Indicates if the message had any errors when parsed.
+        /// </summary>
+        public bool HasErrors
+        {
+            get { return Errors.Any() || Codes.Any(); }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
         /// </summary>
-        /// <param name="name">The message name.</param>
+        /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
         public MessageErrorContext(string name, string controlNumber)
         {
@@ -72,9 +71,9 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
         /// </summary>
-        /// <param name="name">The message name.</param>
+        /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         public MessageErrorContext(string name, string controlNumber, ErrorCodes errorCode)
             : this(name, controlNumber)
         {
@@ -83,10 +82,12 @@ namespace EdiFabric.Framework.Exceptions
 
         /// <summary>
         /// Merges a segment context into the errors collection.
+        /// There can be only one reference for a segment, containing all the errors for that segment.
+        /// A segment is identified by its name (or segment ID) and its position.
         /// </summary>
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         public void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
         {
             var key = segmentName + segmentPosition;
@@ -102,12 +103,14 @@ namespace EdiFabric.Framework.Exceptions
 
         /// <summary>
         /// Merges a segment context into the errors collection.
+        /// There can be only one reference for a segment, containing all the errors for that segment.
+        /// A segment is identified by its name (or segment ID) and its position.
         /// </summary>
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
         /// <param name="name">The data element name.</param>
         /// <param name="position">The data element position.</param>
-        /// <param name="code">The error code.</param>
+        /// <param name="code">The syntax error code.</param>
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
@@ -129,6 +132,8 @@ namespace EdiFabric.Framework.Exceptions
 
         /// <summary>
         /// Merges a segment context into the errors collection.
+        /// There can be only one reference for a segment, containing all the errors for that segment.
+        /// A segment is identified by its name (or segment ID) and its position.
         /// </summary>
         /// <param name="segmentContext">The segment error context to merge.</param>
         public void Add(SegmentErrorContext segmentContext)
@@ -147,9 +152,9 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         /// <summary>
-        /// Adds error code.
+        /// Adds a syntax error code to the error codes collection.
         /// </summary>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         public void Add(ErrorCodes errorCode)
         {
             _codes.Add(errorCode);

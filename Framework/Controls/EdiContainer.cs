@@ -17,37 +17,38 @@ using EdiFabric.Framework.Parsing;
 namespace EdiFabric.Framework.Controls
 {
     /// <summary>
-    /// This class represents an EDI interchange or group
+    /// This class represents an EDI interchange or group. 
+    /// Each EDI container has a header, a trailer and a collection of items of the same type.
     /// </summary>
     /// <typeparam name="T">The header type.</typeparam>
-    /// <typeparam name="TU">The items type - can be group or message.</typeparam>
+    /// <typeparam name="TU">The type of items.</typeparam>
     /// <typeparam name="TV">The trailer type.</typeparam>
     public class EdiContainer<T, TU, TV> 
     {
         /// <summary>
-        /// The header 
+        /// EDI header (interchange or group). 
         /// </summary>
         public T Header { get; private set; }
         private readonly Func<T, int, TV> _trailerSetter;
         private readonly List<TU> _items = new List<TU>();
         private readonly Separators _defaultSeparators;
         /// <summary>
-        /// The items (groups or messages)
+        /// The items (groups or messages).
         /// </summary>
         public IReadOnlyCollection<TU> Items
         {
             get { return _items.AsReadOnly(); }
         }
         /// <summary>
-        /// The trailer 
+        /// EDI trailer (interchange or group). 
         /// </summary>
         public TV Trailer { get; private set; }
 
         /// <summary>
-        /// Protected constructor. 
+        /// Protected constructor. Initializes a new instance of the <see cref="EdiContainer{T, TU, TV}"/> class. 
         /// </summary>
         /// <param name="header">The header type.</param>
-        /// <param name="trailerSetter">The function to set the trailer.</param>
+        /// <param name="trailerSetter">The function to automatically set the trailer.</param>
         /// <param name="defaultSeparators">The default separators.</param>
         protected EdiContainer(T header, Func<T, int, TV> trailerSetter, Separators defaultSeparators)
         {
@@ -86,7 +87,7 @@ namespace EdiFabric.Framework.Controls
         }
 
         /// <summary>
-        /// Generates a collection of EDI segments.
+        /// Generates a collection of EDI segments from the header, the items and the trailer.
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
         /// <returns>The collection of EDI segments.</returns>
@@ -99,7 +100,7 @@ namespace EdiFabric.Framework.Controls
                 result.AddRange(ToEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
-                result.AddRange(ToEdi(item, currentSeparators, true));
+                result.AddRange(ToEdi(item, currentSeparators));
             }
             if (Trailer != null)
                 result.AddRange(ToEdi(Trailer, currentSeparators));
@@ -108,51 +109,48 @@ namespace EdiFabric.Framework.Controls
         }
 
         /// <summary>
-        /// Converts a message to a collection of EDI segments.
+        /// Converts an EDI document instance to a collection of EDI segments.
         /// </summary>
-        /// <param name="item">The message.</param>
+        /// <param name="item">The EDI document instance.</param>
         /// <param name="separators">The EDI separators.</param>
-        /// <param name="isMessage">If it is a message item.</param>
         /// <returns>The collection of EDI segments.</returns>
-        protected static IEnumerable<string> ToEdi(object item, Separators separators, bool isMessage = false)
+        protected static IEnumerable<string> ToEdi(object item, Separators separators)
         {
             var parseTree = ParseNode.BuldTree(item);
             var segments = parseTree.Descendants().Where(d => d.Prefix == Prefixes.S).Reverse().ToList();
 
-            var result = segments.Select(segment => segment.GenerateSegment(separators)).ToList();
-            
-            if (!isMessage) return result;
+            var result = segments.Select(segment => segment.GenerateSegment(separators));
+
+            if (item is IEdiControl) return result;
             if (parseTree.EdiName == "TA1") return result;
 
             var trailerValues = segments.PullTrailerValues();
-            SetTrailer(result, separators, trailerValues.Item2, trailerValues.Item1);
-
-            return result;
+            return SetTrailer(result.ToList(), separators, trailerValues.Item2, trailerValues.Item1);
         }
 
-        private static void SetTrailer(List<string> segments, Separators separators, string trailerTag, string controlNumber)
+        private static IEnumerable<string> SetTrailer(List<string> segments, Separators separators, string trailerTag, string controlNumber)
         {
-            if (segments.Any())
-            {
-                var segmentsCount = segments.Count();
+            if (!segments.Any()) return segments;
+            var segmentsCount = segments.Count();
 
-                string trailer = null;
+            string trailer = null;
 
-                if (segments.Last().StartsWith(trailerTag + separators.DataElement, StringComparison.Ordinal) ||
-                    segments.Last().StartsWith(trailerTag + separators.Segment, StringComparison.Ordinal))
-                    trailer = segments.Last();
+            if (segments.Last().StartsWith(trailerTag + separators.DataElement, StringComparison.Ordinal) ||
+                segments.Last().StartsWith(trailerTag + separators.Segment, StringComparison.Ordinal))
+                trailer = segments.Last();
 
-                if (trailer != null)
-                    segments.Remove(trailer);
-                else
-                    segmentsCount = segmentsCount + 1;
+            if (trailer != null)
+                segments.Remove(trailer);
+            else
+                segmentsCount = segmentsCount + 1;
 
-                trailer = trailerTag + separators.DataElement + segmentsCount + separators.DataElement +
-                          controlNumber +
-                          separators.Segment;
+            trailer = trailerTag + separators.DataElement + segmentsCount + separators.DataElement +
+                      controlNumber +
+                      separators.Segment;
 
-                segments.Add(trailer);
-            }
+            segments.Add(trailer);
+
+            return segments;
         }
     }
 }

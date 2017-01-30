@@ -16,7 +16,7 @@ using System.Xml.Serialization;
 namespace EdiFabric.Framework.Controls
 {
     /// <summary>
-    /// This class represents the EDIFACT interchange header.
+    /// This class represents EDIFACT interchange header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
     public class S_UNB : IEdiControl
@@ -134,7 +134,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the EDIFACT group header.
+    /// This class represents EDIFACT group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
     public class S_UNG : IEdiControl
@@ -216,7 +216,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the EDIFACT group trailer.
+    /// This class represents EDIFACT group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
     public class S_UNE : IEdiControl
@@ -229,7 +229,7 @@ namespace EdiFabric.Framework.Controls
     }
 
     /// <summary>
-    /// This class represents the EDIFACT interchange trailer.
+    /// This class represents EDIFACT interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/edifact")]
     public class S_UNZ : IEdiControl
@@ -243,6 +243,7 @@ namespace EdiFabric.Framework.Controls
 
     /// <summary>
     /// This class represents EDIFACT group.
+    /// Each group can only contain messages of the same type.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
     public class EdifactGroup<T> : EdiContainer<S_UNG, T, S_UNE>, IEdiGroup
@@ -281,7 +282,8 @@ namespace EdiFabric.Framework.Controls
         }
 
         /// <summary>
-        /// Generates a collection of EDI segments.
+        /// Generates a collection of EDI segments from the header, the items and the trailer.
+        /// Automatically generates an UNA segment if the separators are not the default.
         /// </summary>
         /// <param name="separators">The EDI separators.</param>
         /// <returns>The collection of EDI segments.</returns>

@@ -70,9 +70,8 @@ namespace EdiFabric.Tests
             string rulesAssembly = null, string rulesNameSpacePrefix = null)
         {
             using (
-                var ediReader = X12Reader.Create(Load(sample),
-                    new ReaderSettings(rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
-                        encoding ?? Encoding.Default)))
+                var ediReader = X12Reader.Create(Load(sample),rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
+                        encoding ?? Encoding.Default))
             {
                 return ediReader.ReadToEnd().ToList();
             }
@@ -82,9 +81,8 @@ namespace EdiFabric.Tests
             string rulesAssembly = null, string rulesNameSpacePrefix = null)
         {
             using (
-                var ediReader = EdifactReader.Create(Load(sample),
-                    new ReaderSettings(rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
-                        encoding ?? Encoding.Default)))
+                var ediReader = EdifactReader.Create(Load(sample),rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
+                        encoding ?? Encoding.Default))
             {
                 return ediReader.ReadToEnd().ToList();
             }

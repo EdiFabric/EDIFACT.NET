@@ -16,12 +16,13 @@ namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
     /// Parsing exception.
+    /// Raised during the parsing of EDI documents.
     /// </summary>
     [Serializable]
     public class ParsingException : Exception, ISerializable
     {
         /// <summary>
-        /// The error code.
+        /// The syntax error code.
         /// </summary>
         public ErrorCodes ErrorCode
         {
@@ -37,7 +38,7 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         /// <summary>
-        /// The line that failed.
+        /// The line (or segment) that failed.
         /// </summary>
         public string FailedLine
         {
@@ -60,7 +61,7 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         /// <summary>
-        /// The error context.
+        /// The message error context.
         /// </summary>
         public MessageErrorContext ErrorContext
         {
@@ -85,7 +86,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="failedLine">The line that failed.</param>
         /// <param name="context">The error context.</param>
@@ -100,7 +101,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
-        /// <param name="errorCode">The error code.</param>
+        /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="ex">The inner exception.</param>
         /// <param name="failedLine">The line that failed.</param>
@@ -116,8 +117,6 @@ namespace EdiFabric.Framework.Exceptions
 
         #region ISerializable Implementation
 
-        
-
         /// <summary>
         /// Deserialization constructor
         /// </summary>
@@ -131,6 +130,5 @@ namespace EdiFabric.Framework.Exceptions
         }
 
         #endregion ISerializable
-
     }
 }
