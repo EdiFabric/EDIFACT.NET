@@ -45,6 +45,8 @@ namespace EdiFabric.Framework
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Separators"/> class.
+        /// Separators are mandatory for both reading and creating of EDI documents.
+        /// When no explicit separator set was selected, the default set for the format is always used.
         /// </summary>
         /// <param name="segment">Segment separator.</param>
         /// <param name="componentDataElement">Component data element separator.</param>
@@ -63,7 +65,12 @@ namespace EdiFabric.Framework
 
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
-        /// Uses the default X12 separators.
+        /// Uses the default X12 separators:
+        /// Segment ~
+        /// ComponentDataElement >
+        /// DataElement *
+        /// RepetitionDataElement ^
+        /// Escape N/A
         /// </summary>
         /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
         public static Separators DefaultX12()
@@ -73,7 +80,12 @@ namespace EdiFabric.Framework
 
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
-        /// Uses the default EDIFACT separators.
+        /// Uses the default EDIFACT separators:
+        /// Segment '
+        /// ComponentDataElement :
+        /// DataElement +
+        /// RepetitionDataElement *
+        /// Escape ?
         /// </summary>
         /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
         public static Separators DefaultEdifact()
