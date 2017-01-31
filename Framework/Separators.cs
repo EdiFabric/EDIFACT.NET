@@ -9,6 +9,9 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using EdiFabric.Framework.Parsing;
 
 namespace EdiFabric.Framework
@@ -56,6 +59,16 @@ namespace EdiFabric.Framework
         public Separators(char segment, char componentDataElement, char dataElement,
             char? repetitionDataElement, char? escape)
         {
+            var list = new List<char?> { segment, componentDataElement, dataElement, repetitionDataElement, escape };
+            var duplicateKeys = list.GroupBy(x => x)
+                        .Where(group => group.Count() > 1)
+                        .Select(group => group.Key).ToList();
+
+            if (duplicateKeys.Any() && duplicateKeys[0].HasValue)
+            {
+                throw new Exception(string.Format("Duplicate separators are not allowed: {0}", duplicateKeys[0].Value));
+            }
+
             ComponentDataElement = componentDataElement;
             DataElement = dataElement;
             Escape = escape;

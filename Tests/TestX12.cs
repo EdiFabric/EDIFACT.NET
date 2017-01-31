@@ -128,6 +128,23 @@ namespace EdiFabric.Tests
         }
 
         [TestMethod]
+        public void TestGenerateWithDuplicateSeparator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
+            var interchange = TestHelper.GenerateX12<Rules.Rep.X12002040810.M_810>(sample, "EdiFabric.Rules.Rep");
+
+            // ACT
+            var defaultSeparators = Separators.DefaultX12();
+            var newSeparators = new Separators(defaultSeparators.Segment,
+                '>', defaultSeparators.DataElement, '>', null);
+            var ediSegments = interchange.GenerateEdi(newSeparators);
+
+            // ASSERT
+            Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
+        }
+
+        [TestMethod]
         public void TestParseX12WithSegmentSeparatorLf()
         {
             // ARRANGE
