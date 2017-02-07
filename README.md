@@ -1,5 +1,5 @@
 <h3>One reference to bring them in, One line to parse them,<br>
-One framework to find them all and in object bind them.</h3>
+One framework to find them all and in Object bind them.</h3>
 
 An open source framework that empowers developers and businesses interested in enabling their software systems with EDI capabilities and can be integrated into your business applications.
 
