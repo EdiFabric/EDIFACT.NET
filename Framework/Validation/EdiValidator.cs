@@ -117,7 +117,7 @@ namespace EdiFabric.Framework.Validation
                 if (XsdCache.Count > XsdCacheMax) XsdCache.Clear();
 
                 var schemas = XsdCache.GetOrAdd(message.GetType().FullName,
-                    NewSchemaSet(_xsdStream(new MessageContext(message)), xDoc.Root.Name.Namespace.NamespaceName));
+                    key => NewSchemaSet(_xsdStream(new MessageContext(message)), xDoc.Root.Name.Namespace.NamespaceName));
 
                 var messageContext = new MessageErrorContext(messageName, controlNumber);
                 xDoc.Validate(schemas,
@@ -160,7 +160,7 @@ namespace EdiFabric.Framework.Validation
                 nameSpace = "www.edifabric.com/edifact";
 
             if (SerializerCache.Count > SerializerCacheMax) SerializerCache.Clear();
-            var serializer = SerializerCache.GetOrAdd(type.FullName, new XmlSerializer(type, nameSpace));
+            var serializer = SerializerCache.GetOrAdd(type.FullName, key => new XmlSerializer(type, nameSpace));
             using (var ms = new MemoryStream())
             {
                 serializer.Serialize(ms, instance);
