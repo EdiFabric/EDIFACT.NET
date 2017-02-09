@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>7.3.0</version>
+    <version>7.3.1</version>
     <title>The Ultimate EDI Framework for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>.NET framework for reading and creating of EDI documents.</description>
-    <releaseNotes>Changed how assemblies are loaded</releaseNotes>
+    <releaseNotes>Fix for issue 53</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>.NET EDI Framework EDIFACT X12 HIPAA</tags>
   </metadata>
