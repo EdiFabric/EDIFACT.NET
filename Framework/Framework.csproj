@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\IEdiControl.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Validation\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">
