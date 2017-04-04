@@ -81,6 +81,13 @@
   <ItemGroup>
     <Compile Include="Controls\IEdiControl.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="ParseNodes\AllLoop.cs" />
+    <Compile Include="ParseNodes\ComplexDataElement.cs" />
+    <Compile Include="ParseNodes\DataElement.cs" />
+    <Compile Include="ParseNodes\Loop.cs" />
+    <Compile Include="ParseNodes\ParseNode2.cs" />
+    <Compile Include="ParseNodes\Segment.cs" />
+    <Compile Include="ParseNodes\TransactionSet.cs" />
     <Compile Include="Validation\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">

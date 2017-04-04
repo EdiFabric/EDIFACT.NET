@@ -11,14 +11,14 @@
 
 namespace EdiFabric.Framework.Parsing
 {
-    enum Prefixes
-    {
-        M,
-        G,
-        S,
-        C,
-        D,
-        A,
-        U
-    }
+    //enum Prefixes
+    //{
+    //    M,
+    //    G,
+    //    S,
+    //    C,
+    //    D,
+    //    A,
+    //    U
+    //}
 }

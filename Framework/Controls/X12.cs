@@ -12,61 +12,61 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using EdiFabric.Attributes;
 
 namespace EdiFabric.Framework.Controls
 {
     /// <summary>
     /// This class represents X12 interchange header.
     /// </summary>
-    [XmlRoot(Namespace = "www.edifabric.com/x12")]
     public class S_ISA : IEdiControl
     {
-        [XmlElement(Order = 0)]
+        [D(1)]
         public string D_744_1 { get; set; }
 
-        [XmlElement(Order = 1)]
+        [D(2)]
         public string D_745_2 { get; set; }
 
-        [XmlElement(Order = 2)]
+        [D(3)]
         public string D_746_3 { get; set; }
 
-        [XmlElement(Order = 3)]
+        [D(4)]
         public string D_747_4 { get; set; }
 
-        [XmlElement(Order = 4)]
+        [D(5)]
         public string D_704_5 { get; set; }
 
-        [XmlElement(Order = 5)]
+        [D(6)]
         public string D_705_6 { get; set; }
 
-        [XmlElement(Order = 6)]
+        [D(7)]
         public string D_704_7 { get; set; }
 
-        [XmlElement(Order = 7)]
+        [D(8)]
         public string D_706_8 { get; set; }
 
-        [XmlElement(Order = 8)]
+        [D(9)]
         public string D_373_9 { get; set; }
 
-        [XmlElement(Order = 9)]
+        [D(10)]
         public string D_337_10 { get; set; }
 
-        [XmlElement(Order = 10)]
+        [D(11)]
         public string D_726_11 { get; set; }
 
-        [XmlElement(Order = 11)]
+        [D(12)]
         public string D_703_12 { get; set; }
 
-        [XmlElement(Order = 12)]
+        [D(13)]
         public string D_709_13 { get; set; }
 
-        [XmlElement(Order = 13)]
+        [D(14)]
         public string D_749_14 { get; set; }
 
-        [XmlElement(Order = 14)]
+        [D(15)]
         public string D_748_15 { get; set; }
 
-        [XmlElement(Order = 15)]
+        [D(16)]
         public string D_701_16 { get; set; }
     }
 

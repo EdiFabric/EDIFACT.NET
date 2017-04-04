@@ -22,7 +22,7 @@ namespace EdiFabric.Framework.Readers
     {
         internal static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
-            var parseNode = ParseNode.BuldTree(typeof(T), false);
+            var parseNode = new Segment(typeof(T), true);
             parseNode.ParseSegment(segmentValue, separators);
             return (T)parseNode.ToInstance();
         }
@@ -131,13 +131,13 @@ namespace EdiFabric.Framework.Readers
             if (separators == null) throw new ArgumentNullException("separators");
             if (messageContext == null) throw new ArgumentNullException("messageContext");
 
-            var messageGrammar = ParseNode.BuldTree(messageContext.SystemType, true);
-            if (messageGrammar.Prefix != Prefixes.M)
-                throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
+            var messageGrammar = new TransactionSet(messageContext);
+            //if (messageGrammar.Prefix != Prefixes.M)
+            //    throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
 
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
-            var segmentPosition = messageGrammar.Children.First();
-            var instancePosition = new ParseNode(messageContext.SystemType);
+            var segmentPosition = messageGrammar.Children.First() as Segment;
+            ParseNode instancePosition = new TransactionSet(messageContext);
 
             foreach (var segment in segments)
             {
@@ -180,8 +180,10 @@ namespace EdiFabric.Framework.Readers
                     instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
                 foreach (var parseTree in segmentTree)
                 {
-                    instancePosition = instancePosition.AddChild(parseTree.Type, parseTree.Type.Name);
-                    if (parseTree.Prefix == Prefixes.S)
+                    var newNode = ParseNode.NewNode(parseTree.PropertyInfo);
+                    instancePosition.AddChild(newNode);
+                    instancePosition = newNode;
+                    if (newNode is Segment)
                         instancePosition.ParseSegment(segment.Value, separators, errorContext);
                 }
                 segmentPosition = currSeg;
@@ -196,16 +198,11 @@ namespace EdiFabric.Framework.Readers
             if (parseNode == null) throw new ArgumentNullException("parseNode");
             if (String.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
             if (separators == null) throw new ArgumentNullException("separators");
-
-            if (parseNode.Prefix != Prefixes.S)
-                throw new Exception(String.Format("Only segments are supported: {0}", parseNode.Name));
-
-            var dataElementsGrammar = ParseNode.BuldTree(parseNode.Type, false).Children;
-            var dataElements = line.GetDataElements(separators);
-            for (var deIndex = 0; deIndex < dataElements.Length; deIndex++)
+            
+            var dataElementsGrammar = new Segment(parseNode.Type, false).Children;
+            var dataElementsToParse = line.GetDataElements(separators);
+            for (var deIndex = 0; deIndex < dataElementsToParse.Length; deIndex++)
             {
-                var currentDataElement = dataElements[deIndex];
-                if (String.IsNullOrEmpty(currentDataElement)) continue;
                 if (dataElementsGrammar.Count <= deIndex)
                 {
                     if (errorContext != null)
@@ -213,21 +210,32 @@ namespace EdiFabric.Framework.Readers
                     throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "Too many data elements in segment.", line, errorContext);
                 }
 
+                var currentToParse = dataElementsToParse[deIndex];
+                if (String.IsNullOrEmpty(currentToParse)) continue;
+                
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
 
                 var repetitions = currentDataElementGrammar.IsX12RepetitionSeparator()
-                    ? new[] { currentDataElement }
-                    : currentDataElement.GetRepetitions(separators);
+                    ? new[] { currentToParse }
+                    : currentToParse.GetRepetitions(separators);
+                
                 foreach (var repetition in repetitions)
                 {
                     if (String.IsNullOrEmpty(repetition)) continue;
 
-                    var childParseNode = parseNode.AddChild(currentDataElementGrammar.Type,
-                        currentDataElementGrammar.Name,
-                        currentDataElementGrammar.Prefix == Prefixes.D ? repetition.UnEscapeLine(separators) : null);
+                    ParseNode childParseNode;
+                    if (currentDataElementGrammar is DataElement)
+                    {
+                        childParseNode = new DataElement(currentDataElementGrammar.PropertyInfo, repetition.UnEscapeLine(separators));
+                        parseNode.AddChild(childParseNode);
+                        continue;
+                    }
 
-                    if (currentDataElementGrammar.Prefix != Prefixes.C) continue;
-
+                    childParseNode = new ComplexDataElement(currentDataElementGrammar.PropertyInfo);
+                    parseNode.AddChild(childParseNode);
+                    
+                    
+                    
                     var componentDataElementsGrammar = currentDataElementGrammar.Children;
                     var componentDataElements = repetition.GetComponentDataElements(separators);
                     for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
@@ -250,9 +258,8 @@ namespace EdiFabric.Framework.Readers
                                 "Too many component data elements.", line, errorContext);
                         }
 
-                        childParseNode.AddChild(currentComponentDataElementGrammar.Type,
-                            currentComponentDataElementGrammar.Name,
-                            currentComponentDataElement.UnEscapeLine(separators));
+                        var dataElementNode = new DataElement(currentComponentDataElementGrammar.PropertyInfo, currentComponentDataElement.UnEscapeLine(separators));
+                        childParseNode.AddChild(dataElementNode);
                     }
                 }
             }

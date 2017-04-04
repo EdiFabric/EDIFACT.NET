@@ -30,50 +30,50 @@ namespace EdiFabric.Framework.Parsing
             return node.IndexOfChild(next);
         }
 
-        private static IEnumerable<ParseNode> ChildrenWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
+        public static IEnumerable<ParseNode> ChildrenWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
         {
             if (exclusion.Contains(node))
             {
                 var index = node.IndexOfImmediateChild(exclusion);
-                return node.Children.Where(c => c.Parent.IndexOfChild(c) >= index);
+                return node.Children.Where(c => c.IndexInParent() >= index);
             }
 
             return new List<ParseNode>();
         }
 
-        private static IEnumerable<ParseNode> NeighboursWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
-        {
-            var result = new List<ParseNode>();
+        //private static IEnumerable<ParseNode> NeighboursWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
+        //{
+        //    var result = new List<ParseNode>();
 
-            switch (node.Prefix)
-            {
-                case Prefixes.S:
-                    result.Add(node.Parent);
-                    return result;
-                case Prefixes.G:
-                    result.AddRange(node.ChildrenWithExclusion(exclusion));
-                    result.Add(node.Children.First());
-                    result.Add(node.Parent);
-                    return result;
-                case Prefixes.M:
-                    result.AddRange(node.ChildrenWithExclusion(exclusion));
-                    if(!result.Any())
-                        result.AddRange(node.Children);
-                    return result;
-                case Prefixes.U:
-                    result.AddRange(node.ChildrenWithExclusion(exclusion));
-                    if (!result.Any())
-                        result.AddRange(node.Children);
-                    result.Add(node.Parent);
-                    return result;
-                case Prefixes.A:
-                    result.AddRange(node.Children);
-                result.Add(node.Parent);
-                return result;
-                default:
-                    throw new Exception(string.Format("Unsupported node prefix: {0}", node.Prefix));
-            }
-        }
+        //    switch (node.Prefix)
+        //    {
+        //        //case Prefixes.S:
+        //        //    result.Add(node.Parent);
+        //        //    return result;
+        //        //case Prefixes.G:
+        //        //    result.AddRange(node.ChildrenWithExclusion(exclusion));
+        //        //    result.Add(node.Children.First());
+        //        //    result.Add(node.Parent);
+        //        //    return result;
+        //        case Prefixes.M:
+        //            result.AddRange(node.ChildrenWithExclusion(exclusion));
+        //            if(!result.Any())
+        //                result.AddRange(node.Children);
+        //            return result;
+        //        //case Prefixes.U:
+        //        //    result.AddRange(node.ChildrenWithExclusion(exclusion));
+        //        //    if (!result.Any())
+        //        //        result.AddRange(node.Children);
+        //        //    result.Add(node.Parent);
+        //        //    return result;
+        //        //case Prefixes.A:
+        //        //    result.AddRange(node.Children);
+        //        //result.Add(node.Parent);
+        //        //return result;
+        //        //default:
+        //        //    throw new Exception(string.Format("Unsupported node prefix: {0}", node.Prefix));
+        //    }
+        //}
 
         private static string EscapeLine(this string line, Separators separators)
         {
@@ -113,7 +113,7 @@ namespace EdiFabric.Framework.Parsing
             return parseNode.Name == previous.Name;
         }
 
-        internal static IEnumerable<ParseNode> TraverseSegmentsDepthFirst(this ParseNode startNode)
+        internal static IEnumerable<Segment> TraverseSegmentsDepthFirst(this Segment startNode)
         {
             var visited = new HashSet<ParseNode>();
             var stack = new Stack<ParseNode>();
@@ -128,8 +128,8 @@ namespace EdiFabric.Framework.Parsing
                 if (!visited.Add(current))
                     continue;
 
-                if (current.Prefix == Prefixes.S)
-                    yield return current;
+                if (current is Segment)
+                    yield return current as Segment;
 
                 var neighbours = current.NeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
 
@@ -163,11 +163,8 @@ namespace EdiFabric.Framework.Parsing
             return result;
         }
 
-        internal static IEnumerable<ParseNode> AncestorsToIntersection(this ParseNode segment, ParseNode lastFoundSegment)
+        internal static IEnumerable<ParseNode> AncestorsToIntersection(this Segment segment, ParseNode lastFoundSegment)
         {
-            if (segment.Prefix != Prefixes.S)
-                throw new Exception(string.Format("Only segments are supported: {0}", segment.Name));
-
             var lastParents = lastFoundSegment.Ancestors();
             var parents = segment.Ancestors().ToList();
             var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
@@ -181,11 +178,8 @@ namespace EdiFabric.Framework.Parsing
             return result;
         }
 
-        internal static bool IsEqual(this ParseNode parseNode, SegmentContext segmentContext)
+        internal static bool IsEqual(this Segment parseNode, SegmentContext segmentContext)
         {
-            if(parseNode.Prefix != Prefixes.S)
-                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));               
-
             // The names must match
             if (parseNode.EdiName == segmentContext.Name)
             {
@@ -247,8 +241,9 @@ namespace EdiFabric.Framework.Parsing
                         throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
                             currentNode.Type.Name));
 
-                    var child = nodeChild.Prefix == Prefixes.D
-                        ? propertyInfo.GetPropertyValue(nodeChild.Value)
+                    var de = nodeChild as DataElement;
+                    var child = de != null
+                        ? propertyInfo.GetPropertyValue(de.Value)
                         : Activator.CreateInstance(nodeChild.Type);
 
                     if (propertyInfo.PropertyType.IsGenericType)
@@ -270,7 +265,7 @@ namespace EdiFabric.Framework.Parsing
                         propertyInfo.SetValue(currentInstance, child, null);
                     }
 
-                    if (nodeChild.Prefix == Prefixes.D) continue;
+                    if (de != null) continue;
 
                     instanceLinks.Add(nodeChild.Path, child);
                     stack.Push(nodeChild);
@@ -282,27 +277,25 @@ namespace EdiFabric.Framework.Parsing
             return root;
         }
 
-        internal static string GenerateSegment(this ParseNode parseNode, Separators separators)
+        internal static string GenerateSegment(this Segment parseNode, Separators separators)
         {
             if (parseNode == null) throw new ArgumentNullException("parseNode");
             if (separators == null) throw new ArgumentNullException("separators");
-
-            if (parseNode.Prefix != Prefixes.S)
-                throw new Exception(string.Format("Only segments are supported: {0}", parseNode.Name));
 
             var result = parseNode.EdiName;
 
             foreach (var element in parseNode.Children)
             {
                 string value = string.Empty;
-                if (element.Prefix == Prefixes.C)
+                if (element is ComplexDataElement)
                 {
                     if (element.Children.Any())
                     {
-                        value = element.Children.ElementAt(0).Value != null
-                            ? element.Children.ElementAt(0).Value.EscapeLine(separators)
+                        var dataElements = element.Children.OfType<DataElement>().ToList();
+                        value = dataElements.ElementAt(0).Value != null
+                            ? dataElements.ElementAt(0).Value.EscapeLine(separators)
                             : string.Empty;
-                        value = element.Children.Skip(1)
+                        value = dataElements.Skip(1)
                             .Aggregate(value,
                                 (current, subElement) =>
                                     current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
@@ -311,7 +304,9 @@ namespace EdiFabric.Framework.Parsing
                 }
                 else
                 {
-                    value = element.Value.EscapeLine(separators);  
+                    var de = element as DataElement;
+                    if(de == null) throw new Exception(string.Format("Unexpected node {0} under parent {1}", element.Type.FullName, element.Parent.Type.FullName));
+                    value = de.Value.EscapeLine(separators);  
                 }
 
                 var separator = element.IsRepetition()
@@ -324,34 +319,36 @@ namespace EdiFabric.Framework.Parsing
             return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
         }
 
-        internal static ParseNode JumpToHl(this ParseNode grammarRoot, ParseNode instanceRoot, string parentId)
+        internal static Segment JumpToHl(this TransactionSet grammarRoot, ParseNode instanceRoot, string parentId)
         {
-            ParseNode hlParent;
-            if (parentId != null)
-            {
-                // Parent HL, start right after it
-                hlParent =
-                    instanceRoot.Descendants()
-                        .SingleOrDefault(
-                            d =>
-                                (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)) &&
-                                d.Children.First().Value == parentId);
-                if (hlParent == null)
-                    throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
+            //ParseNode hlParent;
+            //if (parentId != null)
+            //{
+            //    // Parent HL, start right after it
+            //    hlParent =
+            //        instanceRoot.Descendants()
+            //            .SingleOrDefault(
+            //                d =>
+            //                    (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)) &&
+            //                    d.Children.First().Value == parentId);
+            //    if (hlParent == null)
+            //        throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
 
-                var nextSegment = grammarRoot.Descendants().Reverse().FindNextSegment(pt => pt.Name == hlParent.Name);
+            //    var nextSegment = grammarRoot.Descendants().Reverse().FindNextSegment(pt => pt.Name == hlParent.Name);
 
-                if (nextSegment == null)
-                    throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
+            //    if (nextSegment == null)
+            //        throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
 
-                return nextSegment;                
-            }
+            //    return nextSegment;                
+            //}
 
-            // Root HL, start from it
-            return
-                grammarRoot.Descendants()
-                    .Reverse()
-                    .First(d => (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)));
+            //// Root HL, start from it
+            //return
+            //    grammarRoot.Descendants()
+            //        .Reverse()
+            //        .First(d => (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)));
+
+            throw new NotImplementedException();
         }
 
         private static ParseNode FindNextSegment(this IEnumerable<ParseNode> items, Predicate<ParseNode> matchPredicate)
@@ -384,17 +381,17 @@ namespace EdiFabric.Framework.Parsing
                         s.Name == "S_UNH" || s.Name.StartsWith("S_UNH_", StringComparison.Ordinal) ||
                         s.Name == "S_ST" || s.Name.StartsWith("S_ST_", StringComparison.Ordinal));
 
-            ParseNode controlNumber = null;
+            DataElement controlNumber = null;
             var trailerTag = "";
             if (msgHeader != null && msgHeader.Name == "S_UNH")
             {
-                controlNumber = msgHeader.Children.ElementAt(0);
+                controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
                 trailerTag = "UNT";
             }
 
             if (msgHeader != null && msgHeader.Name == "S_ST")
             {
-                controlNumber = msgHeader.Children.ElementAt(1);
+                controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
                 trailerTag = "SE";
             }
 

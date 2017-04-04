@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
+using EdiFabric.Attributes;
+
 
 namespace EdiFabric.Framework.Parsing
 {
@@ -23,9 +25,9 @@ namespace EdiFabric.Framework.Parsing
         {
             return propertyInfos.OrderBy(
                 p =>
-                    p.GetCustomAttributes(typeof(XmlElementAttribute), false)
-                        .Cast<XmlElementAttribute>()
-                        .Select(a => a.Order)
+                    p.GetCustomAttributes(typeof(EdiAttribute), false)
+                        .Cast<EdiAttribute>()
+                        .Select(a => a.Pos)
                         .FirstOrDefault());           
         }
 
@@ -58,8 +60,9 @@ namespace EdiFabric.Framework.Parsing
             var firstTwo = propertyInfos.Take(2);
             foreach (var item in firstTwo)
             {
+                var cAttr = item.GetCustomAttribute<CAttribute>();
                 var currItem = item;
-                if (item.Name.StartsWith(Prefixes.C.ToString(), StringComparison.Ordinal))
+                if (cAttr != null)
                     currItem = item.PropertyType.IsGenericType
                         ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
                         : item.PropertyType.GetProperties().Sort().First();
@@ -111,5 +114,7 @@ namespace EdiFabric.Framework.Parsing
 
             return result;
         }
+
+        
     }
 }

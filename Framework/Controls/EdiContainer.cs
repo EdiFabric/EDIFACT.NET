@@ -116,8 +116,8 @@ namespace EdiFabric.Framework.Controls
         /// <returns>The collection of EDI segments.</returns>
         protected static IEnumerable<string> ToEdi(object item, Separators separators)
         {
-            var parseTree = ParseNode.BuldTree(item);
-            var segments = parseTree.Descendants().Where(d => d.Prefix == Prefixes.S).Reverse().ToList();
+            var parseTree = new TransactionSet(item);
+            var segments = parseTree.Descendants().OfType<Segment>().Reverse().ToList();
 
             var result = segments.Select(segment => segment.GenerateSegment(separators));
 
