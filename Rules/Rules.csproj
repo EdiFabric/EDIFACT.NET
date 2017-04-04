@@ -47,9 +47,19 @@
     <Compile Include="EF_EDIFACT_D00A_INVOIC.cs" />
     <Compile Include="EF_X12_002040_810_Repetition.cs" />
     <Compile Include="EF_X12_002040_810.cs" />
+    <Compile Include="EF_X12_002040_ComplexElements.cs" />
+    <Compile Include="EF_X12_002040_Enums.cs" />
+    <Compile Include="EF_X12_002040_Segments.cs" />
+    <Compile Include="EF_X12_002040_TS810.cs" />
     <Compile Include="EF_X12_004010X098A1_837.cs" />
     <Compile Include="EF_X12_005010X222A1_837.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Attributes\Attributes.csproj">
+      <Project>{205bc14b-dc58-42bb-855d-b02faedfcd5a}</Project>
+      <Name>Attributes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

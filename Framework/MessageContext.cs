@@ -12,6 +12,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using EdiFabric.Attributes;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
@@ -60,15 +61,14 @@ namespace EdiFabric.Framework
         /// <param name="version">The message version.</param>
         /// <param name="format">The message format.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         public MessageContext(string tag, string controlNumber, string version, string format,
-            Func<MessageContext, Assembly> rulesAssembly, Func<MessageContext, string> rulesNamespacePrefix)
+            Func<MessageContext, Assembly> rulesAssembly)
         {
             Tag = tag;
             ControlNumber = controlNumber;
             Version = version;
             Format = format;
-            SystemType = ToSystemType(rulesAssembly, rulesNamespacePrefix);
+            SystemType = ToSystemType(rulesAssembly);
         }
 
         /// <summary>
@@ -102,27 +102,26 @@ namespace EdiFabric.Framework
             SystemType = message.GetType();
         }
 
-        private Type ToSystemType(Func<MessageContext, Assembly> rulesAssembly, Func<MessageContext, string> rulesNamespacePrefix)
+        private Type ToSystemType(Func<MessageContext, Assembly> rulesAssembly)
         {
             var assembly = rulesAssembly(this);
-            var ns = rulesNamespacePrefix(this);
-            var typeFullName = ns.TrimEnd('.') + "." + Format + Version + Tag + ".M_" + Tag;
-            var errorMsg = String.Format(
-                            "Type '{0}' was not found in assembly '{1}'.",
-                            typeFullName, assembly.FullName);
-            try
-            {
-                var systemType = Type.GetType(typeFullName + ", " + assembly.FullName);
-                if (systemType == null)
-                    throw new ParsingException(ErrorCodes.InvalidInterchangeContent, errorMsg, null,
-                        new MessageErrorContext(Tag, ControlNumber, ErrorCodes.UnexpectedMessage));
 
-                return systemType;
-            }
-            catch (Exception)
+            var attribute = "[M(" + Format + "," + Version + "," + Tag + ")]";
+            var errorMsg = String.Format(
+                "Type with attribute'{0}' was not found in assembly '{1}'.",
+                attribute, assembly.FullName);
+            var systemType = assembly.GetTypes().SingleOrDefault(m =>
             {
-                throw new ParsingException(ErrorCodes.UnexpectedMessage, errorMsg);
-            }
+                var att = ((MAttribute) m.GetCustomAttribute(typeof (MAttribute)));
+                if (att == null) return false;
+                return att.Format == Format && att.Version == Version && att.Id == Tag;
+            });
+
+            if (systemType == null)
+                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, errorMsg, null,
+                    new MessageErrorContext(Tag, ControlNumber, ErrorCodes.UnexpectedMessage));
+
+            return systemType;
         }
     }   
 }

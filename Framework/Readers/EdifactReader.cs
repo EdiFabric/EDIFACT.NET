@@ -197,7 +197,7 @@ namespace EdiFabric.Framework.Readers
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
-            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssembly, RulesNamespacePrefix);
+            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssembly);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

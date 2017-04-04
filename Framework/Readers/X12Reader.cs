@@ -162,7 +162,7 @@ namespace EdiFabric.Framework.Readers
                 var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
                 if (ta1 != null)
                 {
-                    return new MessageContext("TA1", "", "", "X12", RulesAssembly, RulesNamespacePrefix);
+                    return new MessageContext("TA1", "", "", "X12", RulesAssembly);
                 }
             }
 
@@ -186,7 +186,7 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
             var controlNumber = ediCompositeDataElementsSt[1];
 
-            return new MessageContext(tag, controlNumber, version, "X12", RulesAssembly, RulesNamespacePrefix);
+            return new MessageContext(tag, controlNumber, version, "X12", RulesAssembly);
        }
     }
 }
