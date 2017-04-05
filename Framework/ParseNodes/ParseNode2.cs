@@ -39,11 +39,15 @@ namespace EdiFabric.Framework.Parsing
             get { return _children.AsReadOnly(); }
         }
 
-        protected ParseNode(PropertyInfo propertyInfo)
+        protected ParseNode(PropertyInfo propertyInfo, string ediName = null)
         {
-            Type = propertyInfo.PropertyType;
+            var systemType = propertyInfo.PropertyType;
+            if (systemType.IsGenericType)
+                 systemType = systemType.GenericTypeArguments.First();
+
+            Type = systemType;
             Name = propertyInfo.Name;
-            EdiName = propertyInfo.Name;
+            EdiName = ediName ?? Name;
             PropertyInfo = propertyInfo;
         }
 
@@ -54,15 +58,7 @@ namespace EdiFabric.Framework.Parsing
             EdiName = type.Name;
             PropertyInfo = null;
         }
-
-        protected ParseNode(Type type, string ediName)
-        {
-            Type = type;
-            Name = type.Name;
-            EdiName = ediName;
-            PropertyInfo = null;
-        }
-
+        
         public void AddChild(ParseNode node)
         {
             node.Parent = this;
@@ -78,7 +74,7 @@ namespace EdiFabric.Framework.Parsing
         {
             var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
             if (sAttr != null)
-                return new Segment(propertyInfo, sAttr.Id);
+                return new Segment(propertyInfo, sAttr.Id, false);
             
             var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
             if (gAttr != null)

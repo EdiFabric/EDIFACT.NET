@@ -28,11 +28,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -99,11 +99,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<Rules.Rep.X12002040810.M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.Rep.X12002040810.M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -157,11 +157,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -181,11 +181,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -219,11 +219,11 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -239,10 +239,10 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
-            Assert.IsTrue(ediItems.OfType<S_ISA>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<S_GS>().Count() == 2);
-            Assert.IsTrue(ediItems.OfType<S_GE>().Count() == 2);
-            Assert.IsTrue(ediItems.OfType<S_IEA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             foreach (var item in ediItems)
             {
@@ -267,10 +267,10 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
-            Assert.IsTrue(ediItems.OfType<S_ISA>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<S_GS>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<S_GE>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<S_IEA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             foreach (var item in ediItems)
             {
@@ -312,16 +312,16 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            var parsedXmlInterchange = TestHelper.Serialize(ediItems.OfType<S_ISA>().First());
+            var parsedXmlInterchange = TestHelper.Serialize(ediItems.OfType<ISA>().First());
             Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlGroup = TestHelper.Serialize(ediItems.OfType<S_GS>().First());
+            var parsedXmlGroup = TestHelper.Serialize(ediItems.OfType<GS>().First());
             Assert.IsNotNull(parsedXmlGroup.Root);
             Assert.AreEqual(parsedXmlGroup.Root.ToString(), expectedXmlGroup.ToString());
         }
@@ -339,11 +339,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -370,15 +370,15 @@ namespace EdiFabric.Tests
             // ASSERT
             Assert.IsTrue(items.Count == 10);
             Assert.IsTrue(items.OfType<M_810>().Count() == 2);
-            Assert.IsTrue(items.OfType<S_ISA>().Count() == 2);
-            Assert.IsTrue(items.OfType<S_GS>().Count() == 2);
-            Assert.IsTrue(items.OfType<S_GE>().Count() == 2);
-            Assert.IsTrue(items.OfType<S_IEA>().Count() == 2);
+            Assert.IsTrue(items.OfType<ISA>().Count() == 2);
+            Assert.IsTrue(items.OfType<GS>().Count() == 2);
+            Assert.IsTrue(items.OfType<GE>().Count() == 2);
+            Assert.IsTrue(items.OfType<IEA>().Count() == 2);
             Assert.IsNull(items.OfType<ParsingException>().SingleOrDefault());
-            var parsedXmlInterchange = TestHelper.Serialize(items.OfType<S_ISA>().First());
+            var parsedXmlInterchange = TestHelper.Serialize(items.OfType<ISA>().First());
             Assert.IsNotNull(parsedXmlInterchange.Root);
             Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-            var parsedXmlInterchange2 = TestHelper.Serialize(items.OfType<S_ISA>().Last());
+            var parsedXmlInterchange2 = TestHelper.Serialize(items.OfType<ISA>().Last());
             Assert.IsNotNull(parsedXmlInterchange2.Root);
             Assert.AreEqual(parsedXmlInterchange2.Root.ToString(), expectedXmlInterchange2.ToString());
             foreach (var item in items.OfType<M_810>())
@@ -401,11 +401,11 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
@@ -432,11 +432,11 @@ namespace EdiFabric.Tests
             var ediItems = TestHelper.ParseX12(sample).ToList();
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -452,11 +452,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -476,12 +476,12 @@ namespace EdiFabric.Tests
                 while (ediReader.Read())
                 {
                     ediItems.Add(ediReader.Item);
-                    if (!(ediReader.Item is S_GE)) continue;
+                    if (!(ediReader.Item is GE)) continue;
 
                     // ASSERT
-                    Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-                    Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
                     Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
                     ediItems.Clear();
                 }
@@ -501,14 +501,14 @@ namespace EdiFabric.Tests
                 while (ediReader.Read())
                 {
                     ediItems.Add(ediReader.Item);
-                    if (!(ediReader.Item is S_IEA)) continue;
+                    if (!(ediReader.Item is IEA)) continue;
 
                     // ASSERT
-                    Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-                    Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-                    Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-                    Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
                     Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
                     ediItems.Clear();
                 }
@@ -532,11 +532,11 @@ namespace EdiFabric.Tests
             }
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
@@ -557,11 +557,11 @@ namespace EdiFabric.Tests
             }
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
         }
 
@@ -577,12 +577,12 @@ namespace EdiFabric.Tests
                 var ediItems = ediReader.ReadToEnd().ToList();
 
                 // ASSERT
-                Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
                 Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
                 Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             }
         }
 
@@ -598,11 +598,11 @@ namespace EdiFabric.Tests
                 var ediItems = ediReader.ReadToEnd().ToList();
 
                 // ASSERT
-                Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
                 Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-                Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+                Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
                 Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             }
         }
@@ -620,11 +620,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -644,11 +644,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);
@@ -668,10 +668,10 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsTrue(items.OfType<M_810>().Count() == 3);
-            Assert.IsTrue(items.OfType<S_ISA>().Count() == 2);
-            Assert.IsTrue(items.OfType<S_GS>().Count() == 3);
-            Assert.IsTrue(items.OfType<S_GE>().Count() == 3);
-            Assert.IsTrue(items.OfType<S_IEA>().Count() == 2);
+            Assert.IsTrue(items.OfType<ISA>().Count() == 2);
+            Assert.IsTrue(items.OfType<GS>().Count() == 3);
+            Assert.IsTrue(items.OfType<GE>().Count() == 3);
+            Assert.IsTrue(items.OfType<IEA>().Count() == 2);
             Assert.IsNotNull(items.OfType<ParsingException>().SingleOrDefault());
 
             foreach (var msg in items.OfType<M_810>())
@@ -695,11 +695,11 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<M_810>().Count() == 3);
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
 
             foreach (var msg in ediItems.OfType<M_810>().Skip(1))
@@ -742,12 +742,12 @@ namespace EdiFabric.Tests
 
             // ASSERT
             Assert.IsNotNull(ediItems);
-            Assert.IsNotNull(ediItems.OfType<S_ISA>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_TA1>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TA1>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<S_IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
             var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
             Assert.IsNotNull(parsedXml.Root);

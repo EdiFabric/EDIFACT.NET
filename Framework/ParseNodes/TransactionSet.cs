@@ -8,9 +8,11 @@ namespace EdiFabric.Framework.Parsing
 {
     class TransactionSet : ParseNode
     {
-        public TransactionSet(MessageContext messageContext)
+        public TransactionSet(MessageContext messageContext, bool lazyLoad)
             : base(messageContext.SystemType)
         {
+            if (lazyLoad) return;
+
             var stack = new Stack<ParseNode>(new[] { this });
 
             while (stack.Any())
@@ -21,8 +23,8 @@ namespace EdiFabric.Framework.Parsing
                 {
                     var childNode = NewNode(propertyInfo);
                     currentNode.AddChild(childNode);
-                    
-                    if (currentNode is DataElement) continue;
+
+                    if (childNode is Segment) continue;
 
                     stack.Push(childNode);
                 }

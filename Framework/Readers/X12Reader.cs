@@ -114,13 +114,13 @@ namespace EdiFabric.Framework.Readers
             switch (segmentContext.Tag)
             {
                 case SegmentId.ISA:
-                    Item = segmentContext.Value.ParseSegment<S_ISA>(Separators);
+                    Item = segmentContext.Value.ParseSegment<ISA>(Separators);
                     break;
                 case SegmentId.TA1:
-                    Item = segmentContext.Value.ParseSegment<S_TA1>(Separators);
+                    Item = segmentContext.Value.ParseSegment<TA1>(Separators);
                     break;
                 case SegmentId.GS:
-                    Item = segmentContext.Value.ParseSegment<S_GS>(Separators);
+                    Item = segmentContext.Value.ParseSegment<GS>(Separators);
                     CurrentGroupHeader = segmentContext;
                     break;
                 case SegmentId.ST:
@@ -138,10 +138,10 @@ namespace EdiFabric.Framework.Readers
                     }
                     break;
                 case SegmentId.GE:
-                    Item = segmentContext.Value.ParseSegment<S_GE>(Separators);
+                    Item = segmentContext.Value.ParseSegment<GE>(Separators);
                     break;
                 case SegmentId.IEA:
-                    Item = segmentContext.Value.ParseSegment<S_IEA>(Separators);
+                    Item = segmentContext.Value.ParseSegment<IEA>(Separators);
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);

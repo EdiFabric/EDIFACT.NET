@@ -105,9 +105,9 @@ namespace EdiFabric.Tests
         {
             var items = ParseX12(sample, null, null, rulesNameSpacePrefix).ToList();
 
-            var group = new X12Group<T>(items.OfType<S_GS>().Single());
+            var group = new X12Group<T>(items.OfType<GS>().Single());
             group.AddItem(items.OfType<T>().Single());
-            var interchange = new X12Interchange(items.OfType<S_ISA>().Single());
+            var interchange = new X12Interchange(items.OfType<ISA>().Single());
             interchange.AddItem(group);
 
             return interchange;

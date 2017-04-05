@@ -131,13 +131,13 @@ namespace EdiFabric.Framework.Readers
             if (separators == null) throw new ArgumentNullException("separators");
             if (messageContext == null) throw new ArgumentNullException("messageContext");
 
-            var messageGrammar = new TransactionSet(messageContext);
+            var messageGrammar = new TransactionSet(messageContext, false);
             //if (messageGrammar.Prefix != Prefixes.M)
             //    throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
 
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
             var segmentPosition = messageGrammar.Children.First() as Segment;
-            ParseNode instancePosition = new TransactionSet(messageContext);
+            ParseNode instancePosition = new TransactionSet(messageContext, true);
 
             foreach (var segment in segments)
             {

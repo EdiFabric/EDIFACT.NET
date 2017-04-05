@@ -19,13 +19,13 @@ namespace EdiFabric.Framework.Controls
     /// <summary>
     /// This class represents X12 interchange header.
     /// </summary>
-    public class S_ISA : IEdiControl
+    public class ISA : IEdiControl
     {
         [D(1)]
-        public string D_744_1 { get; set; }
+        public string AuthorizationInformationQualifier_1 { get; set; }
 
         [D(2)]
-        public string D_745_2 { get; set; }
+        public string AuthorizationInformation_2 { get; set; }
 
         [D(3)]
         public string D_746_3 { get; set; }
@@ -74,30 +74,30 @@ namespace EdiFabric.Framework.Controls
     /// This class represents X12 group header.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GS : IEdiControl
+    public class GS : IEdiControl
     {
-        [XmlElement(Order = 0)]
+        [D(1)]
         public string D_479_1 { get; set; }
 
-        [XmlElement(Order = 1)]
+        [D(2)]
         public string D_142_2 { get; set; }
 
-        [XmlElement(Order = 2)]
+        [D(3)]
         public string D_124_3 { get; set; }
 
-        [XmlElement(Order = 3)]
+        [D(4)]
         public string D_29_4 { get; set; }
 
-        [XmlElement(Order = 4)]
+        [D(5)]
         public string D_30_5 { get; set; }
 
-        [XmlElement(Order = 5)]
+        [D(6)]
         public string D_28_6 { get; set; }
 
-        [XmlElement(Order = 6)]
+        [D(7)]
         public string D_455_7 { get; set; }
 
-        [XmlElement(Order = 7)]
+        [D(8)]
         public string D_480_8 { get; set; }
     }
 
@@ -105,12 +105,12 @@ namespace EdiFabric.Framework.Controls
     /// This class represents X12 group trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_GE : IEdiControl
+    public class GE : IEdiControl
     {
-        [XmlElement(Order = 0)]
+        [D(1)]
         public string D_97_1 { get; set; }
 
-        [XmlElement(Order = 1)]
+        [D(2)]
         public string D_28_2 { get; set; }
     }
 
@@ -118,12 +118,12 @@ namespace EdiFabric.Framework.Controls
     /// This class represents X12 interchange trailer.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_IEA : IEdiControl 
+    public class IEA : IEdiControl 
     {
-        [XmlElement(Order = 0)]
+        [D(1)]
         public string D_405_1 { get; set; }
 
-        [XmlElement(Order = 1)]
+        [D(2)]
         public string D_709_2 { get; set; }
     }
 
@@ -131,21 +131,21 @@ namespace EdiFabric.Framework.Controls
     /// This class represents X12 technical acknowledgment.
     /// </summary>
     [XmlRoot(Namespace = "www.edifabric.com/x12")]
-    public class S_TA1 : IEdiControl
+    public class TA1 : IEdiControl
     {
-        [XmlElement(Order = 0)]
+        [D(1)]
         public string D_TA101_1 { get; set; }
 
-        [XmlElement(Order = 1)]
+        [D(2)]
         public string D_TA102_2 { get; set; }
 
-        [XmlElement(Order = 2)]
+        [D(3)]
         public string D_TA103_3 { get; set; }
 
-        [XmlElement(Order = 3)]
+        [D(4)]
         public string D_TA104_4 { get; set; }
 
-        [XmlElement(Order = 4)]
+        [D(5)]
         public string D_TA105_5 { get; set; }
     }  
 
@@ -154,14 +154,14 @@ namespace EdiFabric.Framework.Controls
     /// Each group can only contain messages of the same type.
     /// </summary>
     /// <typeparam name="T">The type of the messages that this group can contain.</typeparam>
-    public class X12Group<T> : EdiContainer<S_GS, T, S_GE>, IEdiGroup
+    public class X12Group<T> : EdiContainer<GS, T, GE>, IEdiGroup
     {
         /// <summary>
         ///  Initializes a new instance of the <see cref="X12Group{T}"/> class.
         /// </summary>
         /// <param name="header">The group header.</param>
-        public X12Group(S_GS header)
-            : base(header, (gs, i) => new S_GE
+        public X12Group(GS header)
+            : base(header, (gs, i) => new GE
             {
                 D_97_1 = i.ToString(),
                 D_28_2 = gs.D_28_6
@@ -173,14 +173,14 @@ namespace EdiFabric.Framework.Controls
     /// <summary>
     /// This class represents X12 interchange.
     /// </summary>
-    public class X12Interchange : EdiContainer<S_ISA, IEdiGroup, S_IEA> 
+    public class X12Interchange : EdiContainer<ISA, IEdiGroup, IEA> 
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="X12Interchange"/> class.
         /// </summary>
         /// <param name="header">The interchange header.</param>
-        public X12Interchange(S_ISA header)
-            : base(header, (gs, i) => new S_IEA
+        public X12Interchange(ISA header)
+            : base(header, (gs, i) => new IEA
             {
                 D_405_1 = i.ToString(),
                 D_709_2 = header.D_709_13

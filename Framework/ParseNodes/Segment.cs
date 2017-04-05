@@ -27,8 +27,19 @@ namespace EdiFabric.Framework.Parsing
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        public Segment(Type type, string ediName, bool lazyLoadSegment)
-            : base(type, ediName)
+        public Segment(Type type, bool lazyLoadSegment)
+            : base(type)
+        {
+            Build(lazyLoadSegment);
+        }
+
+        public Segment(PropertyInfo propertyInfo, string ediName, bool lazyLoadSegment)
+            : base(propertyInfo, ediName)
+        {
+            Build(lazyLoadSegment);
+        }
+
+        private void Build(bool lazyLoadSegment)
         {
             var stack = new Stack<ParseNode>(new[] { this });
 
@@ -55,16 +66,6 @@ namespace EdiFabric.Framework.Parsing
                     stack.Push(childNode);
                 }
             }
-        }
-
-        public Segment(Type type, bool lazyLoadSegment)
-            : this(type, type.Name, lazyLoadSegment)
-        {
-        }
-
-        public Segment(PropertyInfo propertyInfo, string ediName)
-            : this(propertyInfo.PropertyType, ediName, true)
-        {
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
