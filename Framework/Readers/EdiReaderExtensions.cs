@@ -180,7 +180,7 @@ namespace EdiFabric.Framework.Readers
                     instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
                 foreach (var parseTree in segmentTree)
                 {
-                    var newNode = ParseNode.NewNode(parseTree.PropertyInfo);
+                    var newNode = parseTree.PropertyInfo.ToParseNode();
                     instancePosition.AddChild(newNode);
                     instancePosition = newNode;
                     if (newNode is Segment)
@@ -199,7 +199,7 @@ namespace EdiFabric.Framework.Readers
             if (String.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
             if (separators == null) throw new ArgumentNullException("separators");
             
-            var dataElementsGrammar = new Segment(parseNode.Type, false).Children;
+            var dataElementsGrammar = new Segment(parseNode.Type).Children;
             var dataElementsToParse = line.GetDataElements(separators);
             for (var deIndex = 0; deIndex < dataElementsToParse.Length; deIndex++)
             {

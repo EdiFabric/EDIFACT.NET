@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Attributes;
 
 namespace EdiFabric.Framework.Parsing
 {
@@ -13,6 +13,7 @@ namespace EdiFabric.Framework.Parsing
         public string EdiName { get; private set; }
         public ParseNode Parent { get; private set; }
         public Type Type { get; private set; }
+        public string Value { get; set; }
 
         public string Path
         {
@@ -49,7 +50,7 @@ namespace EdiFabric.Framework.Parsing
             Name = propertyInfo.Name;
             EdiName = ediName ?? Name;
             PropertyInfo = propertyInfo;
-        }
+         }
 
         protected ParseNode(Type type)
         {
@@ -64,36 +65,78 @@ namespace EdiFabric.Framework.Parsing
             node.Parent = this;
             _children.Add(node);
         }
-
+       
         public IEnumerable<PropertyInfo> GetProperties()
         {
             return Type.GetProperties().Sort();
         }
 
-        public static ParseNode NewNode(PropertyInfo propertyInfo)
-        {
-            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
-            if (sAttr != null)
-                return new Segment(propertyInfo, sAttr.Id, false);
-            
-            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
-            if (gAttr != null)
-                return new Loop(propertyInfo);
-
-            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
-            if (cAttr != null)
-                return new ComplexDataElement(propertyInfo);
-
-            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
-            if (dAttr != null)
-                return new DataElement(propertyInfo, null);
-
-            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
-        }
-
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
         {
-            throw new Exception(string.Format("Unsupported for: {0}", Type.FullName));
+            throw new NotImplementedException(Type.FullName);
+        }
+
+        protected void BuildFromInstance(object instance)
+        {
+            var instanceLinks = new Dictionary<string, object> { { Path, instance } };
+            var stack = new Stack<ParseNode>(new[] { this });
+
+            while (stack.Any())
+            {
+                var currentNode = stack.Pop();
+
+                var path = currentNode.Path;
+                object currentInstance;
+                if (!instanceLinks.TryGetValue(path, out currentInstance))
+                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
+
+                if (currentNode is DataElement || currentInstance == null) continue;
+
+                var properties = currentNode.GetProperties();
+                foreach (var propertyInfo in properties)
+                {
+                    var node = propertyInfo.ToParseNode();
+                    if (propertyInfo.PropertyType.IsGenericType)
+                    {
+                        var currentList = propertyInfo.GetValue(currentInstance) as IList;
+                        if (currentList == null && !(node is DataElement) && !(node is ComplexDataElement)) continue;
+
+                        if (currentList == null || currentList.Count == 0)
+                        {
+                            currentNode.AddChild(propertyInfo.ToParseNode());
+                        }
+                        else
+                        {
+                            foreach (var currentValue in currentList)
+                            {
+                                if (currentValue == null) continue;
+
+                                var childParseTree = propertyInfo.ToParseNode(currentValue);
+                                currentNode.AddChild(childParseTree);
+                                
+                                stack.Push(childParseTree);
+                                instanceLinks.Add(childParseTree.Path, currentValue);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var currentValue = propertyInfo.GetValue(currentInstance);
+                        if (currentValue == null && !(node is DataElement) && !(node is ComplexDataElement))
+                            continue;
+
+                        var childParseTree = propertyInfo.ToParseNode(currentValue);
+                        currentNode.AddChild(childParseTree);
+                        if (currentValue == null) continue;
+
+                        stack.Push(childParseTree);
+                        instanceLinks.Add(childParseTree.Path, currentValue);
+                    }
+
+                }
+
+                instanceLinks.Remove(path);
+            }
         }
     }
 }

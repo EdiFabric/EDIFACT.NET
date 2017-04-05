@@ -8,6 +8,7 @@ using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Validation;
 using EdiFabric.Rules.X12002040810;
+using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
@@ -44,7 +45,7 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-            var interchange = TestHelper.GenerateX12<M_810>(sample);
+            var interchange = TestHelper.GenerateX12<TS810>(sample);
 
             // ACT
             var ediSegments = interchange.GenerateEdi();

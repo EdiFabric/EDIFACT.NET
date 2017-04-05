@@ -21,7 +21,7 @@ namespace EdiFabric.Framework.Parsing
 
                 foreach (var propertyInfo in currentNode.GetProperties())
                 {
-                    var childNode = NewNode(propertyInfo);
+                    var childNode = propertyInfo.ToParseNode();
                     currentNode.AddChild(childNode);
 
                     if (childNode is Segment) continue;
@@ -34,67 +34,7 @@ namespace EdiFabric.Framework.Parsing
         public TransactionSet(object instance)
             : base(instance.GetType())
         {
-            var instanceLinks = new Dictionary<string, object> { { Path, instance } };
-            var stack = new Stack<ParseNode>(new[] { this });
-
-            while (stack.Any())
-            {
-                var currentNode = stack.Pop();
-
-                var path = currentNode.Path;
-                object currentInstance;
-                if (!instanceLinks.TryGetValue(path, out currentInstance))
-                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
-
-                if (currentInstance is DataElement) continue;
-
-                var properties = currentNode.GetProperties();
-                foreach (var propertyInfo in properties)
-                {
-                    var node = NewNode(propertyInfo);
-                    if (node is DataElement || node is ComplexDataElement)
-                    {
-
-                        if (propertyInfo.PropertyType.IsGenericType)
-                        {
-                            var currentList = propertyInfo.GetValue(currentInstance) as IList;
-                            if (currentList == null) continue;
-
-                            if (currentList == null || currentList.Count == 0)
-                            {
-                                currentNode.AddChild(NewNode(propertyInfo));
-                            }
-                            else
-                            {
-                                foreach (var currentValue in currentList)
-                                {
-                                    if (currentValue == null) continue;
-
-                                    var childParseTree = new DataElement(propertyInfo, (string) currentValue);
-                                    currentNode.AddChild(childParseTree);
-                                    stack.Push(childParseTree);
-                                    instanceLinks.Add(childParseTree.Path, currentValue);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var currentValue = propertyInfo.GetValue(currentInstance);
-                            if (currentValue == null)
-                                continue;
-
-                            var childParseTree = new DataElement(propertyInfo, (string) currentValue);
-                            currentNode.AddChild(childParseTree);
-                            if (currentValue == null) continue;
-
-                            stack.Push(childParseTree);
-                            instanceLinks.Add(childParseTree.Path, currentValue);
-                        }
-                }
-            }
-
-                instanceLinks.Remove(path);
-            }
+            BuildFromInstance(instance);
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)

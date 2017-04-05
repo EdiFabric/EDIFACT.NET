@@ -9,7 +9,8 @@ namespace EdiFabric.Framework.Parsing
 {
     class AllLoop : ParseNode
     {
-        public AllLoop(PropertyInfo propertyInfo) : base(propertyInfo)
+        public AllLoop(PropertyInfo propertyInfo)
+            : base(propertyInfo)
         {
         }
 

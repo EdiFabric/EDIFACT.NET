@@ -115,6 +115,25 @@ namespace EdiFabric.Framework.Parsing
             return result;
         }
 
-        
+        public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object value = null)
+        {
+            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
+            if (sAttr != null)
+                return new Segment(propertyInfo, sAttr.Id);
+
+            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
+            if (gAttr != null)
+                return new Loop(propertyInfo);
+
+            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
+            if (cAttr != null)
+                return new ComplexDataElement(propertyInfo);
+
+            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
+            if (dAttr != null)
+                return new DataElement(propertyInfo, value as string);
+
+            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
+        }
     }
 }

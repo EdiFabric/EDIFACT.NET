@@ -205,12 +205,12 @@ namespace EdiFabric.Framework.Controls
             if (Header.D_726_11 != "U")
                 Header.D_726_11 = currentSeparators.RepetitionDataElement.ToString();
 
-            result.AddRange(ToEdi(Header, currentSeparators));
+            result.Add(ToSegmentEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
                 result.AddRange(item.GenerateEdi(currentSeparators));
             }
-            result.AddRange(ToEdi(Trailer, currentSeparators));
+            result.Add(ToSegmentEdi(Trailer, currentSeparators));
 
             return result;
         }

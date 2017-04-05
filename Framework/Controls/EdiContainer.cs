@@ -97,13 +97,13 @@ namespace EdiFabric.Framework.Controls
             var currentSeparators = separators ?? _defaultSeparators;
 
             if (Header != null)
-                result.AddRange(ToEdi(Header, currentSeparators));
+                result.Add(ToSegmentEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
-                result.AddRange(ToEdi(item, currentSeparators));
+                result.AddRange(ToMessageEdi(item, currentSeparators));
             }
             if (Trailer != null)
-                result.AddRange(ToEdi(Trailer, currentSeparators));
+                result.Add(ToSegmentEdi(Trailer, currentSeparators));
 
             return result;
         }
@@ -114,18 +114,29 @@ namespace EdiFabric.Framework.Controls
         /// <param name="item">The EDI document instance.</param>
         /// <param name="separators">The EDI separators.</param>
         /// <returns>The collection of EDI segments.</returns>
-        protected static IEnumerable<string> ToEdi(object item, Separators separators)
+        protected static IEnumerable<string> ToMessageEdi(object item, Separators separators)
         {
             var parseTree = new TransactionSet(item);
             var segments = parseTree.Descendants().OfType<Segment>().Reverse().ToList();
 
             var result = segments.Select(segment => segment.GenerateSegment(separators));
 
-            if (item is IEdiControl) return result;
             if (parseTree.EdiName == "TA1") return result;
 
             var trailerValues = segments.PullTrailerValues();
             return SetTrailer(result.ToList(), separators, trailerValues.Item2, trailerValues.Item1);
+        }
+
+        /// <summary>
+        /// Converts an EDI document instance to a collection of EDI segments.
+        /// </summary>
+        /// <param name="item">The EDI document instance.</param>
+        /// <param name="separators">The EDI separators.</param>
+        /// <returns>The collection of EDI segments.</returns>
+        protected static string ToSegmentEdi(object item, Separators separators)
+        {
+            var parseTree = new Segment(item);
+            return parseTree.GenerateSegment(separators);
         }
 
         private static IEnumerable<string> SetTrailer(List<string> segments, Separators separators, string trailerTag, string controlNumber)

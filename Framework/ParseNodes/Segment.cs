@@ -27,16 +27,22 @@ namespace EdiFabric.Framework.Parsing
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        public Segment(Type type, bool lazyLoadSegment)
+        public Segment(Type type, bool lazyLoad = false)
             : base(type)
         {
-            Build(lazyLoadSegment);
+            Build(lazyLoad);
         }
 
-        public Segment(PropertyInfo propertyInfo, string ediName, bool lazyLoadSegment)
+        public Segment(PropertyInfo propertyInfo, string ediName)
             : base(propertyInfo, ediName)
         {
-            Build(lazyLoadSegment);
+            Build(true);
+        }
+
+        public Segment(object instance)
+            : base(instance.GetType())
+        {
+            BuildFromInstance(instance);
         }
 
         private void Build(bool lazyLoadSegment)
@@ -58,7 +64,7 @@ namespace EdiFabric.Framework.Parsing
 
                 foreach (var property in properties)
                 {
-                    var childNode = NewNode(property);
+                    var childNode = property.ToParseNode();
                     currentNode.AddChild(childNode);
 
                     if (childNode is DataElement) continue;

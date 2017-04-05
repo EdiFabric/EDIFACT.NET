@@ -9,7 +9,8 @@ namespace EdiFabric.Framework.Parsing
 {
     class ComplexDataElement : ParseNode
     {
-        public ComplexDataElement(PropertyInfo propertyInfo) : base(propertyInfo)
+        public ComplexDataElement(PropertyInfo propertyInfo)
+            : base(propertyInfo)
         {
         }
     }

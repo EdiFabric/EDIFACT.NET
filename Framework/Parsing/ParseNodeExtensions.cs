@@ -378,18 +378,18 @@ namespace EdiFabric.Framework.Parsing
             var msgHeader =
                 segments.SingleOrDefault(
                     s =>
-                        s.Name == "S_UNH" || s.Name.StartsWith("S_UNH_", StringComparison.Ordinal) ||
-                        s.Name == "S_ST" || s.Name.StartsWith("S_ST_", StringComparison.Ordinal));
+                        s.Name == "UNH" || s.Name.StartsWith("UNH_", StringComparison.Ordinal) ||
+                        s.Name == "ST" || s.Name.StartsWith("ST_", StringComparison.Ordinal));
 
             DataElement controlNumber = null;
             var trailerTag = "";
-            if (msgHeader != null && msgHeader.Name == "S_UNH")
+            if (msgHeader != null && msgHeader.Name == "UNH")
             {
                 controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
                 trailerTag = "UNT";
             }
 
-            if (msgHeader != null && msgHeader.Name == "S_ST")
+            if (msgHeader != null && msgHeader.Name == "ST")
             {
                 controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
                 trailerTag = "SE";

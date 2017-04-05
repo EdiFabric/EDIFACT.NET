@@ -296,12 +296,12 @@ namespace EdiFabric.Framework.Controls
                result.Add(separators.ToUna()); 
             }
 
-            result.AddRange(ToEdi(Header, currentSeparators));
+            result.Add(ToSegmentEdi(Header, currentSeparators));
             foreach (var item in Items)
             {
                 result.AddRange(item.GenerateEdi(currentSeparators));
             }
-            result.AddRange(ToEdi(Trailer, currentSeparators));
+            result.Add(ToSegmentEdi(Trailer, currentSeparators));
 
             return result;
         }
