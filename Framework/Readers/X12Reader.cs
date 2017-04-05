@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
 

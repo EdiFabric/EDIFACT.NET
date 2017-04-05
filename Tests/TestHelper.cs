@@ -7,6 +7,8 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Controls.Edifact;
+using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Tests
@@ -92,10 +94,10 @@ namespace EdiFabric.Tests
         {
             var items = ParseEdifact(sample).ToList();
 
-            var ung = items.OfType<S_UNG>().SingleOrDefault();
+            var ung = items.OfType<UNG>().SingleOrDefault();
             var group = new EdifactGroup<T>(ung);
             group.AddItem(items.OfType<T>().Single());
-            var interchange = new EdifactInterchange(items.OfType<S_UNB>().Single());
+            var interchange = new EdifactInterchange(items.OfType<UNB>().Single());
             interchange.AddItem(group);
 
             return interchange;

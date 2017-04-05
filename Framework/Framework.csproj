@@ -79,7 +79,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Edifact\EdifactGroup.cs" />
+    <Compile Include="Controls\Edifact\EdifactInterchange.cs" />
     <Compile Include="Controls\IEdiControl.cs" />
+    <Compile Include="Controls\X12\X12Group.cs" />
+    <Compile Include="Controls\X12\X12Interchange.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="ParseNodes\AllLoop.cs" />
     <Compile Include="ParseNodes\ComplexDataElement.cs" />
@@ -114,8 +118,8 @@
     <Compile Include="Parsing\SegmentContext.cs" />
     <Compile Include="Parsing\ParseNode.cs" />
     <Compile Include="Separators.cs" />
-    <Compile Include="Controls\Edifact.cs" />
-    <Compile Include="Controls\X12.cs" />
+    <Compile Include="Controls\Edifact\ControlSegments.cs" />
+    <Compile Include="Controls\X12\ControlSegments.cs" />
     <Compile Include="Parsing\PropertyInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

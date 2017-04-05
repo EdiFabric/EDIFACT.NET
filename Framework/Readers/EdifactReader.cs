@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsing;
 
@@ -144,10 +145,10 @@ namespace EdiFabric.Framework.Readers
                 case SegmentId.UNA:
                     break;
                 case SegmentId.UNB:
-                    Item = segmentContext.Value.ParseSegment<S_UNB>(Separators);
+                    Item = segmentContext.Value.ParseSegment<UNB>(Separators);
                     break;
                 case SegmentId.UNG:
-                    Item = segmentContext.Value.ParseSegment<S_UNG>(Separators);
+                    Item = segmentContext.Value.ParseSegment<UNG>(Separators);
                     break;
                 case SegmentId.UNH:
                     CurrentMessage.Add(segmentContext);
@@ -164,10 +165,10 @@ namespace EdiFabric.Framework.Readers
                     }
                     break;
                 case SegmentId.UNE:
-                    Item = segmentContext.Value.ParseSegment<S_UNE>(Separators);
+                    Item = segmentContext.Value.ParseSegment<UNE>(Separators);
                     break;
                 case SegmentId.UNZ:
-                    Item = segmentContext.Value.ParseSegment<S_UNZ>(Separators);
+                    Item = segmentContext.Value.ParseSegment<UNZ>(Separators);
                     break;
                 default:
                     CurrentMessage.Add(segmentContext);
@@ -197,7 +198,7 @@ namespace EdiFabric.Framework.Readers
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
-            return new MessageContext(tag, controlNumber, version, "Edifact", RulesAssembly);
+            return new MessageContext(tag, controlNumber, version, "EDIFACT", RulesAssembly);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

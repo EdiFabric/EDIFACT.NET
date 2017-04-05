@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using EdiFabric.Framework.Controls;
+using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Validation;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
