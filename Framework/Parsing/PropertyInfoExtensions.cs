@@ -53,36 +53,42 @@ namespace EdiFabric.Framework.Parsing
 
         internal static Tuple<List<string>, List<string>> GetFirstTwoPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
         {
-            List<string> element0 = null;
-            List<string> element1 = null;
+            var firstTwo = propertyInfos.Take(2).ToList();
+            var element1 = firstTwo.Count > 0 ? firstTwo[0].GetDataElement().GetCodes() : new List<string>();
+            var element2 = firstTwo.Count > 1 ? firstTwo[1].GetDataElement().GetCodes() : new List<string>();
             
-            int i = 0;            
-            var firstTwo = propertyInfos.Take(2);
-            foreach (var item in firstTwo)
+            return new Tuple<List<string>, List<string>>(element1, element2);
+        }
+
+        internal static PropertyInfo GetDataElement(this PropertyInfo item)
+        {
+            var cAttr = item.GetCustomAttribute<CAttribute>();
+            if (cAttr != null)
             {
-                var cAttr = item.GetCustomAttribute<CAttribute>();
-                var currItem = item;
-                if (cAttr != null)
-                    currItem = item.PropertyType.IsGenericType
-                        ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
-                        : item.PropertyType.GetProperties().Sort().First();
-                if (!currItem.PropertyType.IsEnum)
-                {
-                    i++;
-                    continue;
-                }
-                if (i == 0)
-                {
-                    element0 = currItem.GetPropertyEnumValues().ToList();
-                }
-                if (i == 1)
-                {
-                    element1 = currItem.GetPropertyEnumValues().ToList();
-                }
-                i++;
+                return item.PropertyType.IsGenericType
+                         ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
+                         : item.PropertyType.GetProperties().Sort().First();
             }
 
-            return new Tuple<List<string>, List<string>>(element0 ?? new List<string>(), element1 ?? new List<string>());
+            return item;
+        }
+
+        internal static List<string> GetCodes(this PropertyInfo item)
+        {
+            var deAttr = item.GetCustomAttribute<DAttribute>();
+            if(deAttr == null)
+                throw new Exception("No DAttribute");
+
+            if (deAttr.DataType != null)
+            {
+                var codes = deAttr.DataType.GetField("Codes");
+                if (codes != null)
+                {
+                    return (List<String>)codes.GetValue(Activator.CreateInstance(deAttr.DataType));
+                }
+            }
+
+            return new List<string>();
         }
         
         internal static object GetPropertyValue(this PropertyInfo propertyInfo, string value)
@@ -132,6 +138,10 @@ namespace EdiFabric.Framework.Parsing
             var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
             if (dAttr != null)
                 return new DataElement(propertyInfo, value as string);
+
+            var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
+            if (aAttr != null)
+                return new AllLoop(propertyInfo);
 
             throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
         }

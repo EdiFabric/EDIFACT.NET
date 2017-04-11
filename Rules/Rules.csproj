@@ -44,17 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF_EDIFACT_D00A_ComplexElements.cs" />
+    <Compile Include="EF_EDIFACT_D00A_ComplexElements.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EF_EDIFACT_D00A_Enums.cs" />
     <Compile Include="EF_EDIFACT_D00A_INVOIC.cs" />
-    <Compile Include="EF_EDIFACT_D00A_Segments.cs" />
-    <Compile Include="EF_EDIFACT_D00A_TSINVOIC.cs" />
+    <Compile Include="EF_EDIFACT_D00A_Segments.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EF_EDIFACT_D00A_TSINVOIC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EF_HIPAA_004010X098A1_837.cs" />
     <Compile Include="EF_X12_002040_810_Repetition.cs" />
     <Compile Include="EF_X12_002040_810.cs" />
     <Compile Include="EF_X12_002040_ComplexElements.cs" />
     <Compile Include="EF_X12_002040_Enums.cs" />
-    <Compile Include="EF_X12_002040_Segments.cs" />
-    <Compile Include="EF_X12_002040_TS810.cs" />
+    <Compile Include="EF_X12_002040_Segments.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EF_X12_002040_TS810.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EF_X12_004010X098A1_837.cs" />
     <Compile Include="EF_X12_005010X222A1_837.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

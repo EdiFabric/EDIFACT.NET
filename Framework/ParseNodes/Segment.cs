@@ -37,6 +37,9 @@ namespace EdiFabric.Framework.Parsing
             : base(propertyInfo, ediName)
         {
             Build(true);
+            var firstTwo = GetProperties().GetFirstTwoPropertyValues();
+            _firstChildValues = firstTwo.Item1;
+            _secondChildValues = firstTwo.Item2;
         }
 
         public Segment(object instance)
@@ -56,10 +59,10 @@ namespace EdiFabric.Framework.Parsing
                 var properties = currentNode.GetProperties();
                 if (lazyLoadSegment)
                 {
-                    var firstTwo = properties.GetFirstTwoPropertyValues();
+                    //var firstTwo = properties.GetFirstTwoPropertyValues();
                     //currentNode._firstChildValues = firstTwo.Item1;
                     //currentNode._secondChildValues = firstTwo.Item2;
-                    continue;
+                    //continue;
                 }
 
                 foreach (var property in properties)
