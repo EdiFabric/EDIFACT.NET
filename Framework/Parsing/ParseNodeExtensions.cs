@@ -41,40 +41,6 @@ namespace EdiFabric.Framework.Parsing
             return new List<ParseNode>();
         }
 
-        //private static IEnumerable<ParseNode> NeighboursWithExclusion(this ParseNode node, IList<ParseNode> exclusion)
-        //{
-        //    var result = new List<ParseNode>();
-
-        //    switch (node.Prefix)
-        //    {
-        //        //case Prefixes.S:
-        //        //    result.Add(node.Parent);
-        //        //    return result;
-        //        //case Prefixes.G:
-        //        //    result.AddRange(node.ChildrenWithExclusion(exclusion));
-        //        //    result.Add(node.Children.First());
-        //        //    result.Add(node.Parent);
-        //        //    return result;
-        //        case Prefixes.M:
-        //            result.AddRange(node.ChildrenWithExclusion(exclusion));
-        //            if(!result.Any())
-        //                result.AddRange(node.Children);
-        //            return result;
-        //        //case Prefixes.U:
-        //        //    result.AddRange(node.ChildrenWithExclusion(exclusion));
-        //        //    if (!result.Any())
-        //        //        result.AddRange(node.Children);
-        //        //    result.Add(node.Parent);
-        //        //    return result;
-        //        //case Prefixes.A:
-        //        //    result.AddRange(node.Children);
-        //        //result.Add(node.Parent);
-        //        //return result;
-        //        //default:
-        //        //    throw new Exception(string.Format("Unsupported node prefix: {0}", node.Prefix));
-        //    }
-        //}
-
         private static string EscapeLine(this string line, Separators separators)
         {
             if (string.IsNullOrEmpty(line))
@@ -321,37 +287,36 @@ namespace EdiFabric.Framework.Parsing
 
         internal static Segment JumpToHl(this TransactionSet grammarRoot, ParseNode instanceRoot, string parentId)
         {
-            //ParseNode hlParent;
-            //if (parentId != null)
-            //{
-            //    // Parent HL, start right after it
-            //    hlParent =
-            //        instanceRoot.Descendants()
-            //            .SingleOrDefault(
-            //                d =>
-            //                    (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)) &&
-            //                    d.Children.First().Value == parentId);
-            //    if (hlParent == null)
-            //        throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
+            ParseNode hlParent;
+            if (parentId != null)
+            {
+                // Parent HL, start right after it
+                hlParent =
+                    instanceRoot.Descendants()
+                        .SingleOrDefault(
+                            d =>
+                                (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)) &&
+                                d.Children.First().Value == parentId);
+                if (hlParent == null)
+                    throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
 
-            //    var nextSegment = grammarRoot.Descendants().Reverse().FindNextSegment(pt => pt.Name == hlParent.Name);
+                var nextSegment = grammarRoot.Descendants().Reverse().OfType<Segment>().FindNextSegment(pt => pt.Name == hlParent.Name);
 
-            //    if (nextSegment == null)
-            //        throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
+                if (nextSegment == null)
+                    throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
 
-            //    return nextSegment;                
-            //}
+                return nextSegment;
+            }
 
-            //// Root HL, start from it
-            //return
-            //    grammarRoot.Descendants()
-            //        .Reverse()
-            //        .First(d => (d.Name == "S_HL" || d.Name.StartsWith("S_HL_", StringComparison.Ordinal)));
+            // Root HL, start from it
+            return
+                grammarRoot.Descendants()
+                    .Reverse().OfType<Segment>()
+                    .First(d => (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)));
 
-            throw new NotImplementedException();
         }
 
-        private static ParseNode FindNextSegment(this IEnumerable<ParseNode> items, Predicate<ParseNode> matchPredicate)
+        private static Segment FindNextSegment(this IEnumerable<Segment> items, Predicate<ParseNode> matchPredicate)
         {
             using (var iter = items.GetEnumerator())
             {

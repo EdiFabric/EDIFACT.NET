@@ -59,10 +59,7 @@ namespace EdiFabric.Framework.Parsing
                 var properties = currentNode.GetProperties();
                 if (lazyLoadSegment)
                 {
-                    //var firstTwo = properties.GetFirstTwoPropertyValues();
-                    //currentNode._firstChildValues = firstTwo.Item1;
-                    //currentNode._secondChildValues = firstTwo.Item2;
-                    //continue;
+                    continue;
                 }
 
                 foreach (var property in properties)

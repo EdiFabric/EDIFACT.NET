@@ -21,6 +21,8 @@ namespace EdiFabric.Framework.Parsing
 
                 foreach (var propertyInfo in currentNode.GetProperties())
                 {
+                    var c = propertyInfo.Name;
+
                     var childNode = propertyInfo.ToParseNode();
                     currentNode.AddChild(childNode);
 

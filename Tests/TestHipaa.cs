@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Validation;
+using EdiFabric.Rules.HIPAA_004010X098A1_837;
 using EdiFabric.Rules.X12004010X098A1837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,7 +28,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<TS837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -37,7 +38,7 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401.txt";
-            var interchange = TestHelper.GenerateX12<M_837>(sample);
+            var interchange = TestHelper.GenerateX12<TS837>(sample);
 
             // ACT
             var ediSegments = interchange.GenerateEdi();
@@ -61,7 +62,7 @@ namespace EdiFabric.Tests
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
+            var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.HIPAA_005010X222A1_837.TS837>().Single());
             Assert.IsNotNull(parsedXml.Root);
             Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
         }
@@ -71,7 +72,7 @@ namespace EdiFabric.Tests
         {
             // ARRANGE
             const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
-            var interchange = TestHelper.GenerateX12<Rules.X12005010X222A1837.M_837>(sample);
+            var interchange = TestHelper.GenerateX12<Rules.HIPAA_005010X222A1_837.TS837>(sample);
 
             // ACT
             var ediSegments = interchange.GenerateEdi();
