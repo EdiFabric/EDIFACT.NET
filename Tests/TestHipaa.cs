@@ -1,151 +1,86 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using EdiFabric.Framework.Controls;
+using System.Reflection;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Controls.X12;
-using EdiFabric.Framework.Validation;
+using EdiFabric.Framework.Readers;
+using EdiFabric.Rules.HIPAA_005010X222A1_837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
 {
-    //[TestClass]
-    //public class TestHipaa
-    //{
-    //    [TestMethod]
-    //    public void TestParse4010()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00401.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+    [TestClass]
+    public class TestHipaa
+    {
+        [TestMethod]
+        public void Test4010()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
 
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<Rules.HIPAA_004010X098A1_837.TS837>(ediItems, null, Environment.NewLine);
 
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<TS837>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
 
-    //    [TestMethod]
-    //    public void TestGenerate4010()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401.txt";
-    //        var interchange = TestHelper.GenerateX12<TS837>(sample);
+        [TestMethod]
+        public void Test5010()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
 
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
 
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
 
-    //    [TestMethod]
-    //    public void TestParse5010()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+        [TestMethod]
+        public void Test5010Hl()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
 
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
 
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.HIPAA_005010X222A1_837.TS837>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerate5010()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
-    //        var interchange = TestHelper.GenerateX12<Rules.HIPAA_005010X222A1_837.TS837>(sample);
-
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParse5010Hl()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_HL.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerate5010Hl()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
-    //        var interchange = TestHelper.GenerateX12<Rules.X12005010X222A1837.M_837>(sample);
-
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParse5010NoEnum()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_NoEnum.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_NoEnum.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerate5010NoEnum()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_NoEnum.txt";
-    //        var interchange = TestHelper.GenerateX12<Rules.X12005010X222A1837.M_837>(sample);
-
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
 
     //    [TestMethod]
     //    public void TestValidationRules()
@@ -166,24 +101,40 @@ namespace EdiFabric.Tests
     //        Assert.AreEqual(root.ToString(), expectedXml.ToString());
     //    }
 
-    //    [TestMethod]
-    //    public void TestParse5010Lfnm1Lisa()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_LF.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.Hipaa_837P_00501_LF.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+        [TestMethod]
+        public void Test5010Lfnm1Lisa()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_LF.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
 
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<TS837>(ediItems, separators, "");
 
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.X12005010X222A1837.M_837>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-    //}
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        private Assembly HipaaFactory(MessageContext mc)
+        {
+            if (mc.Version == "005010X222A1")
+                return Assembly.Load("EdiFabric.Rules.Hipaa005010");
+            if (mc.Version == "004010X098A1")
+                return Assembly.Load("EdiFabric.Rules.Hipaa004010");
+
+            throw new Exception("Not supported!");
+        }
+    }
 }

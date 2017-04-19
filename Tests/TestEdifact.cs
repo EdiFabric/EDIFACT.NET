@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
-using EdiFabric.Framework.Validation;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

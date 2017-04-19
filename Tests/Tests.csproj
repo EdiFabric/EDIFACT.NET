@@ -87,6 +87,14 @@
       <Project>{17947e82-982a-4828-8e8b-e36ce8e86636}</Project>
       <Name>Rules.EdifactD00A</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rules.Hipaa004010\Rules.Hipaa004010.csproj">
+      <Project>{4f7c7b1c-8580-461a-b143-306460dee135}</Project>
+      <Name>Rules.Hipaa004010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rules.Hipaa005010\Rules.Hipaa005010.csproj">
+      <Project>{466adc2c-1b13-47d6-b31c-f4420489f604}</Project>
+      <Name>Rules.Hipaa005010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rules.X12002040.Rep\Rules.X12002040.Rep.csproj">
       <Project>{8ccc6ec4-a522-463f-bb5d-1c7c07a87460}</Project>
       <Name>Rules.X12002040.Rep</Name>

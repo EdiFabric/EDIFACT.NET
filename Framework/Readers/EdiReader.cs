@@ -77,9 +77,8 @@ namespace EdiFabric.Framework.Readers
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
-            if (encoding == null) throw new ArgumentNullException("encoding");
-
-            StreamReader = new StreamReader(ediStream, encoding, true);
+            
+            StreamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
             CurrentMessage = new List<SegmentContext>();
             Buffer = new Queue<char>();
             RulesAssembly = rulesAssembly;
