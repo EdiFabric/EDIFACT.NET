@@ -44,28 +44,16 @@ namespace EdiFabric.Framework.Readers
             "KECA"
         };
 
-        private EdifactReader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix, Encoding encoding)
-            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
-        {
-        }
-
-        private EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
-            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
-            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
-        {
-        }
-
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="EdifactReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public static EdifactReader Create(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix = null, Encoding encoding = null)
+        public EdifactReader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            return new EdifactReader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
 
         /// <summary>
@@ -73,15 +61,13 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public static EdifactReader Create(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
-            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+        public EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            return new EdifactReader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
-
+        
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";

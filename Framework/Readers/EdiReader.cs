@@ -29,9 +29,11 @@ namespace EdiFabric.Framework.Readers
         internal Queue<char> Buffer { get; private set; } 
         internal List<SegmentContext> CurrentMessage { get; private set; }
         internal StreamReader StreamReader { get; private set; }
-        internal Separators Separators { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Separators Separators { get; private set; }
         internal Func<MessageContext, Assembly> RulesAssembly { get; private set; }
-        internal Func<MessageContext, string> RulesNamespacePrefix { get; private set; }
         internal char[] Trims
         {
             get
@@ -58,13 +60,10 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        protected EdiReader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix,
-            Encoding encoding)
+        protected EdiReader(Stream ediStream, string rulesAssembly, Encoding encoding)
             : this(
-                ediStream, mc => Assembly.Load(rulesAssembly), key => rulesNamespacePrefix ?? "EdiFabric.Rules",
-                encoding ?? Encoding.Default)
+                ediStream, mc => Assembly.Load(rulesAssembly), encoding ?? Encoding.Default)
         {
         }
 
@@ -73,21 +72,17 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
-            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
-            if (rulesNamespacePrefix == null) throw new ArgumentNullException("rulesNamespacePrefix");
             if (encoding == null) throw new ArgumentNullException("encoding");
 
             StreamReader = new StreamReader(ediStream, encoding, true);
             CurrentMessage = new List<SegmentContext>();
             Buffer = new Queue<char>();
             RulesAssembly = rulesAssembly;
-            RulesNamespacePrefix = rulesNamespacePrefix;
         }
 
         /// <summary>

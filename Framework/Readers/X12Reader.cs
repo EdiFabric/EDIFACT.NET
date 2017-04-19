@@ -27,28 +27,16 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class X12Reader : EdiReader
     {
-        private X12Reader(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix, Encoding encoding)
-            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
-        {
-        }
-
-        private X12Reader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
-            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
-            : base(ediStream, rulesAssembly, rulesNamespacePrefix, encoding)
-        {
-        }
-
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="X12Reader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
-        public static X12Reader Create(Stream ediStream, string rulesAssembly, string rulesNamespacePrefix = null, Encoding encoding = null)
+        public X12Reader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            return new X12Reader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
 
         /// <summary>
@@ -56,13 +44,12 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="rulesNamespacePrefix">The delegate to return the namespace prefix for the EDI classes. The default is EdiFabric.Rules.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
-        public static X12Reader Create(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly,
-            Func<MessageContext, string> rulesNamespacePrefix, Encoding encoding)
+        
+        public X12Reader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            return new X12Reader(ediStream, rulesAssembly, rulesNamespacePrefix, encoding);
         }
 
         internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Controls.X12;
@@ -15,14 +16,23 @@ namespace EdiFabric.Tests
 {
     internal class TestHelper
     {
-        public static Stream Load(string qualifiedFileName)
+        public static Stream LoadStream(string qualifiedFileName)
         {
             return Assembly.GetExecutingAssembly().GetManifestResourceStream(qualifiedFileName);
         }
 
+        public static string LoadString(string qualifiedFileName, Encoding encoding = null)
+        {
+            var stream = LoadStream(qualifiedFileName);
+            using (var reader = new StreamReader(stream, encoding ?? Encoding.Default))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
         public static string AsString(string qualifiedFileName, bool withLfCr = true)
         {
-            using (var reader = new StreamReader(Load(qualifiedFileName), Encoding.Default))
+            using (var reader = new StreamReader(LoadStream(qualifiedFileName), Encoding.Default))
             {
                 if (withLfCr)
                     return reader.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n");
@@ -60,59 +70,49 @@ namespace EdiFabric.Tests
 
         public static T Deserialize<T>(Stream stream)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-
+            var serializer = new XmlSerializer(typeof(T));
             using (var reader = new StreamReader(stream))
             {
                 return (T) serializer.Deserialize(reader);
             }
         }
 
-        public static IEnumerable<object> ParseX12(string sample, Encoding encoding = null,
-            string rulesAssembly = null, string rulesNameSpacePrefix = null)
+        public static string GenerateEdifact<T>(List<object> items, Separators separators, string postFix)
         {
-            using (
-                var ediReader = X12Reader.Create(Load(sample),rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
-                        encoding ?? Encoding.Default))
-            {
-                return ediReader.ReadToEnd().ToList();
-            }
-        }
-
-        public static IEnumerable<object> ParseEdifact(string sample, Encoding encoding = null,
-            string rulesAssembly = null, string rulesNameSpacePrefix = null)
-        {
-            using (
-                var ediReader = EdifactReader.Create(Load(sample),rulesAssembly ?? "EdiFabric.Rules", rulesNameSpacePrefix ?? "EdiFabric.Rules",
-                        encoding ?? Encoding.Default))
-            {
-                return ediReader.ReadToEnd().ToList();
-            }
-        }
-
-        public static EdifactInterchange GenerateEdifact<T>(string sample)
-        {
-            var items = ParseEdifact(sample).ToList();
-
-            var ung = items.OfType<UNG>().SingleOrDefault();
-            var group = new EdifactGroup<T>(ung);
-            group.AddItem(items.OfType<T>().Single());
             var interchange = new EdifactInterchange(items.OfType<UNB>().Single());
-            interchange.AddItem(group);
+            EdifactGroup<T> currentGroup = null;
+            foreach (var item in items)
+            {
+                if (item is UNG)
+                {
+                    currentGroup = new EdifactGroup<T>(item as UNG);
+                    interchange.AddItem(currentGroup);
+                    continue;
+                }
 
-            return interchange;
+                if (item is UNB) continue;
+                if (item is UNE) continue;
+                if (item is UNZ) continue;
+
+                if (currentGroup == null)
+                {
+                    currentGroup = new EdifactGroup<T>(null);
+                    interchange.AddItem(currentGroup);
+                }
+                currentGroup.AddItem((T) item);
+            }
+
+            return AsString(interchange.GenerateEdi(separators), postFix);
         }
 
-        public static X12Interchange GenerateX12<T>(string sample, string rulesNameSpacePrefix = null)
+        public static string GenerateX12<T>(List<object> items, Separators separators, string postFix)
         {
-            var items = ParseX12(sample, null, null, rulesNameSpacePrefix).ToList();
-
             var group = new X12Group<T>(items.OfType<GS>().Single());
             group.AddItem(items.OfType<T>().Single());
             var interchange = new X12Interchange(items.OfType<ISA>().Single());
             interchange.AddItem(group);
 
-            return interchange;
+            return AsString(interchange.GenerateEdi(separators), postFix);
         }
     }
 }
