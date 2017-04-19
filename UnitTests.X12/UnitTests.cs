@@ -8,18 +8,18 @@ using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EdiFabric.Tests
+namespace EdiFabric.UnitTests.X12
 {
     [TestClass]
-    public class TestX12
+    public class UnitTests
     {
         [TestMethod]
         public void TestSingleMessage()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -27,7 +27,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -44,7 +44,7 @@ namespace EdiFabric.Tests
     //    public void TestParseX12WithValidationFailure()
     //    {
     //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
+    //        const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
 
     //        // ACT
     //        var message = TestHelper.ParseX12(sample).OfType<M_810>().Single();
@@ -60,7 +60,7 @@ namespace EdiFabric.Tests
     //    public void TestParseX12WithValidation()
     //    {
     //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_Valid.txt";
+    //        const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_Valid.txt";
 
     //        // ACT
     //        var message = TestHelper.ParseX12(sample).OfType<M_810>().Single();
@@ -77,9 +77,9 @@ namespace EdiFabric.Tests
         public void TestRepetitionSeparator()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_RepetitionSeparator.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -89,7 +89,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -106,9 +106,9 @@ namespace EdiFabric.Tests
         public void TestDuplicateSeparator()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_RepetitionSeparator.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -118,7 +118,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -128,9 +128,9 @@ namespace EdiFabric.Tests
         public void TestSegmentSeparatorLf()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_SegmentSeparatorLF.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_SegmentSeparatorLF.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -140,7 +140,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, "");
+            var actual = Helper.GenerateX12<TS810>(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -157,9 +157,9 @@ namespace EdiFabric.Tests
         public void TestPostfixLf()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_LF.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_LF.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -169,7 +169,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, "\n");
+            var actual = Helper.GenerateX12<TS810>(ediItems, separators, "\n");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -186,8 +186,8 @@ namespace EdiFabric.Tests
         public void TestError()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BadSegment.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BadSegment.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -208,9 +208,9 @@ namespace EdiFabric.Tests
         public void TestMultipleGroups()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleGroups.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -218,7 +218,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -234,9 +234,9 @@ namespace EdiFabric.Tests
         public void TestMultipleMessages()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleMessages.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleMessages.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -244,7 +244,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -260,9 +260,9 @@ namespace EdiFabric.Tests
         public void TestBom()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BOM.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BOM.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -270,7 +270,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -280,10 +280,10 @@ namespace EdiFabric.Tests
         public void TestTrailingBlanks()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TrailingBlanks.txt";
-            const string cleanSample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(cleanSample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_TrailingBlanks.txt";
+            const string cleanSample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(cleanSample);
             List<object> ediItems;
 
             // ACT
@@ -291,7 +291,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -308,9 +308,9 @@ namespace EdiFabric.Tests
         public void TestMultipleInterchange()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -321,14 +321,14 @@ namespace EdiFabric.Tests
                 {
                     if (ediReader.Item is ISA && ediItems.Any())
                     {
-                        actual = actual + TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+                        actual = actual + Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
                         ediItems.Clear();
                     }
 
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + TestHelper.GenerateX12<TS810>(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + Helper.GenerateX12<TS810>(ediItems, ediReader.Separators, Environment.NewLine);
             }
 
             // ASSERT
@@ -339,8 +339,8 @@ namespace EdiFabric.Tests
         public void TestInvalidTrailers()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidTrailers.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidTrailers.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -362,8 +362,8 @@ namespace EdiFabric.Tests
         public void TestInvalidHeader()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidHeader.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidHeader.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -380,8 +380,8 @@ namespace EdiFabric.Tests
         public void TestInvalidSegment()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidSegment.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidSegment.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -402,8 +402,8 @@ namespace EdiFabric.Tests
         public void TestGroupRead()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleGroups.txt";
+            var ediStream = Helper.LoadStream(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -428,8 +428,8 @@ namespace EdiFabric.Tests
         public void TestInterchangeRead()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediStream = Helper.LoadStream(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -456,8 +456,8 @@ namespace EdiFabric.Tests
         public void TestMissingGroupTrailer()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingGroupTrailer.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MissingGroupTrailer.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -479,8 +479,8 @@ namespace EdiFabric.Tests
         public void TestMissingInterchangeTrailer()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -502,8 +502,8 @@ namespace EdiFabric.Tests
         public void TestValidAndInvalidMessageRead()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -525,8 +525,8 @@ namespace EdiFabric.Tests
         public void TestVersionFromSt()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_VersionFromSt.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_VersionFromSt.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -548,9 +548,9 @@ namespace EdiFabric.Tests
         public void TestNoRepetition()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_NoRepetition.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_NoRepetition.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -558,7 +558,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -575,10 +575,10 @@ namespace EdiFabric.Tests
         public void TestBlankRepetition()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetition.txt";
-            const string cleanSample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetitionClean.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(cleanSample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BlankRepetition.txt";
+            const string cleanSample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BlankRepetitionClean.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(cleanSample);
             List<object> ediItems;
             Separators separators;
 
@@ -588,7 +588,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
 
 
             // ASSERT
@@ -606,8 +606,8 @@ namespace EdiFabric.Tests
         public void TestMultipleInvalidInterchanges()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -629,8 +629,8 @@ namespace EdiFabric.Tests
         public void TestMultipleInvalidIMessages()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidMessages.txt";
-            var ediStream = TestHelper.LoadStream(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidMessages.txt";
+            var ediStream = Helper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -672,9 +672,9 @@ namespace EdiFabric.Tests
         public void TestTa1()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TA1.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_TA1.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -684,7 +684,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);

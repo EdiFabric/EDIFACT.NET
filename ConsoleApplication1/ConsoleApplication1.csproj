@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2B71580C-F607-43DA-904A-527A21397477}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{7BC6A254-A2FA-42D2-A5D4-535339DC3F86}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EdiFabric.Rules</RootNamespace>
-    <AssemblyName>EdiFabric.Rules</AssemblyName>
+    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <AssemblyName>ConsoleApplication1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,9 +31,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,18 +41,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF_HIPAA_004010X098A1_837.cs" />
-    <Compile Include="EF_HIPAA_005010X222A1_837.cs" />
-    <Compile Include="EF_X12_002040_810_Repetition.cs" />
-    <Compile Include="EF_X12_004010X098A1_837.cs" />
-    <Compile Include="EF_X12_005010X222A1_837.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Attributes\Attributes.csproj">
-      <Project>{205bc14b-dc58-42bb-855d-b02faedfcd5a}</Project>
-      <Name>Attributes</Name>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{d39915c6-da36-406f-828e-4c8c2e299324}</Project>
+      <Name>Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rules\Rules.csproj">
+      <Project>{2b71580c-f607-43da-904a-527a21397477}</Project>
+      <Name>Rules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xsd\Xsd.csproj">
+      <Project>{f6d8a3d6-d721-4f49-b12b-7fbb70e40f2e}</Project>
+      <Name>Xsd</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Hipaa_837P_00501_HL.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

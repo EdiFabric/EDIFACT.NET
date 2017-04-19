@@ -4,10 +4,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using EdiFabric.Framework.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EdiFabric.Tests
+namespace EdiFabric.UnitTests
 {
     [TestClass]
-    public class TestExceptionSerialization
+    public class UnitTestsExceptionSerialization
     {
         [TestMethod]
         public void TestSerializationOfDataElementErrorContext()

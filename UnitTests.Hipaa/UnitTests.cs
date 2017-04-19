@@ -8,18 +8,18 @@ using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.HIPAA_005010X222A1_837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EdiFabric.Tests
+namespace EdiFabric.UnitTests.Hipaa
 {
     [TestClass]
-    public class TestHipaa
+    public class UnitTests
     {
         [TestMethod]
         public void Test4010()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00401.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00401.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -27,7 +27,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<Rules.HIPAA_004010X098A1_837.TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<Rules.HIPAA_004010X098A1_837.TS837>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -40,9 +40,9 @@ namespace EdiFabric.Tests
         public void Test5010()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -50,7 +50,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -63,9 +63,9 @@ namespace EdiFabric.Tests
         public void Test5010Hl()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_HL.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_HL.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -73,7 +73,7 @@ namespace EdiFabric.Tests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = TestHelper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -105,9 +105,9 @@ namespace EdiFabric.Tests
         public void Test5010Lfnm1Lisa()
         {
             // ARRANGE
-            const string sample = "EdiFabric.Tests.Edi.Hipaa_837P_00501_LF.txt";
-            var ediStream = TestHelper.LoadStream(sample);
-            var expected = TestHelper.LoadString(sample);
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_LF.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -117,7 +117,7 @@ namespace EdiFabric.Tests
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = TestHelper.GenerateX12<TS837>(ediItems, separators, "");
+            var actual = Helper.GenerateX12<TS837>(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);

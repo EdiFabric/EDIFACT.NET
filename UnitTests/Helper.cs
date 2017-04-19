@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls;
 using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Controls.X12;
-using EdiFabric.Framework.Readers;
 
-namespace EdiFabric.Tests
+namespace EdiFabric.UnitTests
 {
-    internal class TestHelper
+    public class Helper
     {
         public static Stream LoadStream(string qualifiedFileName)
         {
-            return Assembly.GetExecutingAssembly().GetManifestResourceStream(qualifiedFileName);
+            var parts = qualifiedFileName.Split('.');
+            var assemblyName = parts[0] + "." + parts[1] + "." + parts[2];
+            return Assembly.Load(assemblyName).GetManifestResourceStream(qualifiedFileName);
         }
 
         public static string LoadString(string qualifiedFileName, Encoding encoding = null)
@@ -27,53 +24,6 @@ namespace EdiFabric.Tests
             using (var reader = new StreamReader(stream, encoding ?? Encoding.Default))
             {
                 return reader.ReadToEnd();
-            }
-        }
-
-        public static string AsString(string qualifiedFileName, bool withLfCr = true)
-        {
-            using (var reader = new StreamReader(LoadStream(qualifiedFileName), Encoding.Default))
-            {
-                if (withLfCr)
-                    return reader.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n");
-
-                return reader.ReadToEnd();
-            }
-        }
-
-        public static string AsString(IEnumerable<string> list, string postFix)
-        {
-            return list.Aggregate("", (current, item) => current + item + postFix);
-        }
-
-        public static XDocument Serialize(object instance)
-        {
-            if (instance == null)
-                throw new ArgumentNullException("instance");
-
-            var type = instance.GetType();
-
-            var nameSpace = type.Namespace;
-            if (type.FullName.Contains("X12"))
-                nameSpace = "www.edifabric.com/x12";
-            if (type.FullName.Contains("Edifact"))
-                nameSpace = "www.edifabric.com/edifact";
-
-            var serializer = new XmlSerializer(type, nameSpace);
-            using (var ms = new MemoryStream())
-            {
-                serializer.Serialize(ms, instance);
-                ms.Position = 0;
-                return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
-            }
-        }
-
-        public static T Deserialize<T>(Stream stream)
-        {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var reader = new StreamReader(stream))
-            {
-                return (T) serializer.Deserialize(reader);
             }
         }
 
@@ -102,7 +52,7 @@ namespace EdiFabric.Tests
                 currentGroup.AddItem((T) item);
             }
 
-            return AsString(interchange.GenerateEdi(separators), postFix);
+            return interchange.GenerateEdi(separators).Aggregate("", (current, item) => current + item + postFix);
         }
 
         public static string GenerateX12<T>(List<object> items, Separators separators, string postFix)
@@ -133,7 +83,7 @@ namespace EdiFabric.Tests
                segments.Insert(1, Ta1ToString(ta1, separators)); 
             }
 
-            return AsString(segments, postFix);
+            return segments.Aggregate("", (current, item) => current + item + postFix);
         }
 
         private static string Ta1ToString(TA1 ta1, Separators separators)
