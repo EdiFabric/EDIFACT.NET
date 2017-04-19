@@ -107,12 +107,56 @@ namespace EdiFabric.Tests
 
         public static string GenerateX12<T>(List<object> items, Separators separators, string postFix)
         {
-            var group = new X12Group<T>(items.OfType<GS>().Single());
-            group.AddItem(items.OfType<T>().Single());
             var interchange = new X12Interchange(items.OfType<ISA>().Single());
-            interchange.AddItem(group);
+            X12Group<T> currentGroup = null;
+            foreach (var item in items)
+            {
+                if (item is GS)
+                {
+                    currentGroup = new X12Group<T>(item as GS);
+                    interchange.AddItem(currentGroup);
+                    continue;
+                }
 
-            return AsString(interchange.GenerateEdi(separators), postFix);
+                if (item is ISA) continue;
+                if (item is IEA) continue;
+                if (item is GE) continue;
+
+                if (currentGroup != null)
+                    currentGroup.AddItem((T)item);
+            }
+
+            var segments = interchange.GenerateEdi(separators).ToList();
+            var ta1 = items.OfType<TA1>().SingleOrDefault();
+            if (ta1 != null)
+            {
+               segments.Insert(1, Ta1ToString(ta1, separators)); 
+            }
+
+            return AsString(segments, postFix);
         }
-    }
+
+        private static string Ta1ToString(TA1 ta1, Separators separators)
+        {
+            var result = "TA1" + separators.DataElement + ta1.InterchangeControlNumber_1;
+            if (!string.IsNullOrEmpty(ta1.InterchangeDate_2))
+            {
+                result = result + separators.DataElement + ta1.InterchangeDate_2;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeTime_3))
+            {
+                result = result + separators.DataElement + ta1.InterchangeTime_3;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeAcknowledgmentCode_4))
+            {
+                result = result + separators.DataElement + ta1.InterchangeAcknowledgmentCode_4;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeNoteCode_5))
+            {
+                result = result + separators.DataElement + ta1.InterchangeNoteCode_5;
+            }
+
+            return result + separators.Segment;
+        }
+    } 
 }

@@ -8,52 +8,40 @@ using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Validation;
-using EdiFabric.Rules.X12002040810;
 using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.Tests
 {
-    //[TestClass]
-    //public class TestX12
-    //{
-    //    [TestMethod]
-    //    public void TestParseX12()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+    [TestClass]
+    public class TestX12
+    {
+        [TestMethod]
+        public void TestSingleMessage()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
 
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
 
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerate()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-    //        var interchange = TestHelper.GenerateX12<TS810>(sample);
-
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
 
     //    [TestMethod]
     //    public void TestParseX12WithValidationFailure()
@@ -88,631 +76,583 @@ namespace EdiFabric.Tests
     //        Assert.IsFalse(validationResults.ErrorContext.Codes.Any());
     //    }
 
-    //    [TestMethod]
-    //    public void TestParseX12WithRepetitionSeparator()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_RepetitionSeparator.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample, null, null, "EdiFabric.Rules.Rep").ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<Rules.Rep.X12002040810.M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<Rules.Rep.X12002040810.M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerateWithRepetitionSeparator()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
-    //        var interchange = TestHelper.GenerateX12<Rules.Rep.X12002040810.M_810>(sample, "EdiFabric.Rules.Rep");
-
-    //        // ACT
-    //        var defaultSeparators = Separators.DefaultX12();
-    //        var newSeparators = new Separators(defaultSeparators.Segment,
-    //            '>', defaultSeparators.DataElement, '!', null);
-    //        var ediSegments = interchange.GenerateEdi(newSeparators);
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerateWithDuplicateSeparator()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
-    //        var interchange = TestHelper.GenerateX12<Rules.Rep.X12002040810.M_810>(sample, "EdiFabric.Rules.Rep");
-
-    //        // ACT
-    //        var defaultSeparators = Separators.DefaultX12();
-    //        var newSeparators = new Separators(defaultSeparators.Segment,
-    //            '>', defaultSeparators.DataElement, '>', null);
-    //        var ediSegments = interchange.GenerateEdi(newSeparators);
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithSegmentSeparatorLf()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_SegmentSeparatorLF.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithLf()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_LF.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerateWithSegmentSeparatorLf()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_SegmentSeparatorLF.txt";
-    //        var interchange = TestHelper.GenerateX12<M_810>(sample);
-
-    //        // ACT
-    //        var defaultSeparators = Separators.DefaultX12();
-    //        var newSeparators = new Separators('\n',
-    //            '>', defaultSeparators.DataElement, defaultSeparators.RepetitionDataElement, null);
-    //        var ediSegments = interchange.GenerateEdi(newSeparators);
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample, false), TestHelper.AsString(ediSegments, null));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithError()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BadSegment.txt";
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMultipleGroups()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
-    //        Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
-    //        Assert.IsTrue(ediItems.OfType<GS>().Count() == 2);
-    //        Assert.IsTrue(ediItems.OfType<GE>().Count() == 2);
-    //        Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        foreach (var item in ediItems)
-    //        {
-    //            var message = item as M_810;
-    //            if (message == null) continue;
-    //            var parsedXml = TestHelper.Serialize(message);
-    //            Assert.IsNotNull(parsedXml.Root);
-    //            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMultipleMessages()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleMessages.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsTrue(ediItems.OfType<M_810>().Count() == 2);
-    //        Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
-    //        Assert.IsTrue(ediItems.OfType<GS>().Count() == 1);
-    //        Assert.IsTrue(ediItems.OfType<GE>().Count() == 1);
-    //        Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        foreach (var item in ediItems)
-    //        {
-    //            var message = item as M_810;
-    //            if (message == null) continue;
-    //            var parsedXml = TestHelper.Serialize(message);
-    //            Assert.IsNotNull(parsedXml.Root);
-    //            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestGenerateWithBom()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BOM.txt";
-    //        var interchange = TestHelper.GenerateX12<M_810>(sample);
-
-    //        // ACT
-    //        var ediSegments = interchange.GenerateEdi();
-
-    //        // ASSERT
-    //        Assert.AreEqual(TestHelper.AsString(sample), TestHelper.AsString(ediSegments, Environment.NewLine));
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithHeaders()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-    //        const string expectedGroup = "EdiFabric.Tests.Xml.X12_Group.xml";
-    //        var expectedXmlGroup = XElement.Load(TestHelper.LoadStream(expectedGroup));
-    //        const string expectedInterchange = "EdiFabric.Tests.Xml.X12_Interchange.xml";
-    //        var expectedXmlInterchange = XElement.Load(TestHelper.LoadStream(expectedInterchange),
-    //            LoadOptions.PreserveWhitespace);
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXmlInterchange = TestHelper.Serialize(ediItems.OfType<ISA>().First());
-    //        Assert.IsNotNull(parsedXmlInterchange.Root);
-    //        Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-    //        var parsedXmlGroup = TestHelper.Serialize(ediItems.OfType<GS>().First());
-    //        Assert.IsNotNull(parsedXmlGroup.Root);
-    //        Assert.AreEqual(parsedXmlGroup.Root.ToString(), expectedXmlGroup.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithTrailingBlanks()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TrailingBlanks.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMultipleInterchange()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-    //        const string expectedInterchange = "EdiFabric.Tests.Xml.X12_Interchange.xml";
-    //        var expectedXmlInterchange = XElement.Load(TestHelper.LoadStream(expectedInterchange),
-    //            LoadOptions.PreserveWhitespace);
-    //        const string expectedInterchange2 = "EdiFabric.Tests.Xml.X12_Interchange2.xml";
-    //        var expectedXmlInterchange2 = XElement.Load(TestHelper.LoadStream(expectedInterchange2),
-    //            LoadOptions.PreserveWhitespace);
-
-    //        // ACT
-    //        var items = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsTrue(items.Count == 10);
-    //        Assert.IsTrue(items.OfType<M_810>().Count() == 2);
-    //        Assert.IsTrue(items.OfType<ISA>().Count() == 2);
-    //        Assert.IsTrue(items.OfType<GS>().Count() == 2);
-    //        Assert.IsTrue(items.OfType<GE>().Count() == 2);
-    //        Assert.IsTrue(items.OfType<IEA>().Count() == 2);
-    //        Assert.IsNull(items.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXmlInterchange = TestHelper.Serialize(items.OfType<ISA>().First());
-    //        Assert.IsNotNull(parsedXmlInterchange.Root);
-    //        Assert.AreEqual(parsedXmlInterchange.Root.ToString(), expectedXmlInterchange.ToString());
-    //        var parsedXmlInterchange2 = TestHelper.Serialize(items.OfType<ISA>().Last());
-    //        Assert.IsNotNull(parsedXmlInterchange2.Root);
-    //        Assert.AreEqual(parsedXmlInterchange2.Root.ToString(), expectedXmlInterchange2.ToString());
-    //        foreach (var item in items.OfType<M_810>())
-    //        {
-    //            Assert.IsNotNull(item);
-    //            Assert.IsNotNull(item);
-    //            var parsedXml = TestHelper.Serialize(item);
-    //            Assert.IsNotNull(parsedXml.Root);
-    //            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithInvalidTrailers()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidTrailers.txt";
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithInvalidHeader()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidHeader.txt";
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithInvalidSegment()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidSegment.txt";
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithRulesAssemblyName()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample, null, "EdiFabric.Rules").ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithGroupRead()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
-    //        var ediItems = new List<object>();
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            while (ediReader.Read())
-    //            {
-    //                ediItems.Add(ediReader.Item);
-    //                if (!(ediReader.Item is GE)) continue;
-
-    //                // ASSERT
-    //                Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //                Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //                ediItems.Clear();
-    //            }
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithInterchangeRead()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
-    //        var ediItems = new List<object>();
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            while (ediReader.Read())
-    //            {
-    //                ediItems.Add(ediReader.Item);
-    //                if (!(ediReader.Item is IEA)) continue;
-
-    //                // ASSERT
-    //                Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //                Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //                Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //                ediItems.Clear();
-    //            }
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMissingGroupTrailer()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingGroupTrailer.txt";
-    //        var ediItems = new List<object>();
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            while (ediReader.Read())
-    //            {
-    //                ediItems.Add(ediReader.Item);
-    //            }
-    //        }
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMissingInterchangeTrailer()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
-    //        var ediItems = new List<object>();
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            while (ediReader.Read())
-    //            {
-    //                ediItems.Add(ediReader.Item);
-    //            }
-    //        }
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithValidAndInvalidMessageRead()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            var ediItems = ediReader.ReadToEnd().ToList();
-
-    //            // ASSERT
-    //            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithVersionFromSt()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_VersionFromSt.txt";
-
-    //        // ACT
-    //        using (var ediReader = X12Reader.Create(TestHelper.LoadStream(sample), "EdiFabric.Rules"))
-    //        {
-    //            var ediItems = ediReader.ReadToEnd().ToList();
-
-    //            // ASSERT
-    //            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithNoRepetition()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_NoRepetition.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_NoRepetition.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithBlankRepetition()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetition.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMultipleInvalidInterchanges()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var items = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsTrue(items.OfType<M_810>().Count() == 3);
-    //        Assert.IsTrue(items.OfType<ISA>().Count() == 2);
-    //        Assert.IsTrue(items.OfType<GS>().Count() == 3);
-    //        Assert.IsTrue(items.OfType<GE>().Count() == 3);
-    //        Assert.IsTrue(items.OfType<IEA>().Count() == 2);
-    //        Assert.IsNotNull(items.OfType<ParsingException>().SingleOrDefault());
-
-    //        foreach (var msg in items.OfType<M_810>())
-    //        {
-    //            var parsedXml = TestHelper.Serialize(msg);
-    //            Assert.IsNotNull(parsedXml.Root);
-    //            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //        }
-    //    }
-
-    //    [TestMethod]
-    //    public void TestParseX12WithMultipleInvalidIMessages()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidMessages.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204_Probe.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
-
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
-
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsTrue(ediItems.OfType<M_810>().Count() == 3);
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
-
-    //        foreach (var msg in ediItems.OfType<M_810>().Skip(1))
-    //        {
-    //            var parsedXml = TestHelper.Serialize(msg);
-    //            Assert.IsNotNull(parsedXml.Root);
-    //            Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //        }
-    //    }
-
-    //    [TestMethod]
+        [TestMethod]
+        public void TestRepetitionSeparator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<Rules.X12_002040.Rep.TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestDuplicateSeparator()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_RepetitionSeparator.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSegmentSeparatorLf()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_SegmentSeparatorLF.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, "");
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestPostfixLf()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_LF.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, "\n");
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestError()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BadSegment.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestMultipleGroups()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestMultipleMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleMessages.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestBom()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BOM.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestTrailingBlanks()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TrailingBlanks.txt";
+            const string cleanSample = "EdiFabric.Tests.Edi.X12_810_00204.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(cleanSample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestMultipleInterchange()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            var ediItems = new List<object>();
+
+            // ACT
+            var actual = "";
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                while (ediReader.Read())
+                {
+                    if (ediReader.Item is ISA && ediItems.Any())
+                    {
+                        actual = actual + TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+                        ediItems.Clear();
+                    }
+
+                    ediItems.Add(ediReader.Item);
+                }
+
+                actual = actual + TestHelper.GenerateX12<TS810>(ediItems, ediReader.Separators, Environment.NewLine);
+            }
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestInvalidTrailers()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidTrailers.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestInvalidHeader()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidHeader.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestInvalidSegment()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_InvalidSegment.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestGroupRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleGroups.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var ediItems = new List<object>();
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                    if (!(ediReader.Item is GE)) continue;
+
+                    // ASSERT
+                    Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+                    Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+                    ediItems.Clear();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestInterchangeRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInterchanges.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var ediItems = new List<object>();
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                while (ediReader.Read())
+                {
+                    ediItems.Add(ediReader.Item);
+                    if (!(ediReader.Item is IEA)) continue;
+
+                    // ASSERT
+                    Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+                    Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+                    Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+                    ediItems.Clear();
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMissingGroupTrailer()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingGroupTrailer.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestMissingInterchangeTrailer()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestValidAndInvalidMessageRead()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestVersionFromSt()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_VersionFromSt.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestNoRepetition()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_NoRepetition.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestBlankRepetition()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetition.txt";
+            const string cleanSample = "EdiFabric.Tests.Edi.X12_810_00204_BlankRepetitionClean.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(cleanSample);
+            List<object> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
+
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestMultipleInvalidInterchanges()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            
+            // ASSERT
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 3);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 3);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 3);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 2);
+            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestMultipleInvalidIMessages()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_MultipleInvalidMessages.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 3);
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
+        }
+
+        //    [TestMethod]
     //    public void TestValidationRules()
     //    {
     //        // ARRANGE
@@ -731,30 +671,35 @@ namespace EdiFabric.Tests
     //        Assert.AreEqual(root.ToString(), expectedXml.ToString());
     //    }
 
-    //    [TestMethod]
-    //    public void TestParseX12WithTa1()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TA1.txt";
-    //        const string expectedResult = "EdiFabric.Tests.Xml.X12_810_00204.xml";
-    //        var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+        [TestMethod]
+        public void TestTa1()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.Tests.Edi.X12_810_00204_TA1.txt";
+            var ediStream = TestHelper.LoadStream(sample);
+            var expected = TestHelper.LoadString(sample);
+            List<object> ediItems;
+            Separators separators;
 
-    //        // ACT
-    //        var ediItems = TestHelper.ParseX12(sample).ToList();
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = TestHelper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
 
-    //        // ASSERT
-    //        Assert.IsNotNull(ediItems);
-    //        Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<TA1>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<M_810>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-    //        Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-    //        Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-    //        var parsedXml = TestHelper.Serialize(ediItems.OfType<M_810>().Single());
-    //        Assert.IsNotNull(parsedXml.Root);
-    //        Assert.AreEqual(parsedXml.Root.ToString(), expectedXml.ToString());
-    //    }
-    //}
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TA1>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }
 

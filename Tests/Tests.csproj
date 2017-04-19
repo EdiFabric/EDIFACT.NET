@@ -83,9 +83,17 @@
       <Project>{d39915c6-da36-406f-828e-4c8c2e299324}</Project>
       <Name>Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rules\Rules.csproj">
-      <Project>{2b71580c-f607-43da-904a-527a21397477}</Project>
-      <Name>Rules</Name>
+    <ProjectReference Include="..\Rules.EdifactD00A\Rules.EdifactD00A.csproj">
+      <Project>{17947e82-982a-4828-8e8b-e36ce8e86636}</Project>
+      <Name>Rules.EdifactD00A</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rules.X12002040.Rep\Rules.X12002040.Rep.csproj">
+      <Project>{8ccc6ec4-a522-463f-bb5d-1c7c07a87460}</Project>
+      <Name>Rules.X12002040.Rep</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rules.X12002040\Rules.X12002040.csproj">
+      <Project>{1763d12e-5c4d-4270-bbaf-24fb4c289b25}</Project>
+      <Name>Rules.X12002040</Name>
     </ProjectReference>
     <ProjectReference Include="..\Xsd\Xsd.csproj">
       <Project>{f6d8a3d6-d721-4f49-b12b-7fbb70e40f2e}</Project>
@@ -389,6 +397,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_TA1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_BlankRepetitionClean.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,7 +9,6 @@ using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Validation;
-using EdiFabric.Rules.EdifactD00AINVOIC;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +27,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
             
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -54,7 +53,7 @@ namespace EdiFabric.Tests
         //    List<object> ediItems;
 
         //    // ACT
-        //    using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+        //    using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
         //    {
         //        ediItems = ediReader.ReadToEnd().ToList();
         //    }
@@ -96,7 +95,7 @@ namespace EdiFabric.Tests
             Separators separators;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
@@ -125,7 +124,7 @@ namespace EdiFabric.Tests
             Separators separators;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
@@ -153,7 +152,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
             
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules", Encoding.UTF8))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.UTF8))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -181,7 +180,7 @@ namespace EdiFabric.Tests
             Separators separators;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
@@ -201,7 +200,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -224,7 +223,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -251,7 +250,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -277,7 +276,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -303,7 +302,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -329,7 +328,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -356,7 +355,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -376,7 +375,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -403,7 +402,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -423,7 +422,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -450,7 +449,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -477,7 +476,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -498,7 +497,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -526,7 +525,7 @@ namespace EdiFabric.Tests
 
             // ACT
             var actual = "";
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 while (ediReader.Read())
                 {
@@ -555,7 +554,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -578,7 +577,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -596,7 +595,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -619,7 +618,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 while (ediReader.Read())
                 {
@@ -645,7 +644,7 @@ namespace EdiFabric.Tests
             var ediItems = new List<object>();
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 while (ediReader.Read())
                 {
@@ -673,7 +672,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -696,7 +695,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -719,7 +718,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -744,7 +743,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -770,7 +769,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -794,7 +793,7 @@ namespace EdiFabric.Tests
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
