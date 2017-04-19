@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace EdiFabric.Framework.Parsing
+namespace EdiFabric.Framework.Parsers
 {
     class ParseNode 
     {

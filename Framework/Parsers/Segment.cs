@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using EdiFabric.Attributes;
 
-namespace EdiFabric.Framework.Parsing
+namespace EdiFabric.Framework.Parsers
 {
     class Segment : ParseNode
     {
-        private List<string> _firstChildValues = new List<string>();
+        private readonly List<string> _firstChildValues = new List<string>();
         public IReadOnlyCollection<string> FirstChildValues
         {
             get { return _firstChildValues.AsReadOnly(); }
         }
 
-        private List<string> _secondChildValues = new List<string>();
+        private readonly List<string> _secondChildValues = new List<string>();
         public IReadOnlyCollection<string> SecondChildValues
         {
             get { return _secondChildValues.AsReadOnly(); }

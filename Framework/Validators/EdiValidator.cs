@@ -21,7 +21,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using EdiFabric.Framework.Exceptions;
 
-namespace EdiFabric.Framework.Validation
+namespace EdiFabric.Framework.Validators
 {
     /// <summary>
     /// Validates EDI objects.

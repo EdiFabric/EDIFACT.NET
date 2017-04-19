@@ -13,7 +13,7 @@ using System;
 using System.Linq;
 using EdiFabric.Framework.Readers;
 
-namespace EdiFabric.Framework.Parsing
+namespace EdiFabric.Framework.Parsers
 {
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the data.

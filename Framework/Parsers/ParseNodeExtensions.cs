@@ -14,7 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EdiFabric.Framework.Parsing
+namespace EdiFabric.Framework.Parsers
 {
     static class ParseNodeExtensions
     {
@@ -209,7 +209,7 @@ namespace EdiFabric.Framework.Parsing
 
                     var de = nodeChild as DataElement;
                     var child = de != null
-                        ? propertyInfo.GetPropertyValue(de.Value)
+                        ? de.Value
                         : Activator.CreateInstance(nodeChild.Type);
 
                     if (propertyInfo.PropertyType.IsGenericType)

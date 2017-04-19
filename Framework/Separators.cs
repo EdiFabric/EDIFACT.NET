@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Framework.Parsing;
+using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework
 {

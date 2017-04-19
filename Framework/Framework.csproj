@@ -85,14 +85,14 @@
     <Compile Include="Controls\X12\X12Group.cs" />
     <Compile Include="Controls\X12\X12Interchange.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="ParseNodes\AllLoop.cs" />
-    <Compile Include="ParseNodes\ComplexDataElement.cs" />
-    <Compile Include="ParseNodes\DataElement.cs" />
-    <Compile Include="ParseNodes\Loop.cs" />
-    <Compile Include="ParseNodes\ParseNode2.cs" />
-    <Compile Include="ParseNodes\Segment.cs" />
-    <Compile Include="ParseNodes\TransactionSet.cs" />
-    <Compile Include="Validation\EdiValidator.cs" />
+    <Compile Include="Parsers\AllLoop.cs" />
+    <Compile Include="Parsers\ComplexDataElement.cs" />
+    <Compile Include="Parsers\DataElement.cs" />
+    <Compile Include="Parsers\Loop.cs" />
+    <Compile Include="Parsers\ParseNode.cs" />
+    <Compile Include="Parsers\Segment.cs" />
+    <Compile Include="Parsers\TransactionSet.cs" />
+    <Compile Include="Validators\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">
       <SubType>Code</SubType>
@@ -108,19 +108,17 @@
     <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
-    <Compile Include="Parsing\SegmentId.cs" />
+    <Compile Include="Parsers\SegmentId.cs" />
     <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Parsing\Prefixes.cs" />
-    <Compile Include="Parsing\ParseNodeExtensions.cs" />
+    <Compile Include="Parsers\ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
-    <Compile Include="Parsing\SegmentContext.cs" />
-    <Compile Include="Parsing\ParseNode.cs" />
+    <Compile Include="Parsers\SegmentContext.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="Controls\Edifact\ControlSegments.cs" />
     <Compile Include="Controls\X12\ControlSegments.cs" />
-    <Compile Include="Parsing\PropertyInfoExtensions.cs" />
+    <Compile Include="Parsers\PropertyInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

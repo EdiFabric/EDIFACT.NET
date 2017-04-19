@@ -9,16 +9,28 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Parsing
+// ReSharper disable All
+namespace EdiFabric.Framework.Parsers
 {
-    //enum Prefixes
-    //{
-    //    M,
-    //    G,
-    //    S,
-    //    C,
-    //    D,
-    //    A,
-    //    U
-    //}
+    /// <summary>
+    /// Enum of control segment IDs.
+    /// </summary>
+    enum SegmentId
+    {
+        Regular,
+        UNA,
+        UNB,
+        UNG,
+        UNE,
+        UNZ,
+        ISA,
+        IEA,
+        GE,
+        GS,
+        UNH,
+        UNT,
+        ST,
+        SE,
+        TA1
+    }
 }
