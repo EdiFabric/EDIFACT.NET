@@ -116,16 +116,6 @@
     <EmbeddedResource Include="Edi\X12_810_00204_TrailingBlanks.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_NonDefaultSeparators.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -162,33 +152,13 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EscapedSegmentTerminator.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_RepetitionSeparator.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_RepetitionSeparator.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00401.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00401.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedEscape.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EscapedEscape.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_RepeatingDataElement.txt" />
@@ -198,11 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_EscapedRepetition.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_EscapedRepetition.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -220,16 +185,6 @@
     <EmbeddedResource Include="Edi\Hipaa_837P_00501.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501_HL.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_HL.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -239,30 +194,10 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_RepeatingSegment.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_RepeatingDataElement.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Valid.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_Group.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_Interchange.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleInterchange.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_Interchange2.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_InvalidTrailers.txt" />
@@ -283,33 +218,13 @@
     <EmbeddedResource Include="Edi\X12_810_00204_TrailingSeparator.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_Group.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_Interchange.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_MultipleInterchanges.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_Interchange2.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_InvalidTrailers.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_NoEnum.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501_NoEnum.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MissingGroupTrailer.txt" />
@@ -339,20 +254,10 @@
     <EmbeddedResource Include="Edi\X12_810_00204_NoRepetition.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_NoRepetition.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_BlankRepetition.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_MultipleInvalidInterchanges.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_Probe.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt" />
@@ -361,47 +266,7 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_MultipleInvalidMessages.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_Probe.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_Validation.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_Validation.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501_Validation.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A_ValidationExpected.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\X12_810_00204_ValidationExpected.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501_ValidationExpected.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_LF.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Xml\Hipaa_837P_00501_LF.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_TA1.txt" />
