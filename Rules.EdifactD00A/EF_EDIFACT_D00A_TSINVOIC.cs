@@ -14,7 +14,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A
         /// <summary>
         /// Message Header
         /// </summary>
-        [S("UNH", 1)]
+        [S("UNH", 1)]   
         public UNH UNH { get; set; }
         /// <summary>
         /// BEGINNING OF MESSAGE

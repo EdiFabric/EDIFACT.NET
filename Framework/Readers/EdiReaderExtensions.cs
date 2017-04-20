@@ -22,7 +22,8 @@ namespace EdiFabric.Framework.Readers
     {
         internal static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
-            var parseNode = new Segment(typeof(T), true);
+            var type = typeof (T);
+            var parseNode = new Segment(type, type.Name, type.Name);
             parseNode.ParseSegment(segmentValue, separators);
             return (T)parseNode.ToInstance();
         }
@@ -131,14 +132,11 @@ namespace EdiFabric.Framework.Readers
             if (separators == null) throw new ArgumentNullException("separators");
             if (messageContext == null) throw new ArgumentNullException("messageContext");
 
-            var messageGrammar = new TransactionSet(messageContext, false);
-            //if (messageGrammar.Prefix != Prefixes.M)
-            //    throw new Exception(String.Format("Only messages are supported: {0}", messageGrammar.Name));
-
+            var messageGrammar = new TransactionSet(messageContext.SystemType);
+           
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
             var segmentPosition = messageGrammar.Children.First() as Segment;
-            ParseNode instancePosition = new TransactionSet(messageContext, true);
-
+            
             foreach (var segment in segments)
             {
                 if (segment.IsControl) continue;
@@ -149,7 +147,7 @@ namespace EdiFabric.Framework.Readers
                 {
                     try
                     {
-                        segmentPosition = messageGrammar.JumpToHl(instancePosition.Root(), segment.ParentId);
+                        segmentPosition = messageGrammar.JumpToHl(segment.ParentId);
                     }
                     catch (Exception ex)
                     {
@@ -159,7 +157,7 @@ namespace EdiFabric.Framework.Readers
                     }
                 }
 
-                var currSeg = segmentPosition.TraverseSegmentsDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
+                var currSeg = segmentPosition.TraverseDepthFirst().FirstOrDefault(n => n.IsEqual(segment));
                 if (currSeg == null)
                 {
                     if (messageGrammar.Descendants().All(d => d.EdiName != segment.Name))
@@ -175,30 +173,37 @@ namespace EdiFabric.Framework.Readers
                         errorContext);
                 }
 
-                var segmentTree = currSeg.AncestorsToIntersection(segmentPosition);
-                instancePosition =
-                    instancePosition.AncestorsAndSelf().Last(nt => nt.Name == segmentTree.First().Parent.Name);
-                foreach (var parseTree in segmentTree)
+                if (!string.IsNullOrEmpty(currSeg.Value))
                 {
-                    var newNode = parseTree.PropertyInfo.ToParseNode();
-                    instancePosition.AddChild(newNode);
-                    instancePosition = newNode;
-                    if (newNode is Segment)
-                        instancePosition.ParseSegment(segment.Value, separators, errorContext);
+                    if (currSeg.IsTrigger)
+                    {
+                        var group = new Loop(currSeg.Parent.Type, currSeg.Parent.Name, currSeg.Parent.EdiName);
+                        currSeg.Parent.Parent.InsertChild(currSeg.Parent.IndexInParent() + 1, group);
+                        currSeg = (Segment)group.Children.First();
+                    }
+                    else
+                    {
+                        var newNode = new Segment(currSeg.Type, currSeg.Name, currSeg.EdiName);
+                        currSeg.Parent.InsertChild(currSeg.IndexInParent() + 1, newNode);
+                        currSeg = newNode;
+                    }                    
                 }
+                
+                currSeg.ParseSegment(segment.Value, separators, errorContext);
                 segmentPosition = currSeg;
                 Logger.Log(String.Format("Matched segment: {0}", segmentPosition.Name));
             }
 
-            return instancePosition.Root().ToInstance();
+            return messageGrammar.ToInstance();
         }
 
-        internal static void ParseSegment(this ParseNode parseNode, string line, Separators separators, MessageErrorContext errorContext = null)
+        internal static void ParseSegment(this Segment parseNode, string line, Separators separators, MessageErrorContext errorContext = null)
         {
             if (parseNode == null) throw new ArgumentNullException("parseNode");
             if (String.IsNullOrEmpty(line)) throw new ArgumentNullException("line");
             if (separators == null) throw new ArgumentNullException("separators");
-            
+            parseNode.Value = line;
+
             var dataElementsGrammar = new Segment(parseNode.Type).Children;
             var dataElementsToParse = line.GetDataElements(separators);
             for (var deIndex = 0; deIndex < dataElementsToParse.Length; deIndex++)
@@ -212,13 +217,13 @@ namespace EdiFabric.Framework.Readers
 
                 var currentToParse = dataElementsToParse[deIndex];
                 if (String.IsNullOrEmpty(currentToParse)) continue;
-                
+
                 var currentDataElementGrammar = dataElementsGrammar.ElementAt(deIndex);
 
                 var repetitions = currentDataElementGrammar.IsX12RepetitionSeparator()
                     ? new[] { currentToParse }
                     : currentToParse.GetRepetitions(separators);
-                
+
                 foreach (var repetition in repetitions)
                 {
                     if (String.IsNullOrEmpty(repetition)) continue;
@@ -226,16 +231,14 @@ namespace EdiFabric.Framework.Readers
                     ParseNode childParseNode;
                     if (currentDataElementGrammar is DataElement)
                     {
-                        childParseNode = new DataElement(currentDataElementGrammar.PropertyInfo, repetition.UnEscapeLine(separators));
+                        childParseNode = new DataElement(currentDataElementGrammar.Type, currentDataElementGrammar.Name, currentDataElementGrammar.EdiName, repetition.UnEscapeLine(separators));
                         parseNode.AddChild(childParseNode);
                         continue;
                     }
 
-                    childParseNode = new ComplexDataElement(currentDataElementGrammar.PropertyInfo);
+                    childParseNode = new ComplexDataElement(currentDataElementGrammar.Type, currentDataElementGrammar.Name, currentDataElementGrammar.EdiName);
                     parseNode.AddChild(childParseNode);
-                    
-                    
-                    
+
                     var componentDataElementsGrammar = currentDataElementGrammar.Children;
                     var componentDataElements = repetition.GetComponentDataElements(separators);
                     for (var cdeIndex = 0; cdeIndex < componentDataElements.Length; cdeIndex++)
@@ -258,7 +261,9 @@ namespace EdiFabric.Framework.Readers
                                 "Too many component data elements.", line, errorContext);
                         }
 
-                        var dataElementNode = new DataElement(currentComponentDataElementGrammar.PropertyInfo, currentComponentDataElement.UnEscapeLine(separators));
+                        var dataElementNode = new DataElement(currentComponentDataElementGrammar.Type,
+                            currentComponentDataElementGrammar.Name, currentComponentDataElementGrammar.EdiName,
+                            currentComponentDataElement.UnEscapeLine(separators));
                         childParseNode.AddChild(dataElementNode);
                     }
                 }

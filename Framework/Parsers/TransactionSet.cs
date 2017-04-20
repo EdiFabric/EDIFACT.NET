@@ -1,39 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EdiFabric.Framework.Parsers
 {
     class TransactionSet : ParseNode
     {
-        public TransactionSet(MessageContext messageContext, bool lazyLoad)
-            : base(messageContext.SystemType)
+        public TransactionSet(Type type)
+            : base(type, type.Name, type.Name)
         {
-            if (lazyLoad) return;
-
-            var stack = new Stack<ParseNode>(new[] { this });
-
-            while (stack.Any())
-            {
-                var currentNode = stack.Pop();
-
-                foreach (var propertyInfo in currentNode.GetProperties())
-                {
-                    var c = propertyInfo.Name;
-
-                    var childNode = propertyInfo.ToParseNode();
-                    currentNode.AddChild(childNode);
-
-                    if (childNode is Segment) continue;
-
-                    stack.Push(childNode);
-                }
-            }
+            BuildChildren();
         }
 
         public TransactionSet(object instance)
-            : base(instance.GetType())
+            : base(instance.GetType(), instance.GetType().Name, instance.GetType().Name)
         {
-            BuildFromInstance(instance);
+            BuildChildren(instance);
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)

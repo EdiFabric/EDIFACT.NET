@@ -8,7 +8,6 @@ namespace EdiFabric.Framework.Parsers
 {
     class ParseNode 
     {
-        public PropertyInfo PropertyInfo { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
         public ParseNode Parent { get; private set; }
@@ -40,30 +39,64 @@ namespace EdiFabric.Framework.Parsers
             get { return _children.AsReadOnly(); }
         }
 
-        protected ParseNode(PropertyInfo propertyInfo, string ediName = null)
-        {
-            var systemType = propertyInfo.PropertyType;
-            if (systemType.IsGenericType)
-                 systemType = systemType.GenericTypeArguments.First();
-
-            Type = systemType;
-            Name = propertyInfo.Name;
-            EdiName = ediName ?? Name;
-            PropertyInfo = propertyInfo;
-         }
-
-        protected ParseNode(Type type)
+        protected ParseNode(Type type, string name, string ediName)
         {
             Type = type;
-            Name = type.Name;
-            EdiName = type.Name;
-            PropertyInfo = null;
+            Name = name;
+            EdiName = ediName;
+        }
+
+        public void BuildChildren()
+        {
+            foreach (var property in GetProperties())
+            {
+                AddChild(property.ToParseNode());
+            }
+        }
+
+        public void BuildChildren(object instance, bool allowNulls = false)
+        {
+            foreach (var property in GetProperties())
+            {
+                if (instance == null)
+                {
+                    AddChild(property.ToParseNode());
+                    continue;
+                }
+
+                if (property.PropertyType.IsGenericType)
+                {
+                    var currentList = property.GetValue(instance) as IList;
+                    if (currentList == null) continue;
+
+                    foreach (var currentValue in currentList)
+                    {
+                        if (!allowNulls && currentValue == null) continue;
+
+                        var childParseTree = property.ToParseNode(currentValue);
+                        AddChild(childParseTree);
+                    }
+                }
+                else
+                {
+                    var currentValue = property.GetValue(instance);
+                    if (!allowNulls && currentValue == null) continue;
+
+                    AddChild(property.ToParseNode(currentValue));
+                }
+            }
         }
         
         public void AddChild(ParseNode node)
         {
             node.Parent = this;
             _children.Add(node);
+        }
+
+        public void InsertChild(int position, ParseNode node)
+        {
+            node.Parent = this;
+            _children.Insert(position, node);
         }
        
         public IEnumerable<PropertyInfo> GetProperties()
@@ -74,69 +107,6 @@ namespace EdiFabric.Framework.Parsers
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
         {
             throw new NotImplementedException(Type.FullName);
-        }
-
-        protected void BuildFromInstance(object instance)
-        {
-            var instanceLinks = new Dictionary<string, object> { { Path, instance } };
-            var stack = new Stack<ParseNode>(new[] { this });
-
-            while (stack.Any())
-            {
-                var currentNode = stack.Pop();
-
-                var path = currentNode.Path;
-                object currentInstance;
-                if (!instanceLinks.TryGetValue(path, out currentInstance))
-                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
-
-                if (currentNode is DataElement || currentInstance == null) continue;
-
-                var properties = currentNode.GetProperties();
-                foreach (var propertyInfo in properties)
-                {
-                    var node = propertyInfo.ToParseNode();
-                    if (propertyInfo.PropertyType.IsGenericType)
-                    {
-                        var currentList = propertyInfo.GetValue(currentInstance) as IList;
-                        if (currentList == null && !(node is DataElement) && !(node is ComplexDataElement)) continue;
-
-                        if (currentList == null || currentList.Count == 0)
-                        {
-                            currentNode.AddChild(propertyInfo.ToParseNode());
-                        }
-                        else
-                        {
-                            foreach (var currentValue in currentList)
-                            {
-                                if (currentValue == null) continue;
-
-                                var childParseTree = propertyInfo.ToParseNode(currentValue);
-                                currentNode.AddChild(childParseTree);
-                                
-                                stack.Push(childParseTree);
-                                instanceLinks.Add(childParseTree.Path, currentValue);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var currentValue = propertyInfo.GetValue(currentInstance);
-                        if (currentValue == null && !(node is DataElement) && !(node is ComplexDataElement))
-                            continue;
-
-                        var childParseTree = propertyInfo.ToParseNode(currentValue);
-                        currentNode.AddChild(childParseTree);
-                        if (currentValue == null) continue;
-
-                        stack.Push(childParseTree);
-                        instanceLinks.Add(childParseTree.Path, currentValue);
-                    }
-
-                }
-
-                instanceLinks.Remove(path);
-            }
         }
     }
 }

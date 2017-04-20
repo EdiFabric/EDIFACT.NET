@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace EdiFabric.Framework.Parsers
 {
     class Loop : ParseNode
     {
-        public Loop(PropertyInfo propertyInfo)
-            : base(propertyInfo)
+        public Loop(Type type, string name, string ediName)
+            : base(type, name, ediName)
         {
+            BuildChildren();
+        }
+
+        public Loop(Type type, string name, string ediName, object instance)
+            : base(type, name, ediName)
+        {
+            BuildChildren(instance);
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)

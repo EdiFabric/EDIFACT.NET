@@ -19,32 +19,65 @@ namespace EdiFabric.Framework.Parsers
 {
     static class PropertyInfoExtensions
     {
-        internal static ParseNode ToParseNode(this PropertyInfo propertyInfo, object value = null)
+        public static ParseNode ToParseNode(this PropertyInfo propertyInfo)
         {
+            var type = propertyInfo.PropertyType;
+            if (type.IsGenericType)
+                type = type.GenericTypeArguments.First();
+
             var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
             if (sAttr != null)
-                return new Segment(propertyInfo, sAttr.Id);
+                return new Segment(type, propertyInfo.Name, sAttr.Id);
 
             var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
             if (gAttr != null)
-                return new Loop(propertyInfo);
+                return new Loop(type, propertyInfo.Name, propertyInfo.Name);               
 
             var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
             if (cAttr != null)
-                return new ComplexDataElement(propertyInfo);
+                return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name);
 
             var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
             if (dAttr != null)
-                return new DataElement(propertyInfo, value as string);
+                return new DataElement(type, propertyInfo.Name, propertyInfo.Name);
 
             var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
             if (aAttr != null)
-                return new AllLoop(propertyInfo);
+                return new AllLoop(type, propertyInfo.Name, propertyInfo.Name);
 
             throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
         }
 
-        internal static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
+        public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance)
+        {
+            var type = propertyInfo.PropertyType;
+            if (type.IsGenericType)
+                type = type.GenericTypeArguments.First();
+
+            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
+            if (sAttr != null)
+                return new Segment(type, propertyInfo.Name, sAttr.Id, instance);
+
+            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
+            if (gAttr != null)
+                return new Loop(type, propertyInfo.Name, propertyInfo.Name, instance);
+
+            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
+            if (cAttr != null)
+                return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
+
+            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
+            if (dAttr != null)
+                return new DataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
+
+            var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
+            if (aAttr != null)
+                return new AllLoop(type, propertyInfo.Name, propertyInfo.Name, instance);
+
+            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
+        }
+
+        public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             return propertyInfos.OrderBy(
                 p =>
@@ -52,46 +85,6 @@ namespace EdiFabric.Framework.Parsers
                         .Cast<EdiAttribute>()
                         .Select(a => a.Pos)
                         .FirstOrDefault());           
-        }
-
-        internal static Tuple<List<string>, List<string>> GetFirstTwoPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
-        {
-            var firstTwo = propertyInfos.Take(2).ToList();
-            var element1 = firstTwo.Count > 0 ? firstTwo[0].GetDataElement().GetCodes() : new List<string>();
-            var element2 = firstTwo.Count > 1 ? firstTwo[1].GetDataElement().GetCodes() : new List<string>();
-            
-            return new Tuple<List<string>, List<string>>(element1, element2);
-        }
-
-        static PropertyInfo GetDataElement(this PropertyInfo item)
-        {
-            var cAttr = item.GetCustomAttribute<CAttribute>();
-            if (cAttr != null)
-            {
-                return item.PropertyType.IsGenericType
-                         ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
-                         : item.PropertyType.GetProperties().Sort().First();
-            }
-
-            return item;
-        }
-
-        static List<string> GetCodes(this PropertyInfo item)
-        {
-            var deAttr = item.GetCustomAttribute<DAttribute>();
-            if(deAttr == null)
-                throw new Exception("No DAttribute");
-
-            if (deAttr.DataType != null)
-            {
-                var codes = deAttr.DataType.GetField("Codes");
-                if (codes != null)
-                {
-                    return (List<String>)codes.GetValue(Activator.CreateInstance(deAttr.DataType));
-                }
-            }
-
-            return new List<string>();
-        }        
+        }           
     }
 }

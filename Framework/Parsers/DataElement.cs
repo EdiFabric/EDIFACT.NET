@@ -1,14 +1,18 @@
-﻿using System.Reflection;
+﻿using System;
 
 namespace EdiFabric.Framework.Parsers
 {
     class DataElement : ParseNode
     {
-        public DataElement(PropertyInfo propertyInfo, string value = null)
-            : base(propertyInfo)
+        public DataElement(Type type, string name, string ediName)
+            : base(type, name, ediName)
         {
-            Value = value;
         }
 
+        public DataElement(Type type, string name, string ediName, object instance)
+            : base(type, name, ediName)
+        {
+            Value = instance as string;
+        }
     }
 }

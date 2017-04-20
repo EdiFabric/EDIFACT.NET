@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -24,56 +22,29 @@ namespace EdiFabric.Framework.Parsers
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        public Segment(Type type, bool lazyLoad = false)
-            : base(type)
+        public Segment(Type type, string name, string ediName)
+            : base(type, name, ediName)
         {
-            Build(lazyLoad);
-        }
-
-        public Segment(PropertyInfo propertyInfo, string ediName)
-            : base(propertyInfo, ediName)
-        {
-            Build(true);
             var firstTwo = GetProperties().GetFirstTwoPropertyValues();
             _firstChildValues = firstTwo.Item1;
             _secondChildValues = firstTwo.Item2;
         }
 
-        public Segment(object instance)
-            : base(instance.GetType())
+        public Segment(Type type)
+            : base(type, type.Name, type.Name)
         {
-            BuildFromInstance(instance);
+            BuildChildren();
         }
 
-        private void Build(bool lazyLoadSegment)
+        public Segment(Type type, string name, string ediName, object instance)
+            : base(type, name, ediName)
         {
-            var stack = new Stack<ParseNode>(new[] { this });
-
-            while (stack.Any())
-            {
-                var currentNode = stack.Pop();
-
-                var properties = currentNode.GetProperties();
-                if (lazyLoadSegment)
-                {
-                    continue;
-                }
-
-                foreach (var property in properties)
-                {
-                    var childNode = property.ToParseNode();
-                    currentNode.AddChild(childNode);
-
-                    if (childNode is DataElement) continue;
-
-                    stack.Push(childNode);
-                }
-            }
+            BuildChildren(instance, true);
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
         {
             return new List<ParseNode> {Parent};
-        }
+        }       
     }
 }

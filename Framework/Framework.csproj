@@ -91,6 +91,7 @@
     <Compile Include="Parsers\Loop.cs" />
     <Compile Include="Parsers\ParseNode.cs" />
     <Compile Include="Parsers\Segment.cs" />
+    <Compile Include="Parsers\SegmentExtensions.cs" />
     <Compile Include="Parsers\TransactionSet.cs" />
     <Compile Include="Validators\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />

@@ -40,46 +40,8 @@ namespace EdiFabric.Framework.Parsers
 
             return new List<ParseNode>();
         }
-
-        private static string EscapeLine(this string line, Separators separators)
-        {
-            if (string.IsNullOrEmpty(line))
-                return string.Empty;
-
-            if (!separators.Escape.HasValue)
-                return line;
-
-            return line.ToCharArray()
-                .Aggregate("", (current, l) => l.IsSeparator(separators) ? current + separators.Escape + l : current + l);
-        }
-
-        private static bool IsSeparator(this char value, Separators separators)
-        {
-            return separators.ComponentDataElement == value ||
-                   separators.DataElement == value ||
-                   separators.Escape == value ||
-                   separators.RepetitionDataElement == value ||
-                   separators.Segment == value;
-        }
-
-        private static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
-        {
-            var result = input.TrimEnd(separator);
-            if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString(), StringComparison.Ordinal))
-                result = result + separator;
-
-            return result;
-        }
-
-        private static bool IsRepetition(this ParseNode parseNode)
-        {
-            var index = parseNode.IndexInParent();
-            if (index <= 0) return false;
-            var previous = parseNode.Parent.Children.ElementAt(index - 1);
-            return parseNode.Name == previous.Name;
-        }
-
-        internal static IEnumerable<Segment> TraverseSegmentsDepthFirst(this Segment startNode)
+        
+        internal static IEnumerable<Segment> TraverseDepthFirst(this Segment startNode)
         {
             var visited = new HashSet<ParseNode>();
             var stack = new Stack<ParseNode>();
@@ -128,22 +90,7 @@ namespace EdiFabric.Framework.Parsers
 
             return result;
         }
-
-        internal static IEnumerable<ParseNode> AncestorsToIntersection(this Segment segment, ParseNode lastFoundSegment)
-        {
-            var lastParents = lastFoundSegment.Ancestors();
-            var parents = segment.Ancestors().ToList();
-            var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
-            var result = parents.TakeWhile(parent => parent.Name != intersect.First()).Reverse().ToList();
-
-            if (!result.Any() && segment.IsTrigger)
-                result.Add(segment.Parent);
-            
-            result.Add(segment);
-                   
-            return result;
-        }
-
+        
         internal static bool IsEqual(this Segment parseNode, SegmentContext segmentContext)
         {
             // The names must match
@@ -181,6 +128,21 @@ namespace EdiFabric.Framework.Parsers
                     nodes.Push(n);
             }
         }
+
+        //internal static IEnumerable<ParseNode> AncestorsToIntersection(this Segment segment, ParseNode lastFoundSegment)
+        //{
+        //    var lastParents = lastFoundSegment.Ancestors();
+        //    var parents = segment.Ancestors().ToList();
+        //    var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
+        //    var result = parents.TakeWhile(parent => parent.Name != intersect.First()).Reverse().ToList();
+
+        //    if (!result.Any() && segment.IsTrigger)
+        //        result.Add(segment.Parent);
+
+        //    result.Add(segment);
+
+        //    return result;
+        //}
         
         internal static object ToInstance(this ParseNode parseNode)
         {
@@ -195,6 +157,9 @@ namespace EdiFabric.Framework.Parsers
             {
                 var currentNode = stack.Pop();
 
+                if (currentNode is Segment && string.IsNullOrEmpty(currentNode.Value))
+                    continue;
+
                 var path = currentNode.Path;
                 object currentInstance;
                 if (!instanceLinks.TryGetValue(path, out currentInstance))
@@ -202,6 +167,9 @@ namespace EdiFabric.Framework.Parsers
 
                 foreach (var nodeChild in currentNode.Children)
                 {
+                    if (nodeChild is Segment && string.IsNullOrEmpty(nodeChild.Value))
+                        continue;
+
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
                     if (propertyInfo == null)
                         throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
@@ -243,56 +211,16 @@ namespace EdiFabric.Framework.Parsers
             return root;
         }
 
-        internal static string GenerateSegment(this Segment parseNode, Separators separators)
-        {
-            if (parseNode == null) throw new ArgumentNullException("parseNode");
-            if (separators == null) throw new ArgumentNullException("separators");
+        
 
-            var result = parseNode.EdiName;
-
-            foreach (var element in parseNode.Children)
-            {
-                string value = string.Empty;
-                if (element is ComplexDataElement)
-                {
-                    if (element.Children.Any())
-                    {
-                        var dataElements = element.Children.OfType<DataElement>().ToList();
-                        value = dataElements.ElementAt(0).Value != null
-                            ? dataElements.ElementAt(0).Value.EscapeLine(separators)
-                            : string.Empty;
-                        value = dataElements.Skip(1)
-                            .Aggregate(value,
-                                (current, subElement) =>
-                                    current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
-                        value = value.TrimEndWithEscape(separators.Escape, separators.ComponentDataElement);                       
-                    }
-                }
-                else
-                {
-                    var de = element as DataElement;
-                    if(de == null) throw new Exception(string.Format("Unexpected node {0} under parent {1}", element.Type.FullName, element.Parent.Type.FullName));
-                    value = de.Value.EscapeLine(separators);  
-                }
-
-                var separator = element.IsRepetition()
-                    ? separators.RepetitionDataElement
-                    : separators.DataElement;
-
-                result = result + separator + value;
-            }
-
-            return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
-        }
-
-        internal static Segment JumpToHl(this TransactionSet grammarRoot, ParseNode instanceRoot, string parentId)
+        internal static Segment JumpToHl(this TransactionSet grammarRoot, string parentId)
         {
             ParseNode hlParent;
             if (parentId != null)
             {
                 // Parent HL, start right after it
                 hlParent =
-                    instanceRoot.Descendants()
+                    grammarRoot.Descendants()
                         .SingleOrDefault(
                             d =>
                                 (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)) &&
@@ -331,11 +259,6 @@ namespace EdiFabric.Framework.Parsers
             }
 
             return null;
-        }
-
-        internal static ParseNode Root(this ParseNode parseNode)
-        {
-            return parseNode.Ancestors().Last(); 
         }
 
         internal static Tuple<string, string> PullTrailerValues(this IEnumerable<ParseNode> segments)
