@@ -19,36 +19,7 @@ namespace EdiFabric.Framework.Parsers
 {
     static class PropertyInfoExtensions
     {
-        public static ParseNode ToParseNode(this PropertyInfo propertyInfo)
-        {
-            var type = propertyInfo.PropertyType;
-            if (type.IsGenericType)
-                type = type.GenericTypeArguments.First();
-
-            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
-            if (sAttr != null)
-                return new Segment(type, propertyInfo.Name, sAttr.Id);
-
-            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
-            if (gAttr != null)
-                return new Loop(type, propertyInfo.Name, propertyInfo.Name);               
-
-            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
-            if (cAttr != null)
-                return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name);
-
-            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
-            if (dAttr != null)
-                return new DataElement(type, propertyInfo.Name, propertyInfo.Name);
-
-            var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
-            if (aAttr != null)
-                return new AllLoop(type, propertyInfo.Name, propertyInfo.Name);
-
-            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
-        }
-
-        public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance)
+        public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
         {
             var type = propertyInfo.PropertyType;
             if (type.IsGenericType)

@@ -128,21 +128,6 @@ namespace EdiFabric.Framework.Parsers
                     nodes.Push(n);
             }
         }
-
-        //internal static IEnumerable<ParseNode> AncestorsToIntersection(this Segment segment, ParseNode lastFoundSegment)
-        //{
-        //    var lastParents = lastFoundSegment.Ancestors();
-        //    var parents = segment.Ancestors().ToList();
-        //    var intersect = parents.Select(n => n.Name).Intersect(lastParents.Select(n => n.Name)).ToList();
-        //    var result = parents.TakeWhile(parent => parent.Name != intersect.First()).Reverse().ToList();
-
-        //    if (!result.Any() && segment.IsTrigger)
-        //        result.Add(segment.Parent);
-
-        //    result.Add(segment);
-
-        //    return result;
-        //}
         
         internal static object ToInstance(this ParseNode parseNode)
         {

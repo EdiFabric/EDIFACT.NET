@@ -6,13 +6,7 @@ namespace EdiFabric.Framework.Parsers
 {
     class Loop : ParseNode
     {
-        public Loop(Type type, string name, string ediName)
-            : base(type, name, ediName)
-        {
-            BuildChildren();
-        }
-
-        public Loop(Type type, string name, string ediName, object instance)
+        public Loop(Type type, string name, string ediName, object instance = null)
             : base(type, name, ediName)
         {
             BuildChildren(instance);

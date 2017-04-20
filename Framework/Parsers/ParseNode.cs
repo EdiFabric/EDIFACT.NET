@@ -46,15 +46,7 @@ namespace EdiFabric.Framework.Parsers
             EdiName = ediName;
         }
 
-        public void BuildChildren()
-        {
-            foreach (var property in GetProperties())
-            {
-                AddChild(property.ToParseNode());
-            }
-        }
-
-        public void BuildChildren(object instance, bool allowNulls = false)
+        public void BuildChildren(object instance = null, bool allowNulls = false)
         {
             foreach (var property in GetProperties())
             {

@@ -6,14 +6,8 @@ namespace EdiFabric.Framework.Parsers
 {
     class TransactionSet : ParseNode
     {
-        public TransactionSet(Type type)
+        public TransactionSet(Type type, object instance = null)
             : base(type, type.Name, type.Name)
-        {
-            BuildChildren();
-        }
-
-        public TransactionSet(object instance)
-            : base(instance.GetType(), instance.GetType().Name, instance.GetType().Name)
         {
             BuildChildren(instance);
         }

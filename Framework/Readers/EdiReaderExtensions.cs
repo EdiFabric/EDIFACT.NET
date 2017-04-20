@@ -22,8 +22,7 @@ namespace EdiFabric.Framework.Readers
     {
         internal static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
-            var type = typeof (T);
-            var parseNode = new Segment(type, type.Name, type.Name);
+            var parseNode = new Segment(typeof(T));
             parseNode.ParseSegment(segmentValue, separators);
             return (T)parseNode.ToInstance();
         }
