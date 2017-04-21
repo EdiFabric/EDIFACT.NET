@@ -117,7 +117,7 @@ namespace EdiFabric.Framework.Readers
                     try
                     {
                         CurrentMessage.Add(segmentContext);
-                        Item = CurrentMessage.Analyze(Separators, BuildContext());
+                        Item = CurrentMessage.ParseTransactionSet(Separators, BuildContext());
                     }
                     finally 
                     {

@@ -135,7 +135,8 @@ namespace EdiFabric.Framework.Controls
         /// <returns>The collection of EDI segments.</returns>
         protected static string ToSegmentEdi(object item, Separators separators)
         {
-            var parseTree = new Segment(item.GetType(), item);
+            var type = item.GetType();
+            var parseTree = new Segment(type, type.Name, type.Name, item);
             return parseTree.GenerateSegment(separators);
         }
 

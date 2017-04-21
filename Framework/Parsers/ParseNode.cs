@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -13,6 +14,7 @@ namespace EdiFabric.Framework.Parsers
         public ParseNode Parent { get; private set; }
         public Type Type { get; private set; }
         public string Value { get; set; }
+        public bool IsParsed { get; set; }
 
         public string Path
         {
@@ -44,6 +46,7 @@ namespace EdiFabric.Framework.Parsers
             Type = type;
             Name = name;
             EdiName = ediName;
+            IsParsed = false;
         }
 
         public void BuildChildren(object instance = null, bool allowNulls = false)
@@ -97,6 +100,16 @@ namespace EdiFabric.Framework.Parsers
         }
 
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
+        {
+            throw new NotImplementedException(Type.FullName);
+        }
+
+        public virtual void Parse(string value, Separators separators)
+        {
+            throw new NotImplementedException(Type.FullName);
+        }
+
+        public virtual ParseNode InsertRepetition()
         {
             throw new NotImplementedException(Type.FullName);
         }

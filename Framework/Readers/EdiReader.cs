@@ -26,9 +26,9 @@ namespace EdiFabric.Framework.Readers
     public abstract class EdiReader : IDisposable
     {
         internal SegmentContext CurrentGroupHeader;
-        internal Queue<char> Buffer { get; private set; } 
+        private Queue<char> Buffer { get; set; }
         internal List<SegmentContext> CurrentMessage { get; private set; }
-        internal StreamReader StreamReader { get; private set; }
+        protected StreamReader StreamReader { get; private set; }
         /// <summary>
         /// 
         /// </summary>
@@ -247,7 +247,7 @@ namespace EdiFabric.Framework.Readers
                 {
                     if (CurrentGroupHeader != null)
                         CurrentMessage.Add(CurrentGroupHeader);
-                    Item = CurrentMessage.Analyze(Separators, BuildContext());
+                    Item = CurrentMessage.ParseTransactionSet(Separators, BuildContext());
                 }
                 finally
                 {

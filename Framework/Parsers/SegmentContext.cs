@@ -11,7 +11,6 @@
 
 using System;
 using System.Linq;
-using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers
 {

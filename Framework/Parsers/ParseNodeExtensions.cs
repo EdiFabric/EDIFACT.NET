@@ -13,6 +13,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EdiFabric.Attributes;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -40,8 +42,8 @@ namespace EdiFabric.Framework.Parsers
 
             return new List<ParseNode>();
         }
-        
-        internal static IEnumerable<Segment> TraverseDepthFirst(this Segment startNode)
+
+        public static IEnumerable<Segment> TraverseDepthFirst(this Segment startNode)
         {
             var visited = new HashSet<ParseNode>();
             var stack = new Stack<ParseNode>();
@@ -66,7 +68,7 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        internal static IEnumerable<ParseNode> Ancestors(this ParseNode node)
+        private static IEnumerable<ParseNode> Ancestors(this ParseNode node)
         {
             var stack = new Stack<ParseNode>();
             if (node.Parent == null) 
@@ -83,41 +85,15 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        internal static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
+        public static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
         {
             var result = node.Ancestors().Reverse().ToList(); 
             result.Add(node);
 
             return result;
         }
-        
-        internal static bool IsEqual(this Segment parseNode, SegmentContext segmentContext)
-        {
-            // The names must match
-            if (parseNode.EdiName == segmentContext.Name)
-            {
-                // If no identity match is required, mark this as a match
-                if (string.IsNullOrEmpty(segmentContext.FirstValue) || !parseNode.FirstChildValues.Any())
-                    return true;
 
-                // Match the value 
-                // This must have been defined in the enum of the first element of the segment.
-                if (parseNode.FirstChildValues.Any() && !string.IsNullOrEmpty(segmentContext.FirstValue) &&
-                    parseNode.FirstChildValues.Contains(segmentContext.FirstValue))
-                {
-                    if (parseNode.SecondChildValues.Any() && !string.IsNullOrEmpty(segmentContext.SecondValue))
-                    {
-                        return parseNode.SecondChildValues.Contains(segmentContext.SecondValue);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
+        public static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
         {
             var nodes = new Stack<ParseNode>(new[] { parseNode });
             while (nodes.Any())
@@ -128,8 +104,8 @@ namespace EdiFabric.Framework.Parsers
                     nodes.Push(n);
             }
         }
-        
-        internal static object ToInstance(this ParseNode parseNode)
+
+        public static object ToInstance(this ParseNode parseNode)
         {
             if (parseNode == null) throw new ArgumentNullException("parseNode");
 
@@ -142,7 +118,8 @@ namespace EdiFabric.Framework.Parsers
             {
                 var currentNode = stack.Pop();
 
-                if (currentNode is Segment && string.IsNullOrEmpty(currentNode.Value))
+                var segment = currentNode as Segment;
+                if (segment != null && !segment.IsParsed)
                     continue;
 
                 var path = currentNode.Path;
@@ -152,7 +129,8 @@ namespace EdiFabric.Framework.Parsers
 
                 foreach (var nodeChild in currentNode.Children)
                 {
-                    if (nodeChild is Segment && string.IsNullOrEmpty(nodeChild.Value))
+                    var segment1 = nodeChild as Segment;
+                    if (segment1 != null && !segment1.IsParsed)
                         continue;
 
                     var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
@@ -196,88 +174,43 @@ namespace EdiFabric.Framework.Parsers
             return root;
         }
 
-        
-
-        internal static Segment JumpToHl(this TransactionSet grammarRoot, string parentId)
+        public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
         {
-            ParseNode hlParent;
-            if (parentId != null)
-            {
-                // Parent HL, start right after it
-                hlParent =
-                    grammarRoot.Descendants()
-                        .SingleOrDefault(
-                            d =>
-                                (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)) &&
-                                d.Children.First().Value == parentId);
-                if (hlParent == null)
-                    throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
+            var type = propertyInfo.PropertyType;
+            if (type.IsGenericType)
+                type = type.GenericTypeArguments.First();
 
-                var nextSegment = grammarRoot.Descendants().Reverse().OfType<Segment>().FindNextSegment(pt => pt.Name == hlParent.Name);
+            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
+            if (sAttr != null)
+                return new Segment(type, propertyInfo.Name, sAttr.Id, instance);
 
-                if (nextSegment == null)
-                    throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
+            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
+            if (gAttr != null)
+                return new Loop(type, propertyInfo.Name, propertyInfo.Name, instance);
 
-                return nextSegment;
-            }
+            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
+            if (cAttr != null)
+                return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
 
-            // Root HL, start from it
-            return
-                grammarRoot.Descendants()
-                    .Reverse().OfType<Segment>()
-                    .First(d => (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)));
+            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
+            if (dAttr != null)
+                return new DataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
 
+            var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
+            if (aAttr != null)
+                return new AllLoop(type, propertyInfo.Name, propertyInfo.Name, instance);
+
+            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
         }
 
-        private static Segment FindNextSegment(this IEnumerable<Segment> items, Predicate<ParseNode> matchPredicate)
+        public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
-            using (var iter = items.GetEnumerator())
-            {
-                while (iter.MoveNext())
-                {
-                    if (matchPredicate(iter.Current))
-                    {
-                        if (iter.MoveNext())
-                            return iter.Current;
-                    }                   
-                }
-            }
-
-            return null;
-        }
-
-        internal static Tuple<string, string> PullTrailerValues(this IEnumerable<ParseNode> segments)
-        {
-            var msgHeader =
-                segments.SingleOrDefault(
-                    s =>
-                        s.Name == "UNH" || s.Name.StartsWith("UNH_", StringComparison.Ordinal) ||
-                        s.Name == "ST" || s.Name.StartsWith("ST_", StringComparison.Ordinal));
-
-            DataElement controlNumber = null;
-            var trailerTag = "";
-            if (msgHeader != null && msgHeader.Name == "UNH")
-            {
-                controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
-                trailerTag = "UNT";
-            }
-
-            if (msgHeader != null && msgHeader.Name == "ST")
-            {
-                controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
-                trailerTag = "SE";
-            }
-
-            if (msgHeader == null || controlNumber == null)
-                throw new Exception("Invalid control structure. UNH or ST was not found.");
-
-            if (String.IsNullOrEmpty(controlNumber.Value))
-                throw new Exception("Invalid control number.");
-
-            if (String.IsNullOrEmpty(trailerTag))
-                throw new Exception("Invalid trailer tag.");
-
-            return new Tuple<string, string>(controlNumber.Value, trailerTag);
-        }       
+            return propertyInfos.OrderBy(
+                p =>
+                    p.GetCustomAttributes(typeof(EdiAttribute), false)
+                        .Cast<EdiAttribute>()
+                        .Select(a => a.Pos)
+                        .FirstOrDefault());
+        }      
     }
 }
