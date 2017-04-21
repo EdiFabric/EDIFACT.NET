@@ -93,7 +93,9 @@
     <Compile Include="Parsers\Segment.cs" />
     <Compile Include="Parsers\SegmentExtensions.cs" />
     <Compile Include="Parsers\TransactionSet.cs" />
-    <Compile Include="Parsers\TransactionSetExtensions.cs" />
+    <Compile Include="Parsers\TransactionSetExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Validators\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">
