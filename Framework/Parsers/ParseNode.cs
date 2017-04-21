@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -15,16 +13,7 @@ namespace EdiFabric.Framework.Parsers
         public Type Type { get; private set; }
         public string Value { get; set; }
         public bool IsParsed { get; set; }
-
-        public string Path
-        {
-            get
-            {
-                return this.AncestorsAndSelf()
-                    .Aggregate("", (current, node) => current + node.Name + node.IndexInParent());
-            }
-        }
-
+        
         public int IndexOfChild(ParseNode child)
         {
             return _children.IndexOf(child);
@@ -112,6 +101,43 @@ namespace EdiFabric.Framework.Parsers
         public virtual ParseNode InsertRepetition()
         {
             throw new NotImplementedException(Type.FullName);
+        }
+
+        public virtual object ToInstance()
+        {
+            var result = Activator.CreateInstance(Type);
+
+            var listTypes = new Dictionary<string, IList>();
+            foreach (var nodeChild in Children)
+            {
+                if (!nodeChild.IsParsed) continue;
+
+                var propertyInfo = Type.GetProperty(nodeChild.Name);
+                if (propertyInfo == null)
+                    throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
+                        Type.Name));
+
+                if (propertyInfo.PropertyType.IsGenericType)
+                {
+                    IList list;
+                    if (!listTypes.TryGetValue(propertyInfo.MetadataToken.ToString(), out list))
+                    {
+                        list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(nodeChild.Type));
+                        propertyInfo.SetValue(result, list, null);
+
+                        listTypes.Clear();
+                        listTypes.Add(propertyInfo.MetadataToken.ToString(), list);
+                    }
+
+                    list.Add(nodeChild.ToInstance());
+                }
+                else
+                {
+                    propertyInfo.SetValue(result, nodeChild.ToInstance(), null);
+                }                
+            }
+
+            return result;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Parsers
 {

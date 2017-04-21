@@ -26,5 +26,10 @@ namespace EdiFabric.Framework.Parsers
         {
             return new DataElement(this);
         }
+
+        public override object ToInstance()
+        {
+            return Value;
+        }
     }
 }

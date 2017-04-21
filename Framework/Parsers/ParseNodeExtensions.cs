@@ -10,7 +10,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -85,7 +84,7 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        public static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
+        private static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
         {
             var result = node.Ancestors().Reverse().ToList(); 
             result.Add(node);
@@ -103,75 +102,6 @@ namespace EdiFabric.Framework.Parsers
                 foreach (var n in node.Children) 
                     nodes.Push(n);
             }
-        }
-
-        public static object ToInstance(this ParseNode parseNode)
-        {
-            if (parseNode == null) throw new ArgumentNullException("parseNode");
-
-            var root = Activator.CreateInstance(parseNode.Type);
-            var instanceLinks = new Dictionary<string, object> {{parseNode.Path, root}};
-            var stack = new Stack<ParseNode>(new[] {parseNode});
-            var listTypes = new Dictionary<string, IList>();
-
-            while (stack.Any())
-            {
-                var currentNode = stack.Pop();
-
-                var segment = currentNode as Segment;
-                if (segment != null && !segment.IsParsed)
-                    continue;
-
-                var path = currentNode.Path;
-                object currentInstance;
-                if (!instanceLinks.TryGetValue(path, out currentInstance))
-                    throw new Exception(string.Format("Instance not set for path: {0}", currentNode.Path));
-
-                foreach (var nodeChild in currentNode.Children)
-                {
-                    var segment1 = nodeChild as Segment;
-                    if (segment1 != null && !segment1.IsParsed)
-                        continue;
-
-                    var propertyInfo = currentNode.Type.GetProperty(nodeChild.Name);
-                    if (propertyInfo == null)
-                        throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
-                            currentNode.Type.Name));
-
-                    var de = nodeChild as DataElement;
-                    var child = de != null
-                        ? de.Value
-                        : Activator.CreateInstance(nodeChild.Type);
-
-                    if (propertyInfo.PropertyType.IsGenericType)
-                    {
-                        var repPath = nodeChild.Parent.Path + nodeChild.Name;
-                        IList list;
-                        if (!listTypes.TryGetValue(repPath, out list))
-                        {
-                            list = (IList) Activator.CreateInstance(typeof (List<>).MakeGenericType(nodeChild.Type));
-                            propertyInfo.SetValue(currentInstance, list, null);
-
-                            listTypes.Add(repPath, list);
-                        }
-
-                        list.Add(child);
-                    }
-                    else
-                    {
-                        propertyInfo.SetValue(currentInstance, child, null);
-                    }
-
-                    if (de != null) continue;
-
-                    instanceLinks.Add(nodeChild.Path, child);
-                    stack.Push(nodeChild);
-                }
-
-                instanceLinks.Remove(path);
-            }
-
-            return root;
         }
 
         public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
