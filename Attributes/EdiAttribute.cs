@@ -3,6 +3,16 @@
 namespace EdiFabric.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+    public class EAttribute : Attribute
+    {
+        public string Codes { get; set; }
+        public EAttribute(string codes)
+        {
+            Codes = codes;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
     public class EdiAttribute : Attribute
     {
         public int Pos { get; set; }
@@ -16,10 +26,14 @@ namespace EdiFabric.Attributes
     public class SAttribute : EdiAttribute
     {
         public string Id { get; set; }
+        public Type First { get; set; }
+        public Type Second { get; set; }
 
-        public SAttribute(string id, int pos) : base(pos)
+        public SAttribute(string id, int pos, Type first = null, Type second = null) : base(pos)
         {
             Id = id;
+            First = first;
+            Second = second;
         }        
     }
 
@@ -43,12 +57,10 @@ namespace EdiFabric.Attributes
     public class DAttribute : EdiAttribute
     {
         public string Code { get; set; }
-        public Type DataType { get; set; }
-
-        public DAttribute(int pos, Type dataType = null, string code = null) : base(pos)
+        
+        public DAttribute(int pos, string code = null) : base(pos)
         {
             Code = code;
-            DataType = dataType;
         }
     }
 

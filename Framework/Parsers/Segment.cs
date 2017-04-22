@@ -24,14 +24,15 @@ namespace EdiFabric.Framework.Parsers
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        public Segment(Type type, string name, string ediName, object instance = null)
+        public Segment(Type type, string name, string ediName, List<string> firstValues, List<string> secondValues, object instance = null)
             : base(type, name, ediName)
         {
             if (instance == null)
             {
-                var firstTwo = GetProperties().GetFirstTwoPropertyValues();
-                _firstChildValues = firstTwo.Item1;
-                _secondChildValues = firstTwo.Item2;
+                if (firstValues != null)
+                    _firstChildValues = firstValues;
+                if (secondValues != null)
+                    _secondChildValues = secondValues;
                 return;
             }
 
@@ -43,10 +44,10 @@ namespace EdiFabric.Framework.Parsers
         {
         }
 
-        public Segment(ParseNode parseNode)
-            : this(parseNode.Type, parseNode.Name, parseNode.EdiName)
+        public Segment(Segment segment)
+            : this(segment.Type, segment.Name, segment.EdiName, segment._firstChildValues, segment._secondChildValues)
         {
-            parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
+            segment.Parent.InsertChild(segment.IndexInParent() + 1, this);
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)

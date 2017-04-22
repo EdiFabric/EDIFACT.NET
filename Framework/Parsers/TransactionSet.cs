@@ -19,8 +19,6 @@ namespace EdiFabric.Framework.Parsers
             if (!result.Any())
                 result.AddRange(Children);
             return result;
-        }
-
-        
+        }       
     }
 }

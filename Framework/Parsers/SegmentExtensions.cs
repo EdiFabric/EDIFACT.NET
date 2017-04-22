@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using EdiFabric.Attributes;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers
@@ -87,47 +85,7 @@ namespace EdiFabric.Framework.Parsers
             var previous = parseNode.Parent.Children.ElementAt(index - 1);
             return parseNode.Name == previous.Name;
         }
-
-        public static Tuple<List<string>, List<string>> GetFirstTwoPropertyValues(this IEnumerable<PropertyInfo> propertyInfos)
-        {
-            var firstTwo = propertyInfos.Take(2).ToList();
-            var element1 = firstTwo.Count > 0 ? firstTwo[0].GetDataElement().GetCodes() : new List<string>();
-            var element2 = firstTwo.Count > 1 ? firstTwo[1].GetDataElement().GetCodes() : new List<string>();
-
-            return new Tuple<List<string>, List<string>>(element1, element2);
-        }
-
-        private static PropertyInfo GetDataElement(this PropertyInfo item)
-        {
-            var cAttr = item.GetCustomAttribute<CAttribute>();
-            if (cAttr != null)
-            {
-                return item.PropertyType.IsGenericType
-                         ? item.PropertyType.GenericTypeArguments.First().GetProperties().Sort().First()
-                         : item.PropertyType.GetProperties().Sort().First();
-            }
-
-            return item;
-        }
-
-        private static List<string> GetCodes(this PropertyInfo item)
-        {
-            var deAttr = item.GetCustomAttribute<DAttribute>();
-            if (deAttr == null)
-                throw new Exception("No DAttribute");
-
-            if (deAttr.DataType != null)
-            {
-                var codes = deAttr.DataType.GetField("Codes");
-                if (codes != null)
-                {
-                    return (List<string>)codes.GetValue(Activator.CreateInstance(deAttr.DataType));
-                }
-            }
-
-            return new List<string>();
-        }
-
+        
         public static T ParseSegment<T>(this string segmentValue, Separators separators)
         {
             var parseNode = new Segment(typeof(T));

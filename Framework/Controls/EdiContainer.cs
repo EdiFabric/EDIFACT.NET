@@ -137,7 +137,7 @@ namespace EdiFabric.Framework.Controls
         protected static string ToSegmentEdi(object item, Separators separators)
         {
             var type = item.GetType();
-            var parseTree = new Segment(type, type.Name, type.Name, item);
+            var parseTree = new Segment(type, type.Name, type.Name, null, null, item);
             return parseTree.GenerateSegment(separators);
         }
 

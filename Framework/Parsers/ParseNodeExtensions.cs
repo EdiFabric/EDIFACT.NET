@@ -110,27 +110,49 @@ namespace EdiFabric.Framework.Parsers
             if (type.IsGenericType)
                 type = type.GenericTypeArguments.First();
 
-            var sAttr = propertyInfo.GetCustomAttribute<SAttribute>();
-            if (sAttr != null)
-                return new Segment(type, propertyInfo.Name, sAttr.Id, instance);
+            var attr = propertyInfo.GetCustomAttribute<EdiAttribute>();
+            if(attr == null)
+                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
 
-            var gAttr = propertyInfo.GetCustomAttribute<GAttribute>();
-            if (gAttr != null)
-                return new Loop(type, propertyInfo.Name, propertyInfo.Name, instance);
+            if (attr is DAttribute)
+                return new DataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
 
-            var cAttr = propertyInfo.GetCustomAttribute<CAttribute>();
-            if (cAttr != null)
+            if (attr is SAttribute)
+            {
+                List<string> first = null;
+                List<string> second = null;
+                var sAttr = attr as SAttribute;
+                if (sAttr.First != null)
+                {
+                    var eAttr = (EAttribute) sAttr.First.GetCustomAttributes(typeof (EAttribute)).SingleOrDefault();
+                    if (eAttr == null)
+                        throw new Exception(string.Format("Type {0} is not annotated with an [EAttribute].",
+                            sAttr.First.Name));
+                    first = eAttr.Codes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                    if (sAttr.Second != null)
+                    {
+                        var eAttrS = (EAttribute) sAttr.Second.GetCustomAttributes(typeof (EAttribute)).SingleOrDefault();
+                        if (eAttrS == null)
+                            throw new Exception(string.Format("Type {0} is not annotated with an [EAttribute].",
+                                sAttr.Second.Name));
+                        second = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    }
+                }
+                return new Segment(type, propertyInfo.Name, sAttr.Id, first, second, instance);
+            }
+
+            if (attr is CAttribute)
                 return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
 
-            var dAttr = propertyInfo.GetCustomAttribute<DAttribute>();
-            if (dAttr != null)
-                return new DataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
+            if (attr is GAttribute)
+                return new Loop(type, propertyInfo.Name, propertyInfo.Name, instance);
 
             var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
             if (aAttr != null)
                 return new AllLoop(type, propertyInfo.Name, propertyInfo.Name, instance);
 
-            throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
+            throw new Exception(string.Format("Property {0} is annotated with an unknown [EdiAttribute].", propertyInfo.Name));
         }
 
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)

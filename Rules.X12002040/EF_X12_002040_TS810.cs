@@ -5,12 +5,12 @@ namespace EdiFabric.Rules.X12_002040
     using System.Xml.Serialization;
     using System.Collections.Generic;
     using EdiFabric.Attributes;
-
-
+    
+    
     [M("X12", "002040", "810")]
     public class TS810
     {
-
+        
         /// <summary>
         /// Transaction Set Header
         /// </summary>
@@ -127,10 +127,10 @@ namespace EdiFabric.Rules.X12_002040
         [S("SE", 23)]
         public SE SE { get; set; }
     }
-
+    
     public class TS810_ITALoop2
     {
-
+        
         /// <summary>
         /// Allowance, Charge or Service
         /// </summary>
@@ -142,10 +142,10 @@ namespace EdiFabric.Rules.X12_002040
         [S("TXI", 2)]
         public List<TXI> TXI { get; set; }
     }
-
+    
     public class TS810_IT1Loop1
     {
-
+        
         /// <summary>
         /// Baseline Item Data (Invoice)
         /// </summary>
@@ -247,10 +247,10 @@ namespace EdiFabric.Rules.X12_002040
         [G(20)]
         public List<TS810_N1Loop2> N1Loop2 { get; set; }
     }
-
+    
     public class TS810_N1Loop2
     {
-
+        
         /// <summary>
         /// Name
         /// </summary>
@@ -282,10 +282,10 @@ namespace EdiFabric.Rules.X12_002040
         [S("PER", 6)]
         public List<PER> PER { get; set; }
     }
-
+    
     public class TS810_SLNLoop1
     {
-
+        
         /// <summary>
         /// Subline Item Detail
         /// </summary>
@@ -307,10 +307,10 @@ namespace EdiFabric.Rules.X12_002040
         [S("ITA", 4)]
         public List<ITA> ITA { get; set; }
     }
-
+    
     public class TS810_ITALoop1
     {
-
+        
         /// <summary>
         /// Allowance, Charge or Service
         /// </summary>
@@ -322,10 +322,10 @@ namespace EdiFabric.Rules.X12_002040
         [S("TXI", 2)]
         public List<TXI> TXI { get; set; }
     }
-
+    
     public class TS810_N1Loop1
     {
-
+        
         /// <summary>
         /// Name
         /// </summary>
