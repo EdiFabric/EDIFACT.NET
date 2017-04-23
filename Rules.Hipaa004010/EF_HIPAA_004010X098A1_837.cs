@@ -16,9 +16,9 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         /// </summary>
         [S("ST", 1)]
         public ST ST { get; set; }
-        [S("BHT", 2, typeof(X12_ID_1005_TS837), typeof(X12_ID_353_TS837))]
+        [S("BHT", 2, typeof(X12_ID_1005_BHT_BeginningOfHierarchicalTransaction), typeof(X12_ID_353_BHT_BeginningOfHierarchicalTransaction))]
         public BHT_BeginningOfHierarchicalTransaction BHT_BeginningOfHierarchicalTransaction { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_TS837))]
+        [S("REF", 3, typeof(X12_ID_128_REF_TransmissionTypeIdentification))]
         public REF_TransmissionTypeIdentification REF_TransmissionTypeIdentification { get; set; }
         [G(4)]
         public Loop_1000A Loop_1000A { get; set; }
@@ -38,17 +38,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",0019,")]
-    public class X12_ID_1005_TS837
+    public class X12_ID_1005_BHT_BeginningOfHierarchicalTransaction
     {
     }
     
     [E(",00,18,")]
-    public class X12_ID_353_TS837
+    public class X12_ID_353_BHT_BeginningOfHierarchicalTransaction
     {
     }
     
     [E(",87,")]
-    public class X12_ID_128_TS837
+    public class X12_ID_128_REF_TransmissionTypeIdentification
     {
     }
     
@@ -66,9 +66,9 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         
         [S("HL", 1)]
         public HL_BillingPaytoProviderHierarchicalLevel_2000A HL_BillingPaytoProviderHierarchicalLevel_2000A { get; set; }
-        [S("PRV", 2, typeof(X12_ID_1221_Loop_2000A), typeof(X12_ID_128_Loop_2000A))]
+        [S("PRV", 2, typeof(X12_ID_1221_PRV_BillingPaytoProviderSpecialtyInformation_2000A), typeof(X12_ID_128_PRV_BillingPaytoProviderSpecialtyInformation_2000A))]
         public PRV_BillingPaytoProviderSpecialtyInformation_2000A PRV_BillingPaytoProviderSpecialtyInformation_2000A { get; set; }
-        [S("CUR", 3, typeof(X12_ID_98_Loop_2000A))]
+        [S("CUR", 3, typeof(X12_ID_98_CUR_ForeignCurrencyInformation_2000A))]
         public CUR_ForeignCurrencyInformation_2000A CUR_ForeignCurrencyInformation_2000A { get; set; }
         [A(4)]
         public All_2010A All_2010A { get; set; }
@@ -77,17 +77,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",BI,PT,")]
-    public class X12_ID_1221_Loop_2000A
+    public class X12_ID_1221_PRV_BillingPaytoProviderSpecialtyInformation_2000A
     {
     }
     
     [E(",ZZ,")]
-    public class X12_ID_128_Loop_2000A
+    public class X12_ID_128_PRV_BillingPaytoProviderSpecialtyInformation_2000A
     {
     }
     
     [E(",85,")]
-    public class X12_ID_98_Loop_2000A
+    public class X12_ID_98_CUR_ForeignCurrencyInformation_2000A
     {
     }
     
@@ -100,7 +100,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         
         [S("HL", 1)]
         public HL_SubscriberHierarchicalLevel_2000B HL_SubscriberHierarchicalLevel_2000B { get; set; }
-        [S("SBR", 2, typeof(X12_ID_1138_Loop_2000B), typeof(X12_ID_1069_Loop_2000B))]
+        [S("SBR", 2, typeof(X12_ID_1138_SBR_SubscriberInformation_2000B), typeof(X12_ID_1069_SBR_SubscriberInformation_2000B))]
         public SBR_SubscriberInformation_2000B SBR_SubscriberInformation_2000B { get; set; }
         [S("PAT", 3)]
         public PAT_PatientInformation_2000B PAT_PatientInformation_2000B { get; set; }
@@ -113,12 +113,12 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",P,S,T,")]
-    public class X12_ID_1138_Loop_2000B
+    public class X12_ID_1138_SBR_SubscriberInformation_2000B
     {
     }
     
     [E(",18,")]
-    public class X12_ID_1069_Loop_2000B
+    public class X12_ID_1069_SBR_SubscriberInformation_2000B
     {
     }
     
@@ -127,7 +127,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         
         [S("HL", 1)]
         public HL_PatientHierarchicalLevel_2000C HL_PatientHierarchicalLevel_2000C { get; set; }
-        [S("PAT", 2, typeof(X12_ID_1069_Loop_2000C))]
+        [S("PAT", 2, typeof(X12_ID_1069_PAT_PatientInformation_2000C))]
         public PAT_PatientInformation_2000C PAT_PatientInformation_2000C { get; set; }
         [G(3)]
         public Loop_2010CA Loop_2010CA { get; set; }
@@ -136,7 +136,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",01,04,05,07,09,10,15,17,19,20,21,22,23,24,29,32,33,34,36,39,40,41,43,53,G8,")]
-    public class X12_ID_1069_Loop_2000C
+    public class X12_ID_1069_PAT_PatientInformation_2000C
     {
     }
     
@@ -147,9 +147,9 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         public CLM_ClaimInformation_2300 CLM_ClaimInformation_2300 { get; set; }
         [A(2)]
         public All_DTP_2300 All_DTP_2300 { get; set; }
-        [S("PWK", 3, typeof(X12_ID_755_Loop_2300), typeof(X12_ID_756_Loop_2300))]
+        [S("PWK", 3, typeof(X12_ID_755_PWK_ClaimSupplementalInformation_2300), typeof(X12_ID_756_PWK_ClaimSupplementalInformation_2300))]
         public List<PWK_ClaimSupplementalInformation_2300> PWK_ClaimSupplementalInformation_2300 { get; set; }
-        [S("CN1", 4, typeof(X12_ID_1166_Loop_2300))]
+        [S("CN1", 4, typeof(X12_ID_1166_CN1_ContractInformation_2300))]
         public CN1_ContractInformation_2300 CN1_ContractInformation_2300 { get; set; }
         [A(5)]
         public All_AMT_2300 All_AMT_2300 { get; set; }
@@ -157,17 +157,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         public All_REF_2300 All_REF_2300 { get; set; }
         [S("K3", 7)]
         public List<K3_FileInformation_2300> K3_FileInformation_2300 { get; set; }
-        [S("NTE", 8, typeof(X12_ID_363_Loop_2300))]
+        [S("NTE", 8, typeof(X12_ID_363_NTE_ClaimNote_2300))]
         public NTE_ClaimNote_2300 NTE_ClaimNote_2300 { get; set; }
-        [S("CR1", 9, typeof(X12_ID_355_Loop_2300))]
+        [S("CR1", 9, typeof(X12_ID_355_CR1_AmbulanceTransportInformation_2300))]
         public CR1_AmbulanceTransportInformation_2300 CR1_AmbulanceTransportInformation_2300 { get; set; }
         [S("CR2", 10)]
         public CR2_SpinalManipulationServiceInformation_2300 CR2_SpinalManipulationServiceInformation_2300 { get; set; }
         [A(11)]
         public All_CRC_2300 All_CRC_2300 { get; set; }
-        [S("HI", 12, typeof(X12_ID_1270_Loop_2300), typeof(X12_ID_1270_Loop_2300))]
+        [S("HI", 12, typeof(X12_ID_1270_C022_57917336), typeof(X12_ID_1270_C022_1220782286))]
         public HI_HealthCareDiagnosisCode_2300 HI_HealthCareDiagnosisCode_2300 { get; set; }
-        [S("HCP", 13, typeof(X12_ID_1473_Loop_2300))]
+        [S("HCP", 13, typeof(X12_ID_1473_HCP_ClaimPricingRepricingInformation_2300))]
         public HCP_ClaimPricingRepricingInformation_2300 HCP_ClaimPricingRepricingInformation_2300 { get; set; }
         [G(14)]
         public List<Loop_2305> Loop_2305 { get; set; }
@@ -184,27 +184,27 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",77,AS,B2,B3,B4,CT,DA,DG,DS,EB,MT,NN,OB,OZ,PN,PO,PZ,RB,RR,RT,")]
-    public class X12_ID_755_Loop_2300
+    public class X12_ID_755_PWK_ClaimSupplementalInformation_2300
     {
     }
     
     [E(",AA,BM,EL,EM,FX,")]
-    public class X12_ID_756_Loop_2300
+    public class X12_ID_756_PWK_ClaimSupplementalInformation_2300
     {
     }
     
     [E(",02,03,04,05,06,09,")]
-    public class X12_ID_1166_Loop_2300
+    public class X12_ID_1166_CN1_ContractInformation_2300
     {
     }
     
     [E(",ADD,CER,DCP,DGN,PMT,TPO,")]
-    public class X12_ID_363_Loop_2300
+    public class X12_ID_363_NTE_ClaimNote_2300
     {
     }
     
     [E(",LB,")]
-    public class X12_ID_355_Loop_2300
+    public class X12_ID_355_CR1_AmbulanceTransportInformation_2300
     {
     }
     
@@ -213,12 +213,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",BK,")]
-    public class X12_ID_1270_Loop_2300
+    public class X12_ID_1270_C022_57917336
+    {
+    }
+    
+    [E(",BF,")]
+    public class X12_ID_1270_C022_1220782286
     {
     }
     
     [E(",00,01,02,03,04,05,07,08,09,10,11,12,13,14,")]
-    public class X12_ID_1473_Loop_2300
+    public class X12_ID_1473_HCP_ClaimPricingRepricingInformation_2300
     {
     }
     
@@ -227,27 +232,27 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         
         [S("LX", 1)]
         public LX_ServiceLine_2400 LX_ServiceLine_2400 { get; set; }
-        [S("SV1", 2, typeof(X12_ID_235_Loop_2400))]
+        [S("SV1", 2, typeof(X12_ID_235_C003_701728622))]
         public SV1_ProfessionalService_2400 SV1_ProfessionalService_2400 { get; set; }
-        [S("SV5", 3, typeof(X12_ID_235_Loop_2400), typeof(X12_ID_355_Loop_2400))]
+        [S("SV5", 3, typeof(X12_ID_235_C003_19141319), typeof(X12_ID_355_SV5_DurableMedicalEquipmentService_2400))]
         public SV5_DurableMedicalEquipmentService_2400 SV5_DurableMedicalEquipmentService_2400 { get; set; }
-        [S("PWK", 4, typeof(X12_ID_755_Loop_2400), typeof(X12_ID_756_Loop_2400))]
+        [S("PWK", 4, typeof(X12_ID_755_PWK_DMERCCMNIndicator_2400), typeof(X12_ID_756_PWK_DMERCCMNIndicator_2400))]
         public PWK_DMERCCMNIndicator_2400 PWK_DMERCCMNIndicator_2400 { get; set; }
-        [S("CR1", 5, typeof(X12_ID_355_Loop_2400))]
+        [S("CR1", 5, typeof(X12_ID_355_CR1_AmbulanceTransportInformation_2400))]
         public CR1_AmbulanceTransportInformation_2400 CR1_AmbulanceTransportInformation_2400 { get; set; }
         [S("CR2", 6)]
         public List<CR2_SpinalManipulationServiceInformation_2400> CR2_SpinalManipulationServiceInformation_2400 { get; set; }
-        [S("CR3", 7, typeof(X12_ID_1322_Loop_2400), typeof(X12_ID_355_Loop_2400))]
+        [S("CR3", 7, typeof(X12_ID_1322_CR3_DurableMedicalEquipmentCertification_2400), typeof(X12_ID_355_CR3_DurableMedicalEquipmentCertification_2400))]
         public CR3_DurableMedicalEquipmentCertification_2400 CR3_DurableMedicalEquipmentCertification_2400 { get; set; }
-        [S("CR5", 8, typeof(X12_ID_1322_Loop_2400))]
+        [S("CR5", 8, typeof(X12_ID_1322_CR5_HomeOxygenTherapyInformation_2400))]
         public CR5_HomeOxygenTherapyInformation_2400 CR5_HomeOxygenTherapyInformation_2400 { get; set; }
         [A(9)]
         public All_CRC_2400 All_CRC_2400 { get; set; }
         [A(10)]
         public All_DTP_2400 All_DTP_2400 { get; set; }
-        [S("MEA", 11, typeof(X12_ID_737_Loop_2400), typeof(X12_ID_738_Loop_2400))]
+        [S("MEA", 11, typeof(X12_ID_737_MEA_TestResult_2400), typeof(X12_ID_738_MEA_TestResult_2400))]
         public List<MEA_TestResult_2400> MEA_TestResult_2400 { get; set; }
-        [S("CN1", 12, typeof(X12_ID_1166_Loop_2400))]
+        [S("CN1", 12, typeof(X12_ID_1166_CN1_ContractInformation_2400))]
         public CN1_ContractInformation_2400 CN1_ContractInformation_2400 { get; set; }
         [A(13)]
         public All_REF_2400 All_REF_2400 { get; set; }
@@ -255,13 +260,13 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         public All_AMT_2400 All_AMT_2400 { get; set; }
         [S("K3", 15)]
         public List<K3_FileInformation_2400> K3_FileInformation_2400 { get; set; }
-        [S("NTE", 16, typeof(X12_ID_363_Loop_2400))]
+        [S("NTE", 16, typeof(X12_ID_363_NTE_LineNote_2400))]
         public NTE_LineNote_2400 NTE_LineNote_2400 { get; set; }
         [S("PS1", 17)]
         public PS1_PurchasedServiceInformation_2400 PS1_PurchasedServiceInformation_2400 { get; set; }
-        [S("HSD", 18, typeof(X12_ID_673_Loop_2400))]
+        [S("HSD", 18, typeof(X12_ID_673_HSD_HealthCareServicesDelivery_2400))]
         public HSD_HealthCareServicesDelivery_2400 HSD_HealthCareServicesDelivery_2400 { get; set; }
-        [S("HCP", 19, typeof(X12_ID_1473_Loop_2400))]
+        [S("HCP", 19, typeof(X12_ID_1473_HCP_LinePricingRepricingInformation_2400))]
         public HCP_LinePricingRepricingInformation_2400 HCP_LinePricingRepricingInformation_2400 { get; set; }
         [G(20)]
         public List<Loop_2410> Loop_2410 { get; set; }
@@ -274,76 +279,96 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",HC,IV,ZZ,")]
-    public class X12_ID_235_Loop_2400
+    public class X12_ID_235_C003_701728622
+    {
+    }
+    
+    [E(",HC,")]
+    public class X12_ID_235_C003_19141319
     {
     }
     
     [E(",DA,")]
-    public class X12_ID_355_Loop_2400
+    public class X12_ID_355_SV5_DurableMedicalEquipmentService_2400
     {
     }
     
     [E(",CT,")]
-    public class X12_ID_755_Loop_2400
+    public class X12_ID_755_PWK_DMERCCMNIndicator_2400
     {
     }
     
     [E(",AB,AD,AF,AG,NS,")]
-    public class X12_ID_756_Loop_2400
+    public class X12_ID_756_PWK_DMERCCMNIndicator_2400
+    {
+    }
+    
+    [E(",LB,")]
+    public class X12_ID_355_CR1_AmbulanceTransportInformation_2400
     {
     }
     
     [E(",I,R,S,")]
-    public class X12_ID_1322_Loop_2400
+    public class X12_ID_1322_CR3_DurableMedicalEquipmentCertification_2400
+    {
+    }
+    
+    [E(",MO,")]
+    public class X12_ID_355_CR3_DurableMedicalEquipmentCertification_2400
+    {
+    }
+    
+    [E(",I,R,S,")]
+    public class X12_ID_1322_CR5_HomeOxygenTherapyInformation_2400
     {
     }
     
     [E(",OG,TR,")]
-    public class X12_ID_737_Loop_2400
+    public class X12_ID_737_MEA_TestResult_2400
     {
     }
     
     [E(",GRA,HT,R1,R2,R3,R4,ZO,")]
-    public class X12_ID_738_Loop_2400
+    public class X12_ID_738_MEA_TestResult_2400
     {
     }
     
     [E(",01,02,03,04,05,06,09,")]
-    public class X12_ID_1166_Loop_2400
+    public class X12_ID_1166_CN1_ContractInformation_2400
     {
     }
     
     [E(",ADD,DCP,PMT,TPO,")]
-    public class X12_ID_363_Loop_2400
+    public class X12_ID_363_NTE_LineNote_2400
     {
     }
     
     [E(",VS,")]
-    public class X12_ID_673_Loop_2400
+    public class X12_ID_673_HSD_HealthCareServicesDelivery_2400
     {
     }
     
     [E(",00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,")]
-    public class X12_ID_1473_Loop_2400
+    public class X12_ID_1473_HCP_LinePricingRepricingInformation_2400
     {
     }
     
     public class Loop_2440
     {
         
-        [S("LQ", 1, typeof(X12_ID_1270_Loop_2440))]
+        [S("LQ", 1, typeof(X12_ID_1270_LQ_FormIdentificationCode_2440))]
         public LQ_FormIdentificationCode_2440 LQ_FormIdentificationCode_2440 { get; set; }
         [S("FRM", 2)]
         public List<FRM_SupportingDocumentation_2440> FRM_SupportingDocumentation_2440 { get; set; }
     }
     
     [E(",AS,UT,")]
-    public class X12_ID_1270_Loop_2440
+    public class X12_ID_1270_LQ_FormIdentificationCode_2440
     {
     }
     
     [E(",N,W,Y,")]
-    public class X12_ID_1073_Loop_2440
+    public class X12_ID_1073_FRM_SupportingDocumentation_2440
     {
     }
     
@@ -376,24 +401,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         
         [S("SVD", 1)]
         public SVD_LineAdjudicationInformation_2430 SVD_LineAdjudicationInformation_2430 { get; set; }
-        [S("CAS", 2, typeof(X12_ID_1033_Loop_2430))]
+        [S("CAS", 2, typeof(X12_ID_1033_CAS_LineAdjustment_2430))]
         public List<CAS_LineAdjustment_2430> CAS_LineAdjustment_2430 { get; set; }
-        [S("DTP", 3, typeof(X12_ID_374_Loop_2430), typeof(X12_ID_1250_Loop_2430))]
+        [S("DTP", 3, typeof(X12_ID_374_DTP_LineAdjudicationDate_2430), typeof(X12_ID_1250_DTP_LineAdjudicationDate_2430))]
         public DTP_LineAdjudicationDate_2430 DTP_LineAdjudicationDate_2430 { get; set; }
     }
     
     [E(",CO,CR,OA,PI,PR,")]
-    public class X12_ID_1033_Loop_2430
+    public class X12_ID_1033_CAS_LineAdjustment_2430
     {
     }
     
     [E(",573,")]
-    public class X12_ID_374_Loop_2430
+    public class X12_ID_374_DTP_LineAdjudicationDate_2430
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_Loop_2430
+    public class X12_ID_1250_DTP_LineAdjudicationDate_2430
     {
     }
     
@@ -509,24 +534,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420G
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420G), typeof(X12_ID_1065_Loop_2420G))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G), typeof(X12_ID_1065_NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G))]
         public NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2420G))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerPriorAuthorizationOrReferralNumber_2420G))]
         public List<REF_OtherPayerPriorAuthorizationOrReferralNumber_2420G> REF_OtherPayerPriorAuthorizationOrReferralNumber_2420G { get; set; }
     }
     
     [E(",PR,")]
-    public class X12_ID_98_Loop_2420G
+    public class X12_ID_98_NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2420G
+    public class X12_ID_1065_NM1_OtherPayerPriorAuthorizationOrReferralNumber_2420G
     {
     }
     
     [E(",9F,G1,")]
-    public class X12_ID_128_Loop_2420G
+    public class X12_ID_128_REF_OtherPayerPriorAuthorizationOrReferralNumber_2420G
     {
     }
     
@@ -573,31 +598,36 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420F
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420F), typeof(X12_ID_1065_Loop_2420F))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ReferringProviderName_2420F), typeof(X12_ID_1065_NM1_ReferringProviderName_2420F))]
         public NM1_ReferringProviderName_2420F NM1_ReferringProviderName_2420F { get; set; }
-        [S("PRV", 2, typeof(X12_ID_1221_Loop_2420F), typeof(X12_ID_128_Loop_2420F))]
+        [S("PRV", 2, typeof(X12_ID_1221_PRV_ReferringProviderSpecialtyInformation_2420F), typeof(X12_ID_128_PRV_ReferringProviderSpecialtyInformation_2420F))]
         public PRV_ReferringProviderSpecialtyInformation_2420F PRV_ReferringProviderSpecialtyInformation_2420F { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_Loop_2420F))]
+        [S("REF", 3, typeof(X12_ID_128_REF_ReferringProviderSecondaryIdentification_2420F))]
         public List<REF_ReferringProviderSecondaryIdentification_2420F> REF_ReferringProviderSecondaryIdentification_2420F { get; set; }
     }
     
     [E(",DN,P3,")]
-    public class X12_ID_98_Loop_2420F
+    public class X12_ID_98_NM1_ReferringProviderName_2420F
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2420F
+    public class X12_ID_1065_NM1_ReferringProviderName_2420F
     {
     }
     
     [E(",RF,")]
-    public class X12_ID_1221_Loop_2420F
+    public class X12_ID_1221_PRV_ReferringProviderSpecialtyInformation_2420F
     {
     }
     
     [E(",ZZ,")]
-    public class X12_ID_128_Loop_2420F
+    public class X12_ID_128_PRV_ReferringProviderSpecialtyInformation_2420F
+    {
+    }
+    
+    [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
+    public class X12_ID_128_REF_ReferringProviderSecondaryIdentification_2420F
     {
     }
     
@@ -661,35 +691,35 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420E
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420E), typeof(X12_ID_1065_Loop_2420E))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OrderingProviderName_2420E), typeof(X12_ID_1065_NM1_OrderingProviderName_2420E))]
         public NM1_OrderingProviderName_2420E NM1_OrderingProviderName_2420E { get; set; }
         [S("N3", 2)]
         public N3_OrderingProviderAddress_2420E N3_OrderingProviderAddress_2420E { get; set; }
         [S("N4", 3)]
         public N4_OrderingProviderCityStateZIPCode_2420E N4_OrderingProviderCityStateZIPCode_2420E { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2420E))]
+        [S("REF", 4, typeof(X12_ID_128_REF_OrderingProviderSecondaryIdentification_2420E))]
         public List<REF_OrderingProviderSecondaryIdentification_2420E> REF_OrderingProviderSecondaryIdentification_2420E { get; set; }
-        [S("PER", 5, typeof(X12_ID_366_Loop_2420E))]
+        [S("PER", 5, typeof(X12_ID_366_PER_OrderingProviderContactInformation_2420E))]
         public PER_OrderingProviderContactInformation_2420E PER_OrderingProviderContactInformation_2420E { get; set; }
     }
     
     [E(",DK,")]
-    public class X12_ID_98_Loop_2420E
+    public class X12_ID_98_NM1_OrderingProviderName_2420E
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2420E
+    public class X12_ID_1065_NM1_OrderingProviderName_2420E
     {
     }
     
     [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
-    public class X12_ID_128_Loop_2420E
+    public class X12_ID_128_REF_OrderingProviderSecondaryIdentification_2420E
     {
     }
     
     [E(",IC,")]
-    public class X12_ID_366_Loop_2420E
+    public class X12_ID_366_PER_OrderingProviderContactInformation_2420E
     {
     }
     
@@ -785,24 +815,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420D
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420D), typeof(X12_ID_1065_Loop_2420D))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_SupervisingProviderName_2420D), typeof(X12_ID_1065_NM1_SupervisingProviderName_2420D))]
         public NM1_SupervisingProviderName_2420D NM1_SupervisingProviderName_2420D { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2420D))]
+        [S("REF", 2, typeof(X12_ID_128_REF_SupervisingProviderSecondaryIdentification_2420D))]
         public List<REF_SupervisingProviderSecondaryIdentification_2420D> REF_SupervisingProviderSecondaryIdentification_2420D { get; set; }
     }
     
     [E(",DQ,")]
-    public class X12_ID_98_Loop_2420D
+    public class X12_ID_98_NM1_SupervisingProviderName_2420D
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2420D
+    public class X12_ID_1065_NM1_SupervisingProviderName_2420D
     {
     }
     
     [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
-    public class X12_ID_128_Loop_2420D
+    public class X12_ID_128_REF_SupervisingProviderSecondaryIdentification_2420D
     {
     }
     
@@ -849,28 +879,28 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420C
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420C), typeof(X12_ID_1065_Loop_2420C))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ServiceFacilityLocation_2420C), typeof(X12_ID_1065_NM1_ServiceFacilityLocation_2420C))]
         public NM1_ServiceFacilityLocation_2420C NM1_ServiceFacilityLocation_2420C { get; set; }
         [S("N3", 2)]
         public N3_ServiceFacilityLocationAddress_2420C N3_ServiceFacilityLocationAddress_2420C { get; set; }
         [S("N4", 3)]
         public N4_ServiceFacilityLocationCityStateZIP_2420C N4_ServiceFacilityLocationCityStateZIP_2420C { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2420C))]
+        [S("REF", 4, typeof(X12_ID_128_REF_ServiceFacilityLocationSecondaryIdentification_2420C))]
         public List<REF_ServiceFacilityLocationSecondaryIdentification_2420C> REF_ServiceFacilityLocationSecondaryIdentification_2420C { get; set; }
     }
     
     [E(",77,FA,LI,TL,")]
-    public class X12_ID_98_Loop_2420C
+    public class X12_ID_98_NM1_ServiceFacilityLocation_2420C
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2420C
+    public class X12_ID_1065_NM1_ServiceFacilityLocation_2420C
     {
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,G2,LU,N5,TJ,X4,X5,")]
-    public class X12_ID_128_Loop_2420C
+    public class X12_ID_128_REF_ServiceFacilityLocationSecondaryIdentification_2420C
     {
     }
     
@@ -943,24 +973,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420B
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420B), typeof(X12_ID_1065_Loop_2420B))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_PurchasedServiceProviderName_2420B), typeof(X12_ID_1065_NM1_PurchasedServiceProviderName_2420B))]
         public NM1_PurchasedServiceProviderName_2420B NM1_PurchasedServiceProviderName_2420B { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2420B))]
+        [S("REF", 2, typeof(X12_ID_128_REF_PurchasedServiceProviderSecondaryIdentification_2420B))]
         public List<REF_PurchasedServiceProviderSecondaryIdentification_2420B> REF_PurchasedServiceProviderSecondaryIdentification_2420B { get; set; }
     }
     
     [E(",QB,")]
-    public class X12_ID_98_Loop_2420B
+    public class X12_ID_98_NM1_PurchasedServiceProviderName_2420B
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2420B
+    public class X12_ID_1065_NM1_PurchasedServiceProviderName_2420B
     {
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,U3,X5,")]
-    public class X12_ID_128_Loop_2420B
+    public class X12_ID_128_REF_PurchasedServiceProviderSecondaryIdentification_2420B
     {
     }
     
@@ -1007,31 +1037,36 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2420A
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2420A), typeof(X12_ID_1065_Loop_2420A))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_RenderingProviderName_2420A), typeof(X12_ID_1065_NM1_RenderingProviderName_2420A))]
         public NM1_RenderingProviderName_2420A NM1_RenderingProviderName_2420A { get; set; }
-        [S("PRV", 2, typeof(X12_ID_1221_Loop_2420A), typeof(X12_ID_128_Loop_2420A))]
+        [S("PRV", 2, typeof(X12_ID_1221_PRV_RenderingProviderSpecialtyInformation_2420A), typeof(X12_ID_128_PRV_RenderingProviderSpecialtyInformation_2420A))]
         public PRV_RenderingProviderSpecialtyInformation_2420A PRV_RenderingProviderSpecialtyInformation_2420A { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_Loop_2420A))]
+        [S("REF", 3, typeof(X12_ID_128_REF_RenderingProviderSecondaryIdentification_2420A))]
         public List<REF_RenderingProviderSecondaryIdentification_2420A> REF_RenderingProviderSecondaryIdentification_2420A { get; set; }
     }
     
     [E(",82,")]
-    public class X12_ID_98_Loop_2420A
+    public class X12_ID_98_NM1_RenderingProviderName_2420A
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2420A
+    public class X12_ID_1065_NM1_RenderingProviderName_2420A
     {
     }
     
     [E(",PE,")]
-    public class X12_ID_1221_Loop_2420A
+    public class X12_ID_1221_PRV_RenderingProviderSpecialtyInformation_2420A
     {
     }
     
     [E(",ZZ,")]
-    public class X12_ID_128_Loop_2420A
+    public class X12_ID_128_PRV_RenderingProviderSpecialtyInformation_2420A
+    {
+    }
+    
+    [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
+    public class X12_ID_128_REF_RenderingProviderSecondaryIdentification_2420A
     {
     }
     
@@ -1099,17 +1134,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         public LIN_DrugIdentification_2410 LIN_DrugIdentification_2410 { get; set; }
         [S("CTP", 2)]
         public CTP_DrugPricing_2410 CTP_DrugPricing_2410 { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_Loop_2410))]
+        [S("REF", 3, typeof(X12_ID_128_REF_PrescriptionNumber_2410))]
         public REF_PrescriptionNumber_2410 REF_PrescriptionNumber_2410 { get; set; }
     }
     
     [E(",N4,")]
-    public class X12_ID_235_Loop_2410
+    public class X12_ID_235_LIN_DrugIdentification_2410
     {
     }
     
     [E(",XZ,")]
-    public class X12_ID_128_Loop_2410
+    public class X12_ID_128_REF_PrescriptionNumber_2410
     {
     }
     
@@ -1345,16 +1380,26 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_AMT_2400
     {
         
-        [S("AMT", 1, typeof(X12_ID_522_All_AMT_2400))]
+        [S("AMT", 1, typeof(X12_ID_522_AMT_SalesTaxAmount_2400))]
         public AMT_SalesTaxAmount_2400 AMT_SalesTaxAmount_2400 { get; set; }
-        [S("AMT", 2, typeof(X12_ID_522_All_AMT_2400))]
+        [S("AMT", 2, typeof(X12_ID_522_AMT_ApprovedAmount_2400))]
         public AMT_ApprovedAmount_2400 AMT_ApprovedAmount_2400 { get; set; }
-        [S("AMT", 3, typeof(X12_ID_522_All_AMT_2400))]
+        [S("AMT", 3, typeof(X12_ID_522_AMT_PostageClaimedAmount_2400))]
         public AMT_PostageClaimedAmount_2400 AMT_PostageClaimedAmount_2400 { get; set; }
     }
     
     [E(",T,")]
-    public class X12_ID_522_All_AMT_2400
+    public class X12_ID_522_AMT_SalesTaxAmount_2400
+    {
+    }
+    
+    [E(",AAE,")]
+    public class X12_ID_522_AMT_ApprovedAmount_2400
+    {
+    }
+    
+    [E(",F4,")]
+    public class X12_ID_522_AMT_PostageClaimedAmount_2400
     {
     }
     
@@ -1394,32 +1439,82 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_REF_2400
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 1, typeof(X12_ID_128_REF_RepricedLineItemReferenceNumber_2400))]
         public REF_RepricedLineItemReferenceNumber_2400 REF_RepricedLineItemReferenceNumber_2400 { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 2, typeof(X12_ID_128_REF_AdjustedRepricedLineItemReferenceNumber_2400))]
         public REF_AdjustedRepricedLineItemReferenceNumber_2400 REF_AdjustedRepricedLineItemReferenceNumber_2400 { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 3, typeof(X12_ID_128_REF_PriorAuthorizationOrReferralNumber_2400))]
         public List<REF_PriorAuthorizationOrReferralNumber_2400> REF_PriorAuthorizationOrReferralNumber_2400 { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 4, typeof(X12_ID_128_REF_LineItemControlNumber_2400))]
         public REF_LineItemControlNumber_2400 REF_LineItemControlNumber_2400 { get; set; }
-        [S("REF", 5, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 5, typeof(X12_ID_128_REF_MammographyCertificationNumber_2400))]
         public REF_MammographyCertificationNumber_2400 REF_MammographyCertificationNumber_2400 { get; set; }
-        [S("REF", 6, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 6, typeof(X12_ID_128_REF_ClinicalLaboratoryImprovementAmendmentCLIAIdentification_2400))]
         public REF_ClinicalLaboratoryImprovementAmendmentCLIAIdentification_2400 REF_ClinicalLaboratoryImprovementAmendmentCLIAIdentification_2400 { get; set; }
-        [S("REF", 7, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 7, typeof(X12_ID_128_REF_ReferringClinicalLaboratoryImprovementAmendmentCLIAFacilityIdentification_2400))]
         public REF_ReferringClinicalLaboratoryImprovementAmendmentCLIAFacilityIdentification_2400 REF_ReferringClinicalLaboratoryImprovementAmendmentCLIAFacilityIdentification_2400 { get; set; }
-        [S("REF", 8, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 8, typeof(X12_ID_128_REF_ImmunizationBatchNumber_2400))]
         public REF_ImmunizationBatchNumber_2400 REF_ImmunizationBatchNumber_2400 { get; set; }
-        [S("REF", 9, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 9, typeof(X12_ID_128_REF_AmbulatoryPatientGroupAPG_2400))]
         public List<REF_AmbulatoryPatientGroupAPG_2400> REF_AmbulatoryPatientGroupAPG_2400 { get; set; }
-        [S("REF", 10, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 10, typeof(X12_ID_128_REF_OxygenFlowRate_2400))]
         public REF_OxygenFlowRate_2400 REF_OxygenFlowRate_2400 { get; set; }
-        [S("REF", 11, typeof(X12_ID_128_All_REF_2400))]
+        [S("REF", 11, typeof(X12_ID_128_REF_UniversalProductNumberUPN_2400))]
         public REF_UniversalProductNumberUPN_2400 REF_UniversalProductNumberUPN_2400 { get; set; }
     }
     
     [E(",9B,")]
-    public class X12_ID_128_All_REF_2400
+    public class X12_ID_128_REF_RepricedLineItemReferenceNumber_2400
+    {
+    }
+    
+    [E(",9D,")]
+    public class X12_ID_128_REF_AdjustedRepricedLineItemReferenceNumber_2400
+    {
+    }
+    
+    [E(",9F,G1,")]
+    public class X12_ID_128_REF_PriorAuthorizationOrReferralNumber_2400
+    {
+    }
+    
+    [E(",6R,")]
+    public class X12_ID_128_REF_LineItemControlNumber_2400
+    {
+    }
+    
+    [E(",EW,")]
+    public class X12_ID_128_REF_MammographyCertificationNumber_2400
+    {
+    }
+    
+    [E(",X4,")]
+    public class X12_ID_128_REF_ClinicalLaboratoryImprovementAmendmentCLIAIdentification_2400
+    {
+    }
+    
+    [E(",F4,")]
+    public class X12_ID_128_REF_ReferringClinicalLaboratoryImprovementAmendmentCLIAFacilityIdentification_2400
+    {
+    }
+    
+    [E(",BT,")]
+    public class X12_ID_128_REF_ImmunizationBatchNumber_2400
+    {
+    }
+    
+    [E(",1S,")]
+    public class X12_ID_128_REF_AmbulatoryPatientGroupAPG_2400
+    {
+    }
+    
+    [E(",TP,")]
+    public class X12_ID_128_REF_OxygenFlowRate_2400
+    {
+    }
+    
+    [E(",OZ,VP,")]
+    public class X12_ID_128_REF_UniversalProductNumberUPN_2400
     {
     }
     
@@ -1611,41 +1706,161 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_DTP_2400
     {
         
-        [S("DTP", 1, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 1, typeof(X12_ID_374_DTP_DateServiceDate_2400), typeof(X12_ID_1250_DTP_DateServiceDate_2400))]
         public DTP_DateServiceDate_2400 DTP_DateServiceDate_2400 { get; set; }
-        [S("DTP", 2, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 2, typeof(X12_ID_374_DTP_DateCertificationRevisionDate_2400), typeof(X12_ID_1250_DTP_DateCertificationRevisionDate_2400))]
         public DTP_DateCertificationRevisionDate_2400 DTP_DateCertificationRevisionDate_2400 { get; set; }
-        [S("DTP", 3, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 3, typeof(X12_ID_374_DTP_DateBeginTherapyDate_2400), typeof(X12_ID_1250_DTP_DateBeginTherapyDate_2400))]
         public DTP_DateBeginTherapyDate_2400 DTP_DateBeginTherapyDate_2400 { get; set; }
-        [S("DTP", 4, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 4, typeof(X12_ID_374_DTP_DateLastCertificationDate_2400), typeof(X12_ID_1250_DTP_DateLastCertificationDate_2400))]
         public DTP_DateLastCertificationDate_2400 DTP_DateLastCertificationDate_2400 { get; set; }
-        [S("DTP", 5, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 5, typeof(X12_ID_374_DTP_DateDateLastSeen_2400), typeof(X12_ID_1250_DTP_DateDateLastSeen_2400))]
         public DTP_DateDateLastSeen_2400 DTP_DateDateLastSeen_2400 { get; set; }
-        [S("DTP", 6, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 6, typeof(X12_ID_374_DTP_DateTest_2400), typeof(X12_ID_1250_DTP_DateTest_2400))]
         public List<DTP_DateTest_2400> DTP_DateTest_2400 { get; set; }
-        [S("DTP", 7, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 7, typeof(X12_ID_374_DTP_DateOxygenSaturationArterialBloodGasTest_2400), typeof(X12_ID_1250_DTP_DateOxygenSaturationArterialBloodGasTest_2400))]
         public List<DTP_DateOxygenSaturationArterialBloodGasTest_2400> DTP_DateOxygenSaturationArterialBloodGasTest_2400 { get; set; }
-        [S("DTP", 8, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 8, typeof(X12_ID_374_DTP_DateShipped_2400), typeof(X12_ID_1250_DTP_DateShipped_2400))]
         public DTP_DateShipped_2400 DTP_DateShipped_2400 { get; set; }
-        [S("DTP", 9, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 9, typeof(X12_ID_374_DTP_DateOnsetOfCurrentSymptomIllness_2400), typeof(X12_ID_1250_DTP_DateOnsetOfCurrentSymptomIllness_2400))]
         public DTP_DateOnsetOfCurrentSymptomIllness_2400 DTP_DateOnsetOfCurrentSymptomIllness_2400 { get; set; }
-        [S("DTP", 10, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 10, typeof(X12_ID_374_DTP_DateLastXray_2400), typeof(X12_ID_1250_DTP_DateLastXray_2400))]
         public DTP_DateLastXray_2400 DTP_DateLastXray_2400 { get; set; }
-        [S("DTP", 11, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 11, typeof(X12_ID_374_DTP_DateAcuteManifestation_2400), typeof(X12_ID_1250_DTP_DateAcuteManifestation_2400))]
         public DTP_DateAcuteManifestation_2400 DTP_DateAcuteManifestation_2400 { get; set; }
-        [S("DTP", 12, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 12, typeof(X12_ID_374_DTP_DateInitialTreatment_2400), typeof(X12_ID_1250_DTP_DateInitialTreatment_2400))]
         public DTP_DateInitialTreatment_2400 DTP_DateInitialTreatment_2400 { get; set; }
-        [S("DTP", 13, typeof(X12_ID_374_All_DTP_2400), typeof(X12_ID_1250_All_DTP_2400))]
+        [S("DTP", 13, typeof(X12_ID_374_DTP_DateSimilarIllnessSymptomOnset_2400), typeof(X12_ID_1250_DTP_DateSimilarIllnessSymptomOnset_2400))]
         public DTP_DateSimilarIllnessSymptomOnset_2400 DTP_DateSimilarIllnessSymptomOnset_2400 { get; set; }
     }
     
     [E(",472,")]
-    public class X12_ID_374_All_DTP_2400
+    public class X12_ID_374_DTP_DateServiceDate_2400
     {
     }
     
     [E(",D8,RD8,")]
-    public class X12_ID_1250_All_DTP_2400
+    public class X12_ID_1250_DTP_DateServiceDate_2400
+    {
+    }
+    
+    [E(",607,")]
+    public class X12_ID_374_DTP_DateCertificationRevisionDate_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateCertificationRevisionDate_2400
+    {
+    }
+    
+    [E(",463,")]
+    public class X12_ID_374_DTP_DateBeginTherapyDate_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateBeginTherapyDate_2400
+    {
+    }
+    
+    [E(",461,")]
+    public class X12_ID_374_DTP_DateLastCertificationDate_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateLastCertificationDate_2400
+    {
+    }
+    
+    [E(",304,")]
+    public class X12_ID_374_DTP_DateDateLastSeen_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateDateLastSeen_2400
+    {
+    }
+    
+    [E(",738,739,")]
+    public class X12_ID_374_DTP_DateTest_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateTest_2400
+    {
+    }
+    
+    [E(",119,480,481,")]
+    public class X12_ID_374_DTP_DateOxygenSaturationArterialBloodGasTest_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateOxygenSaturationArterialBloodGasTest_2400
+    {
+    }
+    
+    [E(",011,")]
+    public class X12_ID_374_DTP_DateShipped_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateShipped_2400
+    {
+    }
+    
+    [E(",431,")]
+    public class X12_ID_374_DTP_DateOnsetOfCurrentSymptomIllness_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateOnsetOfCurrentSymptomIllness_2400
+    {
+    }
+    
+    [E(",455,")]
+    public class X12_ID_374_DTP_DateLastXray_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateLastXray_2400
+    {
+    }
+    
+    [E(",453,")]
+    public class X12_ID_374_DTP_DateAcuteManifestation_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateAcuteManifestation_2400
+    {
+    }
+    
+    [E(",454,")]
+    public class X12_ID_374_DTP_DateInitialTreatment_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateInitialTreatment_2400
+    {
+    }
+    
+    [E(",438,")]
+    public class X12_ID_374_DTP_DateSimilarIllnessSymptomOnset_2400
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateSimilarIllnessSymptomOnset_2400
     {
     }
     
@@ -1795,21 +2010,41 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_CRC_2400
     {
         
-        [S("CRC", 1, typeof(X12_ID_1136_All_CRC_2400), typeof(X12_ID_1073_All_CRC_2400))]
+        [S("CRC", 1, typeof(X12_ID_1136_CRC_AmbulanceCertification_2400), typeof(X12_ID_1073_CRC_AmbulanceCertification_2400))]
         public List<CRC_AmbulanceCertification_2400> CRC_AmbulanceCertification_2400 { get; set; }
-        [S("CRC", 2, typeof(X12_ID_1136_All_CRC_2400), typeof(X12_ID_1073_All_CRC_2400))]
+        [S("CRC", 2, typeof(X12_ID_1136_CRC_HospiceEmployeeIndicator_2400), typeof(X12_ID_1073_CRC_HospiceEmployeeIndicator_2400))]
         public CRC_HospiceEmployeeIndicator_2400 CRC_HospiceEmployeeIndicator_2400 { get; set; }
-        [S("CRC", 3, typeof(X12_ID_1136_All_CRC_2400), typeof(X12_ID_1073_All_CRC_2400))]
+        [S("CRC", 3, typeof(X12_ID_1136_CRC_DMERCConditionIndicator_2400), typeof(X12_ID_1073_CRC_DMERCConditionIndicator_2400))]
         public List<CRC_DMERCConditionIndicator_2400> CRC_DMERCConditionIndicator_2400 { get; set; }
     }
     
     [E(",07,")]
-    public class X12_ID_1136_All_CRC_2400
+    public class X12_ID_1136_CRC_AmbulanceCertification_2400
     {
     }
     
     [E(",N,Y,")]
-    public class X12_ID_1073_All_CRC_2400
+    public class X12_ID_1073_CRC_AmbulanceCertification_2400
+    {
+    }
+    
+    [E(",70,")]
+    public class X12_ID_1136_CRC_HospiceEmployeeIndicator_2400
+    {
+    }
+    
+    [E(",N,Y,")]
+    public class X12_ID_1073_CRC_HospiceEmployeeIndicator_2400
+    {
+    }
+    
+    [E(",09,11,")]
+    public class X12_ID_1136_CRC_DMERCConditionIndicator_2400
+    {
+    }
+    
+    [E(",N,Y,")]
+    public class X12_ID_1073_CRC_DMERCConditionIndicator_2400
     {
     }
     
@@ -2130,13 +2365,13 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2320
     {
         
-        [S("SBR", 1, typeof(X12_ID_1138_Loop_2320), typeof(X12_ID_1069_Loop_2320))]
+        [S("SBR", 1, typeof(X12_ID_1138_SBR_OtherSubscriberInformation_2320), typeof(X12_ID_1069_SBR_OtherSubscriberInformation_2320))]
         public SBR_OtherSubscriberInformation_2320 SBR_OtherSubscriberInformation_2320 { get; set; }
-        [S("CAS", 2, typeof(X12_ID_1033_Loop_2320))]
+        [S("CAS", 2, typeof(X12_ID_1033_CAS_ClaimLevelAdjustments_2320))]
         public List<CAS_ClaimLevelAdjustments_2320> CAS_ClaimLevelAdjustments_2320 { get; set; }
         [A(3)]
         public All_AMT_2320 All_AMT_2320 { get; set; }
-        [S("DMG", 4, typeof(X12_ID_1250_Loop_2320))]
+        [S("DMG", 4, typeof(X12_ID_1250_DMG_SubscriberDemographicInformation_2320))]
         public DMG_SubscriberDemographicInformation_2320 DMG_SubscriberDemographicInformation_2320 { get; set; }
         [S("OI", 5)]
         public OI_OtherInsuranceCoverageInformation_2320 OI_OtherInsuranceCoverageInformation_2320 { get; set; }
@@ -2147,22 +2382,22 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",P,S,T,")]
-    public class X12_ID_1138_Loop_2320
+    public class X12_ID_1138_SBR_OtherSubscriberInformation_2320
     {
     }
     
     [E(",01,04,05,07,10,15,17,18,19,20,21,22,23,24,29,32,33,36,39,40,41,43,53,G8,")]
-    public class X12_ID_1069_Loop_2320
+    public class X12_ID_1069_SBR_OtherSubscriberInformation_2320
     {
     }
     
     [E(",CO,CR,OA,PI,PR,")]
-    public class X12_ID_1033_Loop_2320
+    public class X12_ID_1033_CAS_ClaimLevelAdjustments_2320
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_Loop_2320
+    public class X12_ID_1250_DMG_SubscriberDemographicInformation_2320
     {
     }
     
@@ -2190,24 +2425,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330H
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330H), typeof(X12_ID_1065_Loop_2330H))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerSupervisingProvider_2330H), typeof(X12_ID_1065_NM1_OtherPayerSupervisingProvider_2330H))]
         public NM1_OtherPayerSupervisingProvider_2330H NM1_OtherPayerSupervisingProvider_2330H { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330H))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerSupervisingProviderIdentification_2330H))]
         public List<REF_OtherPayerSupervisingProviderIdentification_2330H> REF_OtherPayerSupervisingProviderIdentification_2330H { get; set; }
     }
     
     [E(",DQ,")]
-    public class X12_ID_98_Loop_2330H
+    public class X12_ID_98_NM1_OtherPayerSupervisingProvider_2330H
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2330H
+    public class X12_ID_1065_NM1_OtherPayerSupervisingProvider_2330H
     {
     }
     
     [E(",1B,1C,1D,EI,G2,N5,")]
-    public class X12_ID_128_Loop_2330H
+    public class X12_ID_128_REF_OtherPayerSupervisingProviderIdentification_2330H
     {
     }
     
@@ -2254,24 +2489,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330G
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330G), typeof(X12_ID_1065_Loop_2330G))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerServiceFacilityLocation_2330G), typeof(X12_ID_1065_NM1_OtherPayerServiceFacilityLocation_2330G))]
         public NM1_OtherPayerServiceFacilityLocation_2330G NM1_OtherPayerServiceFacilityLocation_2330G { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330G))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerServiceFacilityLocationIdentification_2330G))]
         public List<REF_OtherPayerServiceFacilityLocationIdentification_2330G> REF_OtherPayerServiceFacilityLocationIdentification_2330G { get; set; }
     }
     
     [E(",77,FA,LI,TL,")]
-    public class X12_ID_98_Loop_2330G
+    public class X12_ID_98_NM1_OtherPayerServiceFacilityLocation_2330G
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2330G
+    public class X12_ID_1065_NM1_OtherPayerServiceFacilityLocation_2330G
     {
     }
     
     [E(",1A,1B,1C,1D,G2,LU,N5,")]
-    public class X12_ID_128_Loop_2330G
+    public class X12_ID_128_REF_OtherPayerServiceFacilityLocationIdentification_2330G
     {
     }
     
@@ -2318,24 +2553,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330F
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330F), typeof(X12_ID_1065_Loop_2330F))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerPurchasedServiceProvider_2330F), typeof(X12_ID_1065_NM1_OtherPayerPurchasedServiceProvider_2330F))]
         public NM1_OtherPayerPurchasedServiceProvider_2330F NM1_OtherPayerPurchasedServiceProvider_2330F { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330F))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerPurchasedServiceProviderIdentification_2330F))]
         public List<REF_OtherPayerPurchasedServiceProviderIdentification_2330F> REF_OtherPayerPurchasedServiceProviderIdentification_2330F { get; set; }
     }
     
     [E(",QB,")]
-    public class X12_ID_98_Loop_2330F
+    public class X12_ID_98_NM1_OtherPayerPurchasedServiceProvider_2330F
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2330F
+    public class X12_ID_1065_NM1_OtherPayerPurchasedServiceProvider_2330F
     {
     }
     
     [E(",1A,1B,1C,1D,EI,G2,LU,N5,")]
-    public class X12_ID_128_Loop_2330F
+    public class X12_ID_128_REF_OtherPayerPurchasedServiceProviderIdentification_2330F
     {
     }
     
@@ -2382,24 +2617,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330E
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330E), typeof(X12_ID_1065_Loop_2330E))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerRenderingProvider_2330E), typeof(X12_ID_1065_NM1_OtherPayerRenderingProvider_2330E))]
         public NM1_OtherPayerRenderingProvider_2330E NM1_OtherPayerRenderingProvider_2330E { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330E))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerRenderingProviderSecondaryIdentification_2330E))]
         public List<REF_OtherPayerRenderingProviderSecondaryIdentification_2330E> REF_OtherPayerRenderingProviderSecondaryIdentification_2330E { get; set; }
     }
     
     [E(",82,")]
-    public class X12_ID_98_Loop_2330E
+    public class X12_ID_98_NM1_OtherPayerRenderingProvider_2330E
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2330E
+    public class X12_ID_1065_NM1_OtherPayerRenderingProvider_2330E
     {
     }
     
     [E(",1B,1C,1D,EI,G2,LU,N5,")]
-    public class X12_ID_128_Loop_2330E
+    public class X12_ID_128_REF_OtherPayerRenderingProviderSecondaryIdentification_2330E
     {
     }
     
@@ -2446,24 +2681,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330D
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330D), typeof(X12_ID_1065_Loop_2330D))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerReferringProvider_2330D), typeof(X12_ID_1065_NM1_OtherPayerReferringProvider_2330D))]
         public NM1_OtherPayerReferringProvider_2330D NM1_OtherPayerReferringProvider_2330D { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330D))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerReferringProviderIdentification_2330D))]
         public List<REF_OtherPayerReferringProviderIdentification_2330D> REF_OtherPayerReferringProviderIdentification_2330D { get; set; }
     }
     
     [E(",DN,P3,")]
-    public class X12_ID_98_Loop_2330D
+    public class X12_ID_98_NM1_OtherPayerReferringProvider_2330D
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2330D
+    public class X12_ID_1065_NM1_OtherPayerReferringProvider_2330D
     {
     }
     
     [E(",1B,1C,1D,EI,G2,LU,N5,")]
-    public class X12_ID_128_Loop_2330D
+    public class X12_ID_128_REF_OtherPayerReferringProviderIdentification_2330D
     {
     }
     
@@ -2510,24 +2745,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330C
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330C), typeof(X12_ID_1065_Loop_2330C))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerPatientInformation_2330C), typeof(X12_ID_1065_NM1_OtherPayerPatientInformation_2330C))]
         public NM1_OtherPayerPatientInformation_2330C NM1_OtherPayerPatientInformation_2330C { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2330C))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerPatientIdentification_2330C))]
         public List<REF_OtherPayerPatientIdentification_2330C> REF_OtherPayerPatientIdentification_2330C { get; set; }
     }
     
     [E(",QC,")]
-    public class X12_ID_98_Loop_2330C
+    public class X12_ID_98_NM1_OtherPayerPatientInformation_2330C
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2330C
+    public class X12_ID_1065_NM1_OtherPayerPatientInformation_2330C
     {
     }
     
     [E(",1W,23,IG,SY,")]
-    public class X12_ID_128_Loop_2330C
+    public class X12_ID_128_REF_OtherPayerPatientIdentification_2330C
     {
     }
     
@@ -2574,54 +2809,64 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330B
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330B), typeof(X12_ID_1065_Loop_2330B))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherPayerName_2330B), typeof(X12_ID_1065_NM1_OtherPayerName_2330B))]
         public NM1_OtherPayerName_2330B NM1_OtherPayerName_2330B { get; set; }
-        [S("PER", 2, typeof(X12_ID_366_Loop_2330B))]
+        [S("PER", 2, typeof(X12_ID_366_PER_OtherPayerContactInformation_2330B))]
         public List<PER_OtherPayerContactInformation_2330B> PER_OtherPayerContactInformation_2330B { get; set; }
-        [S("DTP", 3, typeof(X12_ID_374_Loop_2330B), typeof(X12_ID_1250_Loop_2330B))]
+        [S("DTP", 3, typeof(X12_ID_374_DTP_ClaimAdjudicationDate_2330B), typeof(X12_ID_1250_DTP_ClaimAdjudicationDate_2330B))]
         public DTP_ClaimAdjudicationDate_2330B DTP_ClaimAdjudicationDate_2330B { get; set; }
         [A(4)]
         public All_REF_2330B All_REF_2330B { get; set; }
     }
     
     [E(",PR,")]
-    public class X12_ID_98_Loop_2330B
+    public class X12_ID_98_NM1_OtherPayerName_2330B
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2330B
+    public class X12_ID_1065_NM1_OtherPayerName_2330B
     {
     }
     
     [E(",IC,")]
-    public class X12_ID_366_Loop_2330B
+    public class X12_ID_366_PER_OtherPayerContactInformation_2330B
     {
     }
     
     [E(",573,")]
-    public class X12_ID_374_Loop_2330B
+    public class X12_ID_374_DTP_ClaimAdjudicationDate_2330B
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_Loop_2330B
+    public class X12_ID_1250_DTP_ClaimAdjudicationDate_2330B
     {
     }
     
     public class All_REF_2330B
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2330B))]
+        [S("REF", 1, typeof(X12_ID_128_REF_OtherPayerSecondaryIdentifier_2330B))]
         public List<REF_OtherPayerSecondaryIdentifier_2330B> REF_OtherPayerSecondaryIdentifier_2330B { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2330B))]
+        [S("REF", 2, typeof(X12_ID_128_REF_OtherPayerPriorAuthorizationOrReferralNumber_2330B))]
         public List<REF_OtherPayerPriorAuthorizationOrReferralNumber_2330B> REF_OtherPayerPriorAuthorizationOrReferralNumber_2330B { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_All_REF_2330B))]
+        [S("REF", 3, typeof(X12_ID_128_REF_OtherPayerClaimAdjustmentIndicator_2330B))]
         public List<REF_OtherPayerClaimAdjustmentIndicator_2330B> REF_OtherPayerClaimAdjustmentIndicator_2330B { get; set; }
     }
     
     [E(",2U,F8,FY,NF,TJ,")]
-    public class X12_ID_128_All_REF_2330B
+    public class X12_ID_128_REF_OtherPayerSecondaryIdentifier_2330B
+    {
+    }
+    
+    [E(",9F,G1,")]
+    public class X12_ID_128_REF_OtherPayerPriorAuthorizationOrReferralNumber_2330B
+    {
+    }
+    
+    [E(",T4,")]
+    public class X12_ID_128_REF_OtherPayerClaimAdjustmentIndicator_2330B
     {
     }
     
@@ -2728,28 +2973,28 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2330A
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2330A), typeof(X12_ID_1065_Loop_2330A))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_OtherSubscriberName_2330A), typeof(X12_ID_1065_NM1_OtherSubscriberName_2330A))]
         public NM1_OtherSubscriberName_2330A NM1_OtherSubscriberName_2330A { get; set; }
         [S("N3", 2)]
         public N3_OtherSubscriberAddress_2330A N3_OtherSubscriberAddress_2330A { get; set; }
         [S("N4", 3)]
         public N4_OtherSubscriberCityStateZIPCode_2330A N4_OtherSubscriberCityStateZIPCode_2330A { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2330A))]
+        [S("REF", 4, typeof(X12_ID_128_REF_OtherSubscriberSecondaryIdentification_2330A))]
         public List<REF_OtherSubscriberSecondaryIdentification_2330A> REF_OtherSubscriberSecondaryIdentification_2330A { get; set; }
     }
     
     [E(",IL,")]
-    public class X12_ID_98_Loop_2330A
+    public class X12_ID_98_NM1_OtherSubscriberName_2330A
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2330A
+    public class X12_ID_1065_NM1_OtherSubscriberName_2330A
     {
     }
     
     [E(",1W,23,IG,SY,")]
-    public class X12_ID_128_Loop_2330A
+    public class X12_ID_128_REF_OtherSubscriberSecondaryIdentification_2330A
     {
     }
     
@@ -2885,30 +3130,75 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_AMT_2320
     {
         
-        [S("AMT", 1, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 1, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBPayerPaidAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBPayerPaidAmount_2320 AMT_CoordinationOfBenefitsCOBPayerPaidAmount_2320 { get; set; }
-        [S("AMT", 2, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 2, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBApprovedAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBApprovedAmount_2320 AMT_CoordinationOfBenefitsCOBApprovedAmount_2320 { get; set; }
-        [S("AMT", 3, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 3, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBAllowedAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBAllowedAmount_2320 AMT_CoordinationOfBenefitsCOBAllowedAmount_2320 { get; set; }
-        [S("AMT", 4, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 4, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBPatientResponsibilityAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBPatientResponsibilityAmount_2320 AMT_CoordinationOfBenefitsCOBPatientResponsibilityAmount_2320 { get; set; }
-        [S("AMT", 5, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 5, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBCoveredAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBCoveredAmount_2320 AMT_CoordinationOfBenefitsCOBCoveredAmount_2320 { get; set; }
-        [S("AMT", 6, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 6, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBDiscountAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBDiscountAmount_2320 AMT_CoordinationOfBenefitsCOBDiscountAmount_2320 { get; set; }
-        [S("AMT", 7, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 7, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBPerDayLimitAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBPerDayLimitAmount_2320 AMT_CoordinationOfBenefitsCOBPerDayLimitAmount_2320 { get; set; }
-        [S("AMT", 8, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 8, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBPatientPaidAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBPatientPaidAmount_2320 AMT_CoordinationOfBenefitsCOBPatientPaidAmount_2320 { get; set; }
-        [S("AMT", 9, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 9, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBTaxAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBTaxAmount_2320 AMT_CoordinationOfBenefitsCOBTaxAmount_2320 { get; set; }
-        [S("AMT", 10, typeof(X12_ID_522_All_AMT_2320))]
+        [S("AMT", 10, typeof(X12_ID_522_AMT_CoordinationOfBenefitsCOBTotalClaimBeforeTaxesAmount_2320))]
         public AMT_CoordinationOfBenefitsCOBTotalClaimBeforeTaxesAmount_2320 AMT_CoordinationOfBenefitsCOBTotalClaimBeforeTaxesAmount_2320 { get; set; }
     }
     
     [E(",D,")]
-    public class X12_ID_522_All_AMT_2320
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBPayerPaidAmount_2320
+    {
+    }
+    
+    [E(",AAE,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBApprovedAmount_2320
+    {
+    }
+    
+    [E(",B6,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBAllowedAmount_2320
+    {
+    }
+    
+    [E(",F2,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBPatientResponsibilityAmount_2320
+    {
+    }
+    
+    [E(",AU,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBCoveredAmount_2320
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBDiscountAmount_2320
+    {
+    }
+    
+    [E(",DY,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBPerDayLimitAmount_2320
+    {
+    }
+    
+    [E(",F5,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBPatientPaidAmount_2320
+    {
+    }
+    
+    [E(",T,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBTaxAmount_2320
+    {
+    }
+    
+    [E(",T2,")]
+    public class X12_ID_522_AMT_CoordinationOfBenefitsCOBTotalClaimBeforeTaxesAmount_2320
     {
     }
     
@@ -3106,24 +3396,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2310E
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2310E), typeof(X12_ID_1065_Loop_2310E))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_SupervisingProviderName_2310E), typeof(X12_ID_1065_NM1_SupervisingProviderName_2310E))]
         public NM1_SupervisingProviderName_2310E NM1_SupervisingProviderName_2310E { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2310E))]
+        [S("REF", 2, typeof(X12_ID_128_REF_SupervisingProviderSecondaryIdentification_2310E))]
         public List<REF_SupervisingProviderSecondaryIdentification_2310E> REF_SupervisingProviderSecondaryIdentification_2310E { get; set; }
     }
     
     [E(",DQ,")]
-    public class X12_ID_98_Loop_2310E
+    public class X12_ID_98_NM1_SupervisingProviderName_2310E
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2310E
+    public class X12_ID_1065_NM1_SupervisingProviderName_2310E
     {
     }
     
     [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
-    public class X12_ID_128_Loop_2310E
+    public class X12_ID_128_REF_SupervisingProviderSecondaryIdentification_2310E
     {
     }
     
@@ -3170,28 +3460,28 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2310D
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2310D), typeof(X12_ID_1065_Loop_2310D))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ServiceFacilityLocation_2310D), typeof(X12_ID_1065_NM1_ServiceFacilityLocation_2310D))]
         public NM1_ServiceFacilityLocation_2310D NM1_ServiceFacilityLocation_2310D { get; set; }
         [S("N3", 2)]
         public N3_ServiceFacilityLocationAddress_2310D N3_ServiceFacilityLocationAddress_2310D { get; set; }
         [S("N4", 3)]
         public N4_ServiceFacilityLocationCityStateZIP_2310D N4_ServiceFacilityLocationCityStateZIP_2310D { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2310D))]
+        [S("REF", 4, typeof(X12_ID_128_REF_ServiceFacilityLocationSecondaryIdentification_2310D))]
         public List<REF_ServiceFacilityLocationSecondaryIdentification_2310D> REF_ServiceFacilityLocationSecondaryIdentification_2310D { get; set; }
     }
     
     [E(",77,FA,LI,TL,")]
-    public class X12_ID_98_Loop_2310D
+    public class X12_ID_98_NM1_ServiceFacilityLocation_2310D
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2310D
+    public class X12_ID_1065_NM1_ServiceFacilityLocation_2310D
     {
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,G2,LU,N5,TJ,X4,X5,")]
-    public class X12_ID_128_Loop_2310D
+    public class X12_ID_128_REF_ServiceFacilityLocationSecondaryIdentification_2310D
     {
     }
     
@@ -3264,24 +3554,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2310C
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2310C), typeof(X12_ID_1065_Loop_2310C))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_PurchasedServiceProviderName_2310C), typeof(X12_ID_1065_NM1_PurchasedServiceProviderName_2310C))]
         public NM1_PurchasedServiceProviderName_2310C NM1_PurchasedServiceProviderName_2310C { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2310C))]
+        [S("REF", 2, typeof(X12_ID_128_REF_PurchasedServiceProviderSecondaryIdentification_2310C))]
         public List<REF_PurchasedServiceProviderSecondaryIdentification_2310C> REF_PurchasedServiceProviderSecondaryIdentification_2310C { get; set; }
     }
     
     [E(",QB,")]
-    public class X12_ID_98_Loop_2310C
+    public class X12_ID_98_NM1_PurchasedServiceProviderName_2310C
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2310C
+    public class X12_ID_1065_NM1_PurchasedServiceProviderName_2310C
     {
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,U3,X5,")]
-    public class X12_ID_128_Loop_2310C
+    public class X12_ID_128_REF_PurchasedServiceProviderSecondaryIdentification_2310C
     {
     }
     
@@ -3328,31 +3618,36 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2310B
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2310B), typeof(X12_ID_1065_Loop_2310B))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_RenderingProviderName_2310B), typeof(X12_ID_1065_NM1_RenderingProviderName_2310B))]
         public NM1_RenderingProviderName_2310B NM1_RenderingProviderName_2310B { get; set; }
-        [S("PRV", 2, typeof(X12_ID_1221_Loop_2310B), typeof(X12_ID_128_Loop_2310B))]
+        [S("PRV", 2, typeof(X12_ID_1221_PRV_RenderingProviderSpecialtyInformation_2310B), typeof(X12_ID_128_PRV_RenderingProviderSpecialtyInformation_2310B))]
         public PRV_RenderingProviderSpecialtyInformation_2310B PRV_RenderingProviderSpecialtyInformation_2310B { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_Loop_2310B))]
+        [S("REF", 3, typeof(X12_ID_128_REF_RenderingProviderSecondaryIdentification_2310B))]
         public List<REF_RenderingProviderSecondaryIdentification_2310B> REF_RenderingProviderSecondaryIdentification_2310B { get; set; }
     }
     
     [E(",82,")]
-    public class X12_ID_98_Loop_2310B
+    public class X12_ID_98_NM1_RenderingProviderName_2310B
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2310B
+    public class X12_ID_1065_NM1_RenderingProviderName_2310B
     {
     }
     
     [E(",PE,")]
-    public class X12_ID_1221_Loop_2310B
+    public class X12_ID_1221_PRV_RenderingProviderSpecialtyInformation_2310B
     {
     }
     
     [E(",ZZ,")]
-    public class X12_ID_128_Loop_2310B
+    public class X12_ID_128_PRV_RenderingProviderSpecialtyInformation_2310B
+    {
+    }
+    
+    [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
+    public class X12_ID_128_REF_RenderingProviderSecondaryIdentification_2310B
     {
     }
     
@@ -3416,31 +3711,36 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2310A
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2310A), typeof(X12_ID_1065_Loop_2310A))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ReferringProviderName_2310A), typeof(X12_ID_1065_NM1_ReferringProviderName_2310A))]
         public NM1_ReferringProviderName_2310A NM1_ReferringProviderName_2310A { get; set; }
-        [S("PRV", 2, typeof(X12_ID_1221_Loop_2310A), typeof(X12_ID_128_Loop_2310A))]
+        [S("PRV", 2, typeof(X12_ID_1221_PRV_ReferringProviderSpecialtyInformation_2310A), typeof(X12_ID_128_PRV_ReferringProviderSpecialtyInformation_2310A))]
         public PRV_ReferringProviderSpecialtyInformation_2310A PRV_ReferringProviderSpecialtyInformation_2310A { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_Loop_2310A))]
+        [S("REF", 3, typeof(X12_ID_128_REF_ReferringProviderSecondaryIdentification_2310A))]
         public List<REF_ReferringProviderSecondaryIdentification_2310A> REF_ReferringProviderSecondaryIdentification_2310A { get; set; }
     }
     
     [E(",DN,P3,")]
-    public class X12_ID_98_Loop_2310A
+    public class X12_ID_98_NM1_ReferringProviderName_2310A
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2310A
+    public class X12_ID_1065_NM1_ReferringProviderName_2310A
     {
     }
     
     [E(",RF,")]
-    public class X12_ID_1221_Loop_2310A
+    public class X12_ID_1221_PRV_ReferringProviderSpecialtyInformation_2310A
     {
     }
     
     [E(",ZZ,")]
-    public class X12_ID_128_Loop_2310A
+    public class X12_ID_128_PRV_ReferringProviderSpecialtyInformation_2310A
+    {
+    }
+    
+    [E(",0B,1B,1C,1D,1G,1H,EI,G2,LU,N5,SY,X5,")]
+    public class X12_ID_128_REF_ReferringProviderSecondaryIdentification_2310A
     {
     }
     
@@ -3504,19 +3804,19 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2305
     {
         
-        [S("CR7", 1, typeof(X12_ID_921_Loop_2305))]
+        [S("CR7", 1, typeof(X12_ID_921_CR7_HomeHealthCarePlanInformation_2305))]
         public CR7_HomeHealthCarePlanInformation_2305 CR7_HomeHealthCarePlanInformation_2305 { get; set; }
-        [S("HSD", 2, typeof(X12_ID_673_Loop_2305))]
+        [S("HSD", 2, typeof(X12_ID_673_HSD_HealthCareServicesDelivery_2305))]
         public List<HSD_HealthCareServicesDelivery_2305> HSD_HealthCareServicesDelivery_2305 { get; set; }
     }
     
     [E(",AI,MS,OT,PT,SN,ST,")]
-    public class X12_ID_921_Loop_2305
+    public class X12_ID_921_CR7_HomeHealthCarePlanInformation_2305
     {
     }
     
     [E(",VS,")]
-    public class X12_ID_673_Loop_2305
+    public class X12_ID_673_HSD_HealthCareServicesDelivery_2305
     {
     }
     
@@ -3771,23 +4071,53 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_CRC_2300
     {
         
-        [S("CRC", 1, typeof(X12_ID_1136_All_CRC_2300), typeof(X12_ID_1073_All_CRC_2300))]
+        [S("CRC", 1, typeof(X12_ID_1136_CRC_AmbulanceCertification_2300), typeof(X12_ID_1073_CRC_AmbulanceCertification_2300))]
         public List<CRC_AmbulanceCertification_2300> CRC_AmbulanceCertification_2300 { get; set; }
-        [S("CRC", 2, typeof(X12_ID_1136_All_CRC_2300), typeof(X12_ID_1073_All_CRC_2300))]
+        [S("CRC", 2, typeof(X12_ID_1136_CRC_PatientConditionInformationVision_2300), typeof(X12_ID_1073_CRC_PatientConditionInformationVision_2300))]
         public List<CRC_PatientConditionInformationVision_2300> CRC_PatientConditionInformationVision_2300 { get; set; }
-        [S("CRC", 3, typeof(X12_ID_1136_All_CRC_2300), typeof(X12_ID_1073_All_CRC_2300))]
+        [S("CRC", 3, typeof(X12_ID_1136_CRC_HomeboundIndicator_2300), typeof(X12_ID_1073_CRC_HomeboundIndicator_2300))]
         public CRC_HomeboundIndicator_2300 CRC_HomeboundIndicator_2300 { get; set; }
-        [S("CRC", 4, typeof(X12_ID_1136_All_CRC_2300), typeof(X12_ID_1073_All_CRC_2300))]
+        [S("CRC", 4, typeof(X12_ID_1136_CRC_EPSDTReferral_2300), typeof(X12_ID_1073_CRC_EPSDTReferral_2300))]
         public CRC_EPSDTReferral_2300 CRC_EPSDTReferral_2300 { get; set; }
     }
     
     [E(",07,")]
-    public class X12_ID_1136_All_CRC_2300
+    public class X12_ID_1136_CRC_AmbulanceCertification_2300
     {
     }
     
     [E(",N,Y,")]
-    public class X12_ID_1073_All_CRC_2300
+    public class X12_ID_1073_CRC_AmbulanceCertification_2300
+    {
+    }
+    
+    [E(",E1,E2,E3,")]
+    public class X12_ID_1136_CRC_PatientConditionInformationVision_2300
+    {
+    }
+    
+    [E(",N,Y,")]
+    public class X12_ID_1073_CRC_PatientConditionInformationVision_2300
+    {
+    }
+    
+    [E(",75,")]
+    public class X12_ID_1136_CRC_HomeboundIndicator_2300
+    {
+    }
+    
+    [E(",Y,")]
+    public class X12_ID_1073_CRC_HomeboundIndicator_2300
+    {
+    }
+    
+    [E(",ZZ,")]
+    public class X12_ID_1136_CRC_EPSDTReferral_2300
+    {
+    }
+    
+    [E(",N,Y,")]
+    public class X12_ID_1073_CRC_EPSDTReferral_2300
     {
     }
     
@@ -3944,36 +4274,96 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_REF_2300
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 1, typeof(X12_ID_128_REF_ServiceAuthorizationExceptionCode_2300))]
         public REF_ServiceAuthorizationExceptionCode_2300 REF_ServiceAuthorizationExceptionCode_2300 { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 2, typeof(X12_ID_128_REF_MandatoryMedicareSection4081CrossoverIndicator_2300))]
         public REF_MandatoryMedicareSection4081CrossoverIndicator_2300 REF_MandatoryMedicareSection4081CrossoverIndicator_2300 { get; set; }
-        [S("REF", 3, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 3, typeof(X12_ID_128_REF_MammographyCertificationNumber_2300))]
         public REF_MammographyCertificationNumber_2300 REF_MammographyCertificationNumber_2300 { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 4, typeof(X12_ID_128_REF_PriorAuthorizationOrReferralNumber_2300))]
         public List<REF_PriorAuthorizationOrReferralNumber_2300> REF_PriorAuthorizationOrReferralNumber_2300 { get; set; }
-        [S("REF", 5, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 5, typeof(X12_ID_128_REF_OriginalReferenceNumberICNDCN_2300))]
         public REF_OriginalReferenceNumberICNDCN_2300 REF_OriginalReferenceNumberICNDCN_2300 { get; set; }
-        [S("REF", 6, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 6, typeof(X12_ID_128_REF_ClinicalLaboratoryImprovementAmendmentCLIANumber_2300))]
         public List<REF_ClinicalLaboratoryImprovementAmendmentCLIANumber_2300> REF_ClinicalLaboratoryImprovementAmendmentCLIANumber_2300 { get; set; }
-        [S("REF", 7, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 7, typeof(X12_ID_128_REF_RepricedClaimNumber_2300))]
         public REF_RepricedClaimNumber_2300 REF_RepricedClaimNumber_2300 { get; set; }
-        [S("REF", 8, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 8, typeof(X12_ID_128_REF_AdjustedRepricedClaimNumber_2300))]
         public REF_AdjustedRepricedClaimNumber_2300 REF_AdjustedRepricedClaimNumber_2300 { get; set; }
-        [S("REF", 9, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 9, typeof(X12_ID_128_REF_InvestigationalDeviceExemptionNumber_2300))]
         public REF_InvestigationalDeviceExemptionNumber_2300 REF_InvestigationalDeviceExemptionNumber_2300 { get; set; }
-        [S("REF", 10, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 10, typeof(X12_ID_128_REF_ClaimIdentificationNumberForClearingHousesAndOtherTransmissionIntermediaries_2300))]
         public REF_ClaimIdentificationNumberForClearingHousesAndOtherTransmissionIntermediaries_2300 REF_ClaimIdentificationNumberForClearingHousesAndOtherTransmissionIntermediaries_2300 { get; set; }
-        [S("REF", 11, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 11, typeof(X12_ID_128_REF_AmbulatoryPatientGroupAPG_2300))]
         public List<REF_AmbulatoryPatientGroupAPG_2300> REF_AmbulatoryPatientGroupAPG_2300 { get; set; }
-        [S("REF", 12, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 12, typeof(X12_ID_128_REF_MedicalRecordNumber_2300))]
         public REF_MedicalRecordNumber_2300 REF_MedicalRecordNumber_2300 { get; set; }
-        [S("REF", 13, typeof(X12_ID_128_All_REF_2300))]
+        [S("REF", 13, typeof(X12_ID_128_REF_DemonstrationProjectIdentifier_2300))]
         public REF_DemonstrationProjectIdentifier_2300 REF_DemonstrationProjectIdentifier_2300 { get; set; }
     }
     
     [E(",4N,")]
-    public class X12_ID_128_All_REF_2300
+    public class X12_ID_128_REF_ServiceAuthorizationExceptionCode_2300
+    {
+    }
+    
+    [E(",F5,")]
+    public class X12_ID_128_REF_MandatoryMedicareSection4081CrossoverIndicator_2300
+    {
+    }
+    
+    [E(",EW,")]
+    public class X12_ID_128_REF_MammographyCertificationNumber_2300
+    {
+    }
+    
+    [E(",9F,G1,")]
+    public class X12_ID_128_REF_PriorAuthorizationOrReferralNumber_2300
+    {
+    }
+    
+    [E(",F8,")]
+    public class X12_ID_128_REF_OriginalReferenceNumberICNDCN_2300
+    {
+    }
+    
+    [E(",X4,")]
+    public class X12_ID_128_REF_ClinicalLaboratoryImprovementAmendmentCLIANumber_2300
+    {
+    }
+    
+    [E(",9A,")]
+    public class X12_ID_128_REF_RepricedClaimNumber_2300
+    {
+    }
+    
+    [E(",9C,")]
+    public class X12_ID_128_REF_AdjustedRepricedClaimNumber_2300
+    {
+    }
+    
+    [E(",LX,")]
+    public class X12_ID_128_REF_InvestigationalDeviceExemptionNumber_2300
+    {
+    }
+    
+    [E(",D9,")]
+    public class X12_ID_128_REF_ClaimIdentificationNumberForClearingHousesAndOtherTransmissionIntermediaries_2300
+    {
+    }
+    
+    [E(",1S,")]
+    public class X12_ID_128_REF_AmbulatoryPatientGroupAPG_2300
+    {
+    }
+    
+    [E(",EA,")]
+    public class X12_ID_128_REF_MedicalRecordNumber_2300
+    {
+    }
+    
+    [E(",P4,")]
+    public class X12_ID_128_REF_DemonstrationProjectIdentifier_2300
     {
     }
     
@@ -4149,16 +4539,26 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_AMT_2300
     {
         
-        [S("AMT", 1, typeof(X12_ID_522_All_AMT_2300))]
+        [S("AMT", 1, typeof(X12_ID_522_AMT_CreditDebitCardMaximumAmount_2300))]
         public AMT_CreditDebitCardMaximumAmount_2300 AMT_CreditDebitCardMaximumAmount_2300 { get; set; }
-        [S("AMT", 2, typeof(X12_ID_522_All_AMT_2300))]
+        [S("AMT", 2, typeof(X12_ID_522_AMT_PatientAmountPaid_2300))]
         public AMT_PatientAmountPaid_2300 AMT_PatientAmountPaid_2300 { get; set; }
-        [S("AMT", 3, typeof(X12_ID_522_All_AMT_2300))]
+        [S("AMT", 3, typeof(X12_ID_522_AMT_TotalPurchasedServiceAmount_2300))]
         public AMT_TotalPurchasedServiceAmount_2300 AMT_TotalPurchasedServiceAmount_2300 { get; set; }
     }
     
     [E(",MA,")]
-    public class X12_ID_522_All_AMT_2300
+    public class X12_ID_522_AMT_CreditDebitCardMaximumAmount_2300
+    {
+    }
+    
+    [E(",F5,")]
+    public class X12_ID_522_AMT_PatientAmountPaid_2300
+    {
+    }
+    
+    [E(",NE,")]
+    public class X12_ID_522_AMT_TotalPurchasedServiceAmount_2300
     {
     }
     
@@ -4238,47 +4638,197 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_DTP_2300
     {
         
-        [S("DTP", 1, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 1, typeof(X12_ID_374_DTP_DateInitialTreatment_2300), typeof(X12_ID_1250_DTP_DateInitialTreatment_2300))]
         public DTP_DateInitialTreatment_2300 DTP_DateInitialTreatment_2300 { get; set; }
-        [S("DTP", 2, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 2, typeof(X12_ID_374_DTP_DateDateLastSeen_2300), typeof(X12_ID_1250_DTP_DateDateLastSeen_2300))]
         public DTP_DateDateLastSeen_2300 DTP_DateDateLastSeen_2300 { get; set; }
-        [S("DTP", 3, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 3, typeof(X12_ID_374_DTP_DateOnsetOfCurrentIllnessSymptom_2300), typeof(X12_ID_1250_DTP_DateOnsetOfCurrentIllnessSymptom_2300))]
         public DTP_DateOnsetOfCurrentIllnessSymptom_2300 DTP_DateOnsetOfCurrentIllnessSymptom_2300 { get; set; }
-        [S("DTP", 4, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 4, typeof(X12_ID_374_DTP_DateAcuteManifestation_2300), typeof(X12_ID_1250_DTP_DateAcuteManifestation_2300))]
         public List<DTP_DateAcuteManifestation_2300> DTP_DateAcuteManifestation_2300 { get; set; }
-        [S("DTP", 5, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 5, typeof(X12_ID_374_DTP_DateSimilarIllnessSymptomOnset_2300), typeof(X12_ID_1250_DTP_DateSimilarIllnessSymptomOnset_2300))]
         public List<DTP_DateSimilarIllnessSymptomOnset_2300> DTP_DateSimilarIllnessSymptomOnset_2300 { get; set; }
-        [S("DTP", 6, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 6, typeof(X12_ID_374_DTP_DateAccident_2300), typeof(X12_ID_1250_DTP_DateAccident_2300))]
         public List<DTP_DateAccident_2300> DTP_DateAccident_2300 { get; set; }
-        [S("DTP", 7, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 7, typeof(X12_ID_374_DTP_DateLastMenstrualPeriod_2300), typeof(X12_ID_1250_DTP_DateLastMenstrualPeriod_2300))]
         public DTP_DateLastMenstrualPeriod_2300 DTP_DateLastMenstrualPeriod_2300 { get; set; }
-        [S("DTP", 8, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 8, typeof(X12_ID_374_DTP_DateLastXray_2300), typeof(X12_ID_1250_DTP_DateLastXray_2300))]
         public DTP_DateLastXray_2300 DTP_DateLastXray_2300 { get; set; }
-        [S("DTP", 9, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 9, typeof(X12_ID_374_DTP_DateHearingAndVisionPrescriptionDate_2300), typeof(X12_ID_1250_DTP_DateHearingAndVisionPrescriptionDate_2300))]
         public DTP_DateHearingAndVisionPrescriptionDate_2300 DTP_DateHearingAndVisionPrescriptionDate_2300 { get; set; }
-        [S("DTP", 10, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 10, typeof(X12_ID_374_DTP_DateDisabilityBegin_2300), typeof(X12_ID_1250_DTP_DateDisabilityBegin_2300))]
         public List<DTP_DateDisabilityBegin_2300> DTP_DateDisabilityBegin_2300 { get; set; }
-        [S("DTP", 11, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 11, typeof(X12_ID_374_DTP_DateDisabilityEnd_2300), typeof(X12_ID_1250_DTP_DateDisabilityEnd_2300))]
         public List<DTP_DateDisabilityEnd_2300> DTP_DateDisabilityEnd_2300 { get; set; }
-        [S("DTP", 12, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 12, typeof(X12_ID_374_DTP_DateLastWorked_2300), typeof(X12_ID_1250_DTP_DateLastWorked_2300))]
         public DTP_DateLastWorked_2300 DTP_DateLastWorked_2300 { get; set; }
-        [S("DTP", 13, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 13, typeof(X12_ID_374_DTP_DateAuthorizedReturnToWork_2300), typeof(X12_ID_1250_DTP_DateAuthorizedReturnToWork_2300))]
         public DTP_DateAuthorizedReturnToWork_2300 DTP_DateAuthorizedReturnToWork_2300 { get; set; }
-        [S("DTP", 14, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 14, typeof(X12_ID_374_DTP_DateAdmission_2300), typeof(X12_ID_1250_DTP_DateAdmission_2300))]
         public DTP_DateAdmission_2300 DTP_DateAdmission_2300 { get; set; }
-        [S("DTP", 15, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 15, typeof(X12_ID_374_DTP_DateDischarge_2300), typeof(X12_ID_1250_DTP_DateDischarge_2300))]
         public DTP_DateDischarge_2300 DTP_DateDischarge_2300 { get; set; }
-        [S("DTP", 16, typeof(X12_ID_374_All_DTP_2300), typeof(X12_ID_1250_All_DTP_2300))]
+        [S("DTP", 16, typeof(X12_ID_374_DTP_DateAssumedAndRelinquishedCareDates_2300), typeof(X12_ID_1250_DTP_DateAssumedAndRelinquishedCareDates_2300))]
         public List<DTP_DateAssumedAndRelinquishedCareDates_2300> DTP_DateAssumedAndRelinquishedCareDates_2300 { get; set; }
     }
     
     [E(",454,")]
-    public class X12_ID_374_All_DTP_2300
+    public class X12_ID_374_DTP_DateInitialTreatment_2300
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_All_DTP_2300
+    public class X12_ID_1250_DTP_DateInitialTreatment_2300
+    {
+    }
+    
+    [E(",304,")]
+    public class X12_ID_374_DTP_DateDateLastSeen_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateDateLastSeen_2300
+    {
+    }
+    
+    [E(",431,")]
+    public class X12_ID_374_DTP_DateOnsetOfCurrentIllnessSymptom_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateOnsetOfCurrentIllnessSymptom_2300
+    {
+    }
+    
+    [E(",453,")]
+    public class X12_ID_374_DTP_DateAcuteManifestation_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateAcuteManifestation_2300
+    {
+    }
+    
+    [E(",438,")]
+    public class X12_ID_374_DTP_DateSimilarIllnessSymptomOnset_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateSimilarIllnessSymptomOnset_2300
+    {
+    }
+    
+    [E(",439,")]
+    public class X12_ID_374_DTP_DateAccident_2300
+    {
+    }
+    
+    [E(",D8,DT,")]
+    public class X12_ID_1250_DTP_DateAccident_2300
+    {
+    }
+    
+    [E(",484,")]
+    public class X12_ID_374_DTP_DateLastMenstrualPeriod_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateLastMenstrualPeriod_2300
+    {
+    }
+    
+    [E(",455,")]
+    public class X12_ID_374_DTP_DateLastXray_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateLastXray_2300
+    {
+    }
+    
+    [E(",471,")]
+    public class X12_ID_374_DTP_DateHearingAndVisionPrescriptionDate_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateHearingAndVisionPrescriptionDate_2300
+    {
+    }
+    
+    [E(",360,")]
+    public class X12_ID_374_DTP_DateDisabilityBegin_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateDisabilityBegin_2300
+    {
+    }
+    
+    [E(",361,")]
+    public class X12_ID_374_DTP_DateDisabilityEnd_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateDisabilityEnd_2300
+    {
+    }
+    
+    [E(",297,")]
+    public class X12_ID_374_DTP_DateLastWorked_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateLastWorked_2300
+    {
+    }
+    
+    [E(",296,")]
+    public class X12_ID_374_DTP_DateAuthorizedReturnToWork_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateAuthorizedReturnToWork_2300
+    {
+    }
+    
+    [E(",435,")]
+    public class X12_ID_374_DTP_DateAdmission_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateAdmission_2300
+    {
+    }
+    
+    [E(",096,")]
+    public class X12_ID_374_DTP_DateDischarge_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateDischarge_2300
+    {
+    }
+    
+    [E(",090,091,")]
+    public class X12_ID_374_DTP_DateAssumedAndRelinquishedCareDates_2300
+    {
+    }
+    
+    [E(",D8,")]
+    public class X12_ID_1250_DTP_DateAssumedAndRelinquishedCareDates_2300
     {
     }
     
@@ -4532,44 +5082,49 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010CA
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010CA), typeof(X12_ID_1065_Loop_2010CA))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_PatientName_2010CA), typeof(X12_ID_1065_NM1_PatientName_2010CA))]
         public NM1_PatientName_2010CA NM1_PatientName_2010CA { get; set; }
         [S("N3", 2)]
         public N3_PatientAddress_2010CA N3_PatientAddress_2010CA { get; set; }
         [S("N4", 3)]
         public N4_PatientCityStateZIPCode_2010CA N4_PatientCityStateZIPCode_2010CA { get; set; }
-        [S("DMG", 4, typeof(X12_ID_1250_Loop_2010CA))]
+        [S("DMG", 4, typeof(X12_ID_1250_DMG_PatientDemographicInformation_2010CA))]
         public DMG_PatientDemographicInformation_2010CA DMG_PatientDemographicInformation_2010CA { get; set; }
         [A(5)]
         public All_REF_2010CA All_REF_2010CA { get; set; }
     }
     
     [E(",QC,")]
-    public class X12_ID_98_Loop_2010CA
+    public class X12_ID_98_NM1_PatientName_2010CA
     {
     }
     
     [E(",1,")]
-    public class X12_ID_1065_Loop_2010CA
+    public class X12_ID_1065_NM1_PatientName_2010CA
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_Loop_2010CA
+    public class X12_ID_1250_DMG_PatientDemographicInformation_2010CA
     {
     }
     
     public class All_REF_2010CA
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2010CA))]
+        [S("REF", 1, typeof(X12_ID_128_REF_PatientSecondaryIdentification_2010CA))]
         public List<REF_PatientSecondaryIdentification_2010CA> REF_PatientSecondaryIdentification_2010CA { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2010CA))]
+        [S("REF", 2, typeof(X12_ID_128_REF_PropertyAndCasualtyClaimNumber_2010CA))]
         public REF_PropertyAndCasualtyClaimNumber_2010CA REF_PropertyAndCasualtyClaimNumber_2010CA { get; set; }
     }
     
     [E(",1W,23,IG,SY,")]
-    public class X12_ID_128_All_REF_2010CA
+    public class X12_ID_128_REF_PatientSecondaryIdentification_2010CA
+    {
+    }
+    
+    [E(",Y4,")]
+    public class X12_ID_128_REF_PropertyAndCasualtyClaimNumber_2010CA
     {
     }
     
@@ -4727,24 +5282,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010BD
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010BD), typeof(X12_ID_1065_Loop_2010BD))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_CreditDebitCardHolderName_2010BD), typeof(X12_ID_1065_NM1_CreditDebitCardHolderName_2010BD))]
         public NM1_CreditDebitCardHolderName_2010BD NM1_CreditDebitCardHolderName_2010BD { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_Loop_2010BD))]
+        [S("REF", 2, typeof(X12_ID_128_REF_CreditDebitCardInformation_2010BD))]
         public List<REF_CreditDebitCardInformation_2010BD> REF_CreditDebitCardInformation_2010BD { get; set; }
     }
     
     [E(",AO,")]
-    public class X12_ID_98_Loop_2010BD
+    public class X12_ID_98_NM1_CreditDebitCardHolderName_2010BD
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2010BD
+    public class X12_ID_1065_NM1_CreditDebitCardHolderName_2010BD
     {
     }
     
     [E(",AB,BB,")]
-    public class X12_ID_128_Loop_2010BD
+    public class X12_ID_128_REF_CreditDebitCardInformation_2010BD
     {
     }
     
@@ -4791,7 +5346,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010BC
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010BC), typeof(X12_ID_1065_Loop_2010BC))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ResponsiblePartyName_2010BC), typeof(X12_ID_1065_NM1_ResponsiblePartyName_2010BC))]
         public NM1_ResponsiblePartyName_2010BC NM1_ResponsiblePartyName_2010BC { get; set; }
         [S("N3", 2)]
         public N3_ResponsiblePartyAddress_2010BC N3_ResponsiblePartyAddress_2010BC { get; set; }
@@ -4800,12 +5355,12 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     }
     
     [E(",QD,")]
-    public class X12_ID_98_Loop_2010BC
+    public class X12_ID_98_NM1_ResponsiblePartyName_2010BC
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2010BC
+    public class X12_ID_1065_NM1_ResponsiblePartyName_2010BC
     {
     }
     
@@ -4865,28 +5420,28 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010BB
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010BB), typeof(X12_ID_1065_Loop_2010BB))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_PayerName_2010BB), typeof(X12_ID_1065_NM1_PayerName_2010BB))]
         public NM1_PayerName_2010BB NM1_PayerName_2010BB { get; set; }
         [S("N3", 2)]
         public N3_PayerAddress_2010BB N3_PayerAddress_2010BB { get; set; }
         [S("N4", 3)]
         public N4_PayerCityStateZIPCode_2010BB N4_PayerCityStateZIPCode_2010BB { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2010BB))]
+        [S("REF", 4, typeof(X12_ID_128_REF_PayerSecondaryIdentification_2010BB))]
         public List<REF_PayerSecondaryIdentification_2010BB> REF_PayerSecondaryIdentification_2010BB { get; set; }
     }
     
     [E(",PR,")]
-    public class X12_ID_98_Loop_2010BB
+    public class X12_ID_98_NM1_PayerName_2010BB
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_2010BB
+    public class X12_ID_1065_NM1_PayerName_2010BB
     {
     }
     
     [E(",2U,FY,NF,TJ,")]
-    public class X12_ID_128_Loop_2010BB
+    public class X12_ID_128_REF_PayerSecondaryIdentification_2010BB
     {
     }
     
@@ -4959,44 +5514,49 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010BA
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010BA), typeof(X12_ID_1065_Loop_2010BA))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_SubscriberName_2010BA), typeof(X12_ID_1065_NM1_SubscriberName_2010BA))]
         public NM1_SubscriberName_2010BA NM1_SubscriberName_2010BA { get; set; }
         [S("N3", 2)]
         public N3_SubscriberAddress_2010BA N3_SubscriberAddress_2010BA { get; set; }
         [S("N4", 3)]
         public N4_SubscriberCityStateZIPCode_2010BA N4_SubscriberCityStateZIPCode_2010BA { get; set; }
-        [S("DMG", 4, typeof(X12_ID_1250_Loop_2010BA))]
+        [S("DMG", 4, typeof(X12_ID_1250_DMG_SubscriberDemographicInformation_2010BA))]
         public DMG_SubscriberDemographicInformation_2010BA DMG_SubscriberDemographicInformation_2010BA { get; set; }
         [A(5)]
         public All_REF_2010BA All_REF_2010BA { get; set; }
     }
     
     [E(",IL,")]
-    public class X12_ID_98_Loop_2010BA
+    public class X12_ID_98_NM1_SubscriberName_2010BA
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2010BA
+    public class X12_ID_1065_NM1_SubscriberName_2010BA
     {
     }
     
     [E(",D8,")]
-    public class X12_ID_1250_Loop_2010BA
+    public class X12_ID_1250_DMG_SubscriberDemographicInformation_2010BA
     {
     }
     
     public class All_REF_2010BA
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2010BA))]
+        [S("REF", 1, typeof(X12_ID_128_REF_SubscriberSecondaryIdentification_2010BA))]
         public List<REF_SubscriberSecondaryIdentification_2010BA> REF_SubscriberSecondaryIdentification_2010BA { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2010BA))]
+        [S("REF", 2, typeof(X12_ID_128_REF_PropertyAndCasualtyClaimNumber_2010BA))]
         public REF_PropertyAndCasualtyClaimNumber_2010BA REF_PropertyAndCasualtyClaimNumber_2010BA { get; set; }
     }
     
     [E(",1W,23,IG,SY,")]
-    public class X12_ID_128_All_REF_2010BA
+    public class X12_ID_128_REF_SubscriberSecondaryIdentification_2010BA
+    {
+    }
+    
+    [E(",Y4,")]
+    public class X12_ID_128_REF_PropertyAndCasualtyClaimNumber_2010BA
     {
     }
     
@@ -5173,28 +5733,28 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010AB
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010AB), typeof(X12_ID_1065_Loop_2010AB))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_PaytoProviderName_2010AB), typeof(X12_ID_1065_NM1_PaytoProviderName_2010AB))]
         public NM1_PaytoProviderName_2010AB NM1_PaytoProviderName_2010AB { get; set; }
         [S("N3", 2)]
         public N3_PaytoProviderAddress_2010AB N3_PaytoProviderAddress_2010AB { get; set; }
         [S("N4", 3)]
         public N4_PaytoProviderCityStateZIPCode_2010AB N4_PaytoProviderCityStateZIPCode_2010AB { get; set; }
-        [S("REF", 4, typeof(X12_ID_128_Loop_2010AB))]
+        [S("REF", 4, typeof(X12_ID_128_REF_PaytoProviderSecondaryIdentification_2010AB))]
         public List<REF_PaytoProviderSecondaryIdentification_2010AB> REF_PaytoProviderSecondaryIdentification_2010AB { get; set; }
     }
     
     [E(",87,")]
-    public class X12_ID_98_Loop_2010AB
+    public class X12_ID_98_NM1_PaytoProviderName_2010AB
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2010AB
+    public class X12_ID_1065_NM1_PaytoProviderName_2010AB
     {
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,1J,B3,BQ,EI,FH,G2,G5,LU,SY,U3,X5,")]
-    public class X12_ID_128_Loop_2010AB
+    public class X12_ID_128_REF_PaytoProviderSecondaryIdentification_2010AB
     {
     }
     
@@ -5267,7 +5827,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_2010AA
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_2010AA), typeof(X12_ID_1065_Loop_2010AA))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_BillingProviderName_2010AA), typeof(X12_ID_1065_NM1_BillingProviderName_2010AA))]
         public NM1_BillingProviderName_2010AA NM1_BillingProviderName_2010AA { get; set; }
         [S("N3", 2)]
         public N3_BillingProviderAddress_2010AA N3_BillingProviderAddress_2010AA { get; set; }
@@ -5275,22 +5835,22 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
         public N4_BillingProviderCityStateZIPCode_2010AA N4_BillingProviderCityStateZIPCode_2010AA { get; set; }
         [A(4)]
         public All_REF_2010AA All_REF_2010AA { get; set; }
-        [S("PER", 5, typeof(X12_ID_366_Loop_2010AA))]
+        [S("PER", 5, typeof(X12_ID_366_PER_BillingProviderContactInformation_2010AA))]
         public List<PER_BillingProviderContactInformation_2010AA> PER_BillingProviderContactInformation_2010AA { get; set; }
     }
     
     [E(",85,")]
-    public class X12_ID_98_Loop_2010AA
+    public class X12_ID_98_NM1_BillingProviderName_2010AA
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_2010AA
+    public class X12_ID_1065_NM1_BillingProviderName_2010AA
     {
     }
     
     [E(",IC,")]
-    public class X12_ID_366_Loop_2010AA
+    public class X12_ID_366_PER_BillingProviderContactInformation_2010AA
     {
     }
     
@@ -5320,14 +5880,19 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class All_REF_2010AA
     {
         
-        [S("REF", 1, typeof(X12_ID_128_All_REF_2010AA))]
+        [S("REF", 1, typeof(X12_ID_128_REF_BillingProviderSecondaryIdentification_2010AA))]
         public List<REF_BillingProviderSecondaryIdentification_2010AA> REF_BillingProviderSecondaryIdentification_2010AA { get; set; }
-        [S("REF", 2, typeof(X12_ID_128_All_REF_2010AA))]
+        [S("REF", 2, typeof(X12_ID_128_REF_CreditDebitCardBillingInformation_2010AA))]
         public List<REF_CreditDebitCardBillingInformation_2010AA> REF_CreditDebitCardBillingInformation_2010AA { get; set; }
     }
     
     [E(",0B,1A,1B,1C,1D,1G,1H,1J,B3,BQ,EI,FH,G2,G5,LU,SY,U3,X5,")]
-    public class X12_ID_128_All_REF_2010AA
+    public class X12_ID_128_REF_BillingProviderSecondaryIdentification_2010AA
+    {
+    }
+    
+    [E(",06,8U,EM,IJ,RB,ST,TT,")]
+    public class X12_ID_128_REF_CreditDebitCardBillingInformation_2010AA
     {
     }
     
@@ -5490,17 +6055,17 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_1000B
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_1000B), typeof(X12_ID_1065_Loop_1000B))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_ReceiverName_1000B), typeof(X12_ID_1065_NM1_ReceiverName_1000B))]
         public NM1_ReceiverName_1000B NM1_ReceiverName_1000B { get; set; }
     }
     
     [E(",40,")]
-    public class X12_ID_98_Loop_1000B
+    public class X12_ID_98_NM1_ReceiverName_1000B
     {
     }
     
     [E(",2,")]
-    public class X12_ID_1065_Loop_1000B
+    public class X12_ID_1065_NM1_ReceiverName_1000B
     {
     }
     
@@ -5534,24 +6099,24 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     public class Loop_1000A
     {
         
-        [S("NM1", 1, typeof(X12_ID_98_Loop_1000A), typeof(X12_ID_1065_Loop_1000A))]
+        [S("NM1", 1, typeof(X12_ID_98_NM1_SubmitterName_1000A), typeof(X12_ID_1065_NM1_SubmitterName_1000A))]
         public NM1_SubmitterName_1000A NM1_SubmitterName_1000A { get; set; }
-        [S("PER", 2, typeof(X12_ID_366_Loop_1000A))]
+        [S("PER", 2, typeof(X12_ID_366_PER_SubmitterEDIContactInformation_1000A))]
         public List<PER_SubmitterEDIContactInformation_1000A> PER_SubmitterEDIContactInformation_1000A { get; set; }
     }
     
     [E(",41,")]
-    public class X12_ID_98_Loop_1000A
+    public class X12_ID_98_NM1_SubmitterName_1000A
     {
     }
     
     [E(",1,2,")]
-    public class X12_ID_1065_Loop_1000A
+    public class X12_ID_1065_NM1_SubmitterName_1000A
     {
     }
     
     [E(",IC,")]
-    public class X12_ID_366_Loop_1000A
+    public class X12_ID_366_PER_SubmitterEDIContactInformation_1000A
     {
     }
     
