@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace EdiFabric.Framework.Parsers
@@ -23,7 +24,13 @@ namespace EdiFabric.Framework.Parsers
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
         {
             var result = new List<ParseNode>();
-            result.AddRange(Children);
+            
+            if (Children.Any())
+            {
+                var grouped = Children.GroupBy(s => s.Name);               
+                result.AddRange(grouped.Select(g => g.Last()));
+            }
+
             result.Add(Parent);
             return result;
         }

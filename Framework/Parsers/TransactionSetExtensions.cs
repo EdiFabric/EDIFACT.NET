@@ -40,9 +40,8 @@ namespace EdiFabric.Framework.Parsers
                     }
                 }
 
-                var availableSegments = currSeg.TraverseDepthFirst().ToList();
-                var match = availableSegments.FirstOrDefault(n => n.Match(segment));
-                if (match == null)
+                currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
+                if (currSeg == null)
                 {
                     if (transactionSet.Descendants<Segment>().All(d => d.EdiName != segment.Name))
                     {
@@ -56,11 +55,6 @@ namespace EdiFabric.Framework.Parsers
                         "Segment was not in the correct position according to the rules class.", segment.Value,
                         errorContext);
                 }
-
-                if(currSeg != null && currSeg.Parent is AllLoop)
-                    currSeg = availableSegments.First(s => s.Token == match.Token);
-                else
-                    currSeg = availableSegments.Last(s => s.Token == match.Token);
 
                 if (currSeg.IsParsed) currSeg = (Segment)currSeg.InsertRepetition();
                 currSeg.Parse(segment.Value, separators);
@@ -82,15 +76,14 @@ namespace EdiFabric.Framework.Parsers
             }
 
             // Parent HL, start from it
-            result = descendants.SingleOrDefault(
-                d =>
-                    d.EdiName == "HL" &&
-                    d.Children.First().Value == parentId);
+            var enumerable = descendants as IList<Segment> ?? descendants.ToList();
+            result = enumerable.Last(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == parentId) ??
+                     enumerable.SingleOrDefault(d => d.EdiName == "HL" && d.Children.First().Value == parentId);
 
             if (result == null)
-                throw new Exception(string.Format("No HL segment with id = {0} was found.", parentId));
+                throw new Exception(string.Format("No HL segment with id or parent id = {0} was found.", parentId));
 
-            return result;    
+            return result;
         }
     }
 }

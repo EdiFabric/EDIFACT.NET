@@ -9,7 +9,6 @@ namespace EdiFabric.Framework.Parsers
 {
     class Segment : ParseNode
     {
-        public int Token { get; private set; }
         private readonly List<string> _firstChildValues = new List<string>();
         public IReadOnlyCollection<string> FirstChildValues
         {
@@ -54,8 +53,6 @@ namespace EdiFabric.Framework.Parsers
                     _secondChildValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
             }
-
-            Token = propertyInfo.MetadataToken;
         }
 
         public Segment(Type type, object instance = null)
@@ -67,7 +64,6 @@ namespace EdiFabric.Framework.Parsers
             : this(segment.Type, segment.Name, segment.EdiName)
         {
             segment.Parent.InsertChild(segment.IndexInParent() + 1, this);
-            Token = segment.Token;
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)

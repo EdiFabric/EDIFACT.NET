@@ -65,7 +65,9 @@ namespace EdiFabric.Framework.Parsers
                 var neighbours = current.NeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
 
                 foreach (var neighbour in neighbours.Reverse())
-                    stack.Push(neighbour);                
+                {
+                    stack.Push(neighbour);
+                }
             }
         }
 
