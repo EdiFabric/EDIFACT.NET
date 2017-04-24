@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers
 {
     class ComplexDataElement : ParseNode
     {
-        public ComplexDataElement(Type type, string name, string ediName, object instance = null)
-            : base(type, name, ediName)
+        public ComplexDataElement(PropertyInfo propertyInfo, object instance = null)
+            : base(propertyInfo.GetGenericType(), propertyInfo.Name, propertyInfo.Name)
         {
             BuildChildren(instance, true);
         }
 
         public ComplexDataElement(ParseNode parseNode)
-            : this(parseNode.Type, parseNode.Name, parseNode.EdiName)
+            : base(parseNode.Type, parseNode.Name, parseNode.EdiName)
         {
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
+            BuildChildren(null, true);
         }
 
         public override void Parse(string value, Separators separators)

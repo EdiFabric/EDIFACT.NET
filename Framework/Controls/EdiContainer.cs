@@ -117,8 +117,7 @@ namespace EdiFabric.Framework.Controls
         protected static IEnumerable<string> ToMessageEdi(object item, Separators separators)
         {
             var parseTree = new TransactionSet(item.GetType(), item);
-            //var segments = parseTree.Descendants().OfType<Segment>().Where(s => s.Children.Count > 0).Reverse().ToList();
-            var segments = parseTree.Descendants().OfType<Segment>().Reverse().ToList();
+            var segments = parseTree.Descendants<Segment>();
 
             var result = segments.Select(segment => segment.GenerateSegment(separators));
 
@@ -137,7 +136,7 @@ namespace EdiFabric.Framework.Controls
         protected static string ToSegmentEdi(object item, Separators separators)
         {
             var type = item.GetType();
-            var parseTree = new Segment(type, type.Name, type.Name, null, null, item);
+            var parseTree = new Segment(type, item);
             return parseTree.GenerateSegment(separators);
         }
 

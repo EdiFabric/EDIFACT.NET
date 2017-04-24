@@ -40,10 +40,11 @@ namespace EdiFabric.Framework.Parsers
                     }
                 }
 
-                currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
-                if (currSeg == null)
+                var availableSegments = currSeg.TraverseDepthFirst().ToList();
+                var match = availableSegments.FirstOrDefault(n => n.Match(segment));
+                if (match == null)
                 {
-                    if (transactionSet.Descendants().All(d => d.EdiName != segment.Name))
+                    if (transactionSet.Descendants<Segment>().All(d => d.EdiName != segment.Name))
                     {
                         errorContext.Add(segment.Name, segments.IndexOf(segment) + 1, ErrorCodes.UnrecognizedSegment);
                         throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
@@ -56,6 +57,11 @@ namespace EdiFabric.Framework.Parsers
                         errorContext);
                 }
 
+                if(currSeg != null && currSeg.Parent is AllLoop)
+                    currSeg = availableSegments.First(s => s.Token == match.Token);
+                else
+                    currSeg = availableSegments.Last(s => s.Token == match.Token);
+
                 if (currSeg.IsParsed) currSeg = (Segment)currSeg.InsertRepetition();
                 currSeg.Parse(segment.Value, separators);
                 Logger.Log(String.Format("Matched segment: {0}", currSeg.Name));
@@ -64,50 +70,27 @@ namespace EdiFabric.Framework.Parsers
 
         private static Segment JumpToHl(this TransactionSet transactionSet, string parentId)
         {
-            ParseNode hlParent;
-            if (parentId != null)
-            {
-                // Parent HL, start right after it
-                hlParent =
-                    transactionSet.Descendants()
-                        .SingleOrDefault(
-                            d =>
-                                (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)) &&
-                                d.Children.First().Value == parentId);
-                if (hlParent == null)
-                    throw new Exception(string.Format("HL with id = {0} was not found.", parentId));
-
-                var nextSegment = transactionSet.Descendants().Reverse().OfType<Segment>().FindNextSegment(pt => pt.Name == hlParent.Name);
-
-                if (nextSegment == null)
-                    throw new Exception(string.Format("No segment after HL with id = {0} .", parentId));
-
-                return nextSegment;
-            }
-
+            Segment result;
+            var descendants = transactionSet.Descendants<Segment>();
             // Root HL, start from it
-            return
-                transactionSet.Descendants()
-                    .Reverse().OfType<Segment>()
-                    .First(d => (d.Name == "HL" || d.Name.StartsWith("HL_", StringComparison.Ordinal)));
-
-        }
-
-        private static Segment FindNextSegment(this IEnumerable<Segment> items, Predicate<ParseNode> matchPredicate)
-        {
-            using (var iter = items.GetEnumerator())
+            if (parentId == null)
             {
-                while (iter.MoveNext())
-                {
-                    if (matchPredicate(iter.Current))
-                    {
-                        if (iter.MoveNext())
-                            return iter.Current;
-                    }
-                }
+                result = descendants.Last(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == null);
+                if (result == null)
+                    throw new Exception("No HL segment at parent level was found.");
+                return result;
             }
 
-            return null;
+            // Parent HL, start from it
+            result = descendants.SingleOrDefault(
+                d =>
+                    d.EdiName == "HL" &&
+                    d.Children.First().Value == parentId);
+
+            if (result == null)
+                throw new Exception(string.Format("No HL segment with id = {0} was found.", parentId));
+
+            return result;    
         }
     }
 }

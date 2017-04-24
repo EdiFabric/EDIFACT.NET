@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EdiFabric.Attributes;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers
 {
     class Segment : ParseNode
     {
+        public int Token { get; private set; }
         private readonly List<string> _firstChildValues = new List<string>();
         public IReadOnlyCollection<string> FirstChildValues
         {
@@ -24,33 +27,50 @@ namespace EdiFabric.Framework.Parsers
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        public Segment(Type type, string name, string ediName, List<string> firstValues, List<string> secondValues, object instance = null)
+        private Segment(Type type, string name, string ediName, object instance = null)
             : base(type, name, ediName)
         {
-            if (instance == null)
-            {
-                if (firstValues != null)
-                    _firstChildValues = firstValues;
-                if (secondValues != null)
-                    _secondChildValues = secondValues;
-                return;
-            }
-
+            if (instance == null) return;
             BuildChildren(instance, true);
         }
 
-        public Segment(Type type)
-            : base(type, type.Name, type.Name)
+        public Segment(PropertyInfo propertyInfo, SAttribute sAttr, object instance = null)
+            : this(propertyInfo.GetGenericType(), propertyInfo.Name, sAttr.Id, instance)
+        {
+            if (sAttr.First != null)
+            {
+                var eAttr = (EAttribute)sAttr.First.GetCustomAttributes(typeof(EAttribute)).SingleOrDefault();
+                if (eAttr == null)
+                    throw new Exception(string.Format("Type {0} is not annotated with [EAttribute].",
+                        sAttr.First.Name));
+                _firstChildValues = eAttr.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (sAttr.Second != null)
+                {
+                    var eAttrS = (EAttribute)sAttr.Second.GetCustomAttributes(typeof(EAttribute)).SingleOrDefault();
+                    if (eAttrS == null)
+                        throw new Exception(string.Format("Type {0} is not annotated with [EAttribute].",
+                            sAttr.Second.Name));
+                    _secondChildValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+            }
+
+            Token = propertyInfo.MetadataToken;
+        }
+
+        public Segment(Type type, object instance = null)
+            : this(type, type.Name, type.Name, instance)
         {
         }
 
         public Segment(Segment segment)
-            : this(segment.Type, segment.Name, segment.EdiName, segment._firstChildValues, segment._secondChildValues)
+            : this(segment.Type, segment.Name, segment.EdiName)
         {
             segment.Parent.InsertChild(segment.IndexInParent() + 1, this);
+            Token = segment.Token;
         }
 
-        public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
+        public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
         {
             return new List<ParseNode> {Parent};
         }

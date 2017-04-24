@@ -7,10 +7,10 @@ namespace EdiFabric.Framework.Parsers
 {
     class ParseNode 
     {
+        public Type Type { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
         public ParseNode Parent { get; private set; }
-        public Type Type { get; private set; }
         public string Value { get; set; }
         public bool IsParsed { get; set; }
         
@@ -88,7 +88,7 @@ namespace EdiFabric.Framework.Parsers
             return Type.GetProperties().Sort();
         }
 
-        public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
+        public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
         {
             throw new NotImplementedException(Type.FullName);
         }

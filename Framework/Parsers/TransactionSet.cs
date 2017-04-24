@@ -12,10 +12,10 @@ namespace EdiFabric.Framework.Parsers
             BuildChildren(instance);
         }
 
-        public override IEnumerable<ParseNode> NeighboursWithExclusion(IList<ParseNode> exclusion)
+        public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
         {
             var result = new List<ParseNode>();
-            result.AddRange(this.ChildrenWithExclusion(exclusion));
+            result.AddRange(this.ChildrenWithExclusion(exclusion.ToList()));
             if (!result.Any())
                 result.AddRange(Children);
             return result;

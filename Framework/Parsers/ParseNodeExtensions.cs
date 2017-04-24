@@ -46,7 +46,7 @@ namespace EdiFabric.Framework.Parsers
         {
             var visited = new HashSet<ParseNode>();
             var stack = new Stack<ParseNode>();
-            var parents = startNode.AncestorsAndSelf();
+            var parents = startNode.Ancestors().Reverse().ToList();
             
             stack.Push(startNode);
 
@@ -58,7 +58,9 @@ namespace EdiFabric.Framework.Parsers
                     continue;
 
                 if (current is Segment)
+                {
                     yield return current as Segment;
+                }
 
                 var neighbours = current.NeighboursWithExclusion(parents).Where(p => !visited.Contains(p));
 
@@ -70,10 +72,10 @@ namespace EdiFabric.Framework.Parsers
         private static IEnumerable<ParseNode> Ancestors(this ParseNode node)
         {
             var stack = new Stack<ParseNode>();
-            if (node.Parent == null) 
+            if (node == null) 
                 yield break;
             
-            stack.Push(node.Parent);
+            stack.Push(node);
             while (stack.Count != 0)
             {
                 var item = stack.Pop();
@@ -84,75 +86,42 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        private static IList<ParseNode> AncestorsAndSelf(this ParseNode node)
-        {
-            var result = node.Ancestors().Reverse().ToList(); 
-            result.Add(node);
-
-            return result;
-        }
-
-        public static IEnumerable<ParseNode> Descendants(this ParseNode parseNode)
+        public static IEnumerable<T> Descendants<T>(this ParseNode parseNode) where T : ParseNode
         {
             var nodes = new Stack<ParseNode>(new[] { parseNode });
             while (nodes.Any())
             {
                 var node = nodes.Pop();
-                yield return node;
-                foreach (var n in node.Children) 
+                var result = node as T;
+                if (result != null)
+                    yield return result;
+                foreach (var n in node.Children.Reverse()) 
                     nodes.Push(n);
             }
         }
 
         public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
         {
-            var type = propertyInfo.PropertyType;
-            if (type.IsGenericType)
-                type = type.GenericTypeArguments.First();
-
             var attr = propertyInfo.GetCustomAttribute<EdiAttribute>();
             if(attr == null)
                 throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
 
             if (attr is DAttribute)
-                return new DataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
+                return new DataElement(propertyInfo, instance);
 
             if (attr is SAttribute)
-            {
-                List<string> first = null;
-                List<string> second = null;
-                var sAttr = attr as SAttribute;
-                if (sAttr.First != null)
-                {
-                    var eAttr = (EAttribute) sAttr.First.GetCustomAttributes(typeof (EAttribute)).SingleOrDefault();
-                    if (eAttr == null)
-                        throw new Exception(string.Format("Type {0} is not annotated with an [EAttribute].",
-                            sAttr.First.Name));
-                    first = eAttr.Codes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-                    if (sAttr.Second != null)
-                    {
-                        var eAttrS = (EAttribute) sAttr.Second.GetCustomAttributes(typeof (EAttribute)).SingleOrDefault();
-                        if (eAttrS == null)
-                            throw new Exception(string.Format("Type {0} is not annotated with an [EAttribute].",
-                                sAttr.Second.Name));
-                        second = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    }
-                }
-                return new Segment(type, propertyInfo.Name, sAttr.Id, first, second, instance);
-            }
+                return new Segment(propertyInfo, attr as SAttribute, instance);
 
             if (attr is CAttribute)
-                return new ComplexDataElement(type, propertyInfo.Name, propertyInfo.Name, instance);
+                return new ComplexDataElement(propertyInfo, instance);
 
             if (attr is GAttribute)
-                return new Loop(type, propertyInfo.Name, propertyInfo.Name, instance);
+                return new Loop(propertyInfo, instance);
 
-            var aAttr = propertyInfo.GetCustomAttribute<AAttribute>();
-            if (aAttr != null)
-                return new AllLoop(type, propertyInfo.Name, propertyInfo.Name, instance);
+            if (attr is AAttribute)
+                return new AllLoop(propertyInfo, instance);
 
-            throw new Exception(string.Format("Property {0} is annotated with an unknown [EdiAttribute].", propertyInfo.Name));
+            throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
         }
 
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
@@ -163,6 +132,15 @@ namespace EdiFabric.Framework.Parsers
                         .Cast<EdiAttribute>()
                         .Select(a => a.Pos)
                         .FirstOrDefault());
-        }      
+        }
+
+        public static Type GetGenericType(this PropertyInfo propertyInfo)
+        {
+            var type = propertyInfo.PropertyType;
+            if (type.IsGenericType)
+                type = type.GenericTypeArguments.First();
+
+            return type;
+        }
     }
 }
