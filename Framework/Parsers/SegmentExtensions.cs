@@ -154,9 +154,6 @@ namespace EdiFabric.Framework.Parsers
             // The names must match
             if (parseNode.EdiName == segmentContext.Name)
             {
-                if (parseNode.EdiName == "HL" && parseNode.IsParsed && parseNode.Children.First().Value == segmentContext.ParentId)
-                    return false;
-                
                 // If no identity match is required, mark this as a match
                 if (String.IsNullOrEmpty(segmentContext.FirstValue) || !parseNode.FirstChildValues.Any())
                     return true;

@@ -34,10 +34,6 @@ namespace EdiFabric.Framework.Parsers
         /// </summary>
         public string SecondValue { get; private set; }
         /// <summary>
-        /// The id of HL.
-        /// </summary>
-        public string Id { get; private set; }
-        /// <summary>
         /// The id of the parent HL if any.
         /// </summary>
         public string ParentId { get; private set; }
@@ -98,7 +94,6 @@ namespace EdiFabric.Framework.Parsers
                 }
                 if (Name == Hl)
                 {
-                    Id = dataElements[1];
                     if (!string.IsNullOrEmpty(dataElements[2]))
                         ParentId = dataElements[2];
                 }
