@@ -28,15 +28,15 @@ namespace EdiFabric.Framework.Parsers
                 // Jump back to HL segment if needed
                 if (segment.IsJump)
                 {
-                    try
-                    {
-                        currSeg = transactionSet.JumpToHl(segment.ParentId);
-                    }
-                    catch (Exception ex)
+                    currSeg =
+                        transactionSet.Descendants<Segment>()
+                            .LastOrDefault(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.ParentId);
+
+                    if (currSeg == null)
                     {
                         errorContext.Add(segment.Name, segments.IndexOf(segment) + 1, ErrorCodes.UnexpectedSegment);
                         throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
-                            "Unable to resolve HL.", ex, segment.Value, errorContext);
+                            "Unable to resolve HL.", segment.Value, errorContext);
                     }
                 }
 
@@ -62,28 +62,33 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        private static Segment JumpToHl(this TransactionSet transactionSet, string parentId)
+        public static Tuple<string, string> PullTrailerValues(this TransactionSet transactionSet)
         {
-            Segment result;
-            var descendants = transactionSet.Descendants<Segment>();
-            // Root HL, start from it
-            if (parentId == null)
+            var msgHeader = transactionSet.Children.First();
+            DataElement controlNumber = null;
+            var trailerTag = "";
+            if (msgHeader != null && msgHeader.EdiName == "UNH")
             {
-                result = descendants.Last(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == null);
-                if (result == null)
-                    throw new Exception("No HL segment at parent level was found.");
-                return result;
+                controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
+                trailerTag = "UNT";
             }
 
-            // Parent HL, start from it
-            var enumerable = descendants as IList<Segment> ?? descendants.ToList();
-            result = enumerable.Last(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == parentId) ??
-                     enumerable.SingleOrDefault(d => d.EdiName == "HL" && d.Children.First().Value == parentId);
+            if (msgHeader != null && msgHeader.EdiName == "ST")
+            {
+                controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
+                trailerTag = "SE";
+            }
 
-            if (result == null)
-                throw new Exception(string.Format("No HL segment with id or parent id = {0} was found.", parentId));
+            if (msgHeader == null || controlNumber == null)
+                throw new Exception("Invalid control structure. UNH or ST was not found.");
 
-            return result;
-        }
+            if (String.IsNullOrEmpty(controlNumber.Value))
+                throw new Exception("Invalid control number.");
+
+            if (String.IsNullOrEmpty(trailerTag))
+                throw new Exception("Invalid trailer tag.");
+
+            return new Tuple<string, string>(controlNumber.Value, trailerTag);
+        }  
     }
 }

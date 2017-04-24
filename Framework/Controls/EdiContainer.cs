@@ -116,14 +116,12 @@ namespace EdiFabric.Framework.Controls
         /// <returns>The collection of EDI segments.</returns>
         protected static IEnumerable<string> ToMessageEdi(object item, Separators separators)
         {
-            var parseTree = new TransactionSet(item.GetType(), item);
-            var segments = parseTree.Descendants<Segment>();
+            var transactionSet = new TransactionSet(item.GetType(), item);
+            var result = transactionSet.Descendants<Segment>().Select(segment => segment.GenerateSegment(separators));
 
-            var result = segments.Select(segment => segment.GenerateSegment(separators));
+            if (transactionSet.EdiName == "TA1") return result;
 
-            if (parseTree.EdiName == "TA1") return result;
-
-            var trailerValues = segments.PullTrailerValues();
+            var trailerValues = transactionSet.PullTrailerValues();
             return SetTrailer(result.ToList(), separators, trailerValues.Item2, trailerValues.Item1);
         }
 
@@ -135,9 +133,8 @@ namespace EdiFabric.Framework.Controls
         /// <returns>The collection of EDI segments.</returns>
         protected static string ToSegmentEdi(object item, Separators separators)
         {
-            var type = item.GetType();
-            var parseTree = new Segment(type, item);
-            return parseTree.GenerateSegment(separators);
+            var segment = new Segment(item.GetType(), item);
+            return segment.GenerateSegment(separators);
         }
 
         private static IEnumerable<string> SetTrailer(List<string> segments, Separators separators, string trailerTag, string controlNumber)

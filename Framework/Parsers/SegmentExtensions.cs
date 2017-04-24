@@ -176,40 +176,6 @@ namespace EdiFabric.Framework.Parsers
             }
 
             return false;
-        }
-
-        public static Tuple<string, string> PullTrailerValues(this IEnumerable<Segment> segments)
-        {
-            var msgHeader =
-                segments.SingleOrDefault(
-                    s =>
-                        s.Name == "UNH" || s.Name.StartsWith("UNH_", StringComparison.Ordinal) ||
-                        s.Name == "ST" || s.Name.StartsWith("ST_", StringComparison.Ordinal));
-
-            DataElement controlNumber = null;
-            var trailerTag = "";
-            if (msgHeader != null && msgHeader.Name == "UNH")
-            {
-                controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
-                trailerTag = "UNT";
-            }
-
-            if (msgHeader != null && msgHeader.Name == "ST")
-            {
-                controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
-                trailerTag = "SE";
-            }
-
-            if (msgHeader == null || controlNumber == null)
-                throw new Exception("Invalid control structure. UNH or ST was not found.");
-
-            if (String.IsNullOrEmpty(controlNumber.Value))
-                throw new Exception("Invalid control number.");
-
-            if (String.IsNullOrEmpty(trailerTag))
-                throw new Exception("Invalid trailer tag.");
-
-            return new Tuple<string, string>(controlNumber.Value, trailerTag);
-        }        
+        }              
     }
 }
