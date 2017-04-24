@@ -34,10 +34,6 @@ namespace EdiFabric.Framework.Parsers
         /// </summary>
         public string SecondValue { get; private set; }
         /// <summary>
-        /// The id of the parent HL if any.
-        /// </summary>
-        public string ParentId { get; private set; }
-        /// <summary>
         /// The original segment line.
         /// </summary>
         public string Value { get; private set; }
@@ -90,12 +86,8 @@ namespace EdiFabric.Framework.Parsers
                     var secondComponentDataElements =
                         dataElements[2].Split(new[] {separators.ComponentDataElement},
                             StringSplitOptions.None);
-                    SecondValue = secondComponentDataElements[0];
-                }
-                if (Name == Hl)
-                {
-                    if (!string.IsNullOrEmpty(dataElements[2]))
-                        ParentId = dataElements[2];
+                    if (!string.IsNullOrEmpty(secondComponentDataElements[0]))
+                        SecondValue = secondComponentDataElements[0];
                 }
             }
 
@@ -115,9 +107,6 @@ namespace EdiFabric.Framework.Parsers
             if (!string.IsNullOrEmpty(SecondValue))
                 result = result + string.Format(" SecondValue = {0}", SecondValue);
 
-            if (!string.IsNullOrEmpty(ParentId))
-                result = result + string.Format(" ParentId = {0}", ParentId);
-
             return result;
         }
 
@@ -133,7 +122,7 @@ namespace EdiFabric.Framework.Parsers
             int fv;
             int p;
             return Name == Hl && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
-                     int.TryParse(ParentId ?? "0", out p) &&
+                     int.TryParse(SecondValue ?? "0", out p) &&
                      (fv - p > 1);
         }
     }

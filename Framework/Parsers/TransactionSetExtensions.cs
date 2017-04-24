@@ -30,7 +30,7 @@ namespace EdiFabric.Framework.Parsers
                 {
                     currSeg =
                         transactionSet.Descendants<Segment>()
-                            .LastOrDefault(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.ParentId);
+                            .LastOrDefault(d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
                     {
