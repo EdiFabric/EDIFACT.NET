@@ -28,7 +28,7 @@ namespace EdiFabric.Framework.Controls.Edifact
             {
                 InterchangeControlCount_1 = i.ToString(),
                 InterchangeControlReference_2 = unb.InterchangeControlReference_5
-            }, Separators.DefaultEdifact())
+            }, Separators.DefaultEdifact)
         {
             if (header == null) throw new Exception("UNB header is null.");
         }
@@ -42,7 +42,7 @@ namespace EdiFabric.Framework.Controls.Edifact
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
-            var currentSeparators = separators ?? Separators.DefaultEdifact();
+            var currentSeparators = separators ?? Separators.DefaultEdifact;
             if (separators != null)
             {
                 result.Add(separators.ToUna());

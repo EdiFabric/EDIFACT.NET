@@ -27,7 +27,7 @@ namespace EdiFabric.Framework.Controls.Edifact
             {
                 GroupControlCount_1 = i.ToString(),
                 GroupReferenceNumber_2 = ung.GroupReferenceNumber_5
-            }, Separators.DefaultEdifact())
+            }, Separators.DefaultEdifact)
         {
         }
     }

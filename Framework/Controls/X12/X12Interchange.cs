@@ -28,7 +28,7 @@ namespace EdiFabric.Framework.Controls.X12
             {
                 NumberOfIncludedGroups_1 = i.ToString(),
                 InterchangeControlNumber_2 = header.InterchangeControlNumber_13
-            }, Separators.DefaultX12())
+            }, Separators.DefaultX12)
         {
             if (header == null) throw new Exception("ISA header is null.");
         }
@@ -43,7 +43,7 @@ namespace EdiFabric.Framework.Controls.X12
         public override IEnumerable<string> GenerateEdi(Separators separators = null)
         {
             var result = new List<string>();
-            var currentSeparators = separators ?? Separators.DefaultX12();
+            var currentSeparators = separators ?? Separators.DefaultX12;
 
             Header.ComponentElementSeparator_16 = currentSeparators.ComponentDataElement.ToString();
             if (Header.InterchangeControlStandardsIdentifier_11 != "U")

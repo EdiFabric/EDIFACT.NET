@@ -14,10 +14,9 @@ namespace ConsoleApplication1
         {
             
             List<long> times = new List<long>();
-
             for (var i = 0; i < 1000; i++)
             {
-                var edi = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConsoleApplication1.Edi.Edifact_INVOIC_D00A.txt");
+                var edi = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConsoleApplication1.Edi.Edifact_INVOIC_D00A.txt");           
                 var watch = System.Diagnostics.Stopwatch.StartNew();
                 using (var ediReader = new EdifactReader(edi, "EdiFabric.Rules.EdifactD00A"))
                 //using (var ediReader = X12Reader.Create(edi, "EdiFabric.Rules"))

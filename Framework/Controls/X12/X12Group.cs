@@ -27,7 +27,7 @@ namespace EdiFabric.Framework.Controls.X12
             {
                 NumberOfIncludedSets_1 = i.ToString(),
                 GroupControlNumber_2 = gs.GroupControlNumber_6
-            }, Separators.DefaultX12())
+            }, Separators.DefaultX12)
         {
         }
     }

@@ -80,10 +80,10 @@ namespace EdiFabric.Framework.Readers
                 if (segmentName == "UNB")
                 {
                     probed = segmentName + Read(6);
-                    if (IsUnb(probed, Separators.DefaultEdifact().DataElement,
-                        Separators.DefaultEdifact().ComponentDataElement))
+                    if (IsUnb(probed, Separators.DefaultEdifact.DataElement,
+                        Separators.DefaultEdifact.ComponentDataElement))
                     {
-                        separators = Separators.DefaultEdifact();
+                        separators = Separators.DefaultEdifact;
                         return true;
                     }
                 }
@@ -96,7 +96,7 @@ namespace EdiFabric.Framework.Readers
                     var componentDataElement = unaChars[0];
                     var dataElement = unaChars[1];
                     char? escape = unaChars[3];
-                    var repetitionDataElement = Separators.DefaultEdifact().RepetitionDataElement;
+                    var repetitionDataElement = Separators.DefaultEdifact.RepetitionDataElement;
                     var segment = unaChars[5];
 
                     var tmp = ReadWithTrims(9);
