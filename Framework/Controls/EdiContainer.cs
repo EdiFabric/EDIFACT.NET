@@ -121,7 +121,7 @@ namespace EdiFabric.Framework.Controls
 
             if (transactionSet.EdiName == "TA1") return result;
 
-            var trailerValues = transactionSet.PullTrailerValues();
+            var trailerValues = PullTrailerValues(transactionSet);
             return SetTrailer(result.ToList(), separators, trailerValues.Item2, trailerValues.Item1);
         }
 
@@ -160,6 +160,35 @@ namespace EdiFabric.Framework.Controls
             segments.Add(trailer);
 
             return segments;
+        }
+
+        private static Tuple<string, string> PullTrailerValues(TransactionSet transactionSet)
+        {
+            var msgHeader = transactionSet.Children.First();
+            DataElement controlNumber = null;
+            var trailerTag = "";
+            if (msgHeader != null && msgHeader.EdiName == "UNH")
+            {
+                controlNumber = msgHeader.Children.ElementAt(0) as DataElement;
+                trailerTag = "UNT";
+            }
+
+            if (msgHeader != null && msgHeader.EdiName == "ST")
+            {
+                controlNumber = msgHeader.Children.ElementAt(1) as DataElement;
+                trailerTag = "SE";
+            }
+
+            if (msgHeader == null || controlNumber == null)
+                throw new Exception("Invalid control structure. UNH or ST was not found.");
+
+            if (String.IsNullOrEmpty(controlNumber.Value))
+                throw new Exception("Invalid control number.");
+
+            if (String.IsNullOrEmpty(trailerTag))
+                throw new Exception("Invalid trailer tag.");
+
+            return new Tuple<string, string>(controlNumber.Value, trailerTag);
         }
     }
 }

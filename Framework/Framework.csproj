@@ -84,7 +84,6 @@
     <Compile Include="Controls\IEdiControl.cs" />
     <Compile Include="Controls\X12\X12Group.cs" />
     <Compile Include="Controls\X12\X12Interchange.cs" />
-    <Compile Include="Helper.cs" />
     <Compile Include="Parsers\AllLoop.cs" />
     <Compile Include="Parsers\ComplexDataElement.cs" />
     <Compile Include="Parsers\DataElement.cs" />
@@ -93,9 +92,6 @@
     <Compile Include="Parsers\Segment.cs" />
     <Compile Include="Parsers\SegmentExtensions.cs" />
     <Compile Include="Parsers\TransactionSet.cs" />
-    <Compile Include="Parsers\TransactionSetExtensions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Validators\EdiValidator.cs" />
     <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
     <Compile Include="Exceptions\ErrorCodes.cs">

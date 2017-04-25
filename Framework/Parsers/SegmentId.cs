@@ -15,7 +15,7 @@ namespace EdiFabric.Framework.Parsers
     /// <summary>
     /// Enum of control segment IDs.
     /// </summary>
-    enum SegmentId
+    public enum SegmentId
     {
         Regular,
         UNA,

@@ -13,33 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework.Readers
 {
     static class EdiReaderExtensions
     {
-        public static string Read(this StreamReader reader, int bytes, char[] trims)
-        {
-            string result = null;
-            var counter = 0;
-            while (counter < bytes && !reader.EndOfStream)
-            {
-                var symbol = reader.Read(1).Trim(trims);
-                if (!String.IsNullOrEmpty(symbol))
-                    counter += 1;
-                result += symbol;
-            }
-
-            return result;
-        }        
-
-        public static string Read(this StreamReader reader, int bytes)
-        {
-            var result = new char[bytes];
-            reader.Read(result, 0, result.Length);
-            return String.Concat(result);
-        }
-
         public static string[] GetDataElements(this string segment, Separators separators)
         {
             if (String.IsNullOrEmpty(segment)) throw new ArgumentNullException("segment");
@@ -100,6 +79,21 @@ namespace EdiFabric.Framework.Readers
                 startOfSegment = index;
             }
             yield return input.Substring(startOfSegment);
+        }
+
+        public static object ParseTransactionSet(this List<SegmentContext> segments, Separators separators,
+            MessageContext messageContext)
+        {
+            var message = new TransactionSet(messageContext.SystemType);
+            message.Analyze(segments.Where(s => !s.IsControl), separators, messageContext);
+            return message.ToInstance();
+        }
+
+        public static T ParseSegment<T>(this string segmentValue, Separators separators)
+        {
+            var parseNode = new Segment(typeof(T));
+            parseNode.Parse(segmentValue, separators);
+            return (T)parseNode.ToInstance();
         }
     }
 }

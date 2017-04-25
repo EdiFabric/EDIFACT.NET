@@ -26,6 +26,7 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class EdifactReader : EdiReader
     {
+        private Func<MessageContext, Assembly> RulesAssembly { get; set; }
         private static readonly List<string> SyntaxId = new List<string>
         {
             "UNOA",
@@ -51,8 +52,9 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
         public EdifactReader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
-            : base(ediStream, rulesAssembly, encoding)
+            : base(ediStream, encoding)
         {
+            RulesAssembly = mc => Assembly.Load(rulesAssembly);            
         }
 
         /// <summary>
@@ -63,11 +65,12 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
         public EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
-            : base(ediStream, rulesAssembly, encoding)
+            : base(ediStream, encoding)
         {
+            RulesAssembly = rulesAssembly;            
         }
-        
-        internal override bool TryReadControl(string segmentName, out string probed, out Separators separators)
+
+        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
             separators = null;
@@ -76,7 +79,7 @@ namespace EdiFabric.Framework.Readers
             {
                 if (segmentName == "UNB")
                 {
-                    probed = segmentName + StreamReader.Read(6);
+                    probed = segmentName + Read(6);
                     if (IsUnb(probed, Separators.DefaultEdifact().DataElement,
                         Separators.DefaultEdifact().ComponentDataElement))
                     {
@@ -87,7 +90,7 @@ namespace EdiFabric.Framework.Readers
 
                 if (segmentName == "UNA")
                 {
-                    var una = StreamReader.Read(6);
+                    var una = Read(6);
                     probed = segmentName + una;
                     var unaChars = una.ToArray();
                     var componentDataElement = unaChars[0];
@@ -96,7 +99,7 @@ namespace EdiFabric.Framework.Readers
                     var repetitionDataElement = Separators.DefaultEdifact().RepetitionDataElement;
                     var segment = unaChars[5];
 
-                    var tmp = StreamReader.Read(9, Trims);
+                    var tmp = ReadWithTrims(9);
                     probed += tmp;
                     if (IsUnb(tmp, dataElement, componentDataElement))
                     {
@@ -115,15 +118,17 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        internal override void ProcessSegment(string segment)
+        protected override void ProcessSegment(string segment)
         {
             if (string.IsNullOrEmpty(segment) || Separators == null)
                 return;
 
             var segmentContext = new SegmentContext(segment, Separators);
-
-            if (Flush(segmentContext, SegmentId.UNH))
+            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.UNH) && CurrentMessage.Any())
+            {
+                Flush(segmentContext.Value);
                 return;
+            }
 
             switch (segmentContext.Tag)
             {
@@ -161,7 +166,7 @@ namespace EdiFabric.Framework.Readers
             }
         }
 
-        internal override MessageContext BuildContext()
+        protected override MessageContext BuildContext()
         {
             var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentId.UNH);
             if (unh == null)

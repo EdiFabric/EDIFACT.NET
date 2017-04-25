@@ -1,4 +1,15 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework.Readers;
@@ -86,13 +97,6 @@ namespace EdiFabric.Framework.Parsers
             return parseNode.Name == previous.Name;
         }
         
-        public static T ParseSegment<T>(this string segmentValue, Separators separators)
-        {
-            var parseNode = new Segment(typeof(T));
-            parseNode.Parse(segmentValue, separators);
-            return (T)parseNode.ToInstance();
-        }
-
         public static string UnEscapeLine(this string line, Separators separators)
         {
             if (String.IsNullOrEmpty(line))
@@ -173,6 +177,6 @@ namespace EdiFabric.Framework.Parsers
             }
 
             return false;
-        }              
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace EdiFabric.Framework.Parsers
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the data.
     /// </summary>
-    class SegmentContext
+    public class SegmentContext
     {
         /// <summary>
         /// The segment ID.
@@ -43,10 +43,6 @@ namespace EdiFabric.Framework.Parsers
         /// If it is a control segment.
         /// </summary>
         public bool IsControl{ get; private set; }
-        /// <summary>
-        /// Descriptive name for logging.
-        /// </summary>
-        public string LogName { get; private set; }
         /// <summary>
         /// The segment name as tag.
         /// </summary>
@@ -92,20 +88,6 @@ namespace EdiFabric.Framework.Parsers
             IsJump = Jump();
             Tag = ediSegment.ToSegmentTag(separators);
             IsControl = Control();
-            LogName = ToLogName();
-        }
-
-        private string ToLogName()
-        {
-            var result = string.Format("Name = {0}", Name);
-
-            if (!string.IsNullOrEmpty(FirstValue))
-                result = result + string.Format(" FirstValue = {0}", FirstValue);
-
-            if (!string.IsNullOrEmpty(SecondValue))
-                result = result + string.Format(" SecondValue = {0}", SecondValue);
-
-            return result;
         }
 
         private bool Control()
