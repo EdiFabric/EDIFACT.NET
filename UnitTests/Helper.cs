@@ -11,10 +11,13 @@ namespace EdiFabric.UnitTests
 {
     public class Helper
     {
-        public static Stream LoadStream(string qualifiedFileName)
+        public static Stream LoadStream(string qualifiedFileName, bool noType = true)
         {
             var parts = qualifiedFileName.Split('.');
-            var assemblyName = parts[0] + "." + parts[1] + "." + parts[2];
+            var assemblyName = parts[0] + "." + parts[1];
+            if (noType)
+                assemblyName = assemblyName + "." + parts[2];
+
             return Assembly.Load(assemblyName).GetManifestResourceStream(qualifiedFileName);
         }
 

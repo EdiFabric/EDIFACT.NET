@@ -37,9 +37,14 @@ namespace EdiFabric.Framework.Exceptions
         ImproperEndOfFile,
 
         /// <summary>
-        /// The rules assembly is not set. 
+        /// The rules assembly was not found. 
         /// </summary>
-        RulesAssemblyNameNotSet,
+        RulesAssemblyNotFound,
+
+        /// <summary>
+        /// Duplicate type was defined in the rules assembly. 
+        /// </summary>
+        DuplicateTypeFound,
 
         /// <summary>
         /// Transaction set is not supported.

@@ -19,8 +19,6 @@ namespace EdiFabric.Framework.Parsers
     /// </summary>
     class SegmentContext
     {
-        private const string Hl = "HL";
-
         /// <summary>
         /// The segment ID.
         /// </summary>
@@ -121,7 +119,7 @@ namespace EdiFabric.Framework.Parsers
         {
             int fv;
             int p;
-            return Name == Hl && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
+            return Name == "HL" && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
                      int.TryParse(SecondValue ?? "0", out p) &&
                      (fv - p > 1);
         }

@@ -104,24 +104,38 @@ namespace EdiFabric.Framework
 
         private Type ToSystemType(Func<MessageContext, Assembly> rulesAssembly)
         {
-            var assembly = rulesAssembly(this);
-
-            var attribute = "[M(" + Format + "," + Version + "," + Tag + ")]";
-            var errorMsg = String.Format(
-                "Type with attribute'{0}' was not found in assembly '{1}'.",
-                attribute, assembly.FullName);
-            var systemType = assembly.GetTypes().SingleOrDefault(m =>
+            Assembly assembly;
+            try
+            {
+                assembly = rulesAssembly(this);
+            }
+            catch (Exception ex)
+            {
+                throw new ParsingException(ErrorCodes.RulesAssemblyNotFound, ex.Message, ex);
+            }
+            
+            var matches = assembly.GetTypes().Where(m =>
             {
                 var att = ((MAttribute) m.GetCustomAttribute(typeof (MAttribute)));
                 if (att == null) return false;
                 return att.Format == Format && att.Version == Version && att.Id == Tag;
-            });
+            }).ToList();
 
-            if (systemType == null)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, errorMsg, null,
-                    new MessageErrorContext(Tag, ControlNumber, ErrorCodes.UnexpectedMessage));
+            if (!matches.Any())
+                HandleException(assembly, "Type with attribute'{0}' was not found in assembly '{1}'.", ErrorCodes.UnexpectedMessage);                
+            
+            if(matches.Count > 1)
+                HandleException(assembly, "Multiple types with attribute'{0}' were found in assembly '{1}'.", ErrorCodes.DuplicateTypeFound); 
 
-            return systemType;
+            return matches.First();
+        }
+
+        private void HandleException(Assembly assembly, string message, ErrorCodes errorCode)
+        {
+            var attribute = "[M(" + Format + ", " + Version + ", " + Tag + ")]";
+            var errorMsg = String.Format(message, attribute, assembly.FullName);
+
+            throw new ParsingException(errorCode, errorMsg);
         }
     }   
 }

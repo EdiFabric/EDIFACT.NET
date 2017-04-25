@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A6391E1B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{7BC6A254-A2FA-42D2-A5D4-535339DC3F86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules.DuplicateTS", "Rules.DuplicateTS\Rules.DuplicateTS.csproj", "{192C804B-F089-442A-A4D2-B322481DF643}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,16 @@ Global
 		{7BC6A254-A2FA-42D2-A5D4-535339DC3F86}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7BC6A254-A2FA-42D2-A5D4-535339DC3F86}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7BC6A254-A2FA-42D2-A5D4-535339DC3F86}.Release|x86.ActiveCfg = Release|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{192C804B-F089-442A-A4D2-B322481DF643}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +204,7 @@ Global
 		{82E0A3B3-A0EB-45FF-99CC-1D7A5BCAEDF3} = {A6391E1B-988A-48B7-8146-E899C391C3DF}
 		{1ED7BA28-72F8-42E4-B157-D7D9E8473416} = {A6391E1B-988A-48B7-8146-E899C391C3DF}
 		{F66E2275-FAE0-4876-8F12-831A2A90C7A7} = {A6391E1B-988A-48B7-8146-E899C391C3DF}
+		{192C804B-F089-442A-A4D2-B322481DF643} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

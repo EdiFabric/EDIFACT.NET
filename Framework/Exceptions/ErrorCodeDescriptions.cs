@@ -35,8 +35,10 @@ namespace EdiFabric.Framework.Exceptions
                     return "Interchange control structure is invalid.";
                 case ErrorCodes.RequiredMissing:
                     return "Mandatory item is missing.";
-                case ErrorCodes.RulesAssemblyNameNotSet:
-                    return "The rules assembly is not set.";
+                case ErrorCodes.RulesAssemblyNotFound:
+                    return "The rules assembly was not found.";
+                case ErrorCodes.DuplicateTypeFound:
+                    return "Duplicate type was defined in the rules assembly.";
                 case ErrorCodes.Unexpected:
                     return "Item exceeds maximum use.";
                 case ErrorCodes.UnexpectedMessage:
