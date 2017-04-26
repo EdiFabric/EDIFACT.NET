@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.X12_002040.Rep
     
     
     [M("X12", "002040", "810")]
-    public class TS810
+    public class TS810 : IEdiMessage
     {
         
         /// <summary>

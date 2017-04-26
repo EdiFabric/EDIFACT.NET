@@ -9,13 +9,19 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Controls
+using EdiFabric.Attributes;
+
+namespace EdiFabric.Framework.Segments.Edifact
 {
     /// <summary>
-    /// Identifies a control segment.
-    /// ISA, IEA, GS, GE, TA1, UNB, UNG, UNZ, UNE are all control segments.
+    /// Interchange trailer.
     /// </summary>
-    public interface IEdiControl
+    public class UNZ : IEdiItem
     {
-    }
+        [D(1)]
+        public string InterchangeControlCount_1 { get; set; }
+
+        [D(2)]
+        public string InterchangeControlReference_2 { get; set; }
+    }  
 }

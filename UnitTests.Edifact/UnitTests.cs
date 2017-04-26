@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls.Edifact;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
+using EdiFabric.Framework.Segments.Edifact;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +28,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
             
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -97,7 +97,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -126,7 +126,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -153,7 +153,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, "\n");
+            var actual = Helper.GenerateEdifact(ediItems, null, "\n");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -182,7 +182,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -224,7 +224,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -251,7 +251,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<UNB>().Count() == 1);
@@ -277,7 +277,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<UNB>().Count() == 1);
@@ -303,7 +303,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 2);
@@ -329,7 +329,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -356,7 +356,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -376,7 +376,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -403,7 +403,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -423,7 +423,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -450,7 +450,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -477,7 +477,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -498,7 +498,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -528,14 +528,14 @@ namespace EdiFabric.UnitTests.Edifact
                 {
                     if (ediReader.Item is UNB && ediItems.Any())
                     {
-                        actual = actual + Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+                        actual = actual + Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
                         ediItems.Clear();
                     }
 
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.GenerateEdifact<TSINVOIC>(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine);
             }
             
             // ASSERT
@@ -744,7 +744,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact<TSINVOIC>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);

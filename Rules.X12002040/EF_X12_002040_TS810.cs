@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.X12_002040
     
     
     [M("X12", "002040", "810")]
-    public class TS810
+    public class TS810 : IEdiMessage
     {
         
         /// <summary>
@@ -126,6 +126,11 @@ namespace EdiFabric.Rules.X12_002040
         /// </summary>
         [S("SE", 23)]
         public SE SE { get; set; }
+
+        public string GetControlNumber()
+        {
+            throw new NotImplementedException();
+        }
     }
     
     public class TS810_ITALoop2

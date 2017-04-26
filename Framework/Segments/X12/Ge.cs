@@ -9,20 +9,19 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
+using EdiFabric.Attributes;
 
-namespace EdiFabric.Framework.Controls
+namespace EdiFabric.Framework.Segments.X12
 {
     /// <summary>
-    /// Identifies an EDI group.
+    /// Functional Group trailer.
     /// </summary>
-    public interface IEdiGroup
+    public class GE : IEdiItem
     {
-        /// <summary>
-        /// Generates a collection of EDI segments.
-        /// </summary>
-        /// <param name="separators">The EDI separators.</param>
-        /// <returns>The collection of EDI segments.</returns>
-        IEnumerable<string> GenerateEdi(Separators separators);
+        [D(1)]
+        public string NumberOfIncludedSets_1 { get; set; }
+
+        [D(2)]
+        public string GroupControlNumber_2 { get; set; }
     }
 }

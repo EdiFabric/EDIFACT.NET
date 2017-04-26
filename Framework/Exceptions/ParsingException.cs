@@ -11,6 +11,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using EdiFabric.Attributes;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -19,7 +20,7 @@ namespace EdiFabric.Framework.Exceptions
     /// Raised during the parsing of EDI documents.
     /// </summary>
     [Serializable]
-    public class ParsingException : Exception, ISerializable
+    public class ParsingException : Exception, ISerializable, IEdiItem
     {
         /// <summary>
         /// The syntax error code.

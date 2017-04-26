@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using EdiFabric.Attributes;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
 
@@ -41,7 +42,7 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// The last item that was read.
         /// </summary>
-        public object Item { get; protected set; }
+        public IEdiItem Item { get; protected set; }
         
         /// <summary>
         /// Indicates whether the current stream position is at the end of the stream.

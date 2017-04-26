@@ -93,6 +93,11 @@ namespace EdiFabric.Framework.Parsers
             node.Parent = this;
             _children.Insert(position, node);
         }
+
+        public void RemoveChild(ParseNode node)
+        {
+            _children.Remove(node);
+        }
        
         public IEnumerable<PropertyInfo> GetProperties()
         {

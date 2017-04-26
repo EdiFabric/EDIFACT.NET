@@ -79,11 +79,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\Edifact\EdifactGroup.cs" />
-    <Compile Include="Controls\Edifact\EdifactInterchange.cs" />
-    <Compile Include="Controls\IEdiControl.cs" />
-    <Compile Include="Controls\X12\X12Group.cs" />
-    <Compile Include="Controls\X12\X12Interchange.cs" />
+    <Compile Include="Segments\Edifact\Ung.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Segments\Edifact\Unz.cs" />
+    <Compile Include="Segments\Edifact\Une.cs" />
+    <Compile Include="Segments\X12\Gs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Segments\X12\Ta1.cs" />
+    <Compile Include="Segments\X12\Ge.cs" />
+    <Compile Include="Segments\X12\Iea.cs" />
+    <Compile Include="Writers\EdiWriter.cs" />
+    <Compile Include="Writers\EdifactWriter.cs" />
+    <Compile Include="Writers\X12Writer.cs" />
     <Compile Include="Parsers\AllLoop.cs" />
     <Compile Include="Parsers\ComplexDataElement.cs" />
     <Compile Include="Parsers\DataElement.cs" />
@@ -103,21 +112,19 @@
     </Compile>
     <Compile Include="Exceptions\SegmentErrorContext.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
-    <Compile Include="Controls\IEdiGroup.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Parsers\SegmentId.cs" />
-    <Compile Include="Controls\EdiContainer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Parsers\ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Parsers\SegmentContext.cs" />
     <Compile Include="Separators.cs" />
-    <Compile Include="Controls\Edifact\ControlSegments.cs" />
-    <Compile Include="Controls\X12\ControlSegments.cs" />
+    <Compile Include="Segments\Edifact\Unb.cs" />
+    <Compile Include="Segments\X12\Isa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

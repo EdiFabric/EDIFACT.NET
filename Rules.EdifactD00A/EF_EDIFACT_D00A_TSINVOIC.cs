@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A
     
     
     [M("EDIFACT", "D00A", "INVOIC")]
-    public class TSINVOIC
+    public class TSINVOIC : IEdiMessage
     {
         
         /// <summary>

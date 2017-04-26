@@ -3,9 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EdiFabric.Attributes;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls.Edifact;
-using EdiFabric.Framework.Controls.X12;
+using EdiFabric.Framework.Segments.Edifact;
+using EdiFabric.Framework.Segments.X12;
+using EdiFabric.Framework.Writers;
 
 namespace EdiFabric.UnitTests
 {
@@ -23,70 +25,109 @@ namespace EdiFabric.UnitTests
 
         public static string LoadString(string qualifiedFileName, Encoding encoding = null)
         {
-            var stream = LoadStream(qualifiedFileName);
+            return LoadString(LoadStream(qualifiedFileName));
+        }
+
+        public static string LoadString(Stream stream, Encoding encoding = null)
+        {
+            stream.Position = 0;
             using (var reader = new StreamReader(stream, encoding ?? Encoding.Default))
             {
                 return reader.ReadToEnd();
             }
         }
 
-        public static string GenerateEdifact<T>(List<object> items, Separators separators, string postFix)
+        public static string GenerateEdifact(List<object> items, Separators separators, string postFix, Encoding encoding = null)
         {
-            var interchange = new EdifactInterchange(items.OfType<UNB>().Single());
-            EdifactGroup<T> currentGroup = null;
-            foreach (var item in items)
+            string result;
+            using (var stream = new MemoryStream())
             {
-                if (item is UNG)
+                var writer = new EdifactWriter(items.OfType<UNB>().Single(), stream, separators, postFix, encoding);
+                foreach (var item in items)
                 {
-                    currentGroup = new EdifactGroup<T>(item as UNG);
-                    interchange.AddItem(currentGroup);
-                    continue;
+                    var message = item as IEdiMessage;
+                    if (message != null)
+                    {
+                        writer.AddMessage(message);
+                        continue;
+                    }
+
+                    var gs = item as UNG;
+                    if (gs != null)
+                    {
+                        writer.BeginGroup(gs);
+                        continue;
+                    }
+
+                    var ge = item as UNE;
+                    if (ge != null)
+                    {
+                        writer.EndGroup();
+                        continue;
+                    }
+
+                    var iea = item as UNZ;
+                    if (iea != null)
+                    {
+                        writer.EndInterchange();
+                    }
                 }
 
-                if (item is UNB) continue;
-                if (item is UNE) continue;
-                if (item is UNZ) continue;
+                result = LoadString(stream);
 
-                if (currentGroup == null)
-                {
-                    currentGroup = new EdifactGroup<T>(null);
-                    interchange.AddItem(currentGroup);
-                }
-                currentGroup.AddItem((T) item);
             }
 
-            return interchange.GenerateEdi(separators).Aggregate("", (current, item) => current + item + postFix);
+            return result;
         }
 
-        public static string GenerateX12<T>(List<object> items, Separators separators, string postFix)
+        public static string GenerateX12(List<object> items, Separators separators, string postFix, Encoding encoding = null)
         {
-            var interchange = new X12Interchange(items.OfType<ISA>().Single());
-            X12Group<T> currentGroup = null;
-            foreach (var item in items)
+            string result;
+            using (var stream = new MemoryStream(100))
             {
-                if (item is GS)
+                var writer = new X12Writer(items.OfType<ISA>().Single(), stream, separators, postFix, encoding);
+                foreach (var item in items)
                 {
-                    currentGroup = new X12Group<T>(item as GS);
-                    interchange.AddItem(currentGroup);
-                    continue;
+                    var message = item as IEdiMessage;
+                    if (message != null)
+                    {
+                        writer.AddMessage(message);
+                        continue;
+                    }
+
+                    var gs = item as GS;
+                    if (gs != null)
+                    {
+                        writer.BeginGroup(gs);
+                        continue;
+                    }
+
+                    var ge = item as GE;
+                    if (ge != null)
+                    {
+                        writer.EndGroup();
+                        continue;
+                    }
+
+                    var ta1 = item as TA1;
+                    if (ta1 != null)
+                    {
+                        //writer.
+                        // segments.Insert(1, Ta1ToString(ta1, separators)); 
+                    }
+
+                    var iea = item as IEA;
+                    if (iea != null)
+                    {
+                        writer.EndInterchange();
+                    }
                 }
 
-                if (item is ISA) continue;
-                if (item is IEA) continue;
-                if (item is GE) continue;
-
-                if (currentGroup != null)
-                    currentGroup.AddItem((T)item);
+                result = LoadString(stream);
+                
             }
 
-            var segments = interchange.GenerateEdi(separators).ToList();
-            var ta1 = items.OfType<TA1>().SingleOrDefault();
-            if (ta1 != null)
-            {
-               segments.Insert(1, Ta1ToString(ta1, separators)); 
-            }
-
-            return segments.Aggregate("", (current, item) => current + item + postFix);
+            return result;
         }
 
         private static string Ta1ToString(TA1 ta1, Separators separators)

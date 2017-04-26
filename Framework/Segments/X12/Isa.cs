@@ -11,12 +11,12 @@
 
 using EdiFabric.Attributes;
 
-namespace EdiFabric.Framework.Controls.X12
+namespace EdiFabric.Framework.Segments.X12
 {
     /// <summary>
     /// Interchange header.
     /// </summary>
-    public class ISA : IEdiControl
+    public class ISA : IEdiItem
     {
         [D(1)]
         public string AuthorizationInformationQualifier_1 { get; set; }
@@ -65,80 +65,15 @@ namespace EdiFabric.Framework.Controls.X12
 
         [D(16)]
         public string ComponentElementSeparator_16 { get; set; }
+
+        public string GetControlNumber()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string SetTrailer()
+        {
+            throw new System.NotImplementedException();
+        }
     }
-
-    /// <summary>
-    /// Functional Group header.
-    /// </summary>
-    public class GS : IEdiControl
-    {
-        [D(1)]
-        public string CodeIdentifyingInformationType_1 { get; set; }
-
-        [D(2)]
-        public string SenderIDCode_2 { get; set; }
-
-        [D(3)]
-        public string ReceiverIDCode_3 { get; set; }
-
-        [D(4)]
-        public string Date_4 { get; set; }
-
-        [D(5)]
-        public string Time_5 { get; set; }
-
-        [D(6)]
-        public string GroupControlNumber_6 { get; set; }
-
-        [D(7)]
-        public string TransactionTypeCode_7 { get; set; }
-
-        [D(8)]
-        public string VersionAndRelease_8 { get; set; }
-    }
-
-    /// <summary>
-    /// Functional Group trailer.
-    /// </summary>
-    public class GE : IEdiControl
-    {
-        [D(1)]
-        public string NumberOfIncludedSets_1 { get; set; }
-
-        [D(2)]
-        public string GroupControlNumber_2 { get; set; }
-    }
-
-    /// <summary>
-    /// Interchange trailer.
-    /// </summary>
-    public class IEA : IEdiControl 
-    {
-        [D(1)]
-        public string NumberOfIncludedGroups_1 { get; set; }
-
-        [D(2)]
-        public string InterchangeControlNumber_2 { get; set; }
-    }
-
-    /// <summary>
-    /// Interchange acknowledgment.
-    /// </summary>
-    public class TA1 : IEdiControl
-    {
-        [D(1)]
-        public string InterchangeControlNumber_1 { get; set; }
-
-        [D(2)]
-        public string InterchangeDate_2 { get; set; }
-
-        [D(3)]
-        public string InterchangeTime_3 { get; set; }
-
-        [D(4)]
-        public string InterchangeAcknowledgmentCode_4 { get; set; }
-
-        [D(5)]
-        public string InterchangeNoteCode_5 { get; set; }
-    }      
 }

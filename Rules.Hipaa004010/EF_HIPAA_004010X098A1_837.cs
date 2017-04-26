@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     
     
     [M("X12", "004010X098A1", "837")]
-    public class TS837
+    public class TS837 : IEdiMessage
     {
         
         /// <summary>

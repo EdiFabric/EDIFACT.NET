@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
+using EdiFabric.Framework.Segments.X12;
 using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,7 +12,7 @@ namespace EdiFabric.UnitTests.X12
 {
     [TestClass]
     public class UnitTests
-    {
+    {        
         [TestMethod]
         public void TestSingleMessage()
         {
@@ -27,7 +27,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -89,7 +89,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -118,7 +118,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<Rules.X12_002040.Rep.TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -140,7 +140,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, separators, "");
+            var actual = Helper.GenerateX12(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -169,7 +169,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, separators, "\n");
+            var actual = Helper.GenerateX12(ediItems, separators, "\n");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -218,7 +218,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -244,7 +244,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -270,7 +270,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -291,7 +291,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -321,14 +321,14 @@ namespace EdiFabric.UnitTests.X12
                 {
                     if (ediReader.Item is ISA && ediItems.Any())
                     {
-                        actual = actual + Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+                        actual = actual + Helper.GenerateX12(ediItems, null, Environment.NewLine);
                         ediItems.Clear();
                     }
 
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.GenerateX12<TS810>(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + Helper.GenerateX12(ediItems, ediReader.Separators, Environment.NewLine);
             }
 
             // ASSERT
@@ -558,7 +558,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -588,7 +588,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, separators, Environment.NewLine);
 
 
             // ASSERT
@@ -684,7 +684,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<TS810>(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);

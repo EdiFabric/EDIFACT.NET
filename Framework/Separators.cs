@@ -86,7 +86,7 @@ namespace EdiFabric.Framework
         /// Escape N/A
         /// </summary>
         /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
-        public static Separators DefaultX12 = new Separators('~', '>', '*', '^', null);        
+        public static Separators X12 = new Separators('~', '>', '*', '^', null);        
 
         /// <summary>
         /// Factory method to initialize a new instance of the <see cref="Separators"/> class.
@@ -98,7 +98,7 @@ namespace EdiFabric.Framework
         /// Escape ?
         /// </summary>
         /// <returns>A new instance of the <see cref="Separators"/> class with all default separators.</returns>
-        public static Separators DefaultEdifact = new Separators('\'', ':', '+', '*', '?');       
+        public static Separators Edifact = new Separators('\'', ':', '+', '*', '?');       
 
         /// <summary>
         /// Creates UNA segment.

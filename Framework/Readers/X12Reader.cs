@@ -15,9 +15,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
+using EdiFabric.Framework.Segments.X12;
 
 namespace EdiFabric.Framework.Readers
 {

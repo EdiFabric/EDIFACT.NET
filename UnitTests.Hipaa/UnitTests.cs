@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Controls.X12;
 using EdiFabric.Framework.Readers;
-using EdiFabric.Rules.HIPAA_005010X222A1_837;
+using EdiFabric.Framework.Segments.X12;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.UnitTests.Hipaa
@@ -27,7 +26,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<Rules.HIPAA_004010X098A1_837.TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -50,7 +49,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -73,7 +72,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateX12<TS837>(ediItems, null, Environment.NewLine);
+            var actual = Helper.GenerateX12(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -117,7 +116,7 @@ namespace EdiFabric.UnitTests.Hipaa
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateX12<TS837>(ediItems, separators, "");
+            var actual = Helper.GenerateX12(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
