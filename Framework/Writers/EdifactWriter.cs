@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using EdiFabric.Attributes;
 using EdiFabric.Framework.Parsers;
@@ -9,21 +8,35 @@ namespace EdiFabric.Framework.Writers
 {
     public class EdifactWriter : EdiWriter<UNB, UNG>
     {
-        public EdifactWriter(UNB header, Stream stream, Separators separators, string postfix, Encoding encoding)
-            : base(header, stream, separators ?? Separators.Edifact, postfix ?? "", encoding ?? Encoding.Default)
+        public EdifactWriter(Stream stream, string postfix, Encoding encoding)
+            : base(stream, postfix ?? "", encoding ?? Encoding.Default)
         {
-            if (header == null) throw new Exception("UNB header is null.");
+        }
 
-            var segment = new Segment(typeof(UNB), header);
-            Writer.Write(segment.GenerateSegment(Separators) + PostFix);        
+        public override void BeginInterchange(UNB interchangeHeader, Separators separators)
+        {
+            Separators = separators ?? Separators.Edifact;
+            InterchangeControlNr = interchangeHeader.InterchangeControlReference_5;
+            var segment = new Segment(typeof(UNB), interchangeHeader);
+            Write(segment.GenerateSegment(Separators));    
+        }
+
+        public override void BeginGroup(UNG groupHeader)
+        {
+            MessageCounter = 0;
+            GroupCounter++;
+            GroupControlNr = groupHeader.GroupReferenceNumber_5;
+
+            var segment = new Segment(typeof(UNG), groupHeader);
+            Write(segment.GenerateSegment(Separators));
         }
         
         public override void EndGroup()
         {
-            var trailer = SetTrailer("UNE", CurrentGroupHeader.GroupReferenceNumber_5, MessageCounter);
-            Writer.Write(trailer + PostFix);
+            var trailer = SetTrailer("UNE", GroupControlNr, MessageCounter);
+            Write(trailer);
 
-            CurrentGroupHeader = null;
+            GroupControlNr = null;
         }
 
         public override void EndInterchange()
@@ -31,10 +44,11 @@ namespace EdiFabric.Framework.Writers
             if (GroupCounter == 0)
                 GroupCounter = MessageCounter;
 
-            var trailer = SetTrailer("UNZ", InterchangeHeader.InterchangeControlReference_5, GroupCounter);
-            Writer.Write(trailer + PostFix);
+            var trailer = SetTrailer("UNZ", InterchangeControlNr, GroupCounter);
+            Write(trailer);
 
-            Writer.Flush();
+            InterchangeControlNr = null;
+            Flush();
         }
 
         public override void AddMessage(IEdiMessage message)
@@ -48,13 +62,18 @@ namespace EdiFabric.Framework.Writers
             
             foreach (var segment in transactionSet.Descendants<Segment>())
             {
-                Writer.Write(segment.GenerateSegment(Separators) + PostFix);
+                Write(segment.GenerateSegment(Separators));
                 segmentCounter++;
             }
 
             segmentCounter++;
             var trailer = SetTrailer(trailerTag, transactionSet.GetControlNumber(), segmentCounter);
-            Writer.Write(trailer + PostFix);
+            Write(trailer);
+        }
+
+        public void AddUna(Separators separators)
+        {
+            Write(separators.ToUna());
         }
     }
 }

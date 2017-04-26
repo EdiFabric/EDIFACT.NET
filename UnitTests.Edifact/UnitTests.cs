@@ -97,7 +97,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -126,7 +126,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -182,7 +182,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -535,7 +535,7 @@ namespace EdiFabric.UnitTests.Edifact
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine, null, true);
             }
             
             // ASSERT

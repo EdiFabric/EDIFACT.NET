@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Attributes;
@@ -25,7 +24,7 @@ namespace EdiFabric.UnitTests
 
         public static string LoadString(string qualifiedFileName, Encoding encoding = null)
         {
-            return LoadString(LoadStream(qualifiedFileName));
+            return LoadString(LoadStream(qualifiedFileName), encoding);
         }
 
         public static string LoadString(Stream stream, Encoding encoding = null)
@@ -37,12 +36,14 @@ namespace EdiFabric.UnitTests
             }
         }
 
-        public static string GenerateEdifact(List<object> items, Separators separators, string postFix, Encoding encoding = null)
+        public static string GenerateEdifact(List<object> items, Separators separators, string postFix, Encoding encoding = null, bool una = false)
         {
             string result;
             using (var stream = new MemoryStream())
             {
-                var writer = new EdifactWriter(items.OfType<UNB>().Single(), stream, separators, postFix, encoding);
+                var writer = new EdifactWriter(stream, postFix, encoding);
+                if(una)
+                    writer.AddUna(separators);
                 foreach (var item in items)
                 {
                     var message = item as IEdiMessage;
@@ -51,7 +52,7 @@ namespace EdiFabric.UnitTests
                         writer.AddMessage(message);
                         continue;
                     }
-
+                    
                     var gs = item as UNG;
                     if (gs != null)
                     {
@@ -63,6 +64,13 @@ namespace EdiFabric.UnitTests
                     if (ge != null)
                     {
                         writer.EndGroup();
+                        continue;
+                    }
+
+                    var unb = item as UNB;
+                    if (unb != null)
+                    {
+                        writer.BeginInterchange(unb, separators);
                         continue;
                     }
 
@@ -83,9 +91,9 @@ namespace EdiFabric.UnitTests
         public static string GenerateX12(List<object> items, Separators separators, string postFix, Encoding encoding = null)
         {
             string result;
-            using (var stream = new MemoryStream(100))
+            using (var stream = new MemoryStream())
             {
-                var writer = new X12Writer(items.OfType<ISA>().Single(), stream, separators, postFix, encoding);
+                var writer = new X12Writer(stream, postFix, encoding);
                 foreach (var item in items)
                 {
                     var message = item as IEdiMessage;
@@ -112,8 +120,14 @@ namespace EdiFabric.UnitTests
                     var ta1 = item as TA1;
                     if (ta1 != null)
                     {
-                        //writer.
-                        // segments.Insert(1, Ta1ToString(ta1, separators)); 
+                        writer.AddTa1(ta1);
+                    }
+
+                    var isa = item as ISA;
+                    if (isa != null)
+                    {
+                        writer.BeginInterchange(isa, separators);
+                        continue;
                     }
 
                     var iea = item as IEA;

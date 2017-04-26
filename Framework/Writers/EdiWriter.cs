@@ -1,49 +1,50 @@
 ﻿using System.IO;
 using System.Text;
 using EdiFabric.Attributes;
-using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework.Writers
 {
     public abstract class EdiWriter<T, U>    
     {
-        protected Separators Separators;
-        protected StreamWriter Writer;
+        private readonly StreamWriter _writer;             
+        private readonly string _postFix;
+        protected string InterchangeControlNr;
+        protected string GroupControlNr;
         protected int MessageCounter;
         protected int GroupCounter;
-        protected U CurrentGroupHeader;
-        protected T InterchangeHeader;
-        protected string PostFix;
+        protected Separators Separators;
         
-        protected EdiWriter(T header, Stream stream, Separators separators, string postfix, Encoding encoding)
+        
+        protected EdiWriter(Stream stream, string postfix, Encoding encoding)
         {
-            InterchangeHeader = header;
-            Writer = new StreamWriter(stream, encoding);
-            Separators = separators;
-            PostFix = postfix;
+            _writer = new StreamWriter(stream, encoding);
+            _postFix = postfix;
         }
 
-        public virtual void BeginGroup(U group)
-        {
-            MessageCounter = 0;
-            GroupCounter++;
-            CurrentGroupHeader = group;
+        public abstract void BeginInterchange(T interchangeHeader, Separators separators);
 
-            var segment = new Segment(group.GetType(), group);
-            Writer.Write(segment.GenerateSegment(Separators) + PostFix);
-        }
-
+        public abstract void BeginGroup(U groupHeader);
+       
         public abstract void AddMessage(IEdiMessage message);
         
         public abstract void EndGroup();
 
         public abstract void EndInterchange();
 
-        protected virtual string SetTrailer(string tag, string controlNumber, int count)
+        protected void Write(string segment)
+        {
+            _writer.Write(segment + _postFix);
+        }
+
+        protected string SetTrailer(string tag, string controlNumber, int count)
         {
             return tag + Separators.DataElement + count + Separators.DataElement +
                       controlNumber + Separators.Segment;
         }
 
+        protected void Flush()
+        {
+            _writer.Flush();
+        }
     }
 }

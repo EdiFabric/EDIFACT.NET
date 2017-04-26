@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using EdiFabric.Attributes;
 using EdiFabric.Framework.Parsers;
@@ -9,33 +8,49 @@ namespace EdiFabric.Framework.Writers
 {
     public class X12Writer : EdiWriter<ISA, GS>
     {
-        public X12Writer(ISA header, Stream stream, Separators separators, string postfix, Encoding encoding)
-            : base(header, stream, separators ?? Separators.Edifact, postfix ?? "", encoding ?? Encoding.Default)
+        public X12Writer(Stream stream, string postfix, Encoding encoding)
+            : base(stream, postfix ?? "", encoding ?? Encoding.Default)
         {
-            if (header == null) throw new Exception("ISA header is null.");
+        }
 
-            header.ComponentElementSeparator_16 = Separators.ComponentDataElement.ToString();
-            if (header.InterchangeControlStandardsIdentifier_11 != "U")
-                header.InterchangeControlStandardsIdentifier_11 = Separators.RepetitionDataElement.ToString();
+        public override void BeginInterchange(ISA interchangeHeader, Separators separators)
+        {
+            Separators = separators ?? Separators.X12;
+            interchangeHeader.ComponentElementSeparator_16 = Separators.ComponentDataElement.ToString();
+            if (interchangeHeader.InterchangeControlStandardsIdentifier_11 != "U")
+                interchangeHeader.InterchangeControlStandardsIdentifier_11 = Separators.RepetitionDataElement.ToString();
 
-            var segment = new Segment(typeof(ISA), header);
-            Writer.Write(segment.GenerateSegment(Separators) + PostFix);        
+            InterchangeControlNr = interchangeHeader.InterchangeControlNumber_13;
+
+            var segment = new Segment(typeof(ISA), interchangeHeader);
+            Write(segment.GenerateSegment(Separators));
+        }
+
+        public override void BeginGroup(GS groupHeader)
+        {
+            MessageCounter = 0;
+            GroupCounter++;
+            GroupControlNr = groupHeader.GroupControlNumber_6;
+
+            var segment = new Segment(typeof(GS), groupHeader);
+            Write(segment.GenerateSegment(Separators));
         }
         
         public override void EndGroup()
         {
-            var trailer = SetTrailer("GE", CurrentGroupHeader.GroupControlNumber_6, MessageCounter);
-            Writer.Write(trailer + PostFix);
+            var trailer = SetTrailer("GE", GroupControlNr, MessageCounter);
+            Write(trailer);
 
-            CurrentGroupHeader = null;
+            GroupControlNr = null;
         }
 
         public override void EndInterchange()
         {
-            var trailer = SetTrailer("IEA", InterchangeHeader.InterchangeControlNumber_13, GroupCounter);
-            Writer.Write(trailer + PostFix);
+            var trailer = SetTrailer("IEA", InterchangeControlNr, GroupCounter);
+            Write(trailer);
 
-            Writer.Flush();
+            InterchangeControlNr = null;
+            Flush();
         }
 
         public override void AddMessage(IEdiMessage message)
@@ -49,7 +64,7 @@ namespace EdiFabric.Framework.Writers
             
             foreach (var segment in transactionSet.Descendants<Segment>())
             {
-                Writer.Write(segment.GenerateSegment(Separators) + PostFix);
+                Write(segment.GenerateSegment(Separators));
                 segmentCounter++;
             }
 
@@ -57,8 +72,14 @@ namespace EdiFabric.Framework.Writers
             {
                 segmentCounter++;
                 var trailer = SetTrailer(trailerTag, transactionSet.GetControlNumber(), segmentCounter);
-                Writer.Write(trailer + PostFix);
+                Write(trailer);
             }
+        }
+
+        public void AddTa1(TA1 ta1)
+        {
+            var segment = new Segment(typeof(TA1), ta1);
+            Write(segment.GenerateSegment(Separators));
         }
     }
 }

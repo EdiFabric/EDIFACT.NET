@@ -104,7 +104,7 @@ namespace EdiFabric.Framework
         /// Creates UNA segment.
         /// </summary>
         /// <returns>The separators.</returns>
-        internal string ToUna()
+        public string ToUna()
         {
             return SegmentId.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
