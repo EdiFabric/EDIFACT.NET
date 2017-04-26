@@ -41,7 +41,7 @@ namespace EdiFabric.UnitTests
             string result;
             using (var stream = new MemoryStream())
             {
-                var writer = new EdifactWriter(stream, postFix, encoding);
+                var writer = new EdifactWriter(stream, postFix ?? "", encoding ?? Encoding.Default);
                 if(una)
                     writer.AddUna(separators);
                 foreach (var item in items)
@@ -93,7 +93,7 @@ namespace EdiFabric.UnitTests
             string result;
             using (var stream = new MemoryStream())
             {
-                var writer = new X12Writer(stream, postFix, encoding);
+                var writer = new X12Writer(stream, postFix ?? "", encoding ?? Encoding.Default);
                 foreach (var item in items)
                 {
                     var message = item as IEdiMessage;

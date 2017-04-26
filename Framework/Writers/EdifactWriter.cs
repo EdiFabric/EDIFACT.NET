@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using EdiFabric.Attributes;
 using EdiFabric.Framework.Parsers;
@@ -6,25 +7,43 @@ using EdiFabric.Framework.Segments.Edifact;
 
 namespace EdiFabric.Framework.Writers
 {
-    public class EdifactWriter : EdiWriter<UNB, UNG>
+    public sealed class EdifactWriter : EdiWriter<UNB, UNG>
     {
-        public EdifactWriter(Stream stream, string postfix, Encoding encoding)
-            : base(stream, postfix ?? "", encoding ?? Encoding.Default)
+        public EdifactWriter(Stream stream)
+            : base(stream, "", Encoding.Default)
         {
         }
 
-        public override void BeginInterchange(UNB interchangeHeader, Separators separators)
+        public EdifactWriter(Stream stream, string postfix)
+            : base(stream, postfix, Encoding.Default)
         {
-            Separators = separators ?? Separators.Edifact;
+        }
+
+        public EdifactWriter(Stream stream, Encoding encoding)
+            : base(stream, "", encoding)
+        {
+        }
+
+        public EdifactWriter(Stream stream, string postfix, Encoding encoding)
+            : base(stream, postfix, encoding)
+        {
+        }
+
+        public override void BeginInterchange(UNB interchangeHeader, Separators separators = null)
+        {
+            base.BeginInterchange(interchangeHeader, separators);
+
+            Separators = separators ?? Separators.Edifact;            
             InterchangeControlNr = interchangeHeader.InterchangeControlReference_5;
+            
             var segment = new Segment(typeof(UNB), interchangeHeader);
             Write(segment.GenerateSegment(Separators));    
         }
 
         public override void BeginGroup(UNG groupHeader)
         {
-            MessageCounter = 0;
-            GroupCounter++;
+            base.BeginGroup(groupHeader);
+
             GroupControlNr = groupHeader.GroupReferenceNumber_5;
 
             var segment = new Segment(typeof(UNG), groupHeader);
@@ -36,7 +55,7 @@ namespace EdiFabric.Framework.Writers
             var trailer = SetTrailer("UNE", GroupControlNr, MessageCounter);
             Write(trailer);
 
-            GroupControlNr = null;
+            base.EndGroup();
         }
 
         public override void EndInterchange()
@@ -47,13 +66,12 @@ namespace EdiFabric.Framework.Writers
             var trailer = SetTrailer("UNZ", InterchangeControlNr, GroupCounter);
             Write(trailer);
 
-            InterchangeControlNr = null;
-            Flush();
+            base.EndInterchange();
         }
 
         public override void AddMessage(IEdiMessage message)
         {
-            MessageCounter++;
+            base.AddMessage(message);
 
             const string trailerTag = "UNT";
             var segmentCounter = 0;

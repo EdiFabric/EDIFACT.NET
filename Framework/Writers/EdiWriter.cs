@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using EdiFabric.Attributes;
 
 namespace EdiFabric.Framework.Writers
 {
-    public abstract class EdiWriter<T, U>    
+    public abstract class EdiWriter<T, U> : IDisposable  
     {
         private readonly StreamWriter _writer;             
         private readonly string _postFix;
@@ -17,19 +18,51 @@ namespace EdiFabric.Framework.Writers
         
         protected EdiWriter(Stream stream, string postfix, Encoding encoding)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+            if (postfix == null)
+                throw new ArgumentNullException("postfix");
+            if (encoding == null)
+                throw new ArgumentNullException("encoding");
+
             _writer = new StreamWriter(stream, encoding);
             _postFix = postfix;
         }
 
-        public abstract void BeginInterchange(T interchangeHeader, Separators separators);
+        public virtual void BeginInterchange(T interchangeHeader, Separators separators = null)
+        {
+            MessageCounter = 0;
+            GroupCounter = 0;
+            GroupControlNr = null;
+            InterchangeControlNr = null;
+        }
 
-        public abstract void BeginGroup(U groupHeader);
-       
-        public abstract void AddMessage(IEdiMessage message);
-        
-        public abstract void EndGroup();
+        public virtual void BeginGroup(U groupHeader)
+        {
+            MessageCounter = 0;
+            GroupControlNr = null;
+            GroupCounter++;            
+        }
 
-        public abstract void EndInterchange();
+        public virtual void AddMessage(IEdiMessage message)
+        {
+            MessageCounter++;
+        }
+
+        public virtual void EndGroup()
+        {
+            MessageCounter = 0;
+            GroupControlNr = null;
+        }
+
+        public virtual void EndInterchange()
+        {
+            MessageCounter = 0;
+            GroupCounter = 0;
+            GroupControlNr = null;
+            InterchangeControlNr = null;
+            Flush();
+        }
 
         protected void Write(string segment)
         {
@@ -45,6 +78,12 @@ namespace EdiFabric.Framework.Writers
         protected void Flush()
         {
             _writer.Flush();
+        }
+
+        public void Dispose()
+        {
+            if (_writer != null)
+                _writer.Dispose();
         }
     }
 }

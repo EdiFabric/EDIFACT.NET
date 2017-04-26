@@ -6,15 +6,32 @@ using EdiFabric.Framework.Segments.X12;
 
 namespace EdiFabric.Framework.Writers
 {
-    public class X12Writer : EdiWriter<ISA, GS>
+    public sealed class X12Writer : EdiWriter<ISA, GS>
     {
-        public X12Writer(Stream stream, string postfix, Encoding encoding)
-            : base(stream, postfix ?? "", encoding ?? Encoding.Default)
+        public X12Writer(Stream stream)
+            : base(stream, "", Encoding.Default)
         {
         }
 
-        public override void BeginInterchange(ISA interchangeHeader, Separators separators)
+        public X12Writer(Stream stream, string postfix)
+            : base(stream, postfix, Encoding.Default)
         {
+        }
+
+        public X12Writer(Stream stream, Encoding encoding)
+            : base(stream, "", encoding)
+        {
+        }
+
+        public X12Writer(Stream stream, string postfix, Encoding encoding)
+            : base(stream, postfix, encoding)
+        {
+        }
+
+        public override void BeginInterchange(ISA interchangeHeader, Separators separators = null)
+        {
+            base.BeginInterchange(interchangeHeader, separators);
+
             Separators = separators ?? Separators.X12;
             interchangeHeader.ComponentElementSeparator_16 = Separators.ComponentDataElement.ToString();
             if (interchangeHeader.InterchangeControlStandardsIdentifier_11 != "U")
@@ -28,8 +45,8 @@ namespace EdiFabric.Framework.Writers
 
         public override void BeginGroup(GS groupHeader)
         {
-            MessageCounter = 0;
-            GroupCounter++;
+            base.BeginGroup(groupHeader);
+
             GroupControlNr = groupHeader.GroupControlNumber_6;
 
             var segment = new Segment(typeof(GS), groupHeader);
@@ -41,7 +58,7 @@ namespace EdiFabric.Framework.Writers
             var trailer = SetTrailer("GE", GroupControlNr, MessageCounter);
             Write(trailer);
 
-            GroupControlNr = null;
+            base.EndGroup();
         }
 
         public override void EndInterchange()
@@ -49,13 +66,12 @@ namespace EdiFabric.Framework.Writers
             var trailer = SetTrailer("IEA", InterchangeControlNr, GroupCounter);
             Write(trailer);
 
-            InterchangeControlNr = null;
-            Flush();
+            base.EndInterchange();
         }
 
         public override void AddMessage(IEdiMessage message)
         {
-            MessageCounter++;
+            base.AddMessage(message);
 
             const string trailerTag = "SE";
             var segmentCounter = 0;
