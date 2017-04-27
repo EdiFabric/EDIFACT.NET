@@ -109,7 +109,7 @@ namespace EdiFabric.UnitTests
                     var ta1 = item as TA1;
                     if (ta1 != null)
                     {
-                        writer.WriteSegment(Ta1ToString(ta1, separators));
+                        writer.WriteSegment(ta1.ToString(separators));
                     }
 
                     var isa = item as ISA;
@@ -122,29 +122,6 @@ namespace EdiFabric.UnitTests
 
                 return LoadString(stream);
             }
-        }
-
-        private static string Ta1ToString(TA1 ta1, Separators separators)
-        {
-            var result = "TA1" + separators.DataElement + ta1.InterchangeControlNumber_1;
-            if (!string.IsNullOrEmpty(ta1.InterchangeDate_2))
-            {
-                result = result + separators.DataElement + ta1.InterchangeDate_2;
-            }
-            if (!string.IsNullOrEmpty(ta1.InterchangeTime_3))
-            {
-                result = result + separators.DataElement + ta1.InterchangeTime_3;
-            }
-            if (!string.IsNullOrEmpty(ta1.InterchangeAcknowledgmentCode_4))
-            {
-                result = result + separators.DataElement + ta1.InterchangeAcknowledgmentCode_4;
-            }
-            if (!string.IsNullOrEmpty(ta1.InterchangeNoteCode_5))
-            {
-                result = result + separators.DataElement + ta1.InterchangeNoteCode_5;
-            }
-
-            return result + separators.Segment;
         }
     } 
 }

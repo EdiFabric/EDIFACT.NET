@@ -32,5 +32,28 @@ namespace EdiFabric.Framework.Segments.X12
 
         [D(5)]
         public string InterchangeNoteCode_5 { get; set; }
+
+        public string ToString(Separators separators)
+        {
+            var result = "TA1" + separators.DataElement + InterchangeControlNumber_1;
+            if (!string.IsNullOrEmpty(InterchangeDate_2))
+            {
+                result = result + separators.DataElement + InterchangeDate_2;
+            }
+            if (!string.IsNullOrEmpty(InterchangeTime_3))
+            {
+                result = result + separators.DataElement + InterchangeTime_3;
+            }
+            if (!string.IsNullOrEmpty(InterchangeAcknowledgmentCode_4))
+            {
+                result = result + separators.DataElement + InterchangeAcknowledgmentCode_4;
+            }
+            if (!string.IsNullOrEmpty(InterchangeNoteCode_5))
+            {
+                result = result + separators.DataElement + InterchangeNoteCode_5;
+            }
+
+            return result + separators.Segment;
+        }
     }      
 }
