@@ -89,9 +89,33 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
+        public ParsingException(ErrorCodes errorCode, string message)
+            : base(message)
+        {
+            ErrorCode = errorCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParsingException"/> class.
+        /// </summary>
+        /// <param name="errorCode">The syntax error code.</param>
+        /// <param name="message">The error message.</param>
+        /// <param name="failedLine">The line that failed.</param>
+        public ParsingException(ErrorCodes errorCode, string message, string failedLine)
+            : base(message)
+        {
+            ErrorCode = errorCode;
+            FailedLine = failedLine;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParsingException"/> class.
+        /// </summary>
+        /// <param name="errorCode">The syntax error code.</param>
+        /// <param name="message">The error message.</param>
         /// <param name="failedLine">The line that failed.</param>
         /// <param name="context">The error context.</param>
-        public ParsingException(ErrorCodes errorCode, string message, string failedLine = null, MessageErrorContext context = null)
+        public ParsingException(ErrorCodes errorCode, string message, string failedLine, MessageErrorContext context)
             : base(message)
         {
             ErrorCode = errorCode;
@@ -102,17 +126,11 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
-        /// <param name="errorCode">The syntax error code.</param>
-        /// <param name="message">The error message.</param>
         /// <param name="ex">The inner exception.</param>
-        /// <param name="failedLine">The line that failed.</param>
-        /// <param name="context">The error context.</param>
-        public ParsingException(ErrorCodes errorCode, string message, Exception ex, string failedLine = null, MessageErrorContext context = null)
-            : base(message, ex)
+        public ParsingException(Exception ex)
+            : base(ex.Message, ex)
         {
-            ErrorCode = errorCode;
-            FailedLine = failedLine;
-            ErrorContext = context;
+            ErrorCode = ErrorCodes.Unknown;
         }
 
 

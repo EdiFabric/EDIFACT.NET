@@ -36,112 +36,92 @@ namespace EdiFabric.UnitTests
             }
         }
 
-        public static string GenerateEdifact(List<object> items, Separators separators, string postFix, Encoding encoding = null, bool una = false)
+        public static string GenerateEdifact(List<object> items, Separators separators, string postFix,
+            Encoding encoding = null, string una = null)
         {
-            string result;
             using (var stream = new MemoryStream())
             {
-                var writer = new EdifactWriter(stream, postFix ?? "", encoding ?? Encoding.Default);
-                if(una)
-                    writer.AddUna(separators);
+                var writer = new EdifactWriter(stream, encoding, postFix);
+                if (!string.IsNullOrEmpty(una))
+                    writer.WriteSegment(una);
                 foreach (var item in items)
                 {
                     var message = item as IEdiMessage;
                     if (message != null)
                     {
-                        writer.AddMessage(message);
+                        writer.WriteMessage(message);
                         continue;
                     }
-                    
+
                     var gs = item as UNG;
                     if (gs != null)
                     {
-                        writer.BeginGroup(gs);
+                        writer.WriteGroup(gs);
                         continue;
                     }
 
                     var ge = item as UNE;
                     if (ge != null)
                     {
-                        writer.EndGroup();
                         continue;
                     }
 
                     var unb = item as UNB;
                     if (unb != null)
                     {
-                        writer.BeginInterchange(unb, separators);
-                        continue;
-                    }
-
-                    var iea = item as UNZ;
-                    if (iea != null)
-                    {
-                        writer.EndInterchange();
+                        writer.WriteInterchange(unb, separators);
                     }
                 }
+                writer.Flush();
 
-                result = LoadString(stream);
-
+                return LoadString(stream);
             }
-
-            return result;
         }
 
-        public static string GenerateX12(List<object> items, Separators separators, string postFix, Encoding encoding = null)
+        public static string GenerateX12(List<object> items, Separators separators, string postFix,
+            Encoding encoding = null)
         {
-            string result;
             using (var stream = new MemoryStream())
             {
-                var writer = new X12Writer(stream, postFix ?? "", encoding ?? Encoding.Default);
+                var writer = new X12Writer(stream, encoding, postFix);
                 foreach (var item in items)
                 {
                     var message = item as IEdiMessage;
                     if (message != null)
                     {
-                        writer.AddMessage(message);
+                        writer.WriteMessage(message);
                         continue;
                     }
 
                     var gs = item as GS;
                     if (gs != null)
                     {
-                        writer.BeginGroup(gs);
+                        writer.WriteGroup(gs);
                         continue;
                     }
 
                     var ge = item as GE;
                     if (ge != null)
                     {
-                        writer.EndGroup();
                         continue;
                     }
 
                     var ta1 = item as TA1;
                     if (ta1 != null)
                     {
-                        writer.AddTa1(ta1);
+                        writer.WriteSegment(Ta1ToString(ta1, separators));
                     }
 
                     var isa = item as ISA;
                     if (isa != null)
                     {
-                        writer.BeginInterchange(isa, separators);
-                        continue;
-                    }
-
-                    var iea = item as IEA;
-                    if (iea != null)
-                    {
-                        writer.EndInterchange();
+                        writer.WriteInterchange(isa, separators);
                     }
                 }
+                writer.Flush();
 
-                result = LoadString(stream);
-                
+                return LoadString(stream);
             }
-
-            return result;
         }
 
         private static string Ta1ToString(TA1 ta1, Separators separators)

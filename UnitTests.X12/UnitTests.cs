@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Exceptions;
@@ -37,6 +38,8 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
             Assert.AreEqual(expected, actual);
         }
 
@@ -99,7 +102,10 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
             Assert.AreEqual(expected, actual);
+            
         }
 
         [TestMethod]

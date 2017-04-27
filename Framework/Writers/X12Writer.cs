@@ -1,101 +1,72 @@
-﻿using System.IO;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System.IO;
 using System.Text;
-using EdiFabric.Attributes;
-using EdiFabric.Framework.Parsers;
 using EdiFabric.Framework.Segments.X12;
 
 namespace EdiFabric.Framework.Writers
 {
+    /// <summary>
+    /// Writes .NET object into EDI documents.
+    /// </summary>
     public sealed class X12Writer : EdiWriter<ISA, GS>
     {
-        public X12Writer(Stream stream)
-            : base(stream, "", Encoding.Default)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X12Writer"/> class.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        /// <param name="postfix">The postfix after each segment line.</param>
+        public X12Writer(Stream stream, Encoding encoding = null, string postfix = "")
+            : base(stream, encoding ?? Encoding.Default, postfix ?? "")
         {
+            SetFormatTags();
         }
 
-        public X12Writer(Stream stream, string postfix)
-            : base(stream, postfix, Encoding.Default)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="X12Writer"/> class.
+        /// </summary>
+        /// <param name="path">The path to the file to write to.</param>
+        /// <param name="append">Whether to append to the file. The file will be overwritten by default.</param>
+        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        /// <param name="postfix">The postfix after each segment line.</param>
+        public X12Writer(string path, bool append, Encoding encoding = null, string postfix = "")
+            : base(path, append, encoding ?? Encoding.Default, postfix ?? "")
         {
+            SetFormatTags();
         }
 
-        public X12Writer(Stream stream, Encoding encoding)
-            : base(stream, "", encoding)
+        public override void WriteInterchange(ISA interchangeHeader, Separators separators = null)
         {
-        }
-
-        public X12Writer(Stream stream, string postfix, Encoding encoding)
-            : base(stream, postfix, encoding)
-        {
-        }
-
-        public override void BeginInterchange(ISA interchangeHeader, Separators separators = null)
-        {
-            base.BeginInterchange(interchangeHeader, separators);
-
-            Separators = separators ?? Separators.X12;
-            interchangeHeader.ComponentElementSeparator_16 = Separators.ComponentDataElement.ToString();
+            var sep = separators ?? Separators.X12;
+            interchangeHeader.ComponentElementSeparator_16 = sep.ComponentDataElement.ToString();
             if (interchangeHeader.InterchangeControlStandardsIdentifier_11 != "U")
-                interchangeHeader.InterchangeControlStandardsIdentifier_11 = Separators.RepetitionDataElement.ToString();
+                interchangeHeader.InterchangeControlStandardsIdentifier_11 = sep.RepetitionDataElement.ToString();
 
-            InterchangeControlNr = interchangeHeader.InterchangeControlNumber_13;
-
-            var segment = new Segment(typeof(ISA), interchangeHeader);
-            Write(segment.GenerateSegment(Separators));
+            BeginInterchange(interchangeHeader, interchangeHeader.InterchangeControlNumber_13, sep);
         }
 
-        public override void BeginGroup(GS groupHeader)
+        public override void WriteGroup(GS groupHeader)
         {
-            base.BeginGroup(groupHeader);
-
-            GroupControlNr = groupHeader.GroupControlNumber_6;
-
-            var segment = new Segment(typeof(GS), groupHeader);
-            Write(segment.GenerateSegment(Separators));
+            BeginGroup(groupHeader, groupHeader.GroupControlNumber_6);
         }
-        
-        public override void EndGroup()
+
+        private void SetFormatTags()
         {
-            var trailer = SetTrailer("GE", GroupControlNr, MessageCounter);
-            Write(trailer);
-
-            base.EndGroup();
-        }
-
-        public override void EndInterchange()
-        {
-            var trailer = SetTrailer("IEA", InterchangeControlNr, GroupCounter);
-            Write(trailer);
-
-            base.EndInterchange();
-        }
-
-        public override void AddMessage(IEdiMessage message)
-        {
-            base.AddMessage(message);
-
-            const string trailerTag = "SE";
-            var segmentCounter = 0;
-            var transactionSet = new TransactionSet(message.GetType(), "X12", message);
-            transactionSet.RemoveTrailer(trailerTag);
-            
-            foreach (var segment in transactionSet.Descendants<Segment>())
-            {
-                Write(segment.GenerateSegment(Separators));
-                segmentCounter++;
-            }
-
-            if (transactionSet.EdiName != "TA1")
-            {
-                segmentCounter++;
-                var trailer = SetTrailer(trailerTag, transactionSet.GetControlNumber(), segmentCounter);
-                Write(trailer);
-            }
-        }
-
-        public void AddTa1(TA1 ta1)
-        {
-            var segment = new Segment(typeof(TA1), ta1);
-            Write(segment.GenerateSegment(Separators));
-        }
+            Format = "X12";
+            InterchangeTrailer = "IEA";
+            GroupTrailer = "GE";
+            MessageTrailer = "SE";
+            Ta = "TA1";
+        }        
     }
 }

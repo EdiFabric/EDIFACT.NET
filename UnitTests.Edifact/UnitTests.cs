@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using EdiFabric.Framework;
@@ -38,6 +39,8 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
             Assert.AreEqual(expected, actual);
         }
 
@@ -97,7 +100,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, separators.ToUna());
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -126,7 +129,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -182,7 +185,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, true);
+            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -535,7 +538,7 @@ namespace EdiFabric.UnitTests.Edifact
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine, null, true);
+                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine);
             }
             
             // ASSERT

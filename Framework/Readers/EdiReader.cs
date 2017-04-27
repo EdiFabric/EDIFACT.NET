@@ -21,7 +21,7 @@ using EdiFabric.Framework.Parsers;
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Reads EDI messages into .NET objects.
+    /// Reads EDI documents into .NET objects.
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
@@ -93,7 +93,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                Item = new ParsingException(ErrorCodes.Unknown, ex.Message, ex);
+                Item = new ParsingException(ex);
             }
 
             if (StreamReader.EndOfStream && CurrentMessage.Any())

@@ -108,5 +108,19 @@ namespace EdiFabric.Framework
         {
             return SegmentId.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
+
+        /// <summary>
+        /// Compares to another separator set.
+        /// </summary>
+        /// <param name="separators">The separator set to compare to.</param>
+        /// <returns>Indicates if the separator sets are different.</returns>
+        public bool IsDifferent(Separators separators)
+        {
+            return separators.ComponentDataElement != ComponentDataElement ||
+                   separators.DataElement != DataElement ||
+                   separators.Escape != Escape ||
+                   separators.RepetitionDataElement != RepetitionDataElement ||
+                   separators.Segment != Segment;
+        }
     }
 }

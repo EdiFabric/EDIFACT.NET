@@ -22,7 +22,7 @@ using EdiFabric.Framework.Segments.X12;
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
-    /// Reads X12 messages into .NET objects.
+    /// Reads X12 documents into .NET objects.
     /// </summary>
     public sealed class X12Reader : EdiReader
     {
@@ -30,7 +30,7 @@ namespace EdiFabric.Framework.Readers
         private SegmentContext _currentGroupHeader;
 
         /// <summary>
-        /// Factory method to initialize a new instance of the <see cref="X12Reader"/> class.
+        /// Initializes a new instance of the <see cref="X12Reader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
@@ -43,7 +43,7 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// Factory method to initialize a new instance of the <see cref="X12Reader"/> class.
+        /// Initializes a new instance of the <see cref="X12Reader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>

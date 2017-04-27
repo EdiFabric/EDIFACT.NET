@@ -49,7 +49,8 @@ namespace EdiFabric.Framework.Parsers
                                 d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
-                        throw ToException(messageContext, segment, "Unable to resolve HL.", index);
+                        throw ToException(messageContext, segment, "Unable to resolve HL.", index,
+                            ErrorCodes.InvalidInterchangeContent);
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
@@ -57,10 +58,14 @@ namespace EdiFabric.Framework.Parsers
                 if (currSeg == null)
                 {
                     var message = "Segment was not in the correct position according to the rules class.";
+                    ErrorCodes errorCode = ErrorCodes.UnexpectedSegment;
                     if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))
+                    {
                         message = "Segment is not supported in rules class.";
+                        errorCode = ErrorCodes.UnrecognizedSegment;
+                    }
 
-                    throw ToException(messageContext, segment, message, index);
+                    throw ToException(messageContext, segment, message, index, errorCode);
                 }
 
                 if (currSeg.IsParsed)
@@ -71,12 +76,14 @@ namespace EdiFabric.Framework.Parsers
             }
         }
 
-        private static ParsingException ToException(MessageContext messageContext, SegmentContext segmentContext, string message, int index)
+        private static ParsingException ToException(MessageContext messageContext, SegmentContext segmentContext,
+            string message, int index, ErrorCodes errorCode)
         {
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
-            errorContext.Add(segmentContext.Name, index, ErrorCodes.UnexpectedSegment);
+            errorContext.Add(segmentContext.Name, index, errorCode);
 
-            return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value, errorContext);
+            return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value,
+                errorContext);
         }
 
         public string GetControlNumber()

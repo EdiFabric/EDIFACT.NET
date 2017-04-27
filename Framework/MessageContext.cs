@@ -111,7 +111,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParsingException(ErrorCodes.RulesAssemblyNotFound, ex.Message, ex);
+                throw new ParsingException(ErrorCodes.RulesAssemblyNotFound, ex.Message);
             }
             
             var matches = assembly.GetTypes().Where(m =>

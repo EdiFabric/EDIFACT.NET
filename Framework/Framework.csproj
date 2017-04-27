@@ -117,7 +117,6 @@
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Parsers\SegmentId.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Parsers\ParseNodeExtensions.cs" />
     <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
