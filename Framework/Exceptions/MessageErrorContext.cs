@@ -78,57 +78,7 @@ namespace EdiFabric.Framework.Exceptions
             : this(name, controlNumber)
         {
             _codes.Add(errorCode);
-        }
-
-        /// <summary>
-        /// Merges a segment context into the errors collection.
-        /// There can be only one reference for a segment, containing all the errors for that segment.
-        /// A segment is identified by its name (or segment ID) and its position.
-        /// </summary>
-        /// <param name="segmentName">The segment name.</param>
-        /// <param name="segmentPosition">The segment position.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public void Add(string segmentName, int segmentPosition, ErrorCodes errorCode)
-        {
-            var key = segmentName + segmentPosition;
-            if (_errors.ContainsKey(key))
-            {
-                _errors[key].Add(errorCode);
-            }
-            else
-            {
-                _errors.Add(key, new SegmentErrorContext(segmentName, segmentPosition, errorCode));
-            }
-        }
-
-        /// <summary>
-        /// Merges a segment context into the errors collection.
-        /// There can be only one reference for a segment, containing all the errors for that segment.
-        /// A segment is identified by its name (or segment ID) and its position.
-        /// </summary>
-        /// <param name="segmentName">The segment name.</param>
-        /// <param name="segmentPosition">The segment position.</param>
-        /// <param name="name">The data element name.</param>
-        /// <param name="position">The data element position.</param>
-        /// <param name="code">The syntax error code.</param>
-        /// <param name="componentPosition">The component data element position.</param>
-        /// <param name="repetitionPosition">The repetition position.</param>
-        /// <param name="value">The data element value;</param>
-        public void Add(string segmentName, int segmentPosition, string name, int position, ErrorCodes code, int componentPosition,
-            int repetitionPosition, string value)
-        {
-            var key = segmentName + segmentPosition;
-            if (_errors.ContainsKey(key))
-            {
-                _errors[key].Add(name, position, code, componentPosition, repetitionPosition, value);
-            }
-            else
-            {
-                var segmentContext = new SegmentErrorContext(segmentName, segmentPosition);
-                segmentContext.Add(name, position, code, componentPosition, repetitionPosition, value);
-                _errors.Add(key, segmentContext);
-            }
-        }
+        }        
 
         /// <summary>
         /// Merges a segment context into the errors collection.

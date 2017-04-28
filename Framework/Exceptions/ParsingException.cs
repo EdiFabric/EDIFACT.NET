@@ -22,6 +22,30 @@ namespace EdiFabric.Framework.Exceptions
     [Serializable]
     public class ParsingException : Exception, ISerializable, IEdiItem
     {
+
+        /// <summary>
+        /// The syntax error code.
+        /// </summary>
+        public string PositionInRule
+        {
+            get
+            {
+                return (Data.Contains("PositionInRule")) ? (string)Data["PositionInRule"] : null;
+            }
+
+            private set
+            {
+                if (value == null && Data.Contains("PositionInRule"))
+                {
+                    Data.Remove("PositionInRule");
+                }
+                else
+                {
+                    Data["PositionInRule"] = value;
+                }
+            }
+        }
+
         /// <summary>
         /// The syntax error code.
         /// </summary>
