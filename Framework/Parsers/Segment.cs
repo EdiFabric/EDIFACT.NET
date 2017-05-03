@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers
@@ -44,22 +44,22 @@ namespace EdiFabric.Framework.Parsers
             BuildChildren(instance, true);
         }
 
-        public Segment(PropertyInfo propertyInfo, SAttribute sAttr, object instance = null)
+        public Segment(PropertyInfo propertyInfo, SegmentAttribute sAttr, object instance = null)
             : this(propertyInfo.GetGenericType(), propertyInfo.Name, sAttr.Id, instance)
         {
             if (sAttr.First != null)
             {
-                var eAttr = (EAttribute)sAttr.First.GetCustomAttributes(typeof(EAttribute)).SingleOrDefault();
+                var eAttr = (EdiCodesAttribute)sAttr.First.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                 if (eAttr == null)
-                    throw new Exception(string.Format("Type {0} is not annotated with [EAttribute].",
+                    throw new Exception(string.Format("Type {0} is not annotated with [EdiCodesAttribute].",
                         sAttr.First.Name));
                 _firstChildValues = eAttr.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (sAttr.Second != null)
                 {
-                    var eAttrS = (EAttribute)sAttr.Second.GetCustomAttributes(typeof(EAttribute)).SingleOrDefault();
+                    var eAttrS = (EdiCodesAttribute)sAttr.Second.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                     if (eAttrS == null)
-                        throw new Exception(string.Format("Type {0} is not annotated with [EAttribute].",
+                        throw new Exception(string.Format("Type {0} is not annotated with [EdiCodesAttribute].",
                             sAttr.Second.Name));
                     _secondChildValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }

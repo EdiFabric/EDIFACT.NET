@@ -9,19 +9,23 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Attributes;
+using System;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Segments.Edifact
 {
     /// <summary>
     /// Functional Group trailer.
     /// </summary>
+    [Serializable()]
+    [Segment("UNE")]
     public class UNE : IEdiItem
     {
-        [D(1)]
+        [Pos(1)]
         public string GroupControlCount_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string GroupReferenceNumber_2 { get; set; }
     }
 }

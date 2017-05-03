@@ -9,71 +9,65 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Attributes;
+using System;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Segments.X12
 {
     /// <summary>
     /// Interchange header.
     /// </summary>
+    [Serializable()]
+    [Segment("ISA")]
     public class ISA : IEdiItem
     {
-        [D(1)]
+        [Pos(1)]
         public string AuthorizationInformationQualifier_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string AuthorizationInformation_2 { get; set; }
 
-        [D(3)]
+        [Pos(3)]
         public string SecurityInformationQualifier_3 { get; set; }
 
-        [D(4)]
+        [Pos(4)]
         public string SecurityInformation_4 { get; set; }
 
-        [D(5)]
+        [Pos(5)]
         public string SenderIDQualifier_5 { get; set; }
 
-        [D(6)]
+        [Pos(6)]
         public string InterchangeSenderID_6 { get; set; }
 
-        [D(7)]
+        [Pos(7)]
         public string ReceiverIDQualifier_7 { get; set; }
 
-        [D(8)]
+        [Pos(8)]
         public string InterchangeReceiverID_8 { get; set; }
 
-        [D(9)]
+        [Pos(9)]
         public string InterchangeDate_9 { get; set; }
 
-        [D(10)]
+        [Pos(10)]
         public string InterchangeTime_10 { get; set; }
 
-        [D(11)]
+        [Pos(11)]
         public string InterchangeControlStandardsIdentifier_11 { get; set; }
 
-        [D(12)]
+        [Pos(12)]
         public string InterchangeControlVersionNumber_12 { get; set; }
 
-        [D(13)]
+        [Pos(13)]
         public string InterchangeControlNumber_13 { get; set; }
 
-        [D(14)]
+        [Pos(14)]
         public string AcknowledgementRequested_14 { get; set; }
 
-        [D(15)]
+        [Pos(15)]
         public string UsageIndicator_15 { get; set; }
 
-        [D(16)]
+        [Pos(16)]
         public string ComponentElementSeparator_16 { get; set; }
-
-        public string GetControlNumber()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string SetTrailer()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

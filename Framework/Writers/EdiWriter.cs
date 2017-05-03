@@ -12,7 +12,7 @@
 using System;
 using System.IO;
 using System.Text;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Model;
 using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework.Writers
@@ -175,7 +175,7 @@ namespace EdiFabric.Framework.Writers
         /// Writes a message to the destination.
         /// </summary>
         /// <param name="message">The message to write.</param>
-        public void WriteMessage(IEdiMessage message)
+        public void WriteMessage(EdiMessage message)
         {
             if (_separators == null)
                 throw new Exception("No interchange was started.");

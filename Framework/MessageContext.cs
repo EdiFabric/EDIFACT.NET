@@ -12,7 +12,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
@@ -116,7 +116,7 @@ namespace EdiFabric.Framework
             
             var matches = assembly.GetTypes().Where(m =>
             {
-                var att = ((MAttribute) m.GetCustomAttribute(typeof (MAttribute)));
+                var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
                 if (att == null) return false;
                 return att.Format == Format && att.Version == Version && att.Id == Tag;
             }).ToList();
@@ -132,7 +132,7 @@ namespace EdiFabric.Framework
 
         private void HandleException(Assembly assembly, string message, ErrorCodes errorCode)
         {
-            var attribute = "[M(" + Format + ", " + Version + ", " + Tag + ")]";
+            var attribute = "[Message(" + Format + ", " + Version + ", " + Tag + ")]";
             var errorMsg = String.Format(message, attribute, assembly.FullName);
 
             throw new ParsingException(errorCode, errorMsg);

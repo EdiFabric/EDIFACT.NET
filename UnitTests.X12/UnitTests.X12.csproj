@@ -54,9 +54,9 @@
     <Compile Include="UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Attributes\Attributes.csproj">
-      <Project>{205bc14b-dc58-42bb-855d-b02faedfcd5a}</Project>
-      <Name>Attributes</Name>
+    <ProjectReference Include="..\Annotations\Annotations.csproj">
+      <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
+      <Name>Annotations</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\Framework.csproj">
       <Project>{d39915c6-da36-406f-828e-4c8c2e299324}</Project>

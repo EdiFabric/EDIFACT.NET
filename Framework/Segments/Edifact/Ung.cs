@@ -9,76 +9,86 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Attributes;
+using System;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Segments.Edifact
 {
     /// <summary>
     /// Functional Group header.
     /// </summary>
+    [Serializable()]
+    [Segment("UNG")]
     public class UNG : IEdiItem
     {
-        [D(1)]
+        [Pos(1)]
         public string MessageGroupIdentification_1 { get; set; }
 
-        [C(2)]
+        [Pos(2)]
         public S006 APPLICATIONSENDERIDENTIFICATION_2 { get; set; }
 
-        [C(3)]
+        [Pos(3)]
         public S007 APPLICATIONRECIPIENTIDENTIFICATION_3 { get; set; }
 
-        [C(4)]
+        [Pos(4)]
         public S004 DATEANDTIMEOFPREPARATION_4 { get; set; }
 
-        [D(5)]
+        [Pos(5)]
         public string GroupReferenceNumber_5 { get; set; }
 
-        [D(6)]
+        [Pos(6)]
         public string ControllingAgency_6 { get; set; }
 
-        [C(7)]
+        [Pos(7)]
         public S008 MESSAGEVERSION { get; set; }
 
-        [D(8)]
+        [Pos(8)]
         public string D_0058_8 { get; set; }
     }
 
     /// <summary>
     /// APPLICATION SENDER IDENTIFICATION.
     /// </summary>
+    [Serializable()]
+    [Composite("S006")]
     public class S006
     {
-        [D(1)]
+        [Pos(1)]
         public string ApplicationSenderIdentification_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string IdentificationCodeQualifier_2 { get; set; }
     }
 
     /// <summary>
     /// APPLICATION RECIPIENT IDENTIFICATION.
     /// </summary>
+    [Serializable()]
+    [Composite("S007")]
     public class S007
     {
-        [D(1)]
+        [Pos(1)]
         public string ApplicationRecipientIdentification_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string IdentificationCodeQualifier_2 { get; set; }
     }
 
     /// <summary>
     /// MESSAGE VERSION.
     /// </summary>
+    [Serializable()]
+    [Composite("S008")]
     public class S008
     {
-        [D(1)]
+        [Pos(1)]
         public string MessageVersionNumber_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string MessageReleaseNumber_2 { get; set; }
 
-        [D(3)]
+        [Pos(3)]
         public string AssociationAssignedCode_3 { get; set; }
     }
 }

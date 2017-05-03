@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Attributes\Attributes.csproj">
-      <Project>{205bc14b-dc58-42bb-855d-b02faedfcd5a}</Project>
-      <Name>Attributes</Name>
+    <ProjectReference Include="..\Annotations\Annotations.csproj">
+      <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
+      <Name>Annotations</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

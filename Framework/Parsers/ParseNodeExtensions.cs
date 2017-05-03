@@ -13,7 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Validators;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -104,34 +106,102 @@ namespace EdiFabric.Framework.Parsers
 
         public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
         {
-            var attr = propertyInfo.GetCustomAttribute<EdiAttribute>();
-            if(attr == null)
-                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
-
-            if (attr is DAttribute)
+            var type = propertyInfo.GetGenericType();
+            if(type == typeof(string))
                 return new DataElement(propertyInfo, instance);
 
-            if (attr is SAttribute)
-                return new Segment(propertyInfo, attr as SAttribute, instance);
+            var attr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();
+            if(attr == null)
+                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
+            
+            if (attr is SegmentAttribute)
+                return new Segment(propertyInfo, attr as SegmentAttribute, instance);
 
-            if (attr is CAttribute)
+            if (attr is CompositeAttribute)
                 return new ComplexDataElement(propertyInfo, instance);
 
-            if (attr is GAttribute)
+            if (attr is GroupAttribute)
                 return new Loop(propertyInfo, instance);
 
-            if (attr is AAttribute)
+            if (attr is AllAttribute)
                 return new AllLoop(propertyInfo, instance);
 
             throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
         }
 
+        //public static SegmentErrorContext ToSegmentErrorContext(this PropertyInfo propertyInfo, object value, int segmentPosition)
+        //{
+        //    var attr = propertyInfo.GetCustomAttribute<PositionAttribute>();
+
+        //    if (attr == null)
+        //        throw new Exception(string.Format("Property {0} is not annotated with [PositionAttribute].", propertyInfo.Name));
+
+        //    var results = propertyInfo.Validate(value);
+
+        //    if (attr is SAttribute)
+        //    {
+        //        var sAttr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();
+        //        var segmentName = sAttr.Id;
+        //    }
+
+        //    if (attr is GAttribute)
+        //    {
+        //        var sAttr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();
+        //        var segmentName = sAttr.Id;
+        //    }
+
+        //    if (attr is CAttribute)
+        //    {
+        //        var sAttr = propertyInfo.DeclaringType.GetCustomAttribute<EdiAttribute>();
+        //        var segmentName = sAttr.Id;
+        //    }
+
+        //    if (attr is DAttribute)
+        //    {
+        //        var sAttr = propertyInfo.DeclaringType.GetCustomAttribute<EdiAttribute>();
+        //        if (sAttr == null)
+        //        {
+        //            sAttr = propertyInfo.DeclaringType.DeclaringType.GetCustomAttribute<EdiAttribute>();
+        //        }
+        //        var segmentName = sAttr.Id;
+        //    }
+
+        //    if (attr is AAttribute && results.Contains(ValidationCodes.RequiredMissing))
+        //    {
+        //        foreach (var aValue in value.GetType().GetProperties().Sort())
+        //        {
+                    
+        //        }
+        //    }
+
+
+            
+
+        //    foreach (var result in results)
+        //    {
+        //        //var segmentName = 
+        //    }
+
+           
+            
+
+           
+
+            
+
+            
+
+            
+
+        //    throw new Exception(string.Format("Property {0} is annotated with unknown [PositionAttribute].", propertyInfo.Name));
+        //}
+
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             return propertyInfos.OrderBy(
                 p =>
-                    p.GetCustomAttributes(typeof(EdiAttribute), false)
-                        .Cast<EdiAttribute>()
+                    p.GetCustomAttributes(typeof(PosAttribute), false)
+                        .Cast<PosAttribute>()
                         .Select(a => a.Pos)
                         .FirstOrDefault());
         }
@@ -144,5 +214,7 @@ namespace EdiFabric.Framework.Parsers
 
             return type;
         }
+
+        
     }
 }

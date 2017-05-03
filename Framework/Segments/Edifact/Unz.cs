@@ -9,19 +9,23 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Attributes;
+using System;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Segments.Edifact
 {
     /// <summary>
     /// Interchange trailer.
     /// </summary>
+    [Serializable()]
+    [Segment("UNZ")]
     public class UNZ : IEdiItem
     {
-        [D(1)]
+        [Pos(1)]
         public string InterchangeControlCount_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string InterchangeControlReference_2 { get; set; }
     }  
 }

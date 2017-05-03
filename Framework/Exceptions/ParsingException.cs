@@ -11,7 +11,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -22,7 +22,6 @@ namespace EdiFabric.Framework.Exceptions
     [Serializable]
     public class ParsingException : Exception, ISerializable, IEdiItem
     {
-
         /// <summary>
         /// The syntax error code.
         /// </summary>

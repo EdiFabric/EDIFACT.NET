@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Model;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
 

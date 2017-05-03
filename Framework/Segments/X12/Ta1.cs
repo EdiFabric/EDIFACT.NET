@@ -9,28 +9,32 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Attributes;
+using System;
+using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Segments.X12
 {
     /// <summary>
     /// Interchange acknowledgment.
     /// </summary>
+    [Serializable()]
+    [Segment("TA1")]
     public class TA1 : IEdiItem
     {
-        [D(1)]
+        [Pos(1)]
         public string InterchangeControlNumber_1 { get; set; }
 
-        [D(2)]
+        [Pos(2)]
         public string InterchangeDate_2 { get; set; }
 
-        [D(3)]
+        [Pos(3)]
         public string InterchangeTime_3 { get; set; }
 
-        [D(4)]
+        [Pos(4)]
         public string InterchangeAcknowledgmentCode_4 { get; set; }
 
-        [D(5)]
+        [Pos(5)]
         public string InterchangeNoteCode_5 { get; set; }
 
         public string ToString(Separators separators)

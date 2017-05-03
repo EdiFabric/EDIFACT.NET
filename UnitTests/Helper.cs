@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Attributes;
+using EdiFabric.Annotations.Model;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Segments.Edifact;
 using EdiFabric.Framework.Segments.X12;
@@ -46,7 +46,7 @@ namespace EdiFabric.UnitTests
                     writer.WriteSegment(una);
                 foreach (var item in items)
                 {
-                    var message = item as IEdiMessage;
+                    var message = item as EdiMessage;
                     if (message != null)
                     {
                         writer.WriteMessage(message);
@@ -86,7 +86,7 @@ namespace EdiFabric.UnitTests
                 var writer = new X12Writer(stream, encoding, postFix);
                 foreach (var item in items)
                 {
-                    var message = item as IEdiMessage;
+                    var message = item as EdiMessage;
                     if (message != null)
                     {
                         writer.WriteMessage(message);
