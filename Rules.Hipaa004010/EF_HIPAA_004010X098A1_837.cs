@@ -1,3 +1,5 @@
+using EdiFabric.Annotations.Model;
+
 namespace EdiFabric.Rules.HIPAA_004010X098A1_837
 {
     using System;
@@ -8,7 +10,7 @@ namespace EdiFabric.Rules.HIPAA_004010X098A1_837
     
     [Serializable()]
     [Message("X12", "004010X098A1", "837")]
-    public class TS837
+    public class TS837 : EdiMessage
     {
         
         [Pos(1)]

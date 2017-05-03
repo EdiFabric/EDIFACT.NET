@@ -4,11 +4,12 @@ namespace EdiFabric.Rules.HIPAA_005010X222A1_837
     using System.Collections.Generic;
     using EdiFabric.Annotations.Edi;
     using EdiFabric.Annotations.Validation;
+    using EdiFabric.Annotations.Model;
     
     
     [Serializable()]
     [Message("X12", "005010X222A1", "837")]
-    public class TS837
+    public class TS837 : EdiMessage
     {
         
         [Pos(1)]

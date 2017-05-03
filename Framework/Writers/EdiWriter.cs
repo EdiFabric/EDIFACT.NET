@@ -99,7 +99,7 @@ namespace EdiFabric.Framework.Writers
         /// </param>
         protected void BeginInterchange(T interchangeHeader, string controlNumber, Separators separators)
         {
-            if (_separators == null)
+            if (separators == null)
                 throw new ArgumentNullException("separators");
 
             _separators = separators;

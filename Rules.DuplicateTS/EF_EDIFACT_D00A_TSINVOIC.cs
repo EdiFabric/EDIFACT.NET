@@ -1,3 +1,5 @@
+using EdiFabric.Annotations.Model;
+
 namespace EdiFabric.Rules.EDIFACT_D00A
 {
     using System;
@@ -8,7 +10,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A
     
     [Serializable()]
     [Message("EDIFACT", "D00A", "INVOIC")]
-    public class TSINVOIC
+    public class TSINVOIC : EdiMessage
     {
         
         [Pos(1)]

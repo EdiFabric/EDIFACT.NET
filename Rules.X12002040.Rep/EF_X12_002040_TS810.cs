@@ -1,3 +1,5 @@
+using EdiFabric.Annotations.Model;
+
 namespace EdiFabric.Rules.X12_002040.Rep
 {
     using System;
@@ -8,7 +10,7 @@ namespace EdiFabric.Rules.X12_002040.Rep
     
     [Serializable()]
     [Message("X12", "002040", "810")]
-    public class TS810
+    public class TS810 : EdiMessage
     {
         
         [Pos(1)]

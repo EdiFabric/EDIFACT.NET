@@ -5,6 +5,8 @@ namespace EdiFabric.Rules.X12_002040.Rep
     using EdiFabric.Annotations.Edi;
     using EdiFabric.Annotations.Validation;
 
+    [Serializable()]
+    [Composite("C127")]
     public class C127
     {
         [StringLength(1, 30)]
