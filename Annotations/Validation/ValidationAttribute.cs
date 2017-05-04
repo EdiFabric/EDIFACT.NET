@@ -16,6 +16,12 @@ namespace EdiFabric.Annotations.Validation
     [AttributeUsage(AttributeTargets.Property)]
     public abstract class ValidationAttribute : Attribute
     {
+        protected ValidationAttribute(int priority)
+        {
+            Priority = priority;
+        }
+
+        public int Priority { get; private set; }
         public abstract ValidationResult IsValid(object intance);
     }
 }

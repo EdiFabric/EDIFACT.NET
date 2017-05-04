@@ -18,7 +18,7 @@ namespace EdiFabric.Annotations.Validation
     {
         public string Code { get; set; }
         public Type DataType { get; set; }
-        public DataElementAttribute(string code, Type dataType)
+        public DataElementAttribute(string code, Type dataType) : base(4)
         {
             Code = code;
             DataType = dataType;

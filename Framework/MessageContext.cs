@@ -41,17 +41,7 @@ namespace EdiFabric.Framework
         /// <summary>
         /// The internal type of the relevant EDI spec.
         /// </summary>
-        public Type SystemType { get; private set; }
-        /// <summary>
-        /// The name of XSD file of the EDI spec.
-        /// </summary>
-        public string XsdName
-        {
-            get
-            {
-                return "EF_" + Format + "_" + Version + "_" + Tag + ".xsd";
-            }            
-        }
+        public Type SystemType { get; private set; }       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
@@ -77,29 +67,15 @@ namespace EdiFabric.Framework
         /// <param name="message">The EDI document instance.</param>
         public MessageContext(object message)
         {
-            var typeName = message.GetType().FullName;
-            var parts = typeName.Split('.');
+            var type = message.GetType();
+            var msgAttr = type.GetCustomAttribute<MessageAttribute>();
+            if(msgAttr == null)
+                throw new Exception(string.Format("[Message] attribute was not found in {0} .", type.FullName));
 
-            if (parts.Length < 2)
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
-
-            Version = parts[parts.Length - 2];
-            Tag = parts.Last().Replace("M_", "");
-            if (Version.StartsWith("X12", StringComparison.Ordinal))
-            {
-                Version = Version.Replace("X12", "");
-                Format = "X12";
-            }
-            else if (Version.StartsWith("Edifact", StringComparison.Ordinal))
-            {
-                Version = Version.Replace("Edifact", "");
-                Format = "EDIFACT";
-            }
-            else
-                throw new Exception(string.Format("Unable to determine XSD from {0}.", typeName));
-
-            Version = Version.Replace(Tag, "");
-            SystemType = message.GetType();
+            Format = msgAttr.Format;
+            Version = msgAttr.Version;
+            Tag = msgAttr.Id;
+            SystemType = type;
         }
 
         private Type ToSystemType(Func<MessageContext, Assembly> rulesAssembly)

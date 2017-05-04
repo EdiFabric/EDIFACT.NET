@@ -20,5 +20,9 @@ namespace EdiFabric.Annotations.Validation
         {
             return intance == null ? ValidationResult.RequiredMissing : ValidationResult.Valid;
         }
+
+        public RequiredAttribute() : base(1)
+        {
+        }
     }
 }

@@ -82,6 +82,13 @@ namespace EdiFabric.Framework.Parsers
             return new List<ParseNode> {Parent};
         }
 
+        public override void SetParsed()
+        {
+            IsParsed = true;
+            if (Parent != null)
+                Parent.SetParsed();
+        }
+
         public override void Parse(string value, Separators separators)
         {
             if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
@@ -89,8 +96,8 @@ namespace EdiFabric.Framework.Parsers
 
             if (!Children.Any())
                 BuildChildren();
-            
-            IsParsed = true;
+
+            SetParsed();
 
             var index = 0;
             foreach (var currentToParse in value.GetDataElements(separators))

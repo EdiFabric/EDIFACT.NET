@@ -20,14 +20,12 @@ namespace EdiFabric.Framework.Parsers
         public Loop(PropertyInfo propertyInfo, object instance = null)
             : base(propertyInfo.GetGenericType(), propertyInfo.Name, propertyInfo.Name)
         {
-            IsParsed = true;
             BuildChildren(instance);
         }
 
         public Loop(ParseNode parseNode)
             : base(parseNode.Type, parseNode.Name, parseNode.EdiName)
         {
-            IsParsed = true;
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
             BuildChildren();
         }

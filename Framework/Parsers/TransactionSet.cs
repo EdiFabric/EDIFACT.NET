@@ -80,7 +80,7 @@ namespace EdiFabric.Framework.Parsers
             string message, int index, ErrorCodes errorCode)
         {
             var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
-            errorContext.Add(new SegmentErrorContext(segmentContext.Name, index, errorCode));
+            //errorContext.Add(new SegmentErrorContext(segmentContext.Name, index, errorCode));
 
             return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value,
                 errorContext);

@@ -10,6 +10,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using EdiFabric.Annotations.Validation;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -32,7 +33,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// The syntax error code.
         /// </summary>
-        public ErrorCodes Code { get; private set; }
+        public ValidationResult Code { get; private set; }
         /// <summary>
         /// The copy of the data element in error.
         /// </summary>
@@ -55,7 +56,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value.</param>
-        public DataElementErrorContext(string name, int position, ErrorCodes code, int componentPosition,
+        public DataElementErrorContext(string name, int position, ValidationResult code, int componentPosition,
             int repetitionPosition, string value)
         {
             Name = name;

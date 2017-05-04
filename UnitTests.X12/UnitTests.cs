@@ -6,6 +6,7 @@ using EdiFabric.Framework;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.X12;
+using EdiFabric.Framework.Validators;
 using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -43,21 +44,26 @@ namespace EdiFabric.UnitTests.X12
             Assert.AreEqual(expected, actual);
         }
 
-    //    [TestMethod]
-    //    public void TestParseX12WithValidationFailure()
-    //    {
-    //        // ARRANGE
-    //        const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+        [TestMethod]
+        public void TestParseX12WithValidationFailure()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
+            List<object> ediItems;
 
-    //        // ACT
-    //        var message = TestHelper.ParseX12(sample).OfType<M_810>().Single();
-    //        var validationResults = EdiValidator.Create("EdiFabric.Xsd").Validate(message);
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<TS810>().SingleOrDefault();
+            msg.Validate();
 
-    //        // ASSERT
-    //        Assert.IsNotNull(validationResults);
-    //        Assert.IsNotNull(validationResults.ErrorContext);
-    //        Assert.IsTrue(validationResults.ErrorContext.Errors.Any() || validationResults.ErrorContext.Codes.Any());
-    //    }
+            // ASSERT
+            
+        }
 
     //    [TestMethod]
     //    public void TestParseX12WithValidation()

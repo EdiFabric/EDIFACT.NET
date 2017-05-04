@@ -19,13 +19,13 @@ namespace EdiFabric.Annotations.Validation
         public int MinCount { get; set; }
         public int MaxCount { get; set; }
 
-        public ListCountAttribute(int minCount, int maxCount)
+        public ListCountAttribute(int minCount, int maxCount) : base(2)
         {
             MinCount = minCount;
             MaxCount = maxCount;
         }
 
-        public ListCountAttribute(int maxCount)
+        public ListCountAttribute(int maxCount) : base(2)
         {
             MinCount = 0;
             MaxCount = maxCount;
@@ -35,7 +35,7 @@ namespace EdiFabric.Annotations.Validation
         {
             var list = intance as IList;
             if (list == null)
-                throw new Exception("[EdiMax] attribute can only be applied to lists.");
+                throw new Exception(string.Format("{0} can only be applied to lists.", GetType().Name));
 
             if (list.Count > MaxCount)
                 return ValidationResult.Unexpected;

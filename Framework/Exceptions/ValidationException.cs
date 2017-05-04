@@ -66,52 +66,53 @@ namespace EdiFabric.Framework.Exceptions
         /// </returns>
         public IEnumerable<string> Flatten()
         {
-            if (ErrorContext != null)
-            {
-                foreach (var code in ErrorContext.Codes)
-                {
-                    yield return
-                        string.Format("[{0} with control nr {1}] {2}", ErrorContext.Name,
-                            ErrorContext.ControlNumber, code.ToDescription());
-                }
+            throw new NotImplementedException();
+            //if (ErrorContext != null)
+            //{
+            //    foreach (var code in ErrorContext.Codes)
+            //    {
+            //        yield return
+            //            string.Format("[{0} with control nr {1}] {2}", ErrorContext.Name,
+            //                ErrorContext.ControlNumber, code.ToDescription());
+            //    }
 
-                foreach (var error in ErrorContext.Errors)
-                {
-                    foreach (var code in error.Codes)
-                    {
-                        var errorMsg = string.Format("[{0}", error.Name);
+            //    foreach (var error in ErrorContext.Errors)
+            //    {
+            //        foreach (var code in error.Codes)
+            //        {
+            //            var errorMsg = string.Format("[{0}", error.Name);
 
-                        if (error.Position > 0)
-                            errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", error.Position));
+            //            if (error.Position > 0)
+            //                errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", error.Position));
 
-                        errorMsg = string.Concat(errorMsg, string.Format("] {0}", code.ToDescription()));
-                        yield return errorMsg;
-                    }
+            //            errorMsg = string.Concat(errorMsg, string.Format("] {0}", code.ToDescription()));
+            //            yield return errorMsg;
+            //        }
 
-                    foreach (var deError in error.Errors)
-                    {
-                        var errorMsg = string.Format(
-                            "[{0} at pos {1}] [{2}",
-                            error.Name, error.Position, deError.Name);
+            //        foreach (var deError in error.Errors)
+            //        {
+            //            var errorMsg = string.Format(
+            //                "[{0} at pos {1}] [{2}",
+            //                error.Name, error.Position, deError.Name);
 
-                        if (deError.Position > 0)
-                            errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", deError.Position));
+            //            if (deError.Position > 0)
+            //                errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", deError.Position));
 
-                        if (deError.ComponentPosition > 1)
-                            errorMsg = string.Concat(errorMsg,
-                                string.Format(" and at component pos {0}", deError.ComponentPosition));
-                        if (deError.RepetitionPosition > 1)
-                            errorMsg = string.Concat(errorMsg,
-                                string.Format(" and at repetition pos {0}", deError.RepetitionPosition));
-                        if (!string.IsNullOrEmpty(deError.Value))
-                            errorMsg = string.Concat(errorMsg, string.Format(" with value {0}", deError.Value));
+            //            if (deError.ComponentPosition > 1)
+            //                errorMsg = string.Concat(errorMsg,
+            //                    string.Format(" and at component pos {0}", deError.ComponentPosition));
+            //            if (deError.RepetitionPosition > 1)
+            //                errorMsg = string.Concat(errorMsg,
+            //                    string.Format(" and at repetition pos {0}", deError.RepetitionPosition));
+            //            if (!string.IsNullOrEmpty(deError.Value))
+            //                errorMsg = string.Concat(errorMsg, string.Format(" with value {0}", deError.Value));
 
-                        errorMsg = string.Concat(errorMsg, string.Format("] {0}", deError.Code.ToDescription()));
+            //            errorMsg = string.Concat(errorMsg, string.Format("] {0}", deError.Code.ToDescription()));
 
-                        yield return errorMsg;
-                    }
-                }
-            }
+            //            yield return errorMsg;
+            //        }
+            //    }
+            //}
         }
     }
 }

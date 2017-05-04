@@ -119,6 +119,13 @@ namespace EdiFabric.Framework.Parsers
             throw new NotImplementedException(Type.FullName);
         }
 
+        public virtual void SetParsed()
+        {
+            IsParsed = true;
+            if (Parent != null && !Parent.IsParsed)
+                Parent.SetParsed();
+        }
+
         public virtual object ToInstance()
         {
             var result = Activator.CreateInstance(Type);

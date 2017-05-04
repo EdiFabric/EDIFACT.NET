@@ -93,6 +93,7 @@
     <Compile Include="Segments\X12\Ge.cs" />
     <Compile Include="Segments\X12\Iea.cs" />
     <Compile Include="Validators\EdiMessageExtensions.cs" />
+    <Compile Include="Validators\ValidationContext.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
     <Compile Include="Writers\EdifactWriter.cs" />
     <Compile Include="Writers\X12Writer.cs" />

@@ -19,7 +19,7 @@ namespace EdiFabric.Annotations.Validation
         public int MinLen { get; set; }
         public int MaxLen { get; set; }
 
-        public StringLengthAttribute(int minLen, int maxLen)
+        public StringLengthAttribute(int minLen, int maxLen) : base(3)
         {
             MinLen = minLen;
             MaxLen = maxLen;
@@ -29,7 +29,7 @@ namespace EdiFabric.Annotations.Validation
         {
             var value = intance as string;
             if (value == null)
-                throw new Exception("[EdiLen] attribute can only be applied to data elements.");
+                throw new Exception(string.Format("{0} can only be applied to data elements.", GetType().Name));
 
             if (value.Length > MaxLen)
                 return ValidationResult.DataElementTooLong;

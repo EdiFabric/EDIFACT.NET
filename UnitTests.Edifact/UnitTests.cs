@@ -7,6 +7,7 @@ using EdiFabric.Framework;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.Edifact;
+using EdiFabric.Framework.Validators;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,28 +45,27 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.AreEqual(expected, actual);
         }
 
-        //[TestMethod]
-        //public void TestValidationFailure()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
-        //    var ediStream = TestHelper.LoadStream(sample);
-        //    List<object> ediItems;
+        [TestMethod]
+        public void TestValidationFailure()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Test.txt";
+            var ediStream = Helper.LoadStream(sample);
+            var expected = Helper.LoadString(sample);
+            List<object> ediItems;
 
-        //    // ACT
-        //    using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
-        //    {
-        //        ediItems = ediReader.ReadToEnd().ToList();
-        //    }
-
-        //    var message = ediItems.OfType<TSINVOIC>().Single();
-        //    var validationResults = EdiValidator.Create("EdiFabric.Xsd").Validate(message);
-
-        //    // ASSERT
-        //    Assert.IsNotNull(validationResults);
-        //    Assert.IsNotNull(validationResults.ErrorContext);
-        //    Assert.IsTrue(validationResults.ErrorContext.Errors.Any() || validationResults.ErrorContext.Codes.Any());
-        //}
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<TSINVOIC>().SingleOrDefault();
+            var validationResults = msg.Validate();
+            // ASSERT
+            //Assert.IsNotNull(validationResults);
+            //Assert.IsNotNull(validationResults.ErrorContext);
+            //Assert.IsTrue(validationResults.ErrorContext.Errors.Any() || validationResults.ErrorContext.Codes.Any());
+        }
 
         //[TestMethod]
         //public void TestParseEdifactWithValidation()

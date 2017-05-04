@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using EdiFabric.Annotations.Validation;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -31,11 +32,11 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         public int Position { get; private set; }
 
-        private readonly List<ErrorCodes> _codes = new List<ErrorCodes>();
+        private readonly List<ValidationResult> _codes = new List<ValidationResult>();
         /// <summary>
         /// The syntax error codes.
         /// </summary>
-        public IReadOnlyCollection<ErrorCodes> Codes
+        public IReadOnlyCollection<ValidationResult> Codes
         {
             get { return _codes.AsReadOnly(); }
         }
@@ -66,7 +67,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public SegmentErrorContext(string name, int position, ErrorCodes errorCode)
+        public SegmentErrorContext(string name, int position, ValidationResult errorCode)
             : this(name, position)
         {
             _codes.Add(errorCode);
@@ -76,7 +77,7 @@ namespace EdiFabric.Framework.Exceptions
         /// Adds a syntax error code to the error codes collection.
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
-        public void Add(ErrorCodes errorCode)
+        public void Add(ValidationResult errorCode)
         {
             _codes.Add(errorCode);
         }
@@ -90,7 +91,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        public void Add(string name, int position, ErrorCodes code, int componentPosition,
+        public void Add(string name, int position, ValidationResult code, int componentPosition,
             int repetitionPosition, string value)
         {
             _errors.Add(new DataElementErrorContext(name, position, code, componentPosition, repetitionPosition, value));
