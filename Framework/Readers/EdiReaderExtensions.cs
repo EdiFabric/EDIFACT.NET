@@ -84,7 +84,7 @@ namespace EdiFabric.Framework.Readers
         public static EdiMessage ParseTransactionSet(this List<SegmentContext> segments, Separators separators,
             MessageContext messageContext)
         {
-            var message = new TransactionSet(messageContext.SystemType, messageContext.Format);
+            var message = new TransactionSet(messageContext.SystemType);
             message.Analyze(segments.Where(s => !s.IsControl), separators, messageContext);
             return (EdiMessage)message.ToInstance();
         }

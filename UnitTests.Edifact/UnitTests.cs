@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Exceptions;
@@ -60,6 +61,14 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
             }
             var msg = ediItems.OfType<TSINVOIC>().SingleOrDefault();
+            var d = msg.TraverseDF().ToList();
+            var c = "";
+            //foreach (var f in d)
+            //{
+            //    var n = f.GetType().GetCustomAttribute<Edi>()
+            //    c = c + 
+            //}
+
             var validationResults = msg.Validate();
             // ASSERT
             //Assert.IsNotNull(validationResults);

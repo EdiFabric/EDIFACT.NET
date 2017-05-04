@@ -14,14 +14,69 @@ namespace EdiFabric.Framework.Validators
 {
     public static class EdiMessageExtensions
     {
+        public static IEnumerable<object> TraverseDF(this object instance)
+        {
+            var visited = new HashSet<object>();
+            var stack = new Stack<Tuple<object, object>>();
+
+
+            stack.Push(new Tuple<object, object>(instance, null));
+
+            while (stack.Any())
+            {
+                var current = stack.Pop();
+
+                if (!(current.Item1 is string) && current.Item1 != null && !visited.Add(current.Item1))
+                    continue;
+
+                //var t = current.Item1.GetType();
+                yield return current.Item1;
+
+                var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p));
+                foreach (var neighbour in neighbours.Reverse())
+                {
+                    stack.Push(new Tuple<object, object>(neighbour, current.Item1));
+                }
+            }
+        }
+
+        public static IEnumerable<object> GetNeigbours(this Tuple<object, object> current)
+        {
+            if (current.Item1 is string)
+            {
+            }
+            else if (current.Item1 == null)
+            {
+            }
+            else
+            {
+                foreach (var propertyInfo in current.Item1.GetType().GetProperties().Sort())
+                {
+                    var value = propertyInfo.GetValue(current.Item1);
+                    var list = value as IList;
+                    if (list != null)
+                    {
+                        foreach (var listValue in list)
+                        {
+                            yield return listValue;
+                        }
+                    }
+                    else
+                        yield return value;
+                }               
+            }
+
+            yield return current.Item2;
+        }
+
         public static ValidationException Validate(this EdiMessage message)
         {
             var messageContext = new MessageContext(message);
             var messageErrorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
-
+            
             var segmentIndex = 0;
 
-            var items = new Stack<ValidationContext>();
+           var items = new Stack<ValidationContext>();
             items.Push(new ValidationContext(message, null));
 
             while (items.Any())

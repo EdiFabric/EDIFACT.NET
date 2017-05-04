@@ -13,7 +13,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Model;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework
 {
@@ -65,7 +67,7 @@ namespace EdiFabric.Framework
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
         /// <param name="message">The EDI document instance.</param>
-        public MessageContext(object message)
+        public MessageContext(EdiMessage message)
         {
             var type = message.GetType();
             var msgAttr = type.GetCustomAttribute<MessageAttribute>();
@@ -75,6 +77,7 @@ namespace EdiFabric.Framework
             Format = msgAttr.Format;
             Version = msgAttr.Version;
             Tag = msgAttr.Id;
+            ControlNumber = GetControlNumber(message);
             SystemType = type;
         }
 
@@ -104,6 +107,31 @@ namespace EdiFabric.Framework
                 HandleException(assembly, "Multiple types with attribute'{0}' were found in assembly '{1}'.", ErrorCodes.DuplicateTypeFound); 
 
             return matches.First();
+        }
+
+        private string GetControlNumber(EdiMessage message)
+        {
+            var messageProperties = message.GetType().GetProperties().Sort();
+            
+            var firstProperty = messageProperties.FirstOrDefault();
+            if (firstProperty == null)
+                throw new Exception("Transaction set has no properties.");
+
+            var firstValue = firstProperty.GetValue(message);
+
+            if (Format == "X12")
+            {
+                var stProperties = firstValue.GetType().GetProperties().Sort();
+                return stProperties.ElementAt(1).GetValue(firstValue) as string;               
+            }
+
+            if (Format == "EDIFACT")
+            {
+                var stProperties = firstValue.GetType().GetProperties().Sort();
+                return stProperties.ElementAt(0).GetValue(firstValue) as string;
+            }
+
+            throw new NotImplementedException(Format);
         }
 
         private void HandleException(Assembly assembly, string message, ErrorCodes errorCode)

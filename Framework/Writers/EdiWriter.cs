@@ -183,7 +183,7 @@ namespace EdiFabric.Framework.Writers
             _messageCounter++;
 
             var segmentCounter = 0;
-            var transactionSet = new TransactionSet(message.GetType(), Format, message);
+            var transactionSet = new TransactionSet(message.GetType(), message);
             transactionSet.RemoveTrailer(MessageTrailer);
 
             foreach (var segment in transactionSet.Descendants<Segment>())
@@ -196,7 +196,8 @@ namespace EdiFabric.Framework.Writers
                 return;
 
             segmentCounter++;
-            var trailer = BuildTrailer(MessageTrailer, transactionSet.GetControlNumber(), segmentCounter);
+            var messageContext = new MessageContext(message);
+            var trailer = BuildTrailer(MessageTrailer, messageContext.ControlNumber, segmentCounter);
             WriteSegment(trailer);
         }
         

@@ -18,12 +18,10 @@ namespace EdiFabric.Framework.Parsers
 {
     class TransactionSet : ParseNode
     {
-        public string Format;
-        public TransactionSet(Type type, string format, object instance = null)
+        public TransactionSet(Type type, object instance = null)
             : base(type, type.Name, type.Name)
         {
             BuildChildren(instance);
-            Format = format;
         }
 
         public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
@@ -84,22 +82,7 @@ namespace EdiFabric.Framework.Parsers
 
             return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value,
                 errorContext);
-        }
-
-        public string GetControlNumber()
-        {
-            var first = Children.FirstOrDefault();
-            if(first == null)
-                throw new Exception("Transaction set has no children.");
-
-            if(Format == "X12")
-                return first.Children.ElementAt(1).Value;
-
-            if (Format == "EDIFACT")
-                return first.Children.ElementAt(0).Value;
-
-            throw new NotImplementedException(Format);
-        }
+        }        
 
         public void RemoveTrailer(string trailerTag)
         {
