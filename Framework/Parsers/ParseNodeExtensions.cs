@@ -129,26 +129,6 @@ namespace EdiFabric.Framework.Parsers
             throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
         }
 
-        public static bool IsType<T>(this PropertyInfo propertyInfo) where T : EdiAttribute
-        {
-            return propertyInfo.PropertyType.GetCustomAttribute<T>() != null;
-        }
-
-        public static string GetSegmentName(this PropertyInfo propertyInfo, PropertyInfo parentPropertyInfo)
-        {
-            var attr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();
-            if (attr == null)
-                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
-
-            if (attr is SegmentAttribute)
-                return attr.Id;
-
-           if (attr is GroupAttribute)
-                return attr.Id;          
-
-            throw new Exception(string.Format("Segment name can't be retrieved from {0} .", propertyInfo.Name));
-        }
-
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             return propertyInfos.OrderBy(

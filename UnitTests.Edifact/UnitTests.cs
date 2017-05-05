@@ -61,11 +61,6 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
             }
             var msg = ediItems.OfType<TSINVOIC>().SingleOrDefault();
-            var d = msg.Validate();
-            
-            
-           
-
             var validationResults = msg.Validate();
             // ASSERT
             //Assert.IsNotNull(validationResults);

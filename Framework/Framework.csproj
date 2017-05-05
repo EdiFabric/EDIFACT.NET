@@ -94,7 +94,6 @@
     <Compile Include="Segments\X12\Iea.cs" />
     <Compile Include="Validators\EdiMessageExtensions.cs" />
     <Compile Include="Validators\TraverseItem.cs" />
-    <Compile Include="Validators\ValidationContext.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
     <Compile Include="Writers\EdifactWriter.cs" />
     <Compile Include="Writers\X12Writer.cs" />
