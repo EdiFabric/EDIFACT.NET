@@ -107,6 +107,20 @@ namespace EdiFabric.Framework.Exceptions
         /// There can be only one reference for a segment, containing all the errors for that segment.
         /// A segment is identified by its name (or segment ID) and its position.
         /// </summary>
+        /// <param name="segmentContexts">The collection of segment error contexts to merge.</param>
+        public void AddRange(IEnumerable<SegmentErrorContext> segmentContexts)
+        {
+            foreach (var segmentContext in segmentContexts)
+            {
+                Add(segmentContext);
+            }
+        }
+
+        /// <summary>
+        /// Merges a segment context into the errors collection.
+        /// There can be only one reference for a segment, containing all the errors for that segment.
+        /// A segment is identified by its name (or segment ID) and its position.
+        /// </summary>
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
         /// <param name="errorCode">The syntax error code.</param>

@@ -131,7 +131,7 @@ namespace EdiFabric.Framework.Parsers
 
         public static bool IsType<T>(this PropertyInfo propertyInfo) where T : EdiAttribute
         {
-            return propertyInfo.GetGenericType().GetCustomAttribute<T>() != null;
+            return propertyInfo.PropertyType.GetCustomAttribute<T>() != null;
         }
 
         public static string GetSegmentName(this PropertyInfo propertyInfo, PropertyInfo parentPropertyInfo)

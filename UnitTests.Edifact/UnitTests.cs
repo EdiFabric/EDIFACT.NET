@@ -61,13 +61,10 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
             }
             var msg = ediItems.OfType<TSINVOIC>().SingleOrDefault();
-            var d = msg.TraverseDF().ToList();
-            var c = "";
-            //foreach (var f in d)
-            //{
-            //    var n = f.GetType().GetCustomAttribute<Edi>()
-            //    c = c + 
-            //}
+            var d = msg.Validate();
+            
+            
+           
 
             var validationResults = msg.Validate();
             // ASSERT
