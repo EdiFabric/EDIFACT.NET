@@ -77,7 +77,7 @@ namespace EdiFabric.Framework.Parsers
         private static ParsingException ToException(MessageContext messageContext, SegmentContext segmentContext,
             string message, int index, ErrorCodes errorCode)
         {
-            var errorContext = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
+            var errorContext = new MessageErrorContext(messageContext);
             //errorContext.Add(new SegmentErrorContext(segmentContext.Name, index, errorCode));
 
             return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value,

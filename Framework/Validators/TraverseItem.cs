@@ -50,6 +50,9 @@ namespace EdiFabric.Framework.Validators
 
         public bool IsParentInstanceOfType<T>() where T : EdiAttribute
         {
+            if (_parent == null)
+                return false;
+
             return _parent.IsInstanceOfType<T>();
         }
 
@@ -112,11 +115,11 @@ namespace EdiFabric.Framework.Validators
 
                 if (IsPropertyOfType<CompositeAttribute>())
                 {
-                    if (_parent.IsPropertyOfType<SegmentAttribute>())
+                    if (!_parent.IsPropertyOfType<SegmentAttribute>())
                         throw new Exception(string.Format("Parent of composite {0} must be a segment.", _property.Name));
 
-                    var result = new SegmentErrorContext(_parent.GetId(), segmentIndex + 1);
-                    result.Add(GetId(), inSegmentIndex + 1, ValidationResult.RequiredMissing, 0, 0, null);
+                    var result = new SegmentErrorContext(_parent.GetId(), segmentIndex);
+                    result.Add(GetId(), inSegmentIndex, ValidationResult.RequiredMissing, 0, 0, null);
                     yield return result;
                 }
 
@@ -126,11 +129,11 @@ namespace EdiFabric.Framework.Validators
                         ? _parent.GetId()
                         : _parent.GetDeclaringTypeId();
 
-                    var dataElementAttr = _property.GetGenericType().GetCustomAttribute<DataElementAttribute>();
+                    var dataElementAttr = _property.GetCustomAttribute<DataElementAttribute>();
                     var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-                    var result = new SegmentErrorContext(segmentName, segmentIndex + 1);
-                    result.Add(name, inSegmentIndex + 1, ValidationResult.RequiredMissing, inCompositeIndex, 0, null);
+                    var result = new SegmentErrorContext(segmentName, segmentIndex);
+                    result.Add(name, inSegmentIndex, ValidationResult.RequiredMissing, inCompositeIndex, 0, null);
                     yield return result;
                 }
 

@@ -12,8 +12,7 @@ namespace EdiFabric.Framework.Validators
         {
             var visited = new HashSet<object>();
             var stack = new Stack<TraverseItem>();
-            var messageContext = new MessageContext(instance);
-            var result = new MessageErrorContext(messageContext.Tag, messageContext.ControlNumber);
+            var result = new MessageErrorContext(new MessageContext(instance));
 
             stack.Push(new TraverseItem(instance));
 

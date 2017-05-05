@@ -23,14 +23,9 @@ namespace EdiFabric.Framework.Exceptions
     public class MessageErrorContext
     {
         /// <summary>
-        /// The type of message (or its tag).
+        /// The message context.
         /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// The message control number.
-        /// </summary>
-        public string ControlNumber { get; private set; }
+        public MessageContext Context { get; private set; }
         
         private readonly List<ErrorCodes> _codes = new List<ErrorCodes>();
         /// <summary>
@@ -61,25 +56,11 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
         /// </summary>
-        /// <param name="name">The message name (or tag).</param>
-        /// <param name="controlNumber">The message control number.</param>
-        public MessageErrorContext(string name, string controlNumber)
+        /// <param name="messageContext">The message context.</param>
+        public MessageErrorContext(MessageContext messageContext)
         {
-            Name = name;
-            ControlNumber = controlNumber;
+            Context = messageContext;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
-        /// </summary>
-        /// <param name="name">The message name (or tag).</param>
-        /// <param name="controlNumber">The message control number.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public MessageErrorContext(string name, string controlNumber, ErrorCodes errorCode)
-            : this(name, controlNumber)
-        {
-            _codes.Add(errorCode);
-        }        
 
         /// <summary>
         /// Merges a segment context into the errors collection.
