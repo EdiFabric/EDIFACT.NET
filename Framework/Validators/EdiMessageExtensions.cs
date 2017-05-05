@@ -18,26 +18,41 @@ namespace EdiFabric.Framework.Validators
             stack.Push(new TraverseItem(instance));
 
             var segmentIndex = 0;
+            var inSegmentIndex = 0;
+            var inComponentIndex = 0;
 
             while (stack.Any())
             {
                 var current = stack.Pop();
-
-                if (!(current.Instance is string) && current.Instance != null && !visited.Add(current.Instance))
+               
+                if (current.Instance != null && !(current.Instance is string) && !visited.Add(current.Instance))
                     continue;
-
-                if (current.IsType<SegmentAttribute>())
+                
+                if (current.IsInstanceOfType<SegmentAttribute>())
                 {
                     segmentIndex++;
+                    inSegmentIndex = 0;
+                    inComponentIndex = 0;
                 }
 
-                result.AddRange(current.ValidateRequired(segmentIndex));
-                
+                if (current.IsParentInstanceOfType<SegmentAttribute>())
+                {
+                    inSegmentIndex++;
+                    inComponentIndex = 0;
+                }
+
+                if (current.IsParentInstanceOfType<CompositeAttribute>())
+                {
+                    inComponentIndex++;
+                }
+
+                result.AddRange(current.ValidateRequired(segmentIndex, inSegmentIndex, inComponentIndex));
+
                 var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p.Instance));
                 foreach (var neighbour in neighbours.Reverse())
                 {
                     stack.Push(neighbour);
-                }               
+                }
             }
 
             return result;

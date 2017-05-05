@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -15,49 +14,61 @@ namespace EdiFabric.Framework.Validators
     public class TraverseItem
     {
         public object Instance { get; set; }
-        public PropertyInfo Property { get; set; }
+        private readonly PropertyInfo _property;
         private readonly TraverseItem _parent;
-        private int _propertyIndex = 1;
-        private readonly int _instanceIndex = 1;
+        private readonly int _propertyIndex;
         private int _repetitionIndex = 1;
 
-        public bool IsRequired
+        private bool IsRequired
         {
-            get { return Property != null && Property.GetCustomAttributes<RequiredAttribute>().Any(); }
+            get { return _property != null && _property.GetCustomAttribute<RequiredAttribute>() != null; }
         }
 
-        public string GetId()
+        private string GetId()
         {
-            if(Property == null)
+            if(_property == null)
                 throw new NoNullAllowedException("Property");
 
-            var ediAttr = Property.GetGenericType().GetCustomAttribute<EdiAttribute>();
+            var ediAttr = _property.GetGenericType().GetCustomAttribute<EdiAttribute>();
             if (ediAttr == null)
-                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", Property.Name));
+                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", _property.Name));
 
             return ediAttr.Id;
         }
 
-        public string GetDeclaringTypeId()
+        private string GetDeclaringTypeId()
         {
-            if (Property == null)
+            if (_property == null)
                 throw new NoNullAllowedException("Property");
 
-            var ediAttr = Property.DeclaringType.GetCustomAttribute<EdiAttribute>();
+            var ediAttr = _property.DeclaringType.GetCustomAttribute<EdiAttribute>();
             if (ediAttr == null)
-                throw new Exception(string.Format("The type declaring Property {0} is not annotated with [EdiAttribute].", Property.Name));
+                throw new Exception(string.Format("The type declaring Property {0} is not annotated with [EdiAttribute].", _property.Name));
 
             return ediAttr.Id;
         }
 
-        public bool IsType<T>() where T : EdiAttribute
+        public bool IsParentInstanceOfType<T>() where T : EdiAttribute
         {
-            return Property != null && Property.PropertyType.GetCustomAttribute<T>() != null;
+            return _parent.IsInstanceOfType<T>();
         }
 
-        public bool IsGenericType<T>() where T : EdiAttribute
+        public bool IsInstanceOfType<T>() where T : EdiAttribute
         {
-            return Property != null && Property.GetGenericType().GetCustomAttribute<T>() != null;
+            if (Instance == null)
+                return false;
+
+            var list = Instance as IList;
+
+            if (list != null)
+                return false;
+
+            return IsPropertyOfType<T>();
+        }
+
+        private bool IsPropertyOfType<T>() where T : EdiAttribute
+        {
+            return _property != null && _property.GetGenericType().GetCustomAttribute<T>() != null;
         }
 
         public TraverseItem(object instance)
@@ -66,24 +77,23 @@ namespace EdiFabric.Framework.Validators
         }
 
         public TraverseItem(object instance, PropertyInfo property, TraverseItem parent, int propertyIndex,
-            int instanceIndex, int repetitionIndex)
+            int repetitionIndex)
             : this(instance)
         {
-            Property = property;
+            _property = property;
             _parent = parent;
             _propertyIndex = propertyIndex;
-            _instanceIndex = instanceIndex;
             _repetitionIndex = repetitionIndex;
         }
 
-        public IEnumerable<SegmentErrorContext> ValidateRequired(int segmentIndex)
+        public IEnumerable<SegmentErrorContext> ValidateRequired(int segmentIndex, int inSegmentIndex, int inCompositeIndex)
         {
             if (Instance == null && IsRequired)
             {
-                if (IsGenericType<AllAttribute>())
+                if (IsPropertyOfType<AllAttribute>())
                 {
                     var mandatoryNames =
-                        Property.GetGenericType()
+                        _property.GetGenericType()
                             .GetProperties()
                             .Where(p => p.GetCustomAttribute<RequiredAttribute>() != null)
                             .Select(s => s.GetGenericType().GetCustomAttribute<EdiAttribute>().Id);
@@ -94,33 +104,33 @@ namespace EdiFabric.Framework.Validators
                     }
                 }
 
-                if (IsGenericType<GroupAttribute>() || IsType<SegmentAttribute>())
+                if (IsPropertyOfType<GroupAttribute>() || IsPropertyOfType<SegmentAttribute>())
                 {
                     yield return
                         new SegmentErrorContext(GetId(), segmentIndex + 1, ValidationResult.RequiredMissing);
                 }
 
-                if (IsGenericType<CompositeAttribute>())
+                if (IsPropertyOfType<CompositeAttribute>())
                 {
-                    if (_parent.IsGenericType<SegmentAttribute>())
-                        throw new Exception(string.Format("Parent of composite {0} must be a segment.", Property.Name));
+                    if (_parent.IsPropertyOfType<SegmentAttribute>())
+                        throw new Exception(string.Format("Parent of composite {0} must be a segment.", _property.Name));
 
                     var result = new SegmentErrorContext(_parent.GetId(), segmentIndex + 1);
-                    result.Add(GetId(), _instanceIndex + 1, ValidationResult.RequiredMissing, 0, 0, null);
+                    result.Add(GetId(), inSegmentIndex + 1, ValidationResult.RequiredMissing, 0, 0, null);
                     yield return result;
                 }
 
-                if (Property.GetGenericType() == typeof (string))
+                if (_property.GetGenericType() == typeof (string))
                 {
-                    var segmentName = _parent.IsGenericType<SegmentAttribute>()
+                    var segmentName = _parent.IsPropertyOfType<SegmentAttribute>()
                         ? _parent.GetId()
                         : _parent.GetDeclaringTypeId();
 
-                    var dataElementAttr = Property.GetGenericType().GetCustomAttribute<DataElementAttribute>();
+                    var dataElementAttr = _property.GetGenericType().GetCustomAttribute<DataElementAttribute>();
                     var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
                     var result = new SegmentErrorContext(segmentName, segmentIndex + 1);
-                    result.Add(name, _instanceIndex + 1, ValidationResult.RequiredMissing, 0, 0, null);
+                    result.Add(name, inSegmentIndex + 1, ValidationResult.RequiredMissing, inCompositeIndex, 0, null);
                     yield return result;
                 }
 
@@ -129,46 +139,24 @@ namespace EdiFabric.Framework.Validators
 
         public IEnumerable<TraverseItem> GetNeigbours()
         {
-            if (Instance is string)
+            if (Instance != null && !(Instance is string))
             {
-            }
-            else if (Instance == null)
-            {
-            }
-            else
-            {
-                var propertyIndex = 0;
-                var instanceIndex = 0;
-
                 var list = Instance as IList;
                 if (list != null)
                 {
                     var repetitionIndex = 0;
                     foreach (var listValue in list)
                     {
-                        repetitionIndex++;
-
-                        if (listValue != null) 
-                            instanceIndex++;
-
                         yield return
-                            new TraverseItem(listValue, Property, this, propertyIndex, instanceIndex,
-                                repetitionIndex);
+                            new TraverseItem(listValue, _property, this, _propertyIndex, repetitionIndex++);
                     }
                 }
                 else
                 {
+                    var propertyIndex = 0;
                     foreach (var propertyInfo in Instance.GetType().GetProperties().Sort())
                     {
-                        propertyIndex++;
-
-                        var value = propertyInfo.GetValue(Instance);
-
-                        if (value != null) 
-                            instanceIndex++;
-
-                        yield return new TraverseItem(value, propertyInfo, this, propertyIndex, instanceIndex, 0);
-
+                        yield return new TraverseItem(propertyInfo.GetValue(Instance), propertyInfo, this, propertyIndex++, 0);
                     }
                 }
             }
