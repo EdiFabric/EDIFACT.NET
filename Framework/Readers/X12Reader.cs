@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
 using EdiFabric.Framework.Segments.X12;
 
@@ -107,13 +106,13 @@ namespace EdiFabric.Framework.Readers
             switch (segmentContext.Tag)
             {
                 case SegmentId.ISA:
-                    Item = segmentContext.Value.ParseSegment<ISA>(Separators);
+                    Item = ParseSegment<ISA>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.TA1:
-                    Item = segmentContext.Value.ParseSegment<TA1>(Separators);
+                    Item = ParseSegment<TA1>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.GS:
-                    Item = segmentContext.Value.ParseSegment<GS>(Separators);
+                    Item = ParseSegment<GS>(segmentContext.Value, Separators);
                     _currentGroupHeader = segmentContext;
                     break;
                 case SegmentId.ST:
@@ -124,10 +123,10 @@ namespace EdiFabric.Framework.Readers
                     ParseSegments();
                     break;
                 case SegmentId.GE:
-                    Item = segmentContext.Value.ParseSegment<GE>(Separators);
+                    Item = ParseSegment<GE>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.IEA:
-                    Item = segmentContext.Value.ParseSegment<IEA>(Separators);
+                    Item = ParseSegment<IEA>(segmentContext.Value, Separators);
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
@@ -153,15 +152,15 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_currentGroupHeader == null)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS was not found.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "GS was not found.");
             var ediCompositeDataElementsGs = _currentGroupHeader.Value.GetDataElements(Separators);
             if (ediCompositeDataElementsGs.Count() < 8)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
 
             var st = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.ST);
             if (st == null)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST was not found.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "ST was not found.");
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
             var tag = ediCompositeDataElementsSt[0];
             if (ediCompositeDataElementsSt.Count() == 3)
@@ -169,7 +168,7 @@ namespace EdiFabric.Framework.Readers
                 version = ediCompositeDataElementsSt[2];
             }
             if(ediCompositeDataElementsSt.Count() < 2)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
             var controlNumber = ediCompositeDataElementsSt[1];
 
             return new MessageContext(tag, controlNumber, version, "X12");

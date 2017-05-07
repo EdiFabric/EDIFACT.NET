@@ -5,10 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.Edifact;
-using EdiFabric.Framework.Validators;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

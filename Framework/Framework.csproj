@@ -79,8 +79,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\ErrorCodeDescriptions.cs" />
-    <Compile Include="Exceptions\ErrorCodes.cs" />
+    <Compile Include="ErrorCode.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Segments\Edifact\Ung.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,8 +92,6 @@
     <Compile Include="Segments\X12\Ta1.cs" />
     <Compile Include="Segments\X12\Ge.cs" />
     <Compile Include="Segments\X12\Iea.cs" />
-    <Compile Include="Validators\EdiMessageExtensions.cs" />
-    <Compile Include="Validators\TraverseItem.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
     <Compile Include="Writers\EdifactWriter.cs" />
     <Compile Include="Writers\X12Writer.cs" />
@@ -103,18 +101,13 @@
     <Compile Include="Parsers\Loop.cs" />
     <Compile Include="Parsers\ParseNode.cs" />
     <Compile Include="Parsers\Segment.cs" />
-    <Compile Include="Parsers\SegmentExtensions.cs" />
     <Compile Include="Parsers\TransactionSet.cs" />
-    <Compile Include="Validators\EdiValidator.cs" />
-    <Compile Include="Exceptions\DataElementErrorContext.cs" />
-    <Compile Include="Exceptions\SegmentErrorContext.cs" />
-    <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="ParsingException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Parsers\SegmentId.cs" />
     <Compile Include="Parsers\ParseNodeExtensions.cs" />
-    <Compile Include="Readers\EdiReaderExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Parsers\SegmentContext.cs" />
     <Compile Include="Separators.cs" />
@@ -150,6 +143,7 @@
       <Name>Annotations</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

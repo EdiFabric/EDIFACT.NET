@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
-using EdiFabric.Framework.Readers;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -137,5 +137,72 @@ namespace EdiFabric.Framework.Parsers
 
             return new Segment(this);
         }
+
+        public string GenerateSegment(Separators separators)
+        {
+            if (separators == null) throw new ArgumentNullException("separators");
+
+            var result = EdiName;
+
+            foreach (var element in Children)
+            {
+                string value = String.Empty;
+                if (element is ComplexDataElement)
+                {
+                    if (element.Children.Any())
+                    {
+                        var dataElements = element.Children.OfType<DataElement>().ToList();
+                        value = dataElements.ElementAt(0).Value != null
+                            ? dataElements.ElementAt(0).Value.EscapeLine(separators)
+                            : String.Empty;
+                        value = dataElements.Skip(1)
+                            .Aggregate(value,
+                                (current, subElement) =>
+                                    current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
+                        value = value.TrimEndWithEscape(separators.Escape, separators.ComponentDataElement);
+                    }
+                }
+                else
+                {
+                    var de = element as DataElement;
+                    if (de == null) throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.Type.FullName, element.Parent.Type.FullName));
+                    value = de.Value.EscapeLine(separators);
+                }
+
+                var separator = element.IsRepetition()
+                    ? separators.RepetitionDataElement
+                    : separators.DataElement;
+
+                result = result + separator + value;
+            }
+
+            return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
+        }
+
+        public bool Match(SegmentContext segmentContext)
+        {
+            // The names must match
+            if (EdiName == segmentContext.Name)
+            {
+                // If no identity match is required, mark this as a match
+                if (String.IsNullOrEmpty(segmentContext.FirstValue) || !FirstChildValues.Any())
+                    return true;
+
+                // Match the value 
+                // This must have been defined in the enum of the first element of the segment.
+                if (FirstChildValues.Any() && !String.IsNullOrEmpty(segmentContext.FirstValue) &&
+                    FirstChildValues.Contains(segmentContext.FirstValue))
+                {
+                    if (SecondChildValues.Any() && !String.IsNullOrEmpty(segmentContext.SecondValue))
+                    {
+                        return SecondChildValues.Contains(segmentContext.SecondValue);
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }        
     }
 }

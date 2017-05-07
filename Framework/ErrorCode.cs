@@ -9,12 +9,12 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Framework.Exceptions
+namespace EdiFabric.Framework
 {
     /// <summary>
     /// The internal error codes for all known error conditions.
     /// </summary>
-    public enum ErrorCodes
+    public enum ErrorCode
     {
         /// <summary>
         /// N/A

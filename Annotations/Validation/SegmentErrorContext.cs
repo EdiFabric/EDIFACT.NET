@@ -11,9 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using EdiFabric.Annotations.Validation;
 
-namespace EdiFabric.Framework.Exceptions
+namespace EdiFabric.Annotations.Validation
 {
     /// <summary>
     /// Information for the data, error codes and the context of the data elements that failed.

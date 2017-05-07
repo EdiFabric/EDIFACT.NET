@@ -6,10 +6,8 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Validation;
-using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Parsers;
 
-namespace EdiFabric.Framework.Validators
+namespace EdiFabric.Annotations.Model
 {
     public class TraverseItem
     {

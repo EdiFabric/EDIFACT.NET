@@ -10,10 +10,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
+using EdiFabric.Annotations.Validation;
 
 namespace EdiFabric.Annotations.Model
 {
@@ -79,6 +81,55 @@ namespace EdiFabric.Annotations.Model
                 throw new Exception(string.Format("{0} segment does not contain control number.", tag));
 
             return cnProperty.GetValue(headerValue) as string;
+        }
+
+        public IEnumerable<SegmentErrorContext> Validate()
+        {
+            var visited = new HashSet<object>();
+            var stack = new Stack<TraverseItem>();
+            var result = new List<SegmentErrorContext>();
+
+            stack.Push(new TraverseItem(this));
+
+            var segmentIndex = 0;
+            var inSegmentIndex = 0;
+            var inComponentIndex = 0;
+
+            while (stack.Any())
+            {
+                var current = stack.Pop();
+
+                if (current.Instance != null && !(current.Instance is string) && !visited.Add(current.Instance))
+                    continue;
+
+                if (current.IsInstanceOfType<SegmentAttribute>())
+                {
+                    segmentIndex++;
+                    inSegmentIndex = 0;
+                    inComponentIndex = 0;
+                }
+
+                if (current.IsParentInstanceOfType<SegmentAttribute>())
+                {
+                    inSegmentIndex++;
+                    inComponentIndex = 0;
+                }
+
+                if (current.IsParentInstanceOfType<CompositeAttribute>())
+                {
+                    inComponentIndex++;
+                }
+
+                result.AddRange(current.ValidateRequired(segmentIndex, inSegmentIndex, inComponentIndex));
+
+                var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p.Instance));
+                foreach (var neighbour in neighbours.Reverse())
+                {
+                    stack.Push(neighbour);
+                }
+            }
+
+            return result;
         }
     }
 }

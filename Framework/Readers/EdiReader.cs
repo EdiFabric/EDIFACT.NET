@@ -17,7 +17,6 @@ using System.Reflection;
 using System.Text;
 using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework.Readers
@@ -108,7 +107,7 @@ namespace EdiFabric.Framework.Readers
                     
                     if (Separators != null) continue;
                     
-                    Item = new ParsingException(ErrorCodes.InvalidControlStructure, "No valid interchange header was found.");
+                    Item = new ParsingException(ErrorCode.InvalidControlStructure, "No valid interchange header was found.");
                 }               
             }
             catch (ParsingException ex)
@@ -122,7 +121,7 @@ namespace EdiFabric.Framework.Readers
 
             if (_streamReader.EndOfStream && CurrentSegments.Any())
             {
-                Item = new ParsingException(ErrorCodes.ImproperEndOfFile, "Unprocessed segments before the end of file.");
+                Item = new ParsingException(ErrorCode.ImproperEndOfFile, "Unprocessed segments before the end of file.");
                 CurrentSegments.Clear();
             }
 
@@ -310,7 +309,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                throw new ParsingException(ErrorCodes.RulesAssemblyNotFound, ex.Message);
+                throw new ParsingException(ErrorCode.RulesAssemblyNotFound, ex.Message);
             }
 
             var matches = assembly.GetTypes().Where(m =>
@@ -323,12 +322,12 @@ namespace EdiFabric.Framework.Readers
             var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Tag + ")]";
 
             if (!matches.Any())
-                throw new ParsingException(ErrorCodes.UnexpectedMessage,
+                throw new ParsingException(ErrorCode.UnexpectedMessage,
                     String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
                         assembly.FullName));
                
             if (matches.Count > 1)
-                throw new ParsingException(ErrorCodes.DuplicateTypeFound,
+                throw new ParsingException(ErrorCode.DuplicateTypeFound,
                     String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
                         assembly.FullName));               
 
@@ -342,6 +341,13 @@ namespace EdiFabric.Framework.Readers
         {
             if (_streamReader != null)
                 _streamReader.Dispose();
+        }
+
+        protected static T ParseSegment<T>(string segmentValue, Separators separators)
+        {
+            var parseNode = new Segment(typeof(T));
+            parseNode.Parse(segmentValue, separators);
+            return (T)parseNode.ToInstance();
         }
     }
 }

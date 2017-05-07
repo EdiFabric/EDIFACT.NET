@@ -13,6 +13,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Parsers
 {

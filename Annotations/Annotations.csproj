@@ -47,8 +47,12 @@
     <Compile Include="Edi\MessageAttribute.cs" />
     <Compile Include="Edi\PosAttribute.cs" />
     <Compile Include="Edi\SegmentAttribute.cs" />
+    <Compile Include="Model\Extensions.cs" />
+    <Compile Include="Model\TraverseItem.cs" />
+    <Compile Include="Validation\DataElementErrorContext.cs" />
     <Compile Include="Model\IEdiItem.cs" />
     <Compile Include="Model\EdiMessage.cs" />
+    <Compile Include="Validation\SegmentErrorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\DataElementAttribute.cs" />
     <Compile Include="Validation\ListCountAttribute.cs" />

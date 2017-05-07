@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -46,7 +45,7 @@ namespace EdiFabric.Framework.Parsers
                                 d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
-                        throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "Unable to resolve HL.",
+                        throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Unable to resolve HL.",
                             segment.Value, messageContext.Tag, messageContext.ControlNumber);
                 }
 
@@ -55,11 +54,11 @@ namespace EdiFabric.Framework.Parsers
                 if (currSeg == null)
                 {
                     var message = "Segment was not in the correct position according to the rules class.";
-                    ErrorCodes errorCode = ErrorCodes.UnexpectedSegment;
+                    ErrorCode errorCode = ErrorCode.UnexpectedSegment;
                     if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))
                     {
                         message = "Segment is not supported in rules class.";
-                        errorCode = ErrorCodes.UnrecognizedSegment;
+                        errorCode = ErrorCode.UnrecognizedSegment;
                     }
 
                     throw new ParsingException(errorCode, message, segment.Value, messageContext.Tag,

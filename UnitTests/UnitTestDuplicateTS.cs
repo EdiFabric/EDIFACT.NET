@@ -3,7 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,7 +30,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             var error = ediItems.OfType<ParsingException>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ErrorCodes.DuplicateTypeFound);  
+            Assert.IsTrue(error.ErrorCode == ErrorCode.DuplicateTypeFound);  
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             var error = ediItems.OfType<ParsingException>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ErrorCodes.UnexpectedMessage);  
+            Assert.IsTrue(error.ErrorCode == ErrorCode.UnexpectedMessage);  
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             var error = ediItems.OfType<ParsingException>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ErrorCodes.RulesAssemblyNotFound);  
+            Assert.IsTrue(error.ErrorCode == ErrorCode.RulesAssemblyNotFound);  
         }
 
         [TestMethod]

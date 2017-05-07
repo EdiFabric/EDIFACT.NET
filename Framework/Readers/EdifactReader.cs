@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
 using EdiFabric.Framework.Segments.Edifact;
 
@@ -132,10 +131,10 @@ namespace EdiFabric.Framework.Readers
                 case SegmentId.UNA:
                     break;
                 case SegmentId.UNB:
-                    Item = segmentContext.Value.ParseSegment<UNB>(Separators);
+                    Item = ParseSegment<UNB>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.UNG:
-                    Item = segmentContext.Value.ParseSegment<UNG>(Separators);
+                    Item = ParseSegment<UNG>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.UNH:
                     CurrentSegments.Add(segmentContext);
@@ -145,10 +144,10 @@ namespace EdiFabric.Framework.Readers
                     ParseSegments();
                     break;
                 case SegmentId.UNE:
-                    Item = segmentContext.Value.ParseSegment<UNE>(Separators);
+                    Item = ParseSegment<UNE>(segmentContext.Value, Separators);
                     break;
                 case SegmentId.UNZ:
-                    Item = segmentContext.Value.ParseSegment<UNZ>(Separators);
+                    Item = ParseSegment<UNZ>(segmentContext.Value, Separators);
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
@@ -160,17 +159,17 @@ namespace EdiFabric.Framework.Readers
         {
             var unh = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.UNH);
             if (unh == null)
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "UNH was not found.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "UNH was not found.");
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
             {
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
                     "UNH is invalid. Too little data elements.");
             }
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
             {
-                throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
                     "UNH is invalid. Unable to read message type or version.");
             }
 

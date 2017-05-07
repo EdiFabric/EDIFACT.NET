@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.X12;
-using EdiFabric.Framework.Validators;
 using EdiFabric.Rules.X12_002040;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

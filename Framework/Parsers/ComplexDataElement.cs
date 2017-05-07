@@ -12,6 +12,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using EdiFabric.Annotations.Model;
 using EdiFabric.Framework.Readers;
 
 namespace EdiFabric.Framework.Parsers

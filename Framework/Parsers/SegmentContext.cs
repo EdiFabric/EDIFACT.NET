@@ -86,7 +86,7 @@ namespace EdiFabric.Framework.Parsers
             }
 
             IsJump = Jump();
-            Tag = ediSegment.ToSegmentTag(separators);
+            Tag = ToSegmentTag(separators);
             IsControl = Control();
         }
 
@@ -104,6 +104,19 @@ namespace EdiFabric.Framework.Parsers
             return Name == "HL" && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
                      int.TryParse(SecondValue ?? "0", out p) &&
                      (fv - p > 1);
+        }
+
+        private SegmentId ToSegmentTag(Separators separators)
+        {
+            if (String.IsNullOrEmpty(Value) || String.IsNullOrWhiteSpace(Value) || Value.Length < 3)
+                return SegmentId.Regular;
+
+            if (Value.StartsWith(SegmentId.UNA.ToString(), StringComparison.Ordinal)) return SegmentId.UNA;
+
+            var segmentTag = Value.Split(new[] { separators.DataElement }, StringSplitOptions.None).FirstOrDefault();
+
+            SegmentId tag;
+            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentId.Regular;
         }
     }
 }

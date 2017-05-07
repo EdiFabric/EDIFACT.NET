@@ -10,9 +10,8 @@
 //---------------------------------------------------------------------
 
 using System;
-using EdiFabric.Annotations.Validation;
 
-namespace EdiFabric.Framework.Exceptions
+namespace EdiFabric.Annotations.Validation
 {
     /// <summary>
     /// Information for the position, data and error code of the data element that failed. 

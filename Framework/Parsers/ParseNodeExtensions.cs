@@ -14,8 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
-using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Validators;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Parsers
 {
@@ -129,25 +128,21 @@ namespace EdiFabric.Framework.Parsers
             throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
         }
 
-        public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
-        {
-            return propertyInfos.OrderBy(
-                p =>
-                    p.GetCustomAttributes(typeof(PosAttribute), false)
-                        .Cast<PosAttribute>()
-                        .Select(a => a.Pos)
-                        .FirstOrDefault());
-        }
-
-        public static Type GetGenericType(this PropertyInfo propertyInfo)
-        {
-            var type = propertyInfo.PropertyType;
-            if (type.IsGenericType)
-                type = type.GenericTypeArguments.First();
-
-            return type;
-        }
-
         
+
+        public static bool IsRepetition(this ParseNode parseNode)
+        {
+            var index = parseNode.IndexInParent();
+            if (index <= 0) return false;
+            var previous = parseNode.Parent.Children.ElementAt(index - 1);
+            return parseNode.Name == previous.Name;
+        }
+
+        public static bool IsX12RepetitionSeparator(this ParseNode parseNode)
+        {
+            return parseNode.Parent != null && parseNode.Parent.Name == "ISA" &&
+                   parseNode.Name == "InterchangeControlStandardsIdentifier_11";
+        }
+
     }
 }

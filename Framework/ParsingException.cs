@@ -12,7 +12,7 @@
 using System;
 using EdiFabric.Annotations.Model;
 
-namespace EdiFabric.Framework.Exceptions
+namespace EdiFabric.Framework
 {
     /// <summary>
     /// Parsing exception.
@@ -23,7 +23,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// The syntax error code.
         /// </summary>
-        public ErrorCodes ErrorCode { get; set; }
+        public ErrorCode ErrorCode { get; set; }
         
         /// <summary>
         /// The line (or segment) that failed.
@@ -45,7 +45,7 @@ namespace EdiFabric.Framework.Exceptions
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
-        public ParsingException(ErrorCodes errorCode, string message)
+        public ParsingException(ErrorCode errorCode, string message)
             : base(message)
         {
             ErrorCode = errorCode;
@@ -59,7 +59,7 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="failedLine">The line that failed.</param>
         /// <param name="messageName">The message name.</param>
         /// <param name="messageControlNumber">The message control number.</param>
-        public ParsingException(ErrorCodes errorCode, string message, string failedLine, string messageName, string messageControlNumber)
+        public ParsingException(ErrorCode errorCode, string message, string failedLine, string messageName, string messageControlNumber)
             : base(message)
         {
             if (string.IsNullOrEmpty(failedLine))
@@ -82,7 +82,7 @@ namespace EdiFabric.Framework.Exceptions
         public ParsingException(Exception ex)
             : base(ex.Message, ex)
         {
-            ErrorCode = ErrorCodes.Unknown;
+            ErrorCode = ErrorCode.Unknown;
         }
     }
 }
