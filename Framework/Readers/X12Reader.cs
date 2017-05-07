@@ -26,7 +26,6 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class X12Reader : EdiReader
     {
-        private Func<MessageContext, Assembly> RulesAssembly { get; set; }
         private SegmentContext _currentGroupHeader;
 
         /// <summary>
@@ -37,9 +36,8 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
         public X12Reader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
-            : base(ediStream, encoding)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            RulesAssembly = mc => Assembly.Load(rulesAssembly);
         }
 
         /// <summary>
@@ -51,9 +49,8 @@ namespace EdiFabric.Framework.Readers
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
         
         public X12Reader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
-            : base(ediStream, encoding)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            RulesAssembly = rulesAssembly;     
         }
 
         protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -99,10 +96,10 @@ namespace EdiFabric.Framework.Readers
                 return;
 
             var segmentContext = new SegmentContext(segment, Separators);
-            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.ST) && CurrentMessage.Any())
+            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.ST) && CurrentSegments.Any())
             {
                 if (_currentGroupHeader != null)
-                    CurrentMessage.Add(_currentGroupHeader);
+                    CurrentSegments.Add(_currentGroupHeader);
                 Flush(segmentContext.Value);
                 return;
             }
@@ -120,18 +117,11 @@ namespace EdiFabric.Framework.Readers
                     _currentGroupHeader = segmentContext;
                     break;
                 case SegmentId.ST:
-                    CurrentMessage.Add(segmentContext);                   
+                    CurrentSegments.Add(segmentContext);                   
                     break;
                 case SegmentId.SE:
-                    try
-                    {
-                        CurrentMessage.Add(segmentContext);
-                        Item = CurrentMessage.ParseTransactionSet(Separators, BuildContext());
-                    }
-                    finally 
-                    {
-                        CurrentMessage.Clear();                  
-                    }
+                    CurrentSegments.Add(segmentContext);
+                    ParseSegments();
                     break;
                 case SegmentId.GE:
                     Item = segmentContext.Value.ParseSegment<GE>(Separators);
@@ -140,7 +130,7 @@ namespace EdiFabric.Framework.Readers
                     Item = segmentContext.Value.ParseSegment<IEA>(Separators);
                     break;
                 default:
-                    CurrentMessage.Add(segmentContext);
+                    CurrentSegments.Add(segmentContext);
                     break;
             }
 
@@ -153,12 +143,12 @@ namespace EdiFabric.Framework.Readers
 
         protected override MessageContext BuildContext()
         {
-            if (CurrentMessage.Count == 1)
+            if (CurrentSegments.Count == 1)
             {
-                var ta1 = CurrentMessage.SingleOrDefault(es => es.Name == "TA1");
+                var ta1 = CurrentSegments.SingleOrDefault(es => es.Name == "TA1");
                 if (ta1 != null)
                 {
-                    return new MessageContext("TA1", "", "", "X12", RulesAssembly);
+                    return new MessageContext("TA1", "", "", "X12");
                 }
             }
 
@@ -169,7 +159,7 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
 
-            var st = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentId.ST);
+            var st = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.ST);
             if (st == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST was not found.");
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
@@ -182,7 +172,7 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
             var controlNumber = ediCompositeDataElementsSt[1];
 
-            return new MessageContext(tag, controlNumber, version, "X12", RulesAssembly);
+            return new MessageContext(tag, controlNumber, version, "X12");
        }
     }
 }

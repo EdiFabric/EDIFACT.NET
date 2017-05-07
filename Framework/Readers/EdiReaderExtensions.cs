@@ -12,8 +12,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
+using Microsoft.SqlServer.Server;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -79,14 +83,6 @@ namespace EdiFabric.Framework.Readers
                 startOfSegment = index;
             }
             yield return input.Substring(startOfSegment);
-        }
-
-        public static EdiMessage ParseTransactionSet(this List<SegmentContext> segments, Separators separators,
-            MessageContext messageContext)
-        {
-            var message = new TransactionSet(messageContext.SystemType);
-            message.Analyze(segments.Where(s => !s.IsControl), separators, messageContext);
-            return (EdiMessage)message.ToInstance();
         }
 
         public static T ParseSegment<T>(this string segmentValue, Separators separators)

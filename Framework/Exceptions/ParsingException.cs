@@ -10,7 +10,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Runtime.Serialization;
 using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Framework.Exceptions
@@ -19,94 +18,28 @@ namespace EdiFabric.Framework.Exceptions
     /// Parsing exception.
     /// Raised during the parsing of EDI documents.
     /// </summary>
-    [Serializable]
-    public class ParsingException : Exception, ISerializable, IEdiItem
+    public class ParsingException : Exception, IEdiItem
     {
         /// <summary>
         /// The syntax error code.
         /// </summary>
-        public string PositionInRule
-        {
-            get
-            {
-                return (Data.Contains("PositionInRule")) ? (string)Data["PositionInRule"] : null;
-            }
-
-            private set
-            {
-                if (value == null && Data.Contains("PositionInRule"))
-                {
-                    Data.Remove("PositionInRule");
-                }
-                else
-                {
-                    Data["PositionInRule"] = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The syntax error code.
-        /// </summary>
-        public ErrorCodes ErrorCode
-        {
-            get
-            {
-                return ((ErrorCodes)Data["ErrorCode"]);
-            }
-
-            private set
-            {
-                Data["ErrorCode"] = value;
-            }
-        }
-
+        public ErrorCodes ErrorCode { get; set; }
+        
         /// <summary>
         /// The line (or segment) that failed.
         /// </summary>
-        public string FailedLine
-        {
-            get
-            {
-                return (Data.Contains("FailedLine")) ? (string)Data["FailedLine"] : null;
-            }
-
-            private set
-            {
-                if (value == null && Data.Contains("FailedLine"))
-                {
-                    Data.Remove("FailedLine");
-                }
-                else
-                {
-                    Data["FailedLine"] = value;
-                }
-            }
-        }
+        public string FailedLine { get; set; }
 
         /// <summary>
-        /// The message error context.
+        /// The message name.
         /// </summary>
-        public MessageErrorContext ErrorContext
-        {
-            get
-            {
-                return (Data.Contains("ErrorContext")) ? (MessageErrorContext)Data["ErrorContext"] : null;
-            }
+        public string MessageName { get; set; }
 
-            private set
-            {
-                if (value == null && Data.Contains("MessageErrorContext"))
-                {
-                    Data.Remove("MessageErrorContext");
-                }
-                else
-                {
-                    Data["MessageErrorContext"] = value;
-                }
-            }
-        }
-
+        /// <summary>
+        /// The message control number.
+        /// </summary>
+        public string MessageControlNumber { get; set; }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
@@ -124,28 +57,24 @@ namespace EdiFabric.Framework.Exceptions
         /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="failedLine">The line that failed.</param>
-        public ParsingException(ErrorCodes errorCode, string message, string failedLine)
+        /// <param name="messageName">The message name.</param>
+        /// <param name="messageControlNumber">The message control number.</param>
+        public ParsingException(ErrorCodes errorCode, string message, string failedLine, string messageName, string messageControlNumber)
             : base(message)
         {
+            if (string.IsNullOrEmpty(failedLine))
+                throw new ArgumentNullException("failedLine");
+            if (string.IsNullOrEmpty(messageName))
+                throw new ArgumentNullException("messageName");
+            if (string.IsNullOrEmpty(messageControlNumber))
+                throw new ArgumentNullException("messageControlNumber");
+
             ErrorCode = errorCode;
             FailedLine = failedLine;
+            MessageName = messageName;
+            MessageControlNumber = messageControlNumber;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ParsingException"/> class.
-        /// </summary>
-        /// <param name="errorCode">The syntax error code.</param>
-        /// <param name="message">The error message.</param>
-        /// <param name="failedLine">The line that failed.</param>
-        /// <param name="context">The error context.</param>
-        public ParsingException(ErrorCodes errorCode, string message, string failedLine, MessageErrorContext context)
-            : base(message)
-        {
-            ErrorCode = errorCode;
-            FailedLine = failedLine;
-            ErrorContext = context;
-        }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>
@@ -155,22 +84,5 @@ namespace EdiFabric.Framework.Exceptions
         {
             ErrorCode = ErrorCodes.Unknown;
         }
-
-
-        #region ISerializable Implementation
-
-        /// <summary>
-        /// Deserialization constructor
-        /// </summary>
-        protected ParsingException(SerializationInfo info, StreamingContext context) : base (info, context)
-        {
-        }
-       
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-        }
-
-        #endregion ISerializable
     }
 }

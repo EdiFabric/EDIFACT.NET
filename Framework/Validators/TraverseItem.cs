@@ -136,7 +136,6 @@ namespace EdiFabric.Framework.Validators
                     result.Add(name, inSegmentIndex, ValidationResult.RequiredMissing, inCompositeIndex, 0, null);
                     yield return result;
                 }
-
              }
         }
 

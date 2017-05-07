@@ -26,7 +26,6 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class EdifactReader : EdiReader
     {
-        private Func<MessageContext, Assembly> RulesAssembly { get; set; }
         private static readonly List<string> SyntaxId = new List<string>
         {
             "UNOA",
@@ -52,9 +51,8 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
         public EdifactReader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
-            : base(ediStream, encoding)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            RulesAssembly = mc => Assembly.Load(rulesAssembly);            
         }
 
         /// <summary>
@@ -65,9 +63,8 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
         public EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
-            : base(ediStream, encoding)
+            : base(ediStream, rulesAssembly, encoding)
         {
-            RulesAssembly = rulesAssembly;            
         }
 
         protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
@@ -124,7 +121,7 @@ namespace EdiFabric.Framework.Readers
                 return;
 
             var segmentContext = new SegmentContext(segment, Separators);
-            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.UNH) && CurrentMessage.Any())
+            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.UNH) && CurrentSegments.Any())
             {
                 Flush(segmentContext.Value);
                 return;
@@ -141,18 +138,11 @@ namespace EdiFabric.Framework.Readers
                     Item = segmentContext.Value.ParseSegment<UNG>(Separators);
                     break;
                 case SegmentId.UNH:
-                    CurrentMessage.Add(segmentContext);
+                    CurrentSegments.Add(segmentContext);
                     break;
                 case SegmentId.UNT:
-                    try
-                    {
-                        CurrentMessage.Add(segmentContext);
-                        Item = CurrentMessage.ParseTransactionSet(Separators, BuildContext());
-                    }
-                    finally
-                    {
-                        CurrentMessage.Clear();
-                    }
+                    CurrentSegments.Add(segmentContext);
+                    ParseSegments();
                     break;
                 case SegmentId.UNE:
                     Item = segmentContext.Value.ParseSegment<UNE>(Separators);
@@ -161,34 +151,34 @@ namespace EdiFabric.Framework.Readers
                     Item = segmentContext.Value.ParseSegment<UNZ>(Separators);
                     break;
                 default:
-                    CurrentMessage.Add(segmentContext);
+                    CurrentSegments.Add(segmentContext);
                     break;
             }
         }
 
         protected override MessageContext BuildContext()
         {
-            var unh = CurrentMessage.SingleOrDefault(es => es.Tag == SegmentId.UNH);
+            var unh = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.UNH);
             if (unh == null)
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "UNH was not found.");
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
             {
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
-                    "UNH is invalid. Too little data elements.", unh.Value);
+                    "UNH is invalid. Too little data elements.");
             }
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
             {
                 throw new ParsingException(ErrorCodes.InvalidInterchangeContent,
-                    "UNH is invalid. Unable to read message type or version.", unh.Value);
+                    "UNH is invalid. Unable to read message type or version.");
             }
 
             var tag = ediDataElements[0];
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
-            return new MessageContext(tag, controlNumber, version, "EDIFACT", RulesAssembly);
+            return new MessageContext(tag, controlNumber, version, "EDIFACT");
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

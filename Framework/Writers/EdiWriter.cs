@@ -196,8 +196,7 @@ namespace EdiFabric.Framework.Writers
                 return;
 
             segmentCounter++;
-            var messageContext = new MessageContext(message);
-            var trailer = BuildTrailer(MessageTrailer, messageContext.ControlNumber, segmentCounter);
+            var trailer = BuildTrailer(MessageTrailer, message.GetControlNumber(), segmentCounter);
             WriteSegment(trailer);
         }
         

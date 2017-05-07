@@ -107,12 +107,8 @@
     <Compile Include="Parsers\TransactionSet.cs" />
     <Compile Include="Validators\EdiValidator.cs" />
     <Compile Include="Exceptions\DataElementErrorContext.cs" />
-    <Compile Include="Exceptions\MessageErrorContext.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\SegmentErrorContext.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
-    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />

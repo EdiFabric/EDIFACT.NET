@@ -8,11 +8,11 @@ namespace EdiFabric.Framework.Validators
 {
     public static class EdiMessageExtensions
     {
-        public static MessageErrorContext Validate(this EdiMessage instance)
+        public static IEnumerable<SegmentErrorContext> Validate(this EdiMessage instance)
         {
             var visited = new HashSet<object>();
             var stack = new Stack<TraverseItem>();
-            var result = new MessageErrorContext(new MessageContext(instance));
+            var result = new List<SegmentErrorContext>();
 
             stack.Push(new TraverseItem(instance));
 

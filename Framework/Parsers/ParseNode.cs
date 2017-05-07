@@ -101,7 +101,7 @@ namespace EdiFabric.Framework.Parsers
        
         public IEnumerable<PropertyInfo> GetProperties()
         {
-            return Type.GetProperties().Sort();
+            return Type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance).Sort();
         }
 
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)

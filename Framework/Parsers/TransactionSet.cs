@@ -36,7 +36,6 @@ namespace EdiFabric.Framework.Parsers
         public void Analyze(IEnumerable<SegmentContext> segments, Separators separators, MessageContext messageContext)
         {
             var currSeg = Children.First() as Segment;
-            var index = 1;
             foreach (var segment in segments)
             {
                 if (segment.IsJump)
@@ -47,8 +46,8 @@ namespace EdiFabric.Framework.Parsers
                                 d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
-                        throw ToException(messageContext, segment, "Unable to resolve HL.", index,
-                            ErrorCodes.InvalidInterchangeContent);
+                        throw new ParsingException(ErrorCodes.InvalidInterchangeContent, "Unable to resolve HL.",
+                            segment.Value, messageContext.Tag, messageContext.ControlNumber);
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
@@ -63,26 +62,16 @@ namespace EdiFabric.Framework.Parsers
                         errorCode = ErrorCodes.UnrecognizedSegment;
                     }
 
-                    throw ToException(messageContext, segment, message, index, errorCode);
+                    throw new ParsingException(errorCode, message, segment.Value, messageContext.Tag,
+                        messageContext.ControlNumber);
                 }
 
                 if (currSeg.IsParsed)
                     currSeg = (Segment)currSeg.InsertRepetition();
 
                 currSeg.Parse(segment.Value, separators);
-                index++;
             }
-        }
-
-        private static ParsingException ToException(MessageContext messageContext, SegmentContext segmentContext,
-            string message, int index, ErrorCodes errorCode)
-        {
-            var errorContext = new MessageErrorContext(messageContext);
-            //errorContext.Add(new SegmentErrorContext(segmentContext.Name, index, errorCode));
-
-            return new ParsingException(ErrorCodes.InvalidInterchangeContent, message, segmentContext.Value,
-                errorContext);
-        }        
+        }    
 
         public void RemoveTrailer(string trailerTag)
         {

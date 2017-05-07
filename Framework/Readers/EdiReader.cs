@@ -13,7 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Parsers;
@@ -25,14 +27,15 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        private Queue<char> Buffer { get; set; }
-        private StreamReader StreamReader { get; set; }
-        private char[] Trims { get; set; }
+        private readonly Func<MessageContext, Assembly> _rulesAssembly;
+        private readonly Queue<char> _buffer;
+        private readonly StreamReader _streamReader;
+        private char[] _trims;
         
         /// <summary>
         /// The current list of segments.
         /// </summary>
-        protected List<SegmentContext> CurrentMessage { get; private set; }
+        protected List<SegmentContext> CurrentSegments { get; private set; }
         
         /// <summary>
         /// EDI separators.
@@ -49,22 +52,43 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         public bool EndOfStream
         {
-            get { return StreamReader.EndOfStream; }
+            get { return _streamReader.EndOfStream; }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        protected EdiReader(Stream ediStream, Encoding encoding)
+        protected EdiReader(Stream ediStream, string rulesAssembly, Encoding encoding)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
+            if (string.IsNullOrEmpty(rulesAssembly)) throw new ArgumentNullException("rulesAssembly");
             
-            StreamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
-            CurrentMessage = new List<SegmentContext>();
-            Buffer = new Queue<char>();
-            Trims = new[] { '\r', '\n', ' ' };        
+            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
+            _rulesAssembly = mc => Assembly.Load(rulesAssembly); 
+            CurrentSegments = new List<SegmentContext>();
+            _buffer = new Queue<char>();
+            _trims = new[] { '\r', '\n', ' ' };        
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdiReader"/> class.
+        /// </summary>
+        /// <param name="ediStream">The EDI stream to read from.</param>
+        /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding)
+        {
+            if (ediStream == null) throw new ArgumentNullException("ediStream");
+            if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
+
+            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
+            _rulesAssembly = rulesAssembly;   
+            CurrentSegments = new List<SegmentContext>();
+            _buffer = new Queue<char>();
+            _trims = new[] { '\r', '\n', ' ' };
         }
 
         /// <summary>
@@ -78,7 +102,7 @@ namespace EdiFabric.Framework.Readers
 
             try
             {
-                while ((!StreamReader.EndOfStream || Buffer.Any()) && Item == null)
+                while ((!_streamReader.EndOfStream || _buffer.Any()) && Item == null)
                 {
                     ProcessSegment(ReadSegment());
                     
@@ -96,10 +120,10 @@ namespace EdiFabric.Framework.Readers
                 Item = new ParsingException(ex);
             }
 
-            if (StreamReader.EndOfStream && CurrentMessage.Any())
+            if (_streamReader.EndOfStream && CurrentSegments.Any())
             {
                 Item = new ParsingException(ErrorCodes.ImproperEndOfFile, "Unprocessed segments before the end of file.");
-                CurrentMessage.Clear();
+                CurrentSegments.Clear();
             }
 
             return Item != null;
@@ -151,10 +175,10 @@ namespace EdiFabric.Framework.Readers
         {
             var line = "";
 
-            while (!StreamReader.EndOfStream || Buffer.Any())
+            while (!_streamReader.EndOfStream || _buffer.Any())
             {
-                var symbol = Buffer.Any()
-                    ? Buffer.Dequeue().ToString()
+                var symbol = _buffer.Any()
+                    ? _buffer.Dequeue().ToString()
                     : Read(1);
 
                 line = line + symbol;
@@ -167,14 +191,14 @@ namespace EdiFabric.Framework.Readers
                     if (TryReadControl(last3, out probed, out separators))
                     {
                         Separators = separators;
-                        Trims = Trims.Except(new[] { Separators.Segment }).ToArray();
+                        _trims = _trims.Except(new[] { Separators.Segment }).ToArray();
                         line = probed;
                     }
                     else
                     {
                         if (!string.IsNullOrEmpty(probed))
                             foreach (var c in probed.Skip(3))
-                                Buffer.Enqueue(c);
+                                _buffer.Enqueue(c);
                     }
                 }
 
@@ -208,7 +232,26 @@ namespace EdiFabric.Framework.Readers
                 }
             }
 
-            return line.Trim(Trims);
+            return line.Trim(_trims);
+        }
+
+        /// <summary>
+        /// Parses the accumulated segments.
+        /// </summary>
+        protected void ParseSegments()
+        {
+            try
+            {
+                var messageContext = BuildContext();
+                var type = GetType(messageContext);
+                var message = new TransactionSet(type);
+                message.Analyze(CurrentSegments.Where(s => !s.IsControl), Separators, messageContext);
+                Item = (EdiMessage)message.ToInstance();
+            }
+            finally
+            {
+                CurrentSegments.Clear();
+            }
         }
 
         /// <summary>
@@ -220,17 +263,9 @@ namespace EdiFabric.Framework.Readers
         protected void Flush(string segment)
         {
             foreach (var c in segment)
-                Buffer.Enqueue(c);
-            Buffer.Enqueue(Separators.Segment);
-
-            try
-            {
-                Item = CurrentMessage.ParseTransactionSet(Separators, BuildContext());
-            }
-            finally
-            {
-                CurrentMessage.Clear();
-            }
+                _buffer.Enqueue(c);
+            _buffer.Enqueue(Separators.Segment);
+            ParseSegments();
         }
 
         /// <summary>
@@ -243,9 +278,9 @@ namespace EdiFabric.Framework.Readers
         {
             string result = null;
             var counter = 0;
-            while (counter < bytes && !StreamReader.EndOfStream)
+            while (counter < bytes && !_streamReader.EndOfStream)
             {
-                var symbol = Read(1).Trim(Trims);
+                var symbol = Read(1).Trim(_trims);
                 if (!String.IsNullOrEmpty(symbol))
                     counter += 1;
                 result += symbol;
@@ -262,8 +297,42 @@ namespace EdiFabric.Framework.Readers
         protected string Read(int bytes)
         {
             var result = new char[bytes];
-            StreamReader.Read(result, 0, result.Length);
+            _streamReader.Read(result, 0, result.Length);
             return String.Concat(result);
+        }
+
+        private Type GetType(MessageContext messageContext)
+        {
+            Assembly assembly;
+            try
+            {
+                assembly = _rulesAssembly(messageContext);
+            }
+            catch (Exception ex)
+            {
+                throw new ParsingException(ErrorCodes.RulesAssemblyNotFound, ex.Message);
+            }
+
+            var matches = assembly.GetTypes().Where(m =>
+            {
+                var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
+                if (att == null) return false;
+                return att.Format == messageContext.Format && att.Version == messageContext.Version && att.Id == messageContext.Tag;
+            }).ToList();
+
+            var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Tag + ")]";
+
+            if (!matches.Any())
+                throw new ParsingException(ErrorCodes.UnexpectedMessage,
+                    String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
+                        assembly.FullName));
+               
+            if (matches.Count > 1)
+                throw new ParsingException(ErrorCodes.DuplicateTypeFound,
+                    String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
+                        assembly.FullName));               
+
+            return matches.First();
         }
 
         /// <summary>
@@ -271,8 +340,8 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         public void Dispose()
         {
-            if (StreamReader != null)
-                StreamReader.Dispose();
+            if (_streamReader != null)
+                _streamReader.Dispose();
         }
     }
 }
