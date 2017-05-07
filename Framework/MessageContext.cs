@@ -21,7 +21,7 @@ namespace EdiFabric.Framework
         /// <summary>
         /// The message tag or ID.
         /// </summary>
-        public string Tag { get; private set; }
+        public string Name { get; private set; }
         /// <summary>
         /// The message control number.
         /// </summary>
@@ -38,18 +38,18 @@ namespace EdiFabric.Framework
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
-        /// <param name="tag">The message tag or ID.</param>
+        /// <param name="name">The message tag or ID.</param>
         /// <param name="controlNumber">The message control number.</param>
         /// <param name="version">The message version.</param>
         /// <param name="format">The message format.</param>
-        public MessageContext(string tag, string controlNumber, string version, string format)
+        public MessageContext(string name, string controlNumber, string version, string format)
         {
-            if (string.IsNullOrEmpty(tag)) throw new ArgumentNullException("tag");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
             if (string.IsNullOrEmpty(controlNumber)) throw new ArgumentNullException("controlNumber");
             if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
             if (string.IsNullOrEmpty(format)) throw new ArgumentNullException("format");
             
-            Tag = tag;
+            Name = name;
             ControlNumber = controlNumber;
             Version = version;
             Format = format;

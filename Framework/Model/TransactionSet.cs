@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EdiFabric.Framework.Parsers
+namespace EdiFabric.Framework.Model
 {
     class TransactionSet : ParseNode
     {
@@ -46,7 +46,7 @@ namespace EdiFabric.Framework.Parsers
 
                     if (currSeg == null)
                         throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Unable to resolve HL.",
-                            segment.Value, messageContext.Tag, messageContext.ControlNumber);
+                            segment.Value, messageContext.Name, messageContext.ControlNumber);
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
@@ -61,7 +61,7 @@ namespace EdiFabric.Framework.Parsers
                         errorCode = ErrorCode.UnrecognizedSegment;
                     }
 
-                    throw new ParsingException(errorCode, message, segment.Value, messageContext.Tag,
+                    throw new ParsingException(errorCode, message, segment.Value, messageContext.Name,
                         messageContext.ControlNumber);
                 }
 

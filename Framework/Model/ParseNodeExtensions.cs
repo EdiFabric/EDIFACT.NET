@@ -16,7 +16,7 @@ using System.Reflection;
 using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
 
-namespace EdiFabric.Framework.Parsers
+namespace EdiFabric.Framework.Model
 {
     static class ParseNodeExtensions
     {
@@ -126,9 +126,7 @@ namespace EdiFabric.Framework.Parsers
                 return new AllLoop(propertyInfo, instance);
 
             throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
-        }
-
-        
+        }        
 
         public static bool IsRepetition(this ParseNode parseNode)
         {
@@ -143,6 +141,5 @@ namespace EdiFabric.Framework.Parsers
             return parseNode.Parent != null && parseNode.Parent.Name == "ISA" &&
                    parseNode.Name == "InterchangeControlStandardsIdentifier_11";
         }
-
     }
 }

@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Text;
 using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
-using EdiFabric.Framework.Parsers;
+using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
 {
@@ -316,10 +316,10 @@ namespace EdiFabric.Framework.Readers
             {
                 var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
                 if (att == null) return false;
-                return att.Format == messageContext.Format && att.Version == messageContext.Version && att.Id == messageContext.Tag;
+                return att.Format == messageContext.Format && att.Version == messageContext.Version && att.Id == messageContext.Name;
             }).ToList();
 
-            var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Tag + ")]";
+            var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Name + ")]";
 
             if (!matches.Any())
                 throw new ParsingException(ErrorCode.UnexpectedMessage,

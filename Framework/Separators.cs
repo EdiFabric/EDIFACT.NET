@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Framework.Parsers;
 
 namespace EdiFabric.Framework
 {
@@ -106,7 +105,7 @@ namespace EdiFabric.Framework
         /// <returns>The separators.</returns>
         public string ToUna()
         {
-            return SegmentId.UNA.ToString() + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
+            return "UNA" + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
         }
 
         /// <summary>

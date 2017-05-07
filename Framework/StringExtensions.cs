@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EdiFabric.Framework
 {
-    static class Helpers
+    static class StringExtensions
     {
         public static string[] GetDataElements(this string segment, Separators separators)
         {

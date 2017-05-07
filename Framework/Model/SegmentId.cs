@@ -10,7 +10,7 @@
 //---------------------------------------------------------------------
 
 // ReSharper disable All
-namespace EdiFabric.Framework.Parsers
+namespace EdiFabric.Framework.Model
 {
     /// <summary>
     /// Enum of control segment IDs.

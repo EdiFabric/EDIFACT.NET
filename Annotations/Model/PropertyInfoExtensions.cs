@@ -6,7 +6,7 @@ using EdiFabric.Annotations.Edi;
 
 namespace EdiFabric.Annotations.Model
 {
-    public static class Extensions
+    public static class PropertyInfoExtensions
     {
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {

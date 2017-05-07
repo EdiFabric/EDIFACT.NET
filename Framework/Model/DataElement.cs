@@ -9,40 +9,39 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Model;
 
-namespace EdiFabric.Framework.Parsers
+namespace EdiFabric.Framework.Model
 {
-    class AllLoop : ParseNode
+    class DataElement : ParseNode
     {
-        public AllLoop(PropertyInfo propertyInfo, object instance = null)
+        public DataElement(PropertyInfo propertyInfo, object instance = null)
             : base(propertyInfo.GetGenericType(), propertyInfo.Name, propertyInfo.Name)
         {
-            BuildChildren(instance);
+            Value = instance as string;
         }
 
-        public AllLoop(ParseNode parseNode)
+        public DataElement(ParseNode parseNode)
             : base(parseNode.Type, parseNode.Name, parseNode.EdiName)
         {
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
-            BuildChildren();
         }
 
-        public override IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
+        public override void Parse(string value, Separators separators)
         {
-            var result = new List<ParseNode>();
-            
-            if (Children.Any())
-            {
-                var grouped = Children.GroupBy(s => s.Name);               
-                result.AddRange(grouped.Select(g => g.Last()));
-            }
+            IsParsed = true;
+            Value = value.UnEscapeLine(separators);
+        }
 
-            result.Add(Parent);
-            return result;
+        public override ParseNode InsertRepetition()
+        {
+            return new DataElement(this);
+        }
+
+        public override object ToInstance()
+        {
+            return Value;
         }
     }
 }

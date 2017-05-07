@@ -47,7 +47,7 @@
     <Compile Include="Edi\MessageAttribute.cs" />
     <Compile Include="Edi\PosAttribute.cs" />
     <Compile Include="Edi\SegmentAttribute.cs" />
-    <Compile Include="Model\Extensions.cs" />
+    <Compile Include="Model\PropertyInfoExtensions.cs" />
     <Compile Include="Model\TraverseItem.cs" />
     <Compile Include="Validation\DataElementErrorContext.cs" />
     <Compile Include="Model\IEdiItem.cs" />

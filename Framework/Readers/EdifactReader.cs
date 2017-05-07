@@ -15,7 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Framework.Parsers;
+using EdiFabric.Framework.Model;
 using EdiFabric.Framework.Segments.Edifact;
 
 namespace EdiFabric.Framework.Readers

@@ -16,7 +16,7 @@ using System.Reflection;
 using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
 
-namespace EdiFabric.Framework.Parsers
+namespace EdiFabric.Framework.Model
 {
     class Segment : ParseNode
     {
