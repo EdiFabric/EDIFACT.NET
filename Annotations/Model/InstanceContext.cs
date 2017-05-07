@@ -9,11 +9,11 @@ using EdiFabric.Annotations.Validation;
 
 namespace EdiFabric.Annotations.Model
 {
-    public class TraverseItem
+    public class InstanceContext
     {
         public object Instance { get; set; }
         private readonly PropertyInfo _property;
-        private readonly TraverseItem _parent;
+        private readonly InstanceContext _parent;
         private readonly int _propertyIndex;
         private int _repetitionIndex = 1;
 
@@ -72,12 +72,12 @@ namespace EdiFabric.Annotations.Model
             return _property != null && _property.GetGenericType().GetCustomAttribute<T>() != null;
         }
 
-        public TraverseItem(object instance)
+        public InstanceContext(object instance)
         {
             Instance = instance;
         }
 
-        public TraverseItem(object instance, PropertyInfo property, TraverseItem parent, int propertyIndex,
+        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int propertyIndex,
             int repetitionIndex)
             : this(instance)
         {
@@ -137,7 +137,7 @@ namespace EdiFabric.Annotations.Model
              }
         }
 
-        public IEnumerable<TraverseItem> GetNeigbours()
+        public IEnumerable<InstanceContext> GetNeigbours()
         {
             if (Instance != null && !(Instance is string))
             {
@@ -148,7 +148,7 @@ namespace EdiFabric.Annotations.Model
                     foreach (var listValue in list)
                     {
                         yield return
-                            new TraverseItem(listValue, _property, this, _propertyIndex, repetitionIndex++);
+                            new InstanceContext(listValue, _property, this, _propertyIndex, repetitionIndex++);
                     }
                 }
                 else
@@ -156,7 +156,7 @@ namespace EdiFabric.Annotations.Model
                     var propertyIndex = 0;
                     foreach (var propertyInfo in Instance.GetType().GetProperties().Sort())
                     {
-                        yield return new TraverseItem(propertyInfo.GetValue(Instance), propertyInfo, this, propertyIndex++, 0);
+                        yield return new InstanceContext(propertyInfo.GetValue(Instance), propertyInfo, this, propertyIndex++, 0);
                     }
                 }
             }

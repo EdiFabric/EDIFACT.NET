@@ -66,7 +66,7 @@ namespace EdiFabric.Framework.Readers
         {
         }
 
-        protected override bool TryReadControl(string segmentName, out string probed, out Separators separators)
+        protected override bool TryReadHeader(string segmentName, out string probed, out Separators separators)
         {
             probed = "";
             separators = null;
@@ -122,7 +122,8 @@ namespace EdiFabric.Framework.Readers
             var segmentContext = new SegmentContext(segment, Separators);
             if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.UNH) && CurrentSegments.Any())
             {
-                Flush(segmentContext.Value);
+                Buffer(segment + Separators.Segment);
+                ParseSegments();
                 return;
             }
 

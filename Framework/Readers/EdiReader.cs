@@ -105,7 +105,8 @@ namespace EdiFabric.Framework.Readers
                 {
                     ProcessSegment(ReadSegment());
                     
-                    if (Separators != null) continue;
+                    if (Separators != null) 
+                        continue;
                     
                     Item = new ParsingException(ErrorCode.InvalidControlStructure, "No valid interchange header was found.");
                 }               
@@ -148,7 +149,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>Indicates if an interchange header was found.</returns>
-        protected abstract bool TryReadControl(string segmentName, out string probed, out Separators separators);
+        protected abstract bool TryReadHeader(string segmentName, out string probed, out Separators separators);
 
         /// <summary>
         /// Converts EDI segments into typed objects. 
@@ -161,7 +162,7 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <returns>The message context.</returns>
         protected abstract MessageContext BuildContext();
-        
+
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
         /// Breaks if no segment terminator was encountered after 10000 symbols were read. 
@@ -173,7 +174,6 @@ namespace EdiFabric.Framework.Readers
         private string ReadSegment()
         {
             var line = "";
-
             while (!_streamReader.EndOfStream || _buffer.Any())
             {
                 var symbol = _buffer.Any()
@@ -181,28 +181,26 @@ namespace EdiFabric.Framework.Readers
                     : Read(1);
 
                 line = line + symbol;
-
                 if (line.Length > 2)
                 {
                     var last3 = line.Substring(line.Length - 3);
                     Separators separators;
                     string probed;
-                    if (TryReadControl(last3, out probed, out separators))
+                    if (TryReadHeader(last3, out probed, out separators))
                     {
                         Separators = separators;
-                        _trims = _trims.Except(new[] { Separators.Segment }).ToArray();
+                        _trims = _trims.Except(new[] {Separators.Segment}).ToArray();
                         line = probed;
                     }
                     else
                     {
                         if (!string.IsNullOrEmpty(probed))
-                            foreach (var c in probed.Skip(3))
-                                _buffer.Enqueue(c);
+                            Buffer(probed.Skip(3));                            
                     }
                 }
 
                 // Segment terminator may never be reached
-                if (line.Count() > 10000)
+                if (line.Count() > 5000)
                 {
                     line = "";
                     continue;
@@ -211,24 +209,20 @@ namespace EdiFabric.Framework.Readers
                 if (Separators == null)
                     continue;
 
-                if (line.EndsWith(Separators.Segment.ToString(), StringComparison.Ordinal))
-                {
-                    if (Separators.Escape.HasValue &&
-                        line.EndsWith(string.Concat(Separators.Escape.Value, Separators.Segment),
-                            StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
+                if (!line.EndsWith(Separators.Segment.ToString(), StringComparison.Ordinal)) 
+                    continue;
 
-                    int index = line.LastIndexOf(Separators.Segment.ToString(), StringComparison.Ordinal);
-                    if (index > 0)
-                    {
-                        line = line.Remove(index);
-                    }
+                if (Separators.Escape.HasValue &&
+                    line.EndsWith(string.Concat(Separators.Escape.Value, Separators.Segment),
+                        StringComparison.Ordinal))
+                    continue;
 
-                    if (!string.IsNullOrEmpty(line))
-                        break;
-                }
+                var index = line.LastIndexOf(Separators.Segment.ToString(), StringComparison.Ordinal);
+                if (index > 0)
+                    line = line.Remove(index);
+
+                if (!string.IsNullOrEmpty(line))
+                    break;
             }
 
             return line.Trim(_trims);
@@ -242,8 +236,7 @@ namespace EdiFabric.Framework.Readers
             try
             {
                 var messageContext = BuildContext();
-                var type = GetType(messageContext);
-                var message = new TransactionSet(type);
+                var message = new TransactionSet(GetType(messageContext));
                 message.Analyze(CurrentSegments.Where(s => !s.IsControl), Separators, messageContext);
                 Item = (EdiMessage)message.ToInstance();
             }
@@ -254,18 +247,13 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// Clears the internal cache before trying to process a new message.
-        /// It tries to process what's in the cache in case it's a valid message, before clearing the cache.
-        /// This is for situations where no message trailer was included in the file, however all other segments were present.
+        /// Enqueues a string to the internal buffer.
         /// </summary>
-        /// <param name="segment">The last read segment.</param>
-        protected void Flush(string segment)
+        /// <param name="data">The data to buffer.</param>
+        protected void Buffer(string data)
         {
-            foreach (var c in segment)
-                _buffer.Enqueue(c);
-            _buffer.Enqueue(Separators.Segment);
-            ParseSegments();
-        }
+            Buffer(data.ToCharArray());
+        }        
 
         /// <summary>
         /// Reads number of bytes from the stream.
@@ -300,6 +288,29 @@ namespace EdiFabric.Framework.Readers
             return String.Concat(result);
         }
 
+        /// <summary>
+        /// Parses a segment.
+        /// </summary>
+        /// <param name="segmentValue">The segment string.</param>
+        /// <param name="separators">The separators.</param>
+        /// <typeparam name="T">The type of segment.</typeparam>
+        /// <returns>The parsed segment.</returns>
+        protected static T ParseSegment<T>(string segmentValue, Separators separators)
+        {
+            var parseNode = new Segment(typeof(T));
+            parseNode.Parse(segmentValue, separators);
+            return (T)parseNode.ToInstance();
+        }
+        
+        /// <summary>
+        /// Disposes the reader.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_streamReader != null)
+                _streamReader.Dispose();
+        }
+
         private Type GetType(MessageContext messageContext)
         {
             Assembly assembly;
@@ -325,29 +336,19 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCode.UnexpectedMessage,
                     String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
                         assembly.FullName));
-               
+
             if (matches.Count > 1)
                 throw new ParsingException(ErrorCode.DuplicateTypeFound,
                     String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
-                        assembly.FullName));               
+                        assembly.FullName));
 
             return matches.First();
         }
 
-        /// <summary>
-        /// Disposes the reader.
-        /// </summary>
-        public void Dispose()
+        private void Buffer(IEnumerable<char> data)
         {
-            if (_streamReader != null)
-                _streamReader.Dispose();
-        }
-
-        protected static T ParseSegment<T>(string segmentValue, Separators separators)
-        {
-            var parseNode = new Segment(typeof(T));
-            parseNode.Parse(segmentValue, separators);
-            return (T)parseNode.ToInstance();
+            foreach (var c in data)
+                _buffer.Enqueue(c);
         }
     }
 }

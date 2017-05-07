@@ -86,10 +86,10 @@ namespace EdiFabric.Annotations.Model
         public IEnumerable<SegmentErrorContext> Validate()
         {
             var visited = new HashSet<object>();
-            var stack = new Stack<TraverseItem>();
+            var stack = new Stack<InstanceContext>();
             var result = new List<SegmentErrorContext>();
 
-            stack.Push(new TraverseItem(this));
+            stack.Push(new InstanceContext(this));
 
             var segmentIndex = 0;
             var inSegmentIndex = 0;
