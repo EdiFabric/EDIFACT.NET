@@ -10,6 +10,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Annotations.Validation
 {
@@ -22,6 +24,8 @@ namespace EdiFabric.Annotations.Validation
         }
 
         public int Priority { get; private set; }
-        public abstract ValidationResult IsValid(object intance);
+
+        public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
+            int inCompositeIndex);
     }
 }

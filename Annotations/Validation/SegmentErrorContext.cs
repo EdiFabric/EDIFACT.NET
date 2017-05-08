@@ -17,7 +17,6 @@ namespace EdiFabric.Annotations.Validation
     /// <summary>
     /// Information for the data, error codes and the context of the data elements that failed.
     /// </summary>
-    [Serializable]
     public class SegmentErrorContext
     {
         /// <summary>
@@ -56,6 +55,11 @@ namespace EdiFabric.Annotations.Validation
         /// <param name="position">The segment position.</param>
         public SegmentErrorContext(string name, int position)
         {
+            if(string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+            if (position <= 0)
+                throw new Exception("position must be greater tan zero.");
+
             Name = name;
             Position = position;
         }

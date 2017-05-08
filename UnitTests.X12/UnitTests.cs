@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EdiFabric.Annotations.Validation;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.X12;
@@ -57,7 +58,11 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
             }
             var msg = ediItems.OfType<TS810>().SingleOrDefault();
-            msg.Validate();
+            List<SegmentErrorContext> results;
+            if (!msg.IsValid(out results))
+            {
+                
+            }
 
             // ASSERT
             

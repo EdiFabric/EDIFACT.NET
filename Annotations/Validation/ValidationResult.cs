@@ -16,9 +16,15 @@ namespace EdiFabric.Annotations.Validation
     /// </summary>
     public enum ValidationResult
     {
-        Valid,
-        RequiredMissing,
-        Unexpected,
+        RequiredMissingAll,
+        RequiredMissingGroup,
+        RequiredMissingSegment,
+        RequiredMissingComposite,
+        RequiredMissingDataElement,
+        CountExceededGroup,
+        CountExceededSegment,
+        CountExceededComposite,
+        CountExceededDataElement,
         DataElementTooShort,
         DataElementTooLong,
         DataElementValueWrong,

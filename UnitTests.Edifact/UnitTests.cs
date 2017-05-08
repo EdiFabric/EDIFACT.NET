@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
+using EdiFabric.Annotations.Validation;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.Edifact;
@@ -43,45 +43,6 @@ namespace EdiFabric.UnitTests.Edifact
             File.WriteAllText(@"C:\Test\Actual.txt", actual);
             Assert.AreEqual(expected, actual);
         }
-
-        [TestMethod]
-        public void TestValidationFailure()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Test.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
-            List<object> ediItems;
-
-            // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
-            {
-                ediItems = ediReader.ReadToEnd().ToList();
-            }
-            var msg = ediItems.OfType<TSINVOIC>().SingleOrDefault();
-            var validationResults = msg.Validate();
-            // ASSERT
-            //Assert.IsNotNull(validationResults);
-            //Assert.IsNotNull(validationResults.ErrorContext);
-            //Assert.IsTrue(validationResults.ErrorContext.Errors.Any() || validationResults.ErrorContext.Codes.Any());
-        }
-
-        //[TestMethod]
-        //public void TestParseEdifactWithValidation()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Valid.txt";
-
-        //    // ACT
-        //    var message = TestHelper.ParseEdifact(sample).OfType<M_INVOIC>().Single();
-        //    var validationResults = EdiValidator.Create("EdiFabric.Xsd").Validate(message);
-
-        //    // ASSERT
-        //    Assert.IsNotNull(validationResults);
-        //    Assert.IsNotNull(validationResults.ErrorContext);
-        //    Assert.IsFalse(validationResults.ErrorContext.Errors.Any());
-        //    Assert.IsFalse(validationResults.ErrorContext.Codes.Any());
-        //}
 
         [TestMethod]
         public void TestDefaultUna()
@@ -806,23 +767,27 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<ParsingException>().Count() == 2);
         }
 
-        //[TestMethod]
-        //public void TestValidationRules()
-        //{
-        //    // ARRANGE
-        //    const string sample = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_Validation.xml";
-        //    var obj = TestHelper.Deserialize<M_INVOIC>(TestHelper.LoadStream(sample));
-        //    const string expectedResult = "EdiFabric.Tests.Xml.Edifact_INVOIC_D00A_ValidationExpected.xml";
-        //    var expectedXml = XElement.Load(TestHelper.LoadStream(expectedResult));
+        [TestMethod]
+        public void TestValidation()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Valid.txt";
+            var ediStream = Helper.LoadStream(sample);
+            List<object> ediItems;
 
-        //    // ACT
-        //    var error = EdiValidator.Create("EdiFabric.Xsd").Validate(obj);
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<TSINVOIC>().Single();
 
-        //    // ASSERT
-        //    Assert.IsNotNull(error);
-        //    var root = TestHelper.Serialize(error.Flatten().ToList()).Root;
-        //    Assert.IsNotNull(root);
-        //    Assert.AreEqual(root.ToString(), expectedXml.ToString());
-        //}
+            List<SegmentErrorContext> results;
+            var validationResult = msg.IsValid(out results);
+
+            // ASSERT
+            Assert.IsTrue(validationResult);
+            Assert.IsFalse(results.Any());
+        }
     }
 }

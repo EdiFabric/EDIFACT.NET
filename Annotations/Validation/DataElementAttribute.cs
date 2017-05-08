@@ -10,6 +10,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Annotations.Validation
 {
@@ -18,15 +20,18 @@ namespace EdiFabric.Annotations.Validation
     {
         public string Code { get; set; }
         public Type DataType { get; set; }
+
         public DataElementAttribute(string code, Type dataType) : base(4)
         {
             Code = code;
             DataType = dataType;
         }
 
-        public override ValidationResult IsValid(object intance)
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+            int inSegmentIndex, int inCompositeIndex)
         {
-            return ValidationResult.Valid;
+            var result = new List<SegmentErrorContext>();
+            return result;
         }
     }
 }

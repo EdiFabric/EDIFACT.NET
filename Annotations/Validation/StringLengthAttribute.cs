@@ -10,6 +10,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Annotations.Validation
 {
@@ -25,19 +27,22 @@ namespace EdiFabric.Annotations.Validation
             MaxLen = maxLen;
         }
 
-        public override ValidationResult IsValid(object intance)
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex, int inCompositeIndex)
         {
-            var value = intance as string;
-            if (value == null)
-                throw new Exception(string.Format("{0} can only be applied to data elements.", GetType().Name));
+            //var value = intance as string;
+            //if (value == null)
+            //    throw new Exception(string.Format("{0} can only be applied to data elements.", GetType().Name));
 
-            if (value.Length > MaxLen)
-                return ValidationResult.DataElementTooLong;
+            //if (value.Length > MaxLen)
+            //    return ValidationResult.DataElementTooLong;
 
-            if (value.Length < MinLen)
-                return ValidationResult.DataElementTooShort;
+            //if (value.Length < MinLen)
+            //    return ValidationResult.DataElementTooShort;
 
-            return ValidationResult.Valid;
+            //return ValidationResult.Valid;
+
+            var result = new List<SegmentErrorContext>();
+            return result;
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Framework;
@@ -10,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace EdiFabric.UnitTests
 {
     [TestClass]
-    public class UnitTestDuplicateTs
+    public class UnitTestsLoading
     {
         [TestMethod]
         public void TestDuplicateTs()
@@ -73,28 +71,6 @@ namespace EdiFabric.UnitTests
             var error = ediItems.OfType<ParsingException>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsTrue(error.ErrorCode == ErrorCode.RulesAssemblyNotFound);  
-        }
-
-        [TestMethod]
-        public void TestLog()
-        {
-            // ARRANGE
-            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A.txt";
-            var ediStream = Helper.LoadStream(sample, false);
-            var logFile = ConfigurationManager.AppSettings["EdiFabric.LogFile"];
-
-            List<object> ediItems;
-
-            // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.DuplicateTS"))
-            {
-                ediItems = ediReader.ReadToEnd().ToList();
-            }
-            
-            // ASSERT
-            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());
-            Assert.IsNotNull(logFile);
-            Assert.IsTrue(File.Exists(logFile)); 
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Annotations.Edi;
@@ -9,49 +8,36 @@ using EdiFabric.Annotations.Validation;
 
 namespace EdiFabric.Annotations.Model
 {
-    public class InstanceContext
+    public sealed class InstanceContext
     {
-        public object Instance { get; set; }
-        private readonly PropertyInfo _property;
-        private readonly InstanceContext _parent;
-        private readonly int _propertyIndex;
-        private int _repetitionIndex = 1;
+        public object Instance { get; private set; }
+        public PropertyInfo Property { get; private set; }
+        public InstanceContext Parent { get; private set; }
 
-        private bool IsRequired
+        public string GetId()
         {
-            get { return _property != null && _property.GetCustomAttribute<RequiredAttribute>() != null; }
-        }
+            if (Property == null)
+                return null;
 
-        private string GetId()
-        {
-            if(_property == null)
-                throw new NoNullAllowedException("Property");
-
-            var ediAttr = _property.GetGenericType().GetCustomAttribute<EdiAttribute>();
+            var ediAttr = Property.GetGenericType().GetCustomAttribute<EdiAttribute>();
             if (ediAttr == null)
-                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", _property.Name));
+                throw new Exception(string.Format("Property {0} is not annotated with {1}.", Property.Name,
+                    typeof (EdiAttribute).Name));
 
             return ediAttr.Id;
         }
 
-        private string GetDeclaringTypeId()
+        public string GetDeclaringTypeId()
         {
-            if (_property == null)
-                throw new NoNullAllowedException("Property");
+            if (Property == null || Property.DeclaringType == null)
+                return null;
 
-            var ediAttr = _property.DeclaringType.GetCustomAttribute<EdiAttribute>();
+            var ediAttr = Property.DeclaringType.GetCustomAttribute<EdiAttribute>();
             if (ediAttr == null)
-                throw new Exception(string.Format("The type declaring Property {0} is not annotated with [EdiAttribute].", _property.Name));
+                throw new Exception(string.Format("The type {0} declaring property {1} is not annotated with {2}.",
+                    Property.DeclaringType.Name, Property.Name, typeof(EdiAttribute).Name));
 
             return ediAttr.Id;
-        }
-
-        public bool IsParentInstanceOfType<T>() where T : EdiAttribute
-        {
-            if (_parent == null)
-                return false;
-
-            return _parent.IsInstanceOfType<T>();
         }
 
         public bool IsInstanceOfType<T>() where T : EdiAttribute
@@ -67,9 +53,9 @@ namespace EdiFabric.Annotations.Model
             return IsPropertyOfType<T>();
         }
 
-        private bool IsPropertyOfType<T>() where T : EdiAttribute
+        public bool IsPropertyOfType<T>() where T : EdiAttribute
         {
-            return _property != null && _property.GetGenericType().GetCustomAttribute<T>() != null;
+            return Property != null && Property.GetGenericType().GetCustomAttribute<T>() != null;
         }
 
         public InstanceContext(object instance)
@@ -77,64 +63,26 @@ namespace EdiFabric.Annotations.Model
             Instance = instance;
         }
 
-        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int propertyIndex,
-            int repetitionIndex)
+        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent)
             : this(instance)
         {
-            _property = property;
-            _parent = parent;
-            _propertyIndex = propertyIndex;
-            _repetitionIndex = repetitionIndex;
+            Property = property;
+            Parent = parent;
         }
 
-        public IEnumerable<SegmentErrorContext> ValidateRequired(int segmentIndex, int inSegmentIndex, int inCompositeIndex)
+        public List<SegmentErrorContext> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
         {
-            if (Instance == null && IsRequired)
+            var result = new List<SegmentErrorContext>();
+
+            if (Property == null) return result;
+
+            var validationAttributes = Property.GetCustomAttributes<ValidationAttribute>().OrderBy(a => a.Priority);
+            foreach (var validationAttribute in validationAttributes)
             {
-                if (IsPropertyOfType<AllAttribute>())
-                {
-                    var mandatoryNames =
-                        _property.GetGenericType()
-                            .GetProperties()
-                            .Where(p => p.GetCustomAttribute<RequiredAttribute>() != null)
-                            .Select(s => s.GetGenericType().GetCustomAttribute<EdiAttribute>().Id);
+                result.AddRange(validationAttribute.IsValid(this, segmentIndex, inSegmentIndex, inComponentIndex));
+            }
 
-                    foreach (var name in mandatoryNames)
-                    {
-                        yield return new SegmentErrorContext(name, segmentIndex + 1, ValidationResult.RequiredMissing);
-                    }
-                }
-
-                if (IsPropertyOfType<GroupAttribute>() || IsPropertyOfType<SegmentAttribute>())
-                {
-                    yield return
-                        new SegmentErrorContext(GetId(), segmentIndex + 1, ValidationResult.RequiredMissing);
-                }
-
-                if (IsPropertyOfType<CompositeAttribute>())
-                {
-                    if (!_parent.IsPropertyOfType<SegmentAttribute>())
-                        throw new Exception(string.Format("Parent of composite {0} must be a segment.", _property.Name));
-
-                    var result = new SegmentErrorContext(_parent.GetId(), segmentIndex);
-                    result.Add(GetId(), inSegmentIndex, ValidationResult.RequiredMissing, 0, 0, null);
-                    yield return result;
-                }
-
-                if (_property.GetGenericType() == typeof (string))
-                {
-                    var segmentName = _parent.IsPropertyOfType<SegmentAttribute>()
-                        ? _parent.GetId()
-                        : _parent.GetDeclaringTypeId();
-
-                    var dataElementAttr = _property.GetCustomAttribute<DataElementAttribute>();
-                    var name = dataElementAttr == null ? "" : dataElementAttr.Code;
-
-                    var result = new SegmentErrorContext(segmentName, segmentIndex);
-                    result.Add(name, inSegmentIndex, ValidationResult.RequiredMissing, inCompositeIndex, 0, null);
-                    yield return result;
-                }
-             }
+            return result;
         }
 
         public IEnumerable<InstanceContext> GetNeigbours()
@@ -144,25 +92,48 @@ namespace EdiFabric.Annotations.Model
                 var list = Instance as IList;
                 if (list != null)
                 {
-                    var repetitionIndex = 0;
                     foreach (var listValue in list)
                     {
                         yield return
-                            new InstanceContext(listValue, _property, this, _propertyIndex, repetitionIndex++);
+                            new InstanceContext(listValue, Property, this);
                     }
                 }
                 else
                 {
-                    var propertyIndex = 0;
-                    foreach (var propertyInfo in Instance.GetType().GetProperties().Sort())
+                    foreach (
+                        var propertyInfo in
+                            Instance.GetType()
+                                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                                .Sort())
                     {
-                        yield return new InstanceContext(propertyInfo.GetValue(Instance), propertyInfo, this, propertyIndex++, 0);
+                        yield return new InstanceContext(propertyInfo.GetValue(Instance), propertyInfo, this);
                     }
                 }
             }
 
-            if (_parent != null)
-                yield return _parent;
+            if (Parent != null)
+                yield return Parent;
+        }
+
+        public void SetIndexes(ref int segmentIndex, ref int inSegmentIndex, ref int inComponentIndex)
+        {
+            if (IsInstanceOfType<SegmentAttribute>())
+            {
+                segmentIndex++;
+                inSegmentIndex = 0;
+                inComponentIndex = 0;
+            }
+
+            if (Parent != null && Parent.IsInstanceOfType<SegmentAttribute>())
+            {
+                inSegmentIndex++;
+                inComponentIndex = 0;
+            }
+
+            if (Parent != null && Parent.IsInstanceOfType<CompositeAttribute>())
+            {
+                inComponentIndex++;
+            }
         }
     }
 }

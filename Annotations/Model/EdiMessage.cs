@@ -22,9 +22,9 @@ namespace EdiFabric.Annotations.Model
     public class EdiMessage : IEdiItem
     {
         /// <summary>
-        /// The message tag or ID.
+        /// The message ID.
         /// </summary>
-        public string Tag { get; private set; }
+        public string Name { get; private set; }
         /// <summary>
         /// The message version (derived from the group if not explicitly set in the message).
         /// </summary>
@@ -45,8 +45,8 @@ namespace EdiFabric.Annotations.Model
             if (Format == null) throw new NoNullAllowedException("Format");
             Version = msgAttr.Version;
             if (Version == null) throw new NoNullAllowedException("Version");
-            Tag = msgAttr.Id;
-            if (Tag == null) throw new NoNullAllowedException("Tag");
+            Name = msgAttr.Id;
+            if (Name == null) throw new NoNullAllowedException("Name");
         }
 
         public string GetControlNumber()
@@ -83,11 +83,11 @@ namespace EdiFabric.Annotations.Model
             return cnProperty.GetValue(headerValue) as string;
         }
 
-        public IEnumerable<SegmentErrorContext> Validate()
+        public bool IsValid(out List<SegmentErrorContext> results)
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
-            var result = new List<SegmentErrorContext>();
+            results = new List<SegmentErrorContext>();
 
             stack.Push(new InstanceContext(this));
 
@@ -102,25 +102,8 @@ namespace EdiFabric.Annotations.Model
                 if (current.Instance != null && !(current.Instance is string) && !visited.Add(current.Instance))
                     continue;
 
-                if (current.IsInstanceOfType<SegmentAttribute>())
-                {
-                    segmentIndex++;
-                    inSegmentIndex = 0;
-                    inComponentIndex = 0;
-                }
-
-                if (current.IsParentInstanceOfType<SegmentAttribute>())
-                {
-                    inSegmentIndex++;
-                    inComponentIndex = 0;
-                }
-
-                if (current.IsParentInstanceOfType<CompositeAttribute>())
-                {
-                    inComponentIndex++;
-                }
-
-                result.AddRange(current.ValidateRequired(segmentIndex, inSegmentIndex, inComponentIndex));
+                current.SetIndexes(ref segmentIndex, ref inSegmentIndex, ref inComponentIndex);
+                results.AddRange(current.Validate(segmentIndex, inSegmentIndex, inComponentIndex));
 
                 var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p.Instance));
                 foreach (var neighbour in neighbours.Reverse())
@@ -129,7 +112,7 @@ namespace EdiFabric.Annotations.Model
                 }
             }
 
-            return result;
-        }
+            return !results.Any();
+        }                
     }
 }
