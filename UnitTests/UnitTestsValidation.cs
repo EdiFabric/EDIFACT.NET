@@ -27,7 +27,7 @@ namespace EdiFabric.UnitTests
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var msg = ediItems.OfType<TSINVOIC>().Single();
+            var msg = ediItems.OfType<TSINVOICAll>().Single();
 
             List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
@@ -107,7 +107,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             Assert.IsFalse(validationResult);
             Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 5);
+            Assert.IsTrue(results.Count == 4);
 
             var sErr1 = results.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
@@ -167,7 +167,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             Assert.IsFalse(validationResult);
             Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 5);
+            Assert.IsTrue(results.Count == 4);
 
             var sErr1 = results.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
@@ -250,7 +250,7 @@ namespace EdiFabric.UnitTests
             // ASSERT
             Assert.IsFalse(validationResult);
             Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 5);
+            Assert.IsTrue(results.Count == 4);
 
             var sErr1 = results.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
             Assert.IsNotNull(sErr1);

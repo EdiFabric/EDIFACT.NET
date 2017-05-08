@@ -24,7 +24,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
         public List<DTM> DTM { get; set; }
         [Required]
         [Pos(4)]
-        public All_Test PAI { get; set; }
+        public PAI PAI { get; set; }
         [ListCount(2, 5)]
         [Pos(5)]
         public List<ALI> ALI { get; set; }
@@ -102,19 +102,6 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
         public List<TSINVOIC_ALCLoop3> ALCLoop3 { get; set; }
         [Pos(31)]
         public UNT UNT { get; set; }
-    }
-
-    [All()]
-    public class All_Test
-    {
-        [Required]
-        [Pos(1)]
-        public PAI PAITest { get; set; }
-        [Pos(2)]
-        public UNH UNHTest { get; set; }
-        [Required]
-        [Pos(3)]
-        public UNT UNTTest { get; set; }
     }
     
     [Serializable()]

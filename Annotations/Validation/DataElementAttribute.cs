@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Annotations.Validation
@@ -31,6 +33,47 @@ namespace EdiFabric.Annotations.Validation
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();
+
+            if (instanceContext.Instance == null)
+                return result;
+
+            var value = instanceContext.Instance as string;
+            if (string.IsNullOrEmpty(value))
+                return result;
+
+            if (instanceContext.Property.GetGenericType() != typeof(string))
+                return result;
+
+            var eAttr = DataType.GetCustomAttribute<EdiCodesAttribute>();
+            if (eAttr == null)
+                return result;
+
+            if (eAttr.Codes.Contains("," + value + ","))
+                return result;
+
+            result.Add(ValidateDataElement(value, instanceContext, segmentIndex, inSegmentIndex,
+                inCompositeIndex, repetitionIndex));
+            return result;
+        }
+
+        private SegmentErrorContext ValidateDataElement(string value, InstanceContext instanceContext,
+            int segmentIndex, int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
+        {
+            if (instanceContext.Parent == null)
+                throw new Exception(
+                    string.Format("Parent of data element {0} must be either a segment or a composite.",
+                        instanceContext.Property.Name));
+
+            var segmentName = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
+                ? instanceContext.Parent.GetId()
+                : instanceContext.Parent.GetDeclaringTypeId();
+
+            var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
+            var name = dataElementAttr == null ? "" : dataElementAttr.Code;
+
+            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            result.Add(name, inSegmentIndex, ValidationResult.DataElementValueWrong, inCompositeIndex, repetitionIndex,
+                value);
             return result;
         }
     }
