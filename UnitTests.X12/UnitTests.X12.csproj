@@ -153,6 +153,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_VersionFromSt.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_InvalidSegment2.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

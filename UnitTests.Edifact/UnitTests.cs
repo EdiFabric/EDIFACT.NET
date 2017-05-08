@@ -525,7 +525,9 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            var error = ediItems.OfType<ParsingException>().SingleOrDefault();
+            Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorCode == ErrorCode.ImproperEndOfFile);
         }
 
         [TestMethod]
@@ -543,11 +545,13 @@ namespace EdiFabric.UnitTests.Edifact
             }
 
             // ASSERT
-            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            var error = ediItems.OfType<ParsingException>().SingleOrDefault();
+            Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorCode == ErrorCode.InvalidControlStructure);
         }
 
         [TestMethod]
-        public void TestInvalidSegment()
+        public void TestTooManyDataElements()
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment.txt";
@@ -566,7 +570,34 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            var error = ediItems.OfType<ParsingException>().SingleOrDefault();
+            Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorCode == ErrorCode.DataElementsTooMany);
+        }
+
+        [TestMethod]
+        public void TestTooManyComponentDataElements()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment2.txt";
+            var ediStream = Helper.LoadStream(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            var error = ediItems.OfType<ParsingException>().SingleOrDefault();
+            Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorCode == ErrorCode.ComponentDataElementsTooMany);
         }
 
         [TestMethod]
@@ -689,7 +720,9 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<ParsingException>().SingleOrDefault());
+            var error = ediItems.OfType<ParsingException>().SingleOrDefault();
+            Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorCode == ErrorCode.UnrecognizedSegment);
         }
 
         [TestMethod]
