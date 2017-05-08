@@ -103,12 +103,26 @@ namespace EdiFabric.Framework.Readers
             {
                 while ((!_streamReader.EndOfStream || _buffer.Any()) && Item == null)
                 {
-                    ProcessSegment(ReadSegment());
-                    
-                    if (Separators != null) 
+                    var segment = ReadSegment();
+
+                    if (Separators == null)
+                    {
+                        Item = new ParsingException(ErrorCode.InvalidControlStructure, "No valid interchange header was found.");
                         continue;
-                    
-                    Item = new ParsingException(ErrorCode.InvalidControlStructure, "No valid interchange header was found.");
+                    }
+
+                    if(string.IsNullOrEmpty(segment))
+                        continue;
+
+                    var segmentContext = new SegmentContext(segment, Separators);
+                    if (segmentContext.IsControl && CurrentSegments.Any())
+                    {
+                        Buffer(segment + Separators.Segment);
+                        ParseSegments();
+                        continue;
+                    }
+
+                    ProcessSegment(segmentContext);
                 }               
             }
             catch (ParsingException ex)
@@ -121,10 +135,10 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_streamReader.EndOfStream && CurrentSegments.Any())
-            {
                 Item = new ParsingException(ErrorCode.ImproperEndOfFile, "Unprocessed segments before the end of file.");
+
+            if(Item is ParsingException)
                 CurrentSegments.Clear();
-            }
 
             return Item != null;
         }
@@ -154,15 +168,15 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Converts EDI segments into typed objects. 
         /// </summary>
-        /// <param name="segment">The segment to be processed.</param>
-        protected abstract void ProcessSegment(string segment);
+        /// <param name="segmentContext">The segment to be processed.</param>
+        protected abstract void ProcessSegment(SegmentContext segmentContext);
 
         /// <summary>
         /// Extracts the format, the version and the tag of the EDI document.
         /// </summary>
         /// <returns>The message context.</returns>
         protected abstract MessageContext BuildContext();
-
+        
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
         /// Breaks if no segment terminator was encountered after 10000 symbols were read. 
@@ -233,12 +247,20 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         protected void ParseSegments()
         {
+            var messageContext = BuildContext();
             try
             {
-                var messageContext = BuildContext();
                 var message = new TransactionSet(GetType(messageContext));
-                message.Analyze(CurrentSegments.Where(s => !s.IsControl), Separators, messageContext);
-                Item = (EdiMessage)message.ToInstance();
+                message.Analyze(CurrentSegments, Separators);
+                Item = (EdiMessage) message.ToInstance();
+            }
+            catch (ParsingException pEx)
+            {
+                pEx.MessageName = messageContext.Name;
+                pEx.MessageControlNumber = messageContext.ControlNumber;
+
+                // ReSharper disable once PossibleIntendedRethrow
+                throw pEx;
             }
             finally
             {

@@ -45,7 +45,7 @@
     <Compile Include="Edi\EdiCodesAttribute.cs" />
     <Compile Include="Edi\GroupAttribute.cs" />
     <Compile Include="Edi\MessageAttribute.cs" />
-    <Compile Include="Edi\PosAttribute.cs" />
+    <Compile Include="Validation\PosAttribute.cs" />
     <Compile Include="Edi\SegmentAttribute.cs" />
     <Compile Include="Model\PropertyInfoExtensions.cs" />
     <Compile Include="Model\InstanceContext.cs" />

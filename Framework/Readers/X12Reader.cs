@@ -89,29 +89,17 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        protected override void ProcessSegment(SegmentContext segmentContext)
         {
-            if (string.IsNullOrEmpty(segment) || Separators == null)
-                return;
-
-            var segmentContext = new SegmentContext(segment, Separators);
-            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.ST) && CurrentSegments.Any())
-            {
-                if (_currentGroupHeader != null)
-                    CurrentSegments.Add(_currentGroupHeader);
-
-                Buffer(segment + Separators.Segment);
-                ParseSegments();
-                return;
-            }
-
             switch (segmentContext.Tag)
             {
                 case SegmentId.ISA:
                     Item = ParseSegment<ISA>(segmentContext.Value, Separators);
+                    _currentGroupHeader = null;
                     break;
                 case SegmentId.TA1:
                     Item = ParseSegment<TA1>(segmentContext.Value, Separators);
+                    _currentGroupHeader = null;
                     break;
                 case SegmentId.GS:
                     Item = ParseSegment<GS>(segmentContext.Value, Separators);
@@ -126,19 +114,15 @@ namespace EdiFabric.Framework.Readers
                     break;
                 case SegmentId.GE:
                     Item = ParseSegment<GE>(segmentContext.Value, Separators);
+                    _currentGroupHeader = null;
                     break;
                 case SegmentId.IEA:
                     Item = ParseSegment<IEA>(segmentContext.Value, Separators);
+                    _currentGroupHeader = null;
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
                     break;
-            }
-
-            if (segmentContext.IsControl)
-            {
-                if (segmentContext.Tag != SegmentId.GS)
-                    _currentGroupHeader = null;
             }
         }
 

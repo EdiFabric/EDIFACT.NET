@@ -72,7 +72,7 @@ namespace EdiFabric.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new SegmentErrorContext(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, ValidationResult.DataElementValueWrong, inCompositeIndex, repetitionIndex,
+            result.Add(name, inSegmentIndex, ValidationResult.InvalidCodeValue, inCompositeIndex, repetitionIndex,
                 value);
             return result;
         }

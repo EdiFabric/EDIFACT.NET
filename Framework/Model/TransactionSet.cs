@@ -32,7 +32,7 @@ namespace EdiFabric.Framework.Model
             return result;
         }
         
-        public void Analyze(IEnumerable<SegmentContext> segments, Separators separators, MessageContext messageContext)
+        public void Analyze(IEnumerable<SegmentContext> segments, Separators separators)
         {
             var currSeg = Children.First() as Segment;
             foreach (var segment in segments)
@@ -46,7 +46,7 @@ namespace EdiFabric.Framework.Model
 
                     if (currSeg == null)
                         throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Unable to resolve HL.",
-                            segment.Value, messageContext.Name, messageContext.ControlNumber);
+                            segment.Value);
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
@@ -61,16 +61,15 @@ namespace EdiFabric.Framework.Model
                         errorCode = ErrorCode.UnrecognizedSegment;
                     }
 
-                    throw new ParsingException(errorCode, message, segment.Value, messageContext.Name,
-                        messageContext.ControlNumber);
+                    throw new ParsingException(errorCode, message, segment.Value);
                 }
 
                 if (currSeg.IsParsed)
                     currSeg = (Segment)currSeg.InsertRepetition();
 
-                currSeg.Parse(segment.Value, separators);
+                currSeg.Parse(segment.Value, separators);               
             }
-        }    
+        }
 
         public void RemoveTrailer(string trailerTag)
         {

@@ -114,19 +114,8 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        protected override void ProcessSegment(SegmentContext segmentContext)
         {
-            if (string.IsNullOrEmpty(segment) || Separators == null)
-                return;
-
-            var segmentContext = new SegmentContext(segment, Separators);
-            if ((segmentContext.IsControl || segmentContext.Tag == SegmentId.UNH) && CurrentSegments.Any())
-            {
-                Buffer(segment + Separators.Segment);
-                ParseSegments();
-                return;
-            }
-
             switch (segmentContext.Tag)
             {
                 case SegmentId.UNA:

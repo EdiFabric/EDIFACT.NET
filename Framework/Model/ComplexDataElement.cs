@@ -43,6 +43,11 @@ namespace EdiFabric.Framework.Model
                     continue;
                 }
 
+                if (index >= Children.Count)
+                    throw new ParsingException(ErrorCode.ComponentDataElementsTooMany,
+                        "Too many data elements in component.",
+                        value);
+
                 var currentElement = Children.ElementAt(index);
                 if (currentElement.IsParsed)
                 {

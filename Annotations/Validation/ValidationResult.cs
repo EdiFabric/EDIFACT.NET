@@ -27,6 +27,6 @@ namespace EdiFabric.Annotations.Validation
         CountExceededDataElement,
         DataElementTooShort,
         DataElementTooLong,
-        DataElementValueWrong,
+        InvalidCodeValue,
     }
 }

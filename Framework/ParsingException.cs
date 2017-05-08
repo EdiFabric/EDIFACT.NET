@@ -57,24 +57,37 @@ namespace EdiFabric.Framework
         /// <param name="errorCode">The syntax error code.</param>
         /// <param name="message">The error message.</param>
         /// <param name="failedSegment">The line that failed.</param>
-        /// <param name="messageName">The message name.</param>
-        /// <param name="messageControlNumber">The message control number.</param>
-        public ParsingException(ErrorCode errorCode, string message, string failedSegment, string messageName, string messageControlNumber)
+        public ParsingException(ErrorCode errorCode, string message, string failedSegment)
             : base(message)
         {
             if (string.IsNullOrEmpty(failedSegment))
                 throw new ArgumentNullException("failedSegment");
+           
+            ErrorCode = errorCode;
+            FailedSegment = failedSegment;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParsingException"/> class.
+        /// </summary>
+        /// <param name="errorCode">The syntax error code.</param>
+        /// <param name="message">The error message.</param>
+        /// <param name="failedSegment">The line that failed.</param>
+        /// <param name="messageName">The message name.</param>
+        /// <param name="messageControlNumber">The message control number.</param>
+        public ParsingException(ErrorCode errorCode, string message, string failedSegment, string messageName,
+            string messageControlNumber)
+            : this(errorCode, message, failedSegment)
+        {
             if (string.IsNullOrEmpty(messageName))
                 throw new ArgumentNullException("messageName");
             if (string.IsNullOrEmpty(messageControlNumber))
                 throw new ArgumentNullException("messageControlNumber");
 
-            ErrorCode = errorCode;
-            FailedSegment = failedSegment;
             MessageName = messageName;
             MessageControlNumber = messageControlNumber;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ParsingException"/> class.
         /// </summary>

@@ -93,8 +93,10 @@ namespace EdiFabric.Framework.Model
         private bool Control()
         {
             return Tag == SegmentId.UNB || Tag == SegmentId.UNG || Tag == SegmentId.UNE || Tag == SegmentId.UNZ ||
+                   Tag == SegmentId.UNH || 
                    Tag == SegmentId.UNA ||
-                   Tag == SegmentId.ISA || Tag == SegmentId.GS || Tag == SegmentId.GE || Tag == SegmentId.IEA;
+                   Tag == SegmentId.ISA || Tag == SegmentId.GS || Tag == SegmentId.GE || Tag == SegmentId.IEA ||
+                   Tag == SegmentId.ST;
         }
 
         private bool Jump()

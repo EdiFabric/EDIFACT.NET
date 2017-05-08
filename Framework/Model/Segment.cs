@@ -108,6 +108,10 @@ namespace EdiFabric.Framework.Model
                     continue;
                 }
 
+                if (index >= Children.Count)
+                    throw new ParsingException(ErrorCode.DataElementsTooMany, "Too many data elements in segment.",
+                           value);
+
                 var currentElement = Children.ElementAt(index);
 
                 var repetitions = currentElement.IsX12RepetitionSeparator()
