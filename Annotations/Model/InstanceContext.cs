@@ -13,6 +13,7 @@ namespace EdiFabric.Annotations.Model
         public object Instance { get; private set; }
         public PropertyInfo Property { get; private set; }
         public InstanceContext Parent { get; private set; }
+        private int _repetitionIndex;
 
         public string GetId()
         {
@@ -63,11 +64,12 @@ namespace EdiFabric.Annotations.Model
             Instance = instance;
         }
 
-        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent)
+        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int repetitionIndex)
             : this(instance)
         {
             Property = property;
             Parent = parent;
+            _repetitionIndex = repetitionIndex;
         }
 
         public List<SegmentErrorContext> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
@@ -79,7 +81,8 @@ namespace EdiFabric.Annotations.Model
             var validationAttributes = Property.GetCustomAttributes<ValidationAttribute>().OrderBy(a => a.Priority);
             foreach (var validationAttribute in validationAttributes)
             {
-                result.AddRange(validationAttribute.IsValid(this, segmentIndex, inSegmentIndex, inComponentIndex));
+                result.AddRange(validationAttribute.IsValid(this, segmentIndex, inSegmentIndex, inComponentIndex,
+                    _repetitionIndex));
             }
 
             return result;
@@ -92,10 +95,11 @@ namespace EdiFabric.Annotations.Model
                 var list = Instance as IList;
                 if (list != null)
                 {
+                    _repetitionIndex = 0;
                     foreach (var listValue in list)
                     {
                         yield return
-                            new InstanceContext(listValue, Property, this);
+                            new InstanceContext(listValue, Property, this, _repetitionIndex++);
                     }
                 }
                 else
@@ -106,7 +110,7 @@ namespace EdiFabric.Annotations.Model
                                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
                                 .Sort())
                     {
-                        yield return new InstanceContext(propertyInfo.GetValue(Instance), propertyInfo, this);
+                        yield return new InstanceContext(propertyInfo.GetValue(Instance), propertyInfo, this, 0);
                     }
                 }
             }

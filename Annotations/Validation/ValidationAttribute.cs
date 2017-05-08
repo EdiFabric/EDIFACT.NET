@@ -26,6 +26,6 @@ namespace EdiFabric.Annotations.Validation
         public int Priority { get; private set; }
 
         public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
-            int inCompositeIndex);
+            int inCompositeIndex, int repetitionIndex);
     }
 }

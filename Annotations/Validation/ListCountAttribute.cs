@@ -37,7 +37,7 @@ namespace EdiFabric.Annotations.Validation
         }
 
         public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
-            int inSegmentIndex, int inCompositeIndex)
+            int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();
 
@@ -58,25 +58,25 @@ namespace EdiFabric.Annotations.Validation
 
             if (instanceContext.IsPropertyOfType<GroupAttribute>())
             {
-                result.AddRange(ValidateGroup(list, instanceContext, segmentIndex));
+                result.Add(ValidateGroup(list, instanceContext, segmentIndex));
                 return result;
             }
 
             if (instanceContext.IsPropertyOfType<SegmentAttribute>())
             {
-                result.AddRange(ValidateSegment(list, instanceContext, segmentIndex));
+                result.Add(ValidateSegment(list, instanceContext, segmentIndex));
                 return result;
             }
 
             if (instanceContext.IsPropertyOfType<CompositeAttribute>())
             {
-                result.AddRange(ValidateComposite(list, instanceContext, segmentIndex, inSegmentIndex));
+                result.Add(ValidateComposite(list, instanceContext, segmentIndex, inSegmentIndex));
                 return result;
             }
 
             if (instanceContext.Property.GetGenericType() == typeof (string))
             {
-                result.AddRange(ValidateDataElement(list, instanceContext, segmentIndex, inSegmentIndex,
+                result.Add(ValidateDataElement(list, instanceContext, segmentIndex, inSegmentIndex,
                     inCompositeIndex));
                 return result;
             }
@@ -86,53 +86,45 @@ namespace EdiFabric.Annotations.Validation
                 instanceContext.Property.GetGenericType().Name));
         }
 
-        private List<SegmentErrorContext> ValidateGroup(IList list, InstanceContext instanceContext, int segmentIndex)
+        private SegmentErrorContext ValidateGroup(IList list, InstanceContext instanceContext, int segmentIndex)
         {
-            var result = new List<SegmentErrorContext>();
-
             var errorCode = list.Count > MaxCount
                     ? ValidationResult.CountExceededGroup
                     : ValidationResult.RequiredMissingGroup;
 
-            result.Add(new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode));
-            
-            return result;
+            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode);
         }
 
-        private List<SegmentErrorContext> ValidateSegment(IList list, InstanceContext instanceContext, int segmentIndex)
+        private SegmentErrorContext ValidateSegment(IList list, InstanceContext instanceContext, int segmentIndex)
         {
-            var result = new List<SegmentErrorContext>();
-
             var errorCode = list.Count > MaxCount
                     ? ValidationResult.CountExceededSegment
                     : ValidationResult.RequiredMissingSegment;
 
-            result.Add(new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode));
-
-            return result;
+            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode);
         }
 
-        private List<SegmentErrorContext> ValidateComposite(IList list, InstanceContext instanceContext,
+        private SegmentErrorContext ValidateComposite(IList list, InstanceContext instanceContext,
             int segmentIndex, int inSegmentIndex)
         {
             if (instanceContext.Parent == null || !instanceContext.Parent.IsPropertyOfType<SegmentAttribute>())
                 throw new Exception(string.Format("Parent of composite {0} must be a segment.",
                     instanceContext.Property.Name));
 
-            var result = new List<SegmentErrorContext>();
-
             var errorCode = list.Count > MaxCount
                 ? ValidationResult.CountExceededComposite
                 : ValidationResult.RequiredMissingComposite;
 
-            var error = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
-            error.Add(instanceContext.GetId(), inSegmentIndex, errorCode, 0, MaxCount + 1, null);
-            result.Add(error);
+            var repIndex = list.Count > MaxCount
+                ? MaxCount + 1
+                : MinCount - list.Count + 1;
 
+            var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
+            result.Add(instanceContext.GetId(), inSegmentIndex, errorCode, 0, repIndex, null);
             return result;
         }
 
-        private List<SegmentErrorContext> ValidateDataElement(IList list, InstanceContext instanceContext,
+        private SegmentErrorContext ValidateDataElement(IList list, InstanceContext instanceContext,
             int segmentIndex, int inSegmentIndex, int inCompositeIndex)
         {
             if (instanceContext.Parent == null)
@@ -140,11 +132,13 @@ namespace EdiFabric.Annotations.Validation
                     string.Format("Parent of data element {0} must be either a segment or a composite.",
                         instanceContext.Property.Name));
 
-            var result = new List<SegmentErrorContext>();
-
             var errorCode = list.Count > MaxCount
                 ? ValidationResult.CountExceededDataElement
                 : ValidationResult.RequiredMissingDataElement;
+
+            var repIndex = list.Count > MaxCount
+                ? MaxCount + 1
+                : MinCount - list.Count + 1;
 
             var segmentName = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
                 ? instanceContext.Parent.GetId()
@@ -153,10 +147,8 @@ namespace EdiFabric.Annotations.Validation
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-            var error = new SegmentErrorContext(segmentName, segmentIndex);
-            error.Add(name, inSegmentIndex, errorCode, inCompositeIndex, MaxCount + 1, null);
-            result.Add(error);
-
+            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            result.Add(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, null);
             return result;
         }
     }

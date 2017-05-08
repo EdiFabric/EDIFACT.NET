@@ -79,6 +79,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_ListCountMin.txt" />
     <EmbeddedResource Include="Edi\X12_810_00204.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -91,10 +92,19 @@
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00B.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_ListCount.txt" />
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_ListCountMax.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_RequiredMissing.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_InvalidAttributes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_StringLen.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_NoAttributes.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

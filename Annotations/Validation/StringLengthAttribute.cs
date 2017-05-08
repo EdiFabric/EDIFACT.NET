@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using EdiFabric.Annotations.Edi;
 using EdiFabric.Annotations.Model;
 
 namespace EdiFabric.Annotations.Validation
@@ -27,21 +29,50 @@ namespace EdiFabric.Annotations.Validation
             MaxLen = maxLen;
         }
 
-        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex, int inCompositeIndex)
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+            int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
-            //var value = intance as string;
-            //if (value == null)
-            //    throw new Exception(string.Format("{0} can only be applied to data elements.", GetType().Name));
-
-            //if (value.Length > MaxLen)
-            //    return ValidationResult.DataElementTooLong;
-
-            //if (value.Length < MinLen)
-            //    return ValidationResult.DataElementTooShort;
-
-            //return ValidationResult.Valid;
-
             var result = new List<SegmentErrorContext>();
+
+            if (instanceContext.Instance == null)
+                return result;
+
+            var value = instanceContext.Instance as string;
+            if (string.IsNullOrEmpty(value))
+                return result;
+
+            if (instanceContext.Property.GetGenericType() != typeof(string))
+                return result;
+
+            if (value.Length >= MinLen && value.Length <= MaxLen)
+                return result;
+            
+                result.Add(ValidateDataElement(value, instanceContext, segmentIndex, inSegmentIndex,
+                    inCompositeIndex, repetitionIndex));
+                return result;
+        }
+
+        private SegmentErrorContext ValidateDataElement(string value, InstanceContext instanceContext,
+            int segmentIndex, int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
+        {
+            if (instanceContext.Parent == null)
+                throw new Exception(
+                    string.Format("Parent of data element {0} must be either a segment or a composite.",
+                        instanceContext.Property.Name));
+
+            var errorCode = value.Length < MinLen
+                ? ValidationResult.DataElementTooShort
+                : ValidationResult.DataElementTooLong;
+
+            var segmentName = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
+                ? instanceContext.Parent.GetId()
+                : instanceContext.Parent.GetDeclaringTypeId();
+
+            var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
+            var name = dataElementAttr == null ? "" : dataElementAttr.Code;
+
+            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            result.Add(name, inSegmentIndex, errorCode, inCompositeIndex, repetitionIndex, value);
             return result;
         }
     }

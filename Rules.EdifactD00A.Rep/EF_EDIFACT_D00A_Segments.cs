@@ -391,7 +391,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
     {
         
         [Required]
-        [ListCount(3)]
+        [ListCount(2, 3)]
         [Pos(1)]
         public List<C076> COMMUNICATIONCONTACT_01 { get; set; }
     }
@@ -813,8 +813,9 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
         public C002 DOCUMENTMESSAGENAME_01 { get; set; }
         [Pos(2)]
         public C106 DOCUMENTMESSAGEIDENTIFICATION_02 { get; set; }
-        [ListCount(1)]
-        [DataElement("1225", typeof(EDIFACT_ID_1225))]
+        [ListCount(2, 3)]
+        [StringLength(2, 3)]
+        [DataElement("1225", typeof(EDIFACT_AN))]
         [Pos(3)]
         public List<string> Messagefunctioncode_03 { get; set; }
         [DataElement("4343", typeof(EDIFACT_ID_4343))]
@@ -828,7 +829,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
     {
         
         [Required]
-        [StringLength(1, 14)]
+        [StringLength(2, 14)]
         [DataElement("0062", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string MessageReferenceNumber_01 { get; set; }

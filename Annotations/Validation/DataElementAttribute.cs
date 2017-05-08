@@ -28,7 +28,7 @@ namespace EdiFabric.Annotations.Validation
         }
 
         public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
-            int inSegmentIndex, int inCompositeIndex)
+            int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();
             return result;
