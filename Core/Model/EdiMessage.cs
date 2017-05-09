@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
@@ -42,11 +41,11 @@ namespace EdiFabric.Core.Model
                 throw new Exception(string.Format("[MessageAttribute] was not found in {0} .", type.FullName));
 
             Format = msgAttr.Format;
-            if (Format == null) throw new NoNullAllowedException("Format");
+            if (Format == null) throw new Exception("Format is null");
             Version = msgAttr.Version;
-            if (Version == null) throw new NoNullAllowedException("Version");
+            if (Version == null) throw new Exception("Version is null");
             Name = msgAttr.Id;
-            if (Name == null) throw new NoNullAllowedException("Name");
+            if (Name == null) throw new Exception("Name is null");
         }
 
         public string GetControlNumber()
