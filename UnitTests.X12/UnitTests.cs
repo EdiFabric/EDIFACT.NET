@@ -31,7 +31,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -62,7 +62,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -94,7 +94,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -116,7 +116,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, "");
+            var actual = X12Helper.Generate(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -145,7 +145,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, "\n");
+            var actual = X12Helper.Generate(ediItems, separators, "\n");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -194,7 +194,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -220,7 +220,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
@@ -246,7 +246,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -267,7 +267,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -297,14 +297,14 @@ namespace EdiFabric.UnitTests.X12
                 {
                     if (ediReader.Item is ISA && ediItems.Any())
                     {
-                        actual = actual + Helper.Generate(ediItems, null, Environment.NewLine);
+                        actual = actual + X12Helper.Generate(ediItems, null, Environment.NewLine);
                         ediItems.Clear();
                     }
 
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.Generate(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + X12Helper.Generate(ediItems, ediReader.Separators, Environment.NewLine);
             }
 
             // ASSERT
@@ -568,7 +568,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -598,7 +598,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, separators, Environment.NewLine);
 
 
             // ASSERT
@@ -675,7 +675,7 @@ namespace EdiFabric.UnitTests.X12
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -703,7 +703,7 @@ namespace EdiFabric.UnitTests.X12
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -743,9 +743,9 @@ namespace EdiFabric.UnitTests.X12
             {
                 var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine, true);
 
-                writer.WriteInterchange(Helper.CreateIsa());
-                writer.WriteGroup(Helper.CreateGs());
-                writer.WriteMessage(Helper.CreateInvoice());
+                writer.WriteInterchange(X12Helper.CreateIsa());
+                writer.WriteGroup(X12Helper.CreateGs());
+                writer.WriteMessage(X12Helper.CreateInvoice());
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);
@@ -768,9 +768,9 @@ namespace EdiFabric.UnitTests.X12
             {
                 var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine);
 
-                writer.WriteInterchange(Helper.CreateIsa());
-                writer.WriteGroup(Helper.CreateGs());
-                writer.WriteMessage(Helper.CreateInvoice());
+                writer.WriteInterchange(X12Helper.CreateIsa());
+                writer.WriteGroup(X12Helper.CreateGs());
+                writer.WriteMessage(X12Helper.CreateInvoice());
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);

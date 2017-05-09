@@ -3,12 +3,13 @@ using System.IO;
 using System.Text;
 using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.X12;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.X12_002040;
 
-namespace EdiFabric.UnitTests.X12
+namespace EdiFabric.UnitTests
 {
-    public class Helper
+    public class X12Helper
     {
         public static string Generate(List<object> items, Separators separators, string postFix,
             Encoding encoding = null)
@@ -41,7 +42,7 @@ namespace EdiFabric.UnitTests.X12
                     var ta1 = item as TA1;
                     if (ta1 != null)
                     {
-                        writer.WriteSegment(ta1.ToString(separators));
+                        writer.WriteSegment(ToString(ta1, separators));
                     }
 
                     var isa = item as ISA;
@@ -142,6 +143,29 @@ namespace EdiFabric.UnitTests.X12
             result.NTE.Add(nte2);
 
             return result;
+        }
+
+        public static string ToString(TA1 ta1, Separators separators)
+        {
+            var result = "TA1" + separators.DataElement + ta1.InterchangeControlNumber_1;
+            if (!string.IsNullOrEmpty(ta1.InterchangeDate_2))
+            {
+                result = result + separators.DataElement + ta1.InterchangeDate_2;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeTime_3))
+            {
+                result = result + separators.DataElement + ta1.InterchangeTime_3;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeAcknowledgmentCode_4))
+            {
+                result = result + separators.DataElement + ta1.InterchangeAcknowledgmentCode_4;
+            }
+            if (!string.IsNullOrEmpty(ta1.InterchangeNoteCode_5))
+            {
+                result = result + separators.DataElement + ta1.InterchangeNoteCode_5;
+            }
+
+            return result + separators.Segment;
         }
     }
 }

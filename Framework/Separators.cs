@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EdiFabric.Core.Model
+namespace EdiFabric.Framework
 {
     /// <summary>
     /// EDI separators.

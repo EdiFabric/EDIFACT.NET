@@ -3,12 +3,13 @@ using System.IO;
 using System.Text;
 using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.Edifact;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;
 
-namespace EdiFabric.UnitTests.Edifact
+namespace EdiFabric.UnitTests
 {
-    public class Helper
+    public class EdifactHelper
     {
         public static string Generate(List<object> items, Separators separators, string postFix,
             Encoding encoding = null, string una = null)

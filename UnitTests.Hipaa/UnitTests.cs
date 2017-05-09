@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.X12;
+using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,7 +27,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -49,7 +50,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -72,7 +73,7 @@ namespace EdiFabric.UnitTests.Hipaa
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -97,7 +98,7 @@ namespace EdiFabric.UnitTests.Hipaa
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.Generate(ediItems, separators, "");
+            var actual = X12Helper.Generate(ediItems, separators, "");
 
             // ASSERT
             Assert.IsNotNull(ediItems);

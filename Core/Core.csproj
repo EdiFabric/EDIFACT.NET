@@ -44,9 +44,9 @@
     <Compile Include="Model\ErrorCode.cs" />
     <Compile Include="Model\MessageContext.cs" />
     <Compile Include="Model\ParsingException.cs" />
+    <Compile Include="Model\Validation\ErrorContextMessage.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Model\Validation\InstanceContext.cs" />
-    <Compile Include="Model\Separators.cs" />
     <Compile Include="Model\Edifact\Unb.cs" />
     <Compile Include="Model\Edifact\Une.cs" />
     <Compile Include="Model\Edifact\Ung.cs" />
