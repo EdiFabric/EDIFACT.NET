@@ -57,9 +57,9 @@
     <Compile Include="UnitTestsValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Annotations\Annotations.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
-      <Name>Annotations</Name>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\Framework.csproj">
       <Project>{d39915c6-da36-406f-828e-4c8c2e299324}</Project>

@@ -1,11 +1,13 @@
+using EdiFabric.Core.Annotations;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
+
 namespace EdiFabric.Rules.EDIFACT_D00A.Rep
 {
     using System;
     using System.Collections.Generic;
-    using EdiFabric.Annotations.Edi;
-    using EdiFabric.Annotations.Validation;
-    
-    
+
+
     [Serializable()]
     [Segment("UNT")]
     public class UNT

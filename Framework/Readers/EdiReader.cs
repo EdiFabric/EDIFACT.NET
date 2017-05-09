@@ -15,8 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Annotations.Edi;
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers

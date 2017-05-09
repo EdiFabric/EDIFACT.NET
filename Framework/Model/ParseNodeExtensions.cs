@@ -13,8 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Annotations.Edi;
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core;
+using EdiFabric.Core.Annotations.Edi;
 
 namespace EdiFabric.Framework.Model
 {

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using EdiFabric.Annotations.Model;
-using EdiFabric.Framework;
-using EdiFabric.Framework.Segments.Edifact;
+using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.Edifact;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;
 

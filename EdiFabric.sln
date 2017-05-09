@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A6391E1B-988A-48B7-8146-E899C391C3DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annotations", "Annotations\Annotations.csproj", "{6CE3310F-1DC2-4074-8559-27C5ADB46FE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{6CE3310F-1DC2-4074-8559-27C5ADB46FE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules.EdifactD00A.Rep", "Rules.EdifactD00A.Rep\Rules.EdifactD00A.Rep.csproj", "{A1E921DC-B93B-41A7-81B4-4EA15193AE10}"
 EndProject

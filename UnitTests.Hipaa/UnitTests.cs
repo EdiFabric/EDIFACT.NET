@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Framework;
+using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.X12;
 using EdiFabric.Framework.Readers;
-using EdiFabric.Framework.Segments.X12;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.UnitTests.Hipaa

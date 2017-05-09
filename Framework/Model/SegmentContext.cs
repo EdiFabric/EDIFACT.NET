@@ -11,6 +11,7 @@
 
 using System;
 using System.Linq;
+using EdiFabric.Core.Model;
 
 namespace EdiFabric.Framework.Model
 {

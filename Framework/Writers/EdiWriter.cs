@@ -12,7 +12,7 @@
 using System;
 using System.IO;
 using System.Text;
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core.Model;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Writers

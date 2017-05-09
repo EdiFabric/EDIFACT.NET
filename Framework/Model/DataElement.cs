@@ -10,7 +10,8 @@
 //---------------------------------------------------------------------
 
 using System.Reflection;
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core;
+using EdiFabric.Core.Model;
 
 namespace EdiFabric.Framework.Model
 {

@@ -79,19 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ErrorCode.cs" />
     <Compile Include="StringExtensions.cs" />
-    <Compile Include="Segments\Edifact\Ung.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Segments\Edifact\Unz.cs" />
-    <Compile Include="Segments\Edifact\Une.cs" />
-    <Compile Include="Segments\X12\Gs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Segments\X12\Ta1.cs" />
-    <Compile Include="Segments\X12\Ge.cs" />
-    <Compile Include="Segments\X12\Iea.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
     <Compile Include="Writers\EdifactWriter.cs" />
     <Compile Include="Writers\X12Writer.cs" />
@@ -102,16 +90,11 @@
     <Compile Include="Model\ParseNode.cs" />
     <Compile Include="Model\Segment.cs" />
     <Compile Include="Model\TransactionSet.cs" />
-    <Compile Include="ParsingException.cs" />
-    <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Model\ParseNodeExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Model\SegmentContext.cs" />
-    <Compile Include="Separators.cs" />
-    <Compile Include="Segments\Edifact\Unb.cs" />
-    <Compile Include="Segments\X12\Isa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +120,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Annotations\Annotations.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
-      <Name>Annotations</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

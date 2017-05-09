@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdiFabric.Core.Model;
 
 namespace EdiFabric.Framework.Model
 {

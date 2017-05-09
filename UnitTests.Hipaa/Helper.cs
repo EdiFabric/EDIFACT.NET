@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using EdiFabric.Annotations.Model;
-using EdiFabric.Framework;
-using EdiFabric.Framework.Segments.X12;
+using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.X12;
 using EdiFabric.Framework.Writers;
 
 namespace EdiFabric.UnitTests.Hipaa

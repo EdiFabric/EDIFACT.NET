@@ -11,7 +11,8 @@
 
 using System.IO;
 using System.Text;
-using EdiFabric.Framework.Segments.Edifact;
+using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.Edifact;
 
 namespace EdiFabric.Framework.Writers
 {

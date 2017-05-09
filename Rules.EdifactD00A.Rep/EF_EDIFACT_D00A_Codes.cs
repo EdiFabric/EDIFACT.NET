@@ -1,11 +1,12 @@
+using EdiFabric.Core.Annotations;
+using EdiFabric.Core.Annotations.Edi;
+
 namespace EdiFabric.Rules.EDIFACT_D00A.Rep
 {
     using System;
     using System.Collections.Generic;
-    using EdiFabric.Annotations.Edi;
-    using EdiFabric.Annotations.Validation;
-    
-    
+
+
     [Serializable()]
     public class EDIFACT_N
     {

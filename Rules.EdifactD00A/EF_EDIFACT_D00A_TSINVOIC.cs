@@ -1,13 +1,14 @@
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core.Annotations;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
+using EdiFabric.Core.Model;
 
 namespace EdiFabric.Rules.EDIFACT_D00A
 {
     using System;
     using System.Collections.Generic;
-    using EdiFabric.Annotations.Edi;
-    using EdiFabric.Annotations.Validation;
-    
-    
+
+
     [Serializable()]
     [Message("EDIFACT", "D00A", "INVOIC")]
     public class TSINVOIC : EdiMessage

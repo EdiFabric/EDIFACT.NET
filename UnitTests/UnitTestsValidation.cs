@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Annotations.Validation;
+using EdiFabric.Core.Model.Validation;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.EDIFACT_D00A.Rep;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,7 +29,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICAll>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -101,7 +101,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -161,7 +161,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -221,7 +221,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICInvalidAttributes>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
             
             // ASSERT
@@ -244,7 +244,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -316,7 +316,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICNoAttributes>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT

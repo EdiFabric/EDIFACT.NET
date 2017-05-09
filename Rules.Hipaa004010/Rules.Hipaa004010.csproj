@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Annotations\Annotations.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
-      <Name>Annotations</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

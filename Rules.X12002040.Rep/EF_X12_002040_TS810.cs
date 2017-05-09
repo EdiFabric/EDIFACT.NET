@@ -1,13 +1,14 @@
-using EdiFabric.Annotations.Model;
+using EdiFabric.Core.Annotations;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
+using EdiFabric.Core.Model;
 
 namespace EdiFabric.Rules.X12_002040.Rep
 {
     using System;
     using System.Collections.Generic;
-    using EdiFabric.Annotations.Edi;
-    using EdiFabric.Annotations.Validation;
-    
-    
+
+
     [Serializable()]
     [Message("X12", "002040", "810")]
     public class TS810 : EdiMessage

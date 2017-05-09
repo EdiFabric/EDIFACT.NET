@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Annotations.Validation;
-using EdiFabric.Framework;
+using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.Edifact;
+using EdiFabric.Core.Model.Validation;
 using EdiFabric.Framework.Readers;
-using EdiFabric.Framework.Segments.Edifact;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -817,7 +817,7 @@ namespace EdiFabric.UnitTests.Edifact
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
+            List<ErrorContextSegment> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
