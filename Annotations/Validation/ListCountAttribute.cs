@@ -19,7 +19,7 @@ using EdiFabric.Annotations.Model;
 namespace EdiFabric.Annotations.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class ListCountAttribute : ValidationAttribute
+    public sealed class ListCountAttribute : ValidationAttribute
     {
         public int MinCount { get; set; }
         public int MaxCount { get; set; }

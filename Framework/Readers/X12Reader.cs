@@ -90,36 +90,53 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(SegmentContext segmentContext)
+        protected override void ProcessSegment(string segment)
         {
-            switch (segmentContext.Tag)
+            var segmentContext = new SegmentContext(segment, Separators);
+            switch (segmentContext.Name)
             {
-                case SegmentId.ISA:
+                case "ISA":
+                case "GS":
+                case "ST":
+                case "GE":
+                case "IEA":
+                    if (CurrentSegments.Any())
+                    {
+                        Buffer(segment + Separators.Segment);
+                        ParseSegments();
+                        return;
+                    }
+                    break;
+            }
+
+            switch (segmentContext.Name)
+            {
+                case "ISA":
                     var isa = ParseSegment<ISA>(segmentContext.Value, Separators);
                     _currentIsa = isa;
                     Item = isa;
                     _currentGroupHeader = null;
                     break;
-                case SegmentId.TA1:
+                case "TA1":
                     Item = ParseSegment<TA1>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     break;
-                case SegmentId.GS:
+                case "GS":
                     Item = ParseSegment<GS>(segmentContext.Value, Separators);
                     _currentGroupHeader = segmentContext;
                     break;
-                case SegmentId.ST:
+                case "ST":
                     CurrentSegments.Add(segmentContext);                   
                     break;
-                case SegmentId.SE:
+                case "SE":
                     CurrentSegments.Add(segmentContext);
                     ParseSegments();
                     break;
-                case SegmentId.GE:
+                case "GE":
                     Item = ParseSegment<GE>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     break;
-                case SegmentId.IEA:
+                case "IEA":
                     Item = ParseSegment<IEA>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     _currentIsa = null;
@@ -154,7 +171,7 @@ namespace EdiFabric.Framework.Readers
                     "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
 
-            var st = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.ST);
+            var st = CurrentSegments.SingleOrDefault(es => es.Name == "ST");
             if (st == null)
                 throw new ParsingException(ErrorCode.InvalidInterchangeContent, "ST was not found.");
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);

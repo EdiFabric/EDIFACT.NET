@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class PosAttribute : Attribute
+    public sealed class PosAttribute : Attribute
     {
         public int Pos { get; set; }
         public PosAttribute(int pos)

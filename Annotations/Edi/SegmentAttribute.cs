@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class SegmentAttribute : EdiAttribute
+    public sealed class SegmentAttribute : EdiAttribute
     {
         public Type First { get; set; }
         public Type Second { get; set; }

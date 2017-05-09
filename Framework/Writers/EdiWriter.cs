@@ -32,7 +32,7 @@ namespace EdiFabric.Framework.Writers
         private int _messageCounter;
         private int _groupCounter;        
         private Separators _separators;
-        private bool _preserveWhitespace;
+        private readonly bool _preserveWhitespace;
 
         protected string Format;
         protected string InterchangeTrailer;

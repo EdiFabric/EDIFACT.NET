@@ -17,7 +17,7 @@ namespace EdiFabric.Annotations.Validation
     /// <summary>
     /// Information for the data, error codes and the context of the data elements that failed.
     /// </summary>
-    public class SegmentErrorContext
+    public sealed class SegmentErrorContext
     {
         /// <summary>
         /// The segment ID.

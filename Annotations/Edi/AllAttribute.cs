@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class AllAttribute : EdiAttribute
+    public sealed class AllAttribute : EdiAttribute
     {
         public AllAttribute()
             : base(null)

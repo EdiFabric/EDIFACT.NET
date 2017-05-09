@@ -51,16 +51,16 @@ namespace EdiFabric.Framework.Model
             {
                 var eAttr = (EdiCodesAttribute)sAttr.First.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                 if (eAttr == null)
-                    throw new Exception(string.Format("Type {0} is not annotated with [EdiCodesAttribute].",
-                        sAttr.First.Name));
+                    throw new Exception(string.Format("Type {0} is not annotated with {1}.",
+                        sAttr.First.Name, typeof(EdiCodesAttribute).Name));
                 _firstChildValues = eAttr.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (sAttr.Second != null)
                 {
                     var eAttrS = (EdiCodesAttribute)sAttr.Second.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                     if (eAttrS == null)
-                        throw new Exception(string.Format("Type {0} is not annotated with [EdiCodesAttribute].",
-                            sAttr.Second.Name));
+                        throw new Exception(string.Format("Type {0} is not annotated with {1}.",
+                            sAttr.Second.Name, typeof(EdiCodesAttribute).Name));
                     _secondChildValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
             }

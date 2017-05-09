@@ -13,7 +13,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class EdiCodesAttribute : Attribute
+    public sealed class EdiCodesAttribute : Attribute
     {
         public string Codes { get; set; }
         public EdiCodesAttribute(string codes)

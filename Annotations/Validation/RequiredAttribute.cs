@@ -19,7 +19,7 @@ using EdiFabric.Annotations.Model;
 namespace EdiFabric.Annotations.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class RequiredAttribute : ValidationAttribute
+    public sealed class RequiredAttribute : ValidationAttribute
     {
         public RequiredAttribute()
             : base(1)

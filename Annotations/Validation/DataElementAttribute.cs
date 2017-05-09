@@ -18,7 +18,7 @@ using EdiFabric.Annotations.Model;
 namespace EdiFabric.Annotations.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class DataElementAttribute : ValidationAttribute
+    public sealed class DataElementAttribute : ValidationAttribute
     {
         public string Code { get; set; }
         public Type DataType { get; set; }

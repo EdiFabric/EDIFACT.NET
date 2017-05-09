@@ -18,7 +18,7 @@ using EdiFabric.Annotations.Model;
 namespace EdiFabric.Annotations.Validation
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class StringLengthAttribute : ValidationAttribute
+    public sealed class StringLengthAttribute : ValidationAttribute
     {
         public int MinLen { get; set; }
         public int MaxLen { get; set; }

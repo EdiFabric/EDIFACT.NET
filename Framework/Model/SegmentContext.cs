@@ -17,7 +17,7 @@ namespace EdiFabric.Framework.Model
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the data.
     /// </summary>
-    public class SegmentContext
+    public sealed class SegmentContext
     {
         /// <summary>
         /// The segment ID.
@@ -39,14 +39,6 @@ namespace EdiFabric.Framework.Model
         /// If it is HL that is not a direct child of its parent.
         /// </summary>
         public bool IsJump{ get; private set; }
-        /// <summary>
-        /// If it is a control segment.
-        /// </summary>
-        public bool IsControl{ get; private set; }
-        /// <summary>
-        /// The segment name as tag.
-        /// </summary>
-        public SegmentId Tag { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentContext"/> class.
@@ -58,16 +50,11 @@ namespace EdiFabric.Framework.Model
             if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
             if (separators == null) throw new ArgumentNullException("separators");
 
-            var dataElements = ediSegment.Split(new [] {separators.DataElement}, StringSplitOptions.None);
-            // Support for blank/situational segments
-            if (dataElements[0] == ediSegment)
-                dataElements[0] = dataElements[0].TrimEnd(separators.Segment);
-
-            Name = string.Concat(dataElements[0].Take(3));
+            var dataElements = ediSegment.Split(new[] {separators.DataElement}, StringSplitOptions.None);
+            Name = ediSegment.StartsWith("UNA", StringComparison.Ordinal)
+                ? "UNA"
+                : string.Concat(dataElements[0].TakeWhile(d => d != separators.Segment));
             Value = ediSegment;
-
-            // UNA segments don't have values
-            if (ediSegment.StartsWith(SegmentId.UNA.ToString(), StringComparison.Ordinal)) Name = SegmentId.UNA.ToString();
 
             if (dataElements.Length > 1)
             {
@@ -86,17 +73,6 @@ namespace EdiFabric.Framework.Model
             }
 
             IsJump = Jump();
-            Tag = ToSegmentTag(separators);
-            IsControl = Control();
-        }
-
-        private bool Control()
-        {
-            return Tag == SegmentId.UNB || Tag == SegmentId.UNG || Tag == SegmentId.UNE || Tag == SegmentId.UNZ ||
-                   Tag == SegmentId.UNH || 
-                   Tag == SegmentId.UNA ||
-                   Tag == SegmentId.ISA || Tag == SegmentId.GS || Tag == SegmentId.GE || Tag == SegmentId.IEA ||
-                   Tag == SegmentId.ST;
         }
 
         private bool Jump()
@@ -106,19 +82,6 @@ namespace EdiFabric.Framework.Model
             return Name == "HL" && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
                      int.TryParse(SecondValue ?? "0", out p) &&
                      (fv - p > 1);
-        }
-
-        private SegmentId ToSegmentTag(Separators separators)
-        {
-            if (String.IsNullOrEmpty(Value) || String.IsNullOrWhiteSpace(Value) || Value.Length < 3)
-                return SegmentId.Regular;
-
-            if (Value.StartsWith(SegmentId.UNA.ToString(), StringComparison.Ordinal)) return SegmentId.UNA;
-
-            var segmentTag = Value.Split(new[] { separators.DataElement }, StringSplitOptions.None).FirstOrDefault();
-
-            SegmentId tag;
-            return Enum.TryParse(segmentTag, out tag) ? tag : SegmentId.Regular;
         }
     }
 }

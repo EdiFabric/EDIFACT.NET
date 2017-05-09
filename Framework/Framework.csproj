@@ -106,7 +106,6 @@
     <Compile Include="MessageContext.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
-    <Compile Include="Model\SegmentId.cs" />
     <Compile Include="Model\ParseNodeExtensions.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Model\SegmentContext.cs" />

@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class MessageAttribute : EdiAttribute
+    public sealed class MessageAttribute : EdiAttribute
     {
         public string Format { get; set; }
         public string Version { get; set; }

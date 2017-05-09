@@ -53,6 +53,8 @@ namespace EdiFabric.Framework
 
         public static IEnumerable<string> SplitWithEscape(this string input, char escapeCharacter, char separator)
         {
+            if (input == null) throw new ArgumentNullException("input");
+
             var startOfSegment = 0;
             var index = 0;
             while (index < input.Length)
@@ -88,6 +90,8 @@ namespace EdiFabric.Framework
         public static string TrimEndWithEscape(this List<string> input, char? escapeCharacter, char separator,
             bool preserveWhitespace)
         {
+            if (input == null) throw new ArgumentNullException("input");
+
             input.Reverse();
             var temp = preserveWhitespace
                 ? input.SkipWhile(i => i == null || i == separator.ToString()).ToList()

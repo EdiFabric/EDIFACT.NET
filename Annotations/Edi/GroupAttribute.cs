@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class GroupAttribute : EdiAttribute
+    public sealed class GroupAttribute : EdiAttribute
     {
         public GroupAttribute(string id)
             : base(id)

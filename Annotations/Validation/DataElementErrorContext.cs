@@ -9,15 +9,12 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
-
 namespace EdiFabric.Annotations.Validation
 {
     /// <summary>
     /// Information for the position, data and error code of the data element that failed. 
     /// </summary>
-    [Serializable]
-    public class DataElementErrorContext
+    public sealed class DataElementErrorContext
     {
         /// <summary>
         /// The reference number to locate the data element.

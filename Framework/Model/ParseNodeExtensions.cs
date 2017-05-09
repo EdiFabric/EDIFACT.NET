@@ -111,7 +111,7 @@ namespace EdiFabric.Framework.Model
 
             var attr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();
             if(attr == null)
-                throw new Exception(string.Format("Property {0} is not annotated with [EdiAttribute].", propertyInfo.Name));
+                throw new Exception(string.Format("Property {0} is not annotated with {1}.", propertyInfo.Name, typeof(EdiAttribute).Name));
             
             if (attr is SegmentAttribute)
                 return new Segment(propertyInfo, attr as SegmentAttribute, instance);
@@ -125,7 +125,7 @@ namespace EdiFabric.Framework.Model
             if (attr is AllAttribute)
                 return new AllLoop(propertyInfo, instance);
 
-            throw new Exception(string.Format("Property {0} is annotated with unknown [EdiAttribute].", propertyInfo.Name));
+            throw new Exception(string.Format("Attribute {0} is not supported", attr.GetType().Name));
         }        
 
         public static bool IsRepetition(this ParseNode parseNode)

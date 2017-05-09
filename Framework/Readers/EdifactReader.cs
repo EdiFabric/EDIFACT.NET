@@ -115,31 +115,49 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(SegmentContext segmentContext)
+        protected override void ProcessSegment(string segment)
         {
-            switch (segmentContext.Tag)
+            var segmentContext = new SegmentContext(segment, Separators);
+            switch (segmentContext.Name)
             {
-                case SegmentId.UNA:
+                case "UNA":
+                case "UNB":
+                case "UNG":
+                case "UNH":
+                case "UNE":
+                case "UNZ":
+                    if (CurrentSegments.Any())
+                    {
+                        Buffer(segment + Separators.Segment);
+                        ParseSegments();
+                        return;
+                    }
                     break;
-                case SegmentId.UNB:
+            }
+
+            switch (segmentContext.Name)
+            {
+                case "UNA":
+                    break;
+                case "UNB":
                     var unb = ParseSegment<UNB>(segmentContext.Value, Separators);
                     _currentUnb = unb;
                     Item = unb;
                     break;
-                case SegmentId.UNG:
+                case "UNG":
                     Item = ParseSegment<UNG>(segmentContext.Value, Separators);
                     break;
-                case SegmentId.UNH:
+                case "UNH":
                     CurrentSegments.Add(segmentContext);
                     break;
-                case SegmentId.UNT:
+                case "UNT":
                     CurrentSegments.Add(segmentContext);
                     ParseSegments();
                     break;
-                case SegmentId.UNE:
+                case "UNE":
                     Item = ParseSegment<UNE>(segmentContext.Value, Separators);
                     break;
-                case SegmentId.UNZ:
+                case "UNZ":
                     Item = ParseSegment<UNZ>(segmentContext.Value, Separators);
                     _currentUnb = null;
                     break;
@@ -154,7 +172,7 @@ namespace EdiFabric.Framework.Readers
             if (_currentUnb == null)
                 throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Interchange header is missing.");
 
-            var unh = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.UNH);
+            var unh = CurrentSegments.SingleOrDefault(es => es.Name == "UNH");
             if (unh == null)
                 throw new ParsingException(ErrorCode.InvalidInterchangeContent, "UNH was not found.");
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);

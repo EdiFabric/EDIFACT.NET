@@ -114,15 +114,7 @@ namespace EdiFabric.Framework.Readers
                     if(string.IsNullOrEmpty(segment))
                         continue;
 
-                    var segmentContext = new SegmentContext(segment, Separators);
-                    if (segmentContext.IsControl && CurrentSegments.Any())
-                    {
-                        Buffer(segment + Separators.Segment);
-                        ParseSegments();
-                        continue;
-                    }
-
-                    ProcessSegment(segmentContext);
+                    ProcessSegment(segment);
                 }               
             }
             catch (ParsingException ex)
@@ -168,8 +160,8 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Converts EDI segments into typed objects. 
         /// </summary>
-        /// <param name="segmentContext">The segment to be processed.</param>
-        protected abstract void ProcessSegment(SegmentContext segmentContext);
+        /// <param name="segment">The segment to be processed.</param>
+        protected abstract void ProcessSegment(string segment);
 
         /// <summary>
         /// Extracts the format, the version and the tag of the EDI document.

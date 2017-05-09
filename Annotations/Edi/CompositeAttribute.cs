@@ -14,7 +14,7 @@ using System;
 namespace EdiFabric.Annotations.Edi
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class CompositeAttribute : EdiAttribute
+    public sealed class CompositeAttribute : EdiAttribute
     {
         public CompositeAttribute(string id)
             : base(id)
