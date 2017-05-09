@@ -26,6 +26,7 @@ namespace EdiFabric.Framework.Readers
     public sealed class X12Reader : EdiReader
     {
         private SegmentContext _currentGroupHeader;
+        private ISA _currentIsa;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="X12Reader"/> class.
@@ -94,7 +95,9 @@ namespace EdiFabric.Framework.Readers
             switch (segmentContext.Tag)
             {
                 case SegmentId.ISA:
-                    Item = ParseSegment<ISA>(segmentContext.Value, Separators);
+                    var isa = ParseSegment<ISA>(segmentContext.Value, Separators);
+                    _currentIsa = isa;
+                    Item = isa;
                     _currentGroupHeader = null;
                     break;
                 case SegmentId.TA1:
@@ -119,6 +122,7 @@ namespace EdiFabric.Framework.Readers
                 case SegmentId.IEA:
                     Item = ParseSegment<IEA>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
+                    _currentIsa = null;
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
@@ -128,12 +132,17 @@ namespace EdiFabric.Framework.Readers
 
         protected override MessageContext BuildContext()
         {
+            if (_currentIsa == null)
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Interchange header is missing.");
+
             if (CurrentSegments.Count == 1)
             {
                 var ta1 = CurrentSegments.SingleOrDefault(es => es.Name == "TA1");
                 if (ta1 != null)
                 {
-                    return new MessageContext("TA1", "", "", "X12");
+                    return new MessageContext("TA1", "", "", "X12", _currentIsa.InterchangeSenderID_6,
+                        _currentIsa.SenderIDQualifier_5, _currentIsa.InterchangeReceiverID_8,
+                        _currentIsa.ReceiverIDQualifier_7);
                 }
             }
 
@@ -141,7 +150,8 @@ namespace EdiFabric.Framework.Readers
                 throw new ParsingException(ErrorCode.InvalidInterchangeContent, "GS was not found.");
             var ediCompositeDataElementsGs = _currentGroupHeader.Value.GetDataElements(Separators);
             if (ediCompositeDataElementsGs.Count() < 8)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "GS is invalid. Too little data elements.");
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
+                    "GS is invalid. Too little data elements.");
             var version = ediCompositeDataElementsGs[7];
 
             var st = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.ST);
@@ -153,11 +163,13 @@ namespace EdiFabric.Framework.Readers
             {
                 version = ediCompositeDataElementsSt[2];
             }
-            if(ediCompositeDataElementsSt.Count() < 2)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "ST is invalid.Too little data elements.");
+            if (ediCompositeDataElementsSt.Count() < 2)
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
+                    "ST is invalid.Too little data elements.");
             var controlNumber = ediCompositeDataElementsSt[1];
 
-            return new MessageContext(tag, controlNumber, version, "X12");
-       }
+            return new MessageContext(tag, controlNumber, version, "X12", _currentIsa.InterchangeSenderID_6,
+                _currentIsa.SenderIDQualifier_5, _currentIsa.InterchangeReceiverID_8, _currentIsa.ReceiverIDQualifier_7);
+        }
     }
 }

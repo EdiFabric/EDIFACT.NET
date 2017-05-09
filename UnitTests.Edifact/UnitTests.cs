@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using EdiFabric.Annotations.Validation;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Segments.Edifact;
+using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,8 +22,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
             
             // ACT
@@ -29,7 +31,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
             
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -49,8 +51,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_DefaultUNA.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -60,7 +62,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine, null, separators.ToUna());
+            var actual = Helper.Generate(ediItems, separators, Environment.NewLine, null, separators.ToUna());
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -78,8 +80,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -89,7 +91,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -107,8 +109,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_LF.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample, Encoding.UTF8);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<object> ediItems;
             
             // ACT
@@ -116,7 +118,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, "\n");
+            var actual = Helper.Generate(ediItems, null, "\n");
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -134,8 +136,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
             Separators separators;
 
@@ -145,7 +147,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = Helper.GenerateEdifact(ediItems, separators, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, separators, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -156,7 +158,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BadSegment.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -178,8 +180,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Group.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -187,7 +189,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -205,8 +207,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -214,7 +216,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<UNB>().Count() == 1);
@@ -231,8 +233,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -240,7 +242,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<UNB>().Count() == 1);
@@ -257,8 +259,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -266,7 +268,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 2);
@@ -283,8 +285,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -292,7 +294,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -310,8 +312,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingSegment.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -319,7 +321,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -330,8 +332,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -339,7 +341,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -357,8 +359,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -366,7 +368,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -377,8 +379,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -386,7 +388,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -404,8 +406,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -413,7 +415,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -431,8 +433,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BOM.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
 
             // ACT
@@ -440,7 +442,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -452,8 +454,8 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_TrailingBlanks.txt";
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sampleClean);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sampleClean);
             List<object> ediItems;
 
             // ACT
@@ -461,7 +463,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -479,8 +481,8 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -491,14 +493,14 @@ namespace EdiFabric.UnitTests.Edifact
                 {
                     if (ediReader.Item is UNB && ediItems.Any())
                     {
-                        actual = actual + Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+                        actual = actual + Helper.Generate(ediItems, null, Environment.NewLine);
                         ediItems.Clear();
                     }
 
                     ediItems.Add(ediReader.Item);
                 }
 
-                actual = actual + Helper.GenerateEdifact(ediItems, ediReader.Separators, Environment.NewLine);
+                actual = actual + Helper.Generate(ediItems, ediReader.Separators, Environment.NewLine);
             }
             
             // ASSERT
@@ -510,7 +512,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidTrailers.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -535,7 +537,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidHeader.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -555,7 +557,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -580,7 +582,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment2.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -605,7 +607,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -631,7 +633,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             var ediItems = new List<object>();
 
             // ACT
@@ -659,7 +661,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MissingGroupTrailer.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -682,7 +684,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MissingInterchangeTrailer.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -705,7 +707,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -731,8 +733,8 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BlankRepetition.txt";
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
-            var ediStream = Helper.LoadStream(sample);
-            var expected = Helper.LoadString(sampleClean);
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sampleClean);
             List<object> ediItems;
 
             // ACT
@@ -740,7 +742,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = Helper.GenerateEdifact(ediItems, null, Environment.NewLine);
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -758,7 +760,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -782,7 +784,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInvalidMessages.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -805,7 +807,7 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Valid.txt";
-            var ediStream = Helper.LoadStream(sample);
+            var ediStream = CommonHelper.LoadStream(sample);
             List<object> ediItems;
 
             // ACT
@@ -821,6 +823,95 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsTrue(validationResult);
             Assert.IsFalse(results.Any());
+        }
+
+        [TestMethod]
+        public void TestLoadingWithDelegate()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, AssemblyLoadFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = Helper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ParsingException>().SingleOrDefault());           
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static Assembly AssemblyLoadFactory(MessageContext messageContext)
+        {
+            Assert.IsNotNull(messageContext.ControlNumber);
+            Assert.IsNotNull(messageContext.Format);
+            Assert.IsNotNull(messageContext.Name);
+            Assert.IsNotNull(messageContext.ReceiverId);
+            Assert.IsNotNull(messageContext.ReceiverQualifier);
+            Assert.IsNotNull(messageContext.SenderId);
+            Assert.IsNotNull(messageContext.SenderQualifier);
+            Assert.IsNotNull(messageContext.Version);
+
+            return Assembly.Load("EdiFabric.Rules.EdifactD00A");
+        }
+
+        [TestMethod]
+        public void TestPreserveWhiteSpace()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Write.txt";
+            var expected = CommonHelper.LoadString(sample);
+            string actual;
+            
+            // ACT
+            using (var stream = new MemoryStream())
+            {
+                var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine, true);
+
+                writer.WriteInterchange(Helper.CreateUnb());
+                writer.WriteMessage(Helper.CreateInvoice());                
+                writer.Flush();
+
+                actual = CommonHelper.LoadString(stream);
+            }
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestNoPreserveWhiteSpace()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_WriteNoPreserveWhitespace.txt";
+            var expected = CommonHelper.LoadString(sample);
+            string actual;
+
+            // ACT
+            using (var stream = new MemoryStream())
+            {
+                var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine);
+
+                writer.WriteInterchange(Helper.CreateUnb());
+                writer.WriteMessage(Helper.CreateInvoice());
+                writer.Flush();
+
+                actual = CommonHelper.LoadString(stream);
+            }
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
         }
     }
 }

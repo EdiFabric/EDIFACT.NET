@@ -142,34 +142,33 @@ namespace EdiFabric.Framework.Model
             return new Segment(this);
         }
 
-        public string GenerateSegment(Separators separators)
+        public string GenerateSegment(Separators separators, bool preserveWhitespace)
         {
             if (separators == null) throw new ArgumentNullException("separators");
 
-            var result = EdiName;
+            var result = new List<string> {EdiName};
 
             foreach (var element in Children)
             {
-                string value = String.Empty;
+                string value;
                 if (element is ComplexDataElement)
                 {
-                    if (element.Children.Any())
+                    var composite = new List<string>();
+                    foreach (var child in element.Children.OfType<DataElement>())
                     {
-                        var dataElements = element.Children.OfType<DataElement>().ToList();
-                        value = dataElements.ElementAt(0).Value != null
-                            ? dataElements.ElementAt(0).Value.EscapeLine(separators)
-                            : String.Empty;
-                        value = dataElements.Skip(1)
-                            .Aggregate(value,
-                                (current, subElement) =>
-                                    current + separators.ComponentDataElement + subElement.Value.EscapeLine(separators));
-                        value = value.TrimEndWithEscape(separators.Escape, separators.ComponentDataElement);
+                        composite.Add(child.Value.EscapeLine(separators));
+                        composite.Add(separators.ComponentDataElement.ToString());
                     }
+                    value = composite.TrimEndWithEscape(separators.Escape, separators.ComponentDataElement,
+                        preserveWhitespace);
                 }
                 else
                 {
                     var de = element as DataElement;
-                    if (de == null) throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.Type.FullName, element.Parent.Type.FullName));
+                    if (de == null)
+                        throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.Type.FullName,
+                            element.Parent.Type.FullName));
+
                     value = de.Value.EscapeLine(separators);
                 }
 
@@ -177,10 +176,12 @@ namespace EdiFabric.Framework.Model
                     ? separators.RepetitionDataElement
                     : separators.DataElement;
 
-                result = result + separator + value;
+                result.Add(separator.ToString());
+                result.Add(value);
             }
 
-            return result.TrimEndWithEscape(separators.Escape, separators.DataElement) + separators.Segment;
+            return result.TrimEndWithEscape(separators.Escape, separators.DataElement, preserveWhitespace) +
+                   separators.Segment;
         }
 
         public bool Match(SegmentContext segmentContext)

@@ -25,6 +25,7 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public sealed class EdifactReader : EdiReader
     {
+        private UNB _currentUnb;
         private static readonly List<string> SyntaxId = new List<string>
         {
             "UNOA",
@@ -121,7 +122,9 @@ namespace EdiFabric.Framework.Readers
                 case SegmentId.UNA:
                     break;
                 case SegmentId.UNB:
-                    Item = ParseSegment<UNB>(segmentContext.Value, Separators);
+                    var unb = ParseSegment<UNB>(segmentContext.Value, Separators);
+                    _currentUnb = unb;
+                    Item = unb;
                     break;
                 case SegmentId.UNG:
                     Item = ParseSegment<UNG>(segmentContext.Value, Separators);
@@ -138,6 +141,7 @@ namespace EdiFabric.Framework.Readers
                     break;
                 case SegmentId.UNZ:
                     Item = ParseSegment<UNZ>(segmentContext.Value, Separators);
+                    _currentUnb = null;
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
@@ -147,6 +151,9 @@ namespace EdiFabric.Framework.Readers
 
         protected override MessageContext BuildContext()
         {
+            if (_currentUnb == null)
+                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Interchange header is missing.");
+
             var unh = CurrentSegments.SingleOrDefault(es => es.Tag == SegmentId.UNH);
             if (unh == null)
                 throw new ParsingException(ErrorCode.InvalidInterchangeContent, "UNH was not found.");
@@ -167,7 +174,11 @@ namespace EdiFabric.Framework.Readers
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
-            return new MessageContext(tag, controlNumber, version, "EDIFACT");
+            return new MessageContext(tag, controlNumber, version, "EDIFACT",
+                _currentUnb.INTERCHANGESENDER_2.InterchangeSenderIdentification_1,
+                _currentUnb.INTERCHANGESENDER_2.IdentificationCodeQualifier_2,
+                _currentUnb.INTERCHANGERECIPIENT_3.InterchangeRecipientIdentification_1,
+                _currentUnb.INTERCHANGERECIPIENT_3.IdentificationCodeQualifier_2);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)

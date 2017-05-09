@@ -14,13 +14,13 @@ namespace EdiFabric.UnitTests
         public void TestDuplicateTs()
         {
             // ARRANGE
-            const string sample = "EdiFabric.UnitTests.Edi.X12_810_00204.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            const string sample = "EdiFabric.UnitTests.Edi.X12_820_00204.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
            
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.DuplicateTS"))
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }            
@@ -36,12 +36,12 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00B.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
 
             List<object> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.DuplicateTS"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.UnitTests"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -57,7 +57,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
 
             List<object> ediItems;
 

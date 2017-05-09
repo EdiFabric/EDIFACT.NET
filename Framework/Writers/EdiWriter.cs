@@ -32,12 +32,13 @@ namespace EdiFabric.Framework.Writers
         private int _messageCounter;
         private int _groupCounter;        
         private Separators _separators;
+        private bool _preserveWhitespace;
 
         protected string Format;
         protected string InterchangeTrailer;
         protected string GroupTrailer;
         protected string MessageTrailer;
-        protected string Ta; 
+        protected string Ta;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiWriter{T, U}"/> class.
@@ -45,7 +46,8 @@ namespace EdiFabric.Framework.Writers
         /// <param name="stream">The stream to write to.</param>
         /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
-        protected EdiWriter(Stream stream, Encoding encoding, string postfix)
+        /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
+        protected EdiWriter(Stream stream, Encoding encoding, string postfix, bool preserveWhitespace)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -53,9 +55,10 @@ namespace EdiFabric.Framework.Writers
                 throw new ArgumentNullException("encoding");
             if (postfix == null)
                 throw new ArgumentNullException("postfix");
-            
+
             _writer = new StreamWriter(stream, encoding);
             _postFix = postfix;
+            _preserveWhitespace = preserveWhitespace;
         }
 
         /// <summary>
@@ -65,7 +68,8 @@ namespace EdiFabric.Framework.Writers
         /// <param name="append">Whether to append to the file. The file will be overwritten by default.</param>
         /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
-        protected EdiWriter(string path, bool append, Encoding encoding, string postfix)
+        /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
+        protected EdiWriter(string path, bool append, Encoding encoding, string postfix, bool preserveWhitespace)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException("path");
@@ -76,6 +80,7 @@ namespace EdiFabric.Framework.Writers
 
             _writer = new StreamWriter(path, append, encoding);
             _postFix = postfix;
+            _preserveWhitespace = preserveWhitespace;
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace EdiFabric.Framework.Writers
             _interchangeControlNr = controlNumber;
 
             var segment = new Segment(typeof(T), interchangeHeader);
-            WriteSegment(segment.GenerateSegment(_separators));
+            WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
         private void EndInterchange()
@@ -155,7 +160,7 @@ namespace EdiFabric.Framework.Writers
             _groupControlNr = controlNumber;
 
             var segment = new Segment(typeof(U), groupHeader);
-            WriteSegment(segment.GenerateSegment(_separators));
+            WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
         private void EndGroup()
@@ -188,7 +193,7 @@ namespace EdiFabric.Framework.Writers
 
             foreach (var segment in transactionSet.Descendants<Segment>())
             {
-                WriteSegment(segment.GenerateSegment(_separators));
+                WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
                 segmentCounter++;
             }
 

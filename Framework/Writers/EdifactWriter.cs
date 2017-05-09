@@ -26,8 +26,10 @@ namespace EdiFabric.Framework.Writers
         /// <param name="stream">The stream to write to.</param>
         /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
-        public EdifactWriter(Stream stream, Encoding encoding = null, string postfix = "")
-            : base(stream, encoding ?? Encoding.Default, postfix ?? "")
+        /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
+        
+        public EdifactWriter(Stream stream, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
+            : base(stream, encoding ?? Encoding.Default, postfix ?? "", preserveWhitespace)
         {
             SetFormatTags();
         }
@@ -39,8 +41,9 @@ namespace EdiFabric.Framework.Writers
         /// <param name="append">Whether to append to the file. The file will be overwritten by default.</param>
         /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
-        public EdifactWriter(string path, bool append, Encoding encoding = null, string postfix = "")
-            : base(path, append, encoding ?? Encoding.Default, postfix ?? "")
+        /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
+        public EdifactWriter(string path, bool append, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
+            : base(path, append, encoding ?? Encoding.Default, postfix ?? "", preserveWhitespace)
         {
             SetFormatTags();
         }

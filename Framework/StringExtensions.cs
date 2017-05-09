@@ -85,9 +85,20 @@ namespace EdiFabric.Framework
             yield return input.Substring(startOfSegment);
         }
 
-        public static string TrimEndWithEscape(this string input, char? escapeCharacter, char separator)
+        public static string TrimEndWithEscape(this List<string> input, char? escapeCharacter, char separator,
+            bool preserveWhitespace)
         {
-            var result = input.TrimEnd(separator);
+            input.Reverse();
+            var temp = preserveWhitespace
+                ? input.SkipWhile(i => i == null || i == separator.ToString()).ToList()
+                : input.SkipWhile(i => string.IsNullOrEmpty(i) || i == separator.ToString()).ToList();
+            temp.Reverse();
+
+            var result = temp.Aggregate<string, string>(null, (current, s) => current + s);
+
+            if (result == null)
+                return null;
+
             if (escapeCharacter.HasValue && result.EndsWith(escapeCharacter.ToString(), StringComparison.Ordinal))
                 result = result + separator;
 
@@ -96,8 +107,8 @@ namespace EdiFabric.Framework
 
         public static string EscapeLine(this string line, Separators separators)
         {
-            if (String.IsNullOrEmpty(line))
-                return String.Empty;
+            if (line == null)
+                return null;
 
             if (!separators.Escape.HasValue)
                 return line;

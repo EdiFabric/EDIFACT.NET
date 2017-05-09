@@ -19,7 +19,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_RequiredMissing.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
@@ -91,7 +91,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_ListCountMax.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
@@ -151,7 +151,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_ListCountMin.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
@@ -211,7 +211,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_InvalidAttributes.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
@@ -234,7 +234,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_StringLen.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
@@ -306,7 +306,7 @@ namespace EdiFabric.UnitTests
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_NoAttributes.txt";
-            var ediStream = Helper.LoadStream(sample, false);
+            var ediStream = CommonHelper.LoadStream(sample, false);
             List<object> ediItems;
 
             // ACT
