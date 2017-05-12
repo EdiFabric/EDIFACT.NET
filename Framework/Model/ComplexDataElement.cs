@@ -13,14 +13,16 @@ using System;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core;
-using EdiFabric.Core.Model;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
 {
     class ComplexDataElement : ParseNode
     {
-        public ComplexDataElement(PropertyInfo propertyInfo, object instance = null)
-            : base(propertyInfo.GetGenericType(), propertyInfo.Name, propertyInfo.Name)
+        public ComplexDataElement(PropertyInfo propertyInfo, CompositeAttribute cAttr, object instance = null)
+            : base(propertyInfo.GetGenericType(), propertyInfo.Name, cAttr.Id)
         {
             BuildChildren(instance, true);
         }
@@ -45,9 +47,7 @@ namespace EdiFabric.Framework.Model
                 }
 
                 if (index >= Children.Count)
-                    throw new ParsingException(ErrorCode.ComponentDataElementsTooMany,
-                        "Too many data elements in component.",
-                        value);
+                    throw new ParsingException("Too many components.", DataElementErrorCode.TooManyComponents, index);
 
                 var currentElement = Children.ElementAt(index);
                 if (currentElement.IsParsed)

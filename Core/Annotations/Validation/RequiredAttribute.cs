@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
 namespace EdiFabric.Core.Annotations.Validation
@@ -80,7 +82,7 @@ namespace EdiFabric.Core.Annotations.Validation
 
             result.AddRange(
                 mandatoryNames.Select(
-                    name => new ErrorContextSegment(name, segmentIndex + 1, ValidationResult.RequiredMissingAll)));
+                    name => new ErrorContextSegment(name, segmentIndex + 1, SegmentErrorCode.RequiredSegmentMissing)));
 
             return result;
         }
@@ -88,13 +90,13 @@ namespace EdiFabric.Core.Annotations.Validation
         private ErrorContextSegment ValidateGroup(InstanceContext instanceContext, int segmentIndex)
         {
             return new ErrorContextSegment(instanceContext.GetId(), segmentIndex + 1,
-                ValidationResult.RequiredMissingGroup);
+                SegmentErrorCode.RequiredSegmentMissing);
         }
 
         private ErrorContextSegment ValidateSegment(InstanceContext instanceContext, int segmentIndex)
         {
             return new ErrorContextSegment(instanceContext.GetId(), segmentIndex + 1,
-                ValidationResult.RequiredMissingSegment);
+                SegmentErrorCode.RequiredSegmentMissing);
         }
 
         private ErrorContextSegment ValidateComposite(InstanceContext instanceContext,
@@ -105,7 +107,7 @@ namespace EdiFabric.Core.Annotations.Validation
                     instanceContext.Property.Name));
 
             var result = new ErrorContextSegment(instanceContext.Parent.GetId(), segmentIndex);
-            result.Add(instanceContext.GetId(), inSegmentIndex, ValidationResult.RequiredMissingComposite, 0, 0, null);
+            result.Add(instanceContext.GetId(), inSegmentIndex, DataElementErrorCode.RequiredDataElementMissing, 0, 0, null);
             
             return result;
         }
@@ -125,7 +127,7 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new ErrorContextSegment(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, ValidationResult.RequiredMissingDataElement, inCompositeIndex, 0, null);
+            result.Add(name, inSegmentIndex, DataElementErrorCode.RequiredDataElementMissing, inCompositeIndex, 0, null);
             
             return result;
         }

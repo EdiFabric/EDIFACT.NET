@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
 namespace EdiFabric.Core.Annotations.Validation
@@ -72,7 +74,7 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new ErrorContextSegment(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, ValidationResult.InvalidCodeValue, inCompositeIndex, repetitionIndex,
+            result.Add(name, inSegmentIndex, DataElementErrorCode.InvalidCodeValue, inCompositeIndex, repetitionIndex,
                 value);
             return result;
         }

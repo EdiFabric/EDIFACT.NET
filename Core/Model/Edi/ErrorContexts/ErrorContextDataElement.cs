@@ -9,7 +9,10 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Core.Model.Validation
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Validation;
+
+namespace EdiFabric.Core.Model.Edi.Exceptions
 {
     /// <summary>
     /// Information for the position, data and error code of the data element that failed. 
@@ -20,24 +23,29 @@ namespace EdiFabric.Core.Model.Validation
         /// The reference number to locate the data element.
         /// </summary>
         public string Name { get; private set; }
+        
         /// <summary>
         /// The relative position of the simple data element, or the relative position
         /// of a composite data structure in error within the segment, count beginning with 1
         /// for the position immediately following the segment ID.
         /// </summary>
         public int Position { get; private set; }
+        
         /// <summary>
         /// The syntax error code.
         /// </summary>
-        public ValidationResult Code { get; private set; }
+        public DataElementErrorCode Code { get; private set; }
+        
         /// <summary>
         /// The copy of the data element in error.
         /// </summary>
         public string Value { get; private set; }
+        
         /// <summary>
         /// The component data element position within the composite that is an error.
         /// </summary>
         public int ComponentPosition { get; private set; }
+        
         /// <summary>
         /// The specific repetition of a data element that is an error.
         /// </summary>
@@ -52,7 +60,7 @@ namespace EdiFabric.Core.Model.Validation
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value.</param>
-        public ErrorContextDataElement(string name, int position, ValidationResult code, int componentPosition,
+        public ErrorContextDataElement(string name, int position, DataElementErrorCode code, int componentPosition,
             int repetitionPosition, string value)
         {
             Name = name;

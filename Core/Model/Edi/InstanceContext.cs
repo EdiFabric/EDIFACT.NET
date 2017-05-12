@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.Annotations.Validation;
+using EdiFabric.Core.Model.Edi.Exceptions;
 
 namespace EdiFabric.Core.Model.Validation
 {

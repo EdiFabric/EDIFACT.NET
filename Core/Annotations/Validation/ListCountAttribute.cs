@@ -14,6 +14,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
 namespace EdiFabric.Core.Annotations.Validation
@@ -89,8 +91,8 @@ namespace EdiFabric.Core.Annotations.Validation
         private ErrorContextSegment ValidateGroup(IList list, InstanceContext instanceContext, int segmentIndex)
         {
             var errorCode = list.Count > MaxCount
-                    ? ValidationResult.CountExceededGroup
-                    : ValidationResult.RequiredMissingGroup;
+                    ? SegmentErrorCode.LoopExceedsMaximumUse
+                    : SegmentErrorCode.LoopBelowMinimumUse;
 
             return new ErrorContextSegment(instanceContext.GetId(), segmentIndex, errorCode);
         }
@@ -98,8 +100,8 @@ namespace EdiFabric.Core.Annotations.Validation
         private ErrorContextSegment ValidateSegment(IList list, InstanceContext instanceContext, int segmentIndex)
         {
             var errorCode = list.Count > MaxCount
-                    ? ValidationResult.CountExceededSegment
-                    : ValidationResult.RequiredMissingSegment;
+                    ? SegmentErrorCode.SegmentExceedsMaximumUse
+                    : SegmentErrorCode.SegmentBelowMinimumUse;
 
             return new ErrorContextSegment(instanceContext.GetId(), segmentIndex, errorCode);
         }
@@ -112,8 +114,8 @@ namespace EdiFabric.Core.Annotations.Validation
                     instanceContext.Property.Name));
 
             var errorCode = list.Count > MaxCount
-                ? ValidationResult.CountExceededComposite
-                : ValidationResult.RequiredMissingComposite;
+                ? DataElementErrorCode.TooManyRepetitions
+                : DataElementErrorCode.TooFewRepetitions;
 
             var repIndex = list.Count > MaxCount
                 ? MaxCount + 1
@@ -133,8 +135,8 @@ namespace EdiFabric.Core.Annotations.Validation
                         instanceContext.Property.Name));
 
             var errorCode = list.Count > MaxCount
-                ? ValidationResult.CountExceededDataElement
-                : ValidationResult.RequiredMissingDataElement;
+                ? DataElementErrorCode.TooManyRepetitions
+                : DataElementErrorCode.TooFewRepetitions;
 
             var repIndex = list.Count > MaxCount
                 ? MaxCount + 1

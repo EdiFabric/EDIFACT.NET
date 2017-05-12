@@ -2,7 +2,8 @@
 using System.IO;
 using System.Text;
 using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.Edifact;
+using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;

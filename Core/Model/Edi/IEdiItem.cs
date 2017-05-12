@@ -9,22 +9,9 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using System;
-using EdiFabric.Core.Annotations.Edi;
-
-namespace EdiFabric.Core.Model.X12
+namespace EdiFabric.Core.Model.Edi
 {
-    /// <summary>
-    /// Interchange trailer.
-    /// </summary>
-    [Serializable()]
-    [Segment("IEA")]
-    public class IEA : IEdiItem 
+    public interface IEdiItem
     {
-        [Pos(1)]
-        public string NumberOfIncludedGroups_1 { get; set; }
-
-        [Pos(2)]
-        public string InterchangeControlNumber_2 { get; set; }
-    }     
+    }
 }

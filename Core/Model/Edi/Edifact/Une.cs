@@ -9,24 +9,22 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Core.Model.Validation
+using System;
+using EdiFabric.Core.Annotations.Edi;
+
+namespace EdiFabric.Core.Model.Edi.Edifact
 {
     /// <summary>
-    /// The internal error codes for all known error conditions.
+    /// Functional Group trailer.
     /// </summary>
-    public enum ValidationResult
+    [Serializable()]
+    [Segment("UNE")]
+    public class UNE : IEdiItem
     {
-        RequiredMissingAll,
-        RequiredMissingGroup,
-        RequiredMissingSegment,
-        RequiredMissingComposite,
-        RequiredMissingDataElement,
-        CountExceededGroup,
-        CountExceededSegment,
-        CountExceededComposite,
-        CountExceededDataElement,
-        DataElementTooShort,
-        DataElementTooLong,
-        InvalidCodeValue
+        [Pos(1)]
+        public string GroupControlCount_1 { get; set; }
+
+        [Pos(2)]
+        public string GroupReferenceNumber_2 { get; set; }
     }
 }

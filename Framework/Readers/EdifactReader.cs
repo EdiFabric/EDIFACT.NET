@@ -15,8 +15,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.Edifact;
+using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
@@ -27,6 +28,7 @@ namespace EdiFabric.Framework.Readers
     public sealed class EdifactReader : EdiReader
     {
         private UNB _currentUnb;
+
         private static readonly List<string> SyntaxId = new List<string>
         {
             "UNOA",
@@ -171,23 +173,20 @@ namespace EdiFabric.Framework.Readers
         protected override MessageContext BuildContext()
         {
             if (_currentUnb == null)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Interchange header is missing.");
+                throw new ReaderException("Interchange header is missing.", ReaderErrorCode.InvalidControlStructure);
 
             var unh = CurrentSegments.SingleOrDefault(es => es.Name == "UNH");
             if (unh == null)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "UNH was not found.");
+                throw new ReaderException("UNH was not found.", ReaderErrorCode.InvalidInterchangeContent);
+
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
-            {
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
-                    "UNH is invalid. Too little data elements.");
-            }
+                throw new ReaderException("UNH is invalid. Too little data elements.", ReaderErrorCode.InvalidInterchangeContent);
+
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
-            {
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
-                    "UNH is invalid. Unable to read message type or version.");
-            }
+                throw new ReaderException("UNH is invalid. Unable to read message type or version.",
+                    ReaderErrorCode.InvalidInterchangeContent);
 
             var tag = ediDataElements[0];
             var version = ediDataElements[1] + ediDataElements[2];

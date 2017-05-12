@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.X12;
+using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

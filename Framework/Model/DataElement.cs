@@ -11,14 +11,14 @@
 
 using System.Reflection;
 using EdiFabric.Core;
-using EdiFabric.Core.Model;
+using EdiFabric.Core.Annotations.Validation;
 
 namespace EdiFabric.Framework.Model
 {
     class DataElement : ParseNode
     {
         public DataElement(PropertyInfo propertyInfo, object instance = null)
-            : base(propertyInfo.GetGenericType(), propertyInfo.Name, propertyInfo.Name)
+            : base(propertyInfo.GetGenericType(), propertyInfo.Name, GetEdiName(propertyInfo))
         {
             Value = instance as string;
         }
@@ -43,6 +43,15 @@ namespace EdiFabric.Framework.Model
         public override object ToInstance()
         {
             return Value;
+        }
+
+        private static string GetEdiName(PropertyInfo propertyInfo)
+        {
+            var attr = propertyInfo.GetCustomAttribute<DataElementAttribute>();
+            if (attr != null && !string.IsNullOrEmpty(attr.Code))
+                return attr.Code;
+
+            return propertyInfo.Name;
         }
     }
 }

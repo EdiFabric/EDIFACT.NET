@@ -11,7 +11,6 @@
 
 using System;
 using System.Linq;
-using EdiFabric.Core.Model;
 
 namespace EdiFabric.Framework.Model
 {
@@ -24,6 +23,7 @@ namespace EdiFabric.Framework.Model
         /// The segment ID.
         /// </summary>
         public string Name { get; private set; }
+        
         /// <summary>
         /// The value of the first data element.
         /// </summary>

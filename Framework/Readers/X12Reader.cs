@@ -15,8 +15,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.X12;
+using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.Model.Edi.X12;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
@@ -151,7 +152,7 @@ namespace EdiFabric.Framework.Readers
         protected override MessageContext BuildContext()
         {
             if (_currentIsa == null)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Interchange header is missing.");
+                throw new ReaderException("Interchange header is missing.", ReaderErrorCode.InvalidControlStructure);
 
             if (CurrentSegments.Count == 1)
             {
@@ -165,16 +166,19 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_currentGroupHeader == null)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "GS was not found.");
+                throw new ReaderException("GS was not found.", ReaderErrorCode.InvalidInterchangeContent);
+
             var ediCompositeDataElementsGs = _currentGroupHeader.Value.GetDataElements(Separators);
             if (ediCompositeDataElementsGs.Count() < 8)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
-                    "GS is invalid. Too little data elements.");
+                throw new ReaderException("GS is invalid. Too little data elements.",
+                    ReaderErrorCode.InvalidInterchangeContent);
+
             var version = ediCompositeDataElementsGs[7];
 
             var st = CurrentSegments.SingleOrDefault(es => es.Name == "ST");
             if (st == null)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent, "ST was not found.");
+                throw new ReaderException("ST was not found.", ReaderErrorCode.InvalidInterchangeContent);
+
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
             var tag = ediCompositeDataElementsSt[0];
             if (ediCompositeDataElementsSt.Count() == 3)
@@ -182,8 +186,9 @@ namespace EdiFabric.Framework.Readers
                 version = ediCompositeDataElementsSt[2];
             }
             if (ediCompositeDataElementsSt.Count() < 2)
-                throw new ParsingException(ErrorCode.InvalidInterchangeContent,
-                    "ST is invalid.Too little data elements.");
+                throw new ReaderException("ST is invalid.Too little data elements.",
+                    ReaderErrorCode.InvalidInterchangeContent);
+
             var controlNumber = ediCompositeDataElementsSt[1];
 
             return new MessageContext(tag, controlNumber, version, "X12", _currentIsa.InterchangeSenderID_6,

@@ -9,9 +9,22 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Core.Model
+using System;
+using EdiFabric.Core.Annotations.Edi;
+
+namespace EdiFabric.Core.Model.Edi.Edifact
 {
-    public interface IEdiItem
+    /// <summary>
+    /// Interchange trailer.
+    /// </summary>
+    [Serializable()]
+    [Segment("UNZ")]
+    public class UNZ : IEdiItem
     {
-    }
+        [Pos(1)]
+        public string InterchangeControlCount_1 { get; set; }
+
+        [Pos(2)]
+        public string InterchangeControlReference_2 { get; set; }
+    }  
 }

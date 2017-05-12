@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
 namespace EdiFabric.Core.Annotations.Validation
@@ -61,8 +63,8 @@ namespace EdiFabric.Core.Annotations.Validation
                         instanceContext.Property.Name));
 
             var errorCode = value.Length < MinLen
-                ? ValidationResult.DataElementTooShort
-                : ValidationResult.DataElementTooLong;
+                ? DataElementErrorCode.DataElementTooShort
+                : DataElementErrorCode.DataElementTooLong;
 
             var segmentName = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
                 ? instanceContext.Parent.GetId()

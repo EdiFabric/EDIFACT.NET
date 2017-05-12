@@ -14,7 +14,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using EdiFabric.Core;
-using EdiFabric.Core.Model;
 
 namespace EdiFabric.Framework.Model
 {

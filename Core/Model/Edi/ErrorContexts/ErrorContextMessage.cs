@@ -11,13 +11,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
 
-namespace EdiFabric.Core.Model.Validation
+namespace EdiFabric.Core.Model.Edi.Exceptions
 {
     /// <summary>
     /// Information for the data, error codes and the context of the segments that failed.  
     /// </summary>
-    public sealed class ErrorContextMessage
+    public sealed class ErrorContextMessage : IEdiItem
     {
         /// <summary>
         /// The type of message (or its tag).
@@ -29,11 +30,16 @@ namespace EdiFabric.Core.Model.Validation
         /// </summary>
         public string ControlNumber { get; private set; }
 
-        private readonly List<ErrorCode> _codes = new List<ErrorCode>();
+        /// <summary>
+        /// The copy of the segment in error.
+        /// </summary>
+        public string FailedSegment { get; private set; }
+
+        private readonly List<MessageErrorCode> _codes = new List<MessageErrorCode>();
         /// <summary>
         /// The syntax error codes.
         /// </summary>
-        public IReadOnlyCollection<ErrorCode> Codes
+        public IReadOnlyCollection<MessageErrorCode> Codes
         {
             get { return _codes.AsReadOnly(); }
         }
@@ -71,9 +77,34 @@ namespace EdiFabric.Core.Model.Validation
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public ErrorContextMessage(string name, string controlNumber, ErrorCode errorCode)
+        /// <param name="failedSegment">The copy of the segment in error.</param>
+        public ErrorContextMessage(string name, string controlNumber, string failedSegment)
             : this(name, controlNumber)
+        {
+            FailedSegment = failedSegment;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
+        /// </summary>
+        /// <param name="name">The message name (or tag).</param>
+        /// <param name="controlNumber">The message control number.</param>
+        /// <param name="errorCode">The syntax error code.</param>
+        public ErrorContextMessage(string name, string controlNumber, MessageErrorCode errorCode)
+            : this(name, controlNumber)
+        {
+            _codes.Add(errorCode);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
+        /// </summary>
+        /// <param name="name">The message name (or tag).</param>
+        /// <param name="controlNumber">The message control number.</param>
+        /// <param name="errorCode">The syntax error code.</param>
+        /// <param name="failedSegment">The copy of the segment in error.</param>
+        public ErrorContextMessage(string name, string controlNumber, MessageErrorCode errorCode, string failedSegment)
+            : this(name, controlNumber, failedSegment)
         {
             _codes.Add(errorCode);
         }
@@ -85,8 +116,9 @@ namespace EdiFabric.Core.Model.Validation
         /// </summary>
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
+        /// <param name="value">The segment value.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public void Add(string segmentName, int segmentPosition, ValidationResult errorCode)
+        public void Add(string segmentName, int segmentPosition, string value, SegmentErrorCode errorCode)
         {
             var key = segmentName + segmentPosition;
             if (_errors.ContainsKey(key))
@@ -95,7 +127,7 @@ namespace EdiFabric.Core.Model.Validation
             }
             else
             {
-                _errors.Add(key, new ErrorContextSegment(segmentName, segmentPosition, errorCode));
+                _errors.Add(key, new ErrorContextSegment(segmentName, segmentPosition, value, errorCode));
             }
         }
 
@@ -106,13 +138,14 @@ namespace EdiFabric.Core.Model.Validation
         /// </summary>
         /// <param name="segmentName">The segment name.</param>
         /// <param name="segmentPosition">The segment position.</param>
+        /// <param name="segmentValue">The segment value.</param>
         /// <param name="name">The data element name.</param>
         /// <param name="position">The data element position.</param>
         /// <param name="code">The syntax error code.</param>
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        public void Add(string segmentName, int segmentPosition, string name, int position, ValidationResult code, int componentPosition,
+        public void Add(string segmentName, int segmentPosition, string segmentValue, string name, int position, DataElementErrorCode code, int componentPosition,
             int repetitionPosition, string value)
         {
             var key = segmentName + segmentPosition;
@@ -122,7 +155,7 @@ namespace EdiFabric.Core.Model.Validation
             }
             else
             {
-                var segmentContext = new ErrorContextSegment(segmentName, segmentPosition);
+                var segmentContext = new ErrorContextSegment(segmentName, segmentPosition, segmentValue);
                 segmentContext.Add(name, position, code, componentPosition, repetitionPosition, value);
                 _errors.Add(key, segmentContext);
             }
@@ -153,7 +186,7 @@ namespace EdiFabric.Core.Model.Validation
         /// Adds a syntax error code to the error codes collection.
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
-        public void Add(ErrorCode errorCode)
+        public void Add(MessageErrorCode errorCode)
         {
             _codes.Add(errorCode);
         }

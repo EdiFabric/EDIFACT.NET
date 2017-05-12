@@ -12,7 +12,7 @@
 using System;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core.Model.Edifact
+namespace EdiFabric.Core.Model.Edi.Edifact
 {
     /// <summary>
     /// Interchange header.

@@ -12,28 +12,37 @@
 using System;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core.Model.X12
+namespace EdiFabric.Core.Model.Edi.X12
 {
     /// <summary>
-    /// Interchange acknowledgment.
+    /// Functional Group header.
     /// </summary>
     [Serializable()]
-    [Segment("TA1")]
-    public class TA1 : IEdiItem
+    [Segment("GS")]
+    public class GS : IEdiItem
     {
         [Pos(1)]
-        public string InterchangeControlNumber_1 { get; set; }
+        public string CodeIdentifyingInformationType_1 { get; set; }
 
         [Pos(2)]
-        public string InterchangeDate_2 { get; set; }
+        public string SenderIDCode_2 { get; set; }
 
         [Pos(3)]
-        public string InterchangeTime_3 { get; set; }
+        public string ReceiverIDCode_3 { get; set; }
 
         [Pos(4)]
-        public string InterchangeAcknowledgmentCode_4 { get; set; }
+        public string Date_4 { get; set; }
 
         [Pos(5)]
-        public string InterchangeNoteCode_5 { get; set; }        
-    }      
+        public string Time_5 { get; set; }
+
+        [Pos(6)]
+        public string GroupControlNumber_6 { get; set; }
+
+        [Pos(7)]
+        public string TransactionTypeCode_7 { get; set; }
+
+        [Pos(8)]
+        public string VersionAndRelease_8 { get; set; }
+    }
 }

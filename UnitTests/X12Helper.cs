@@ -2,7 +2,8 @@
 using System.IO;
 using System.Text;
 using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.X12;
+using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.X12_002040;

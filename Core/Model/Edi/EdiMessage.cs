@@ -14,9 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
-namespace EdiFabric.Core.Model
+namespace EdiFabric.Core.Model.Edi
 {
     public class EdiMessage : IEdiItem
     {

@@ -16,7 +16,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Core.Annotations.Edi;
-using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
@@ -98,7 +100,7 @@ namespace EdiFabric.Framework.Readers
         public bool Read()
         {
             Item = null;
-
+           
             try
             {
                 while ((!_streamReader.EndOfStream || _buffer.Any()) && Item == null)
@@ -107,7 +109,7 @@ namespace EdiFabric.Framework.Readers
 
                     if (Separators == null)
                     {
-                        Item = new ParsingException(ErrorCode.InvalidControlStructure, "No valid interchange header was found.");
+                        Item = new ErrorContextReader(ReaderErrorCode.InvalidControlStructure);
                         continue;
                     }
 
@@ -117,19 +119,19 @@ namespace EdiFabric.Framework.Readers
                     ProcessSegment(segment);
                 }               
             }
-            catch (ParsingException ex)
+            catch (ReaderException ex)
             {
-                Item = ex;
+                Item = new ErrorContextReader(ex, ex.ErrorCode);
             }
             catch (Exception ex)
             {
-                Item = new ParsingException(ex);
+                Item = new ErrorContextReader(ex, ReaderErrorCode.Unknown);
             }
 
             if (_streamReader.EndOfStream && CurrentSegments.Any())
-                Item = new ParsingException(ErrorCode.ImproperEndOfFile, "Unprocessed segments before the end of file.");
+                Item = new ErrorContextReader(ReaderErrorCode.ImproperEndOfFile);
 
-            if(Item is ParsingException)
+            if (Item is ErrorContextReader || Item is ErrorContextMessage)
                 CurrentSegments.Clear();
 
             return Item != null;
@@ -246,13 +248,11 @@ namespace EdiFabric.Framework.Readers
                 message.Analyze(CurrentSegments, Separators);
                 Item = (EdiMessage) message.ToInstance();
             }
-            catch (ParsingException pEx)
+            catch (SegmentException ex)
             {
-                pEx.MessageName = messageContext.Name;
-                pEx.MessageControlNumber = messageContext.ControlNumber;
-
-                // ReSharper disable once PossibleIntendedRethrow
-                throw pEx;
+                var errorContext = new ErrorContextMessage(messageContext.Name, messageContext.ControlNumber);
+                errorContext.Add(ex.ErrorContext);
+                Item = errorContext;
             }
             finally
             {
@@ -312,7 +312,18 @@ namespace EdiFabric.Framework.Readers
         protected static T ParseSegment<T>(string segmentValue, Separators separators)
         {
             var parseNode = new Segment(typeof(T));
-            parseNode.Parse(segmentValue, separators);
+            try
+            {
+                parseNode.Parse(segmentValue, separators);
+            }
+            catch (ParsingException ex)
+            {
+                if(typeof(T).Name == "ISA" || typeof(T).Name == "UNB" || typeof(T).Name == "UNA")
+                    throw new ReaderException(ex.Message, ReaderErrorCode.InvalidControlStructure);
+
+                throw new ReaderException(ex.Message, ReaderErrorCode.InvalidInterchangeContent);
+            }
+            
             return (T)parseNode.ToInstance();
         }
         
@@ -334,7 +345,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                throw new ParsingException(ErrorCode.RulesAssemblyNotFound, ex.Message);
+                throw new ReaderException(ex.Message, ReaderErrorCode.RulesAssemblyNotFound);
             }
 
             var matches = assembly.GetTypes().Where(m =>
@@ -347,14 +358,20 @@ namespace EdiFabric.Framework.Readers
             var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Name + ")]";
 
             if (!matches.Any())
-                throw new ParsingException(ErrorCode.UnexpectedMessage,
-                    String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
-                        assembly.FullName));
+            {
+                var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
+                    assembly.FullName);
+
+                throw new ReaderException(msg, ReaderErrorCode.TransactionSetNotSupported);
+            }
 
             if (matches.Count > 1)
-                throw new ParsingException(ErrorCode.DuplicateTypeFound,
-                    String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
-                        assembly.FullName));
+            {
+                var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
+                    assembly.FullName);
+
+                throw new ReaderException(msg, ReaderErrorCode.DuplicateTypeFound);
+            }
 
             return matches.First();
         }

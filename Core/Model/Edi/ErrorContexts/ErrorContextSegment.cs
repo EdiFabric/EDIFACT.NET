@@ -11,8 +11,10 @@
 
 using System;
 using System.Collections.Generic;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Validation;
 
-namespace EdiFabric.Core.Model.Validation
+namespace EdiFabric.Core.Model.Edi.Exceptions
 {
     /// <summary>
     /// Information for the data, error codes and the context of the data elements that failed.
@@ -30,11 +32,16 @@ namespace EdiFabric.Core.Model.Validation
         /// </summary>
         public int Position { get; private set; }
 
-        private readonly List<ValidationResult> _codes = new List<ValidationResult>();
+        /// <summary>
+        /// The segment line.
+        /// </summary>
+        public string Value { get; private set; }
+
+        private readonly List<SegmentErrorCode> _codes = new List<SegmentErrorCode>();
         /// <summary>
         /// The syntax error codes.
         /// </summary>
-        public IReadOnlyCollection<ValidationResult> Codes
+        public IReadOnlyCollection<SegmentErrorCode> Codes
         {
             get { return _codes.AsReadOnly(); }
         }
@@ -55,7 +62,7 @@ namespace EdiFabric.Core.Model.Validation
         /// <param name="position">The segment position.</param>
         public ErrorContextSegment(string name, int position)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
             if (position <= 0)
                 throw new Exception("position must be greater tan zero.");
@@ -70,17 +77,42 @@ namespace EdiFabric.Core.Model.Validation
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public ErrorContextSegment(string name, int position, ValidationResult errorCode)
+        public ErrorContextSegment(string name, int position, SegmentErrorCode errorCode)
             : this(name, position)
         {
             _codes.Add(errorCode);
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// </summary>
+        /// <param name="name">The segment ID.</param>
+        /// <param name="position">The segment position.</param>
+        /// <param name="value">The segment line.</param>
+        public ErrorContextSegment(string name, int position, string value)
+            : this(name, position)
+        {
+            Value = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// </summary>
+        /// <param name="name">The segment ID.</param>
+        /// <param name="position">The segment position.</param>
+        /// <param name="value">The segment line.</param>
+        /// <param name="errorCode">The syntax error code.</param>
+        public ErrorContextSegment(string name, int position, string value, SegmentErrorCode errorCode)
+            : this(name, position, errorCode)
+        {
+            Value = value;
+        }
+
+        /// <summary>
         /// Adds a syntax error code to the error codes collection.
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
-        public void Add(ValidationResult errorCode)
+        public void Add(SegmentErrorCode errorCode)
         {
             _codes.Add(errorCode);
         }
@@ -94,7 +126,7 @@ namespace EdiFabric.Core.Model.Validation
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value;</param>
-        public void Add(string name, int position, ValidationResult code, int componentPosition,
+        public void Add(string name, int position, DataElementErrorCode code, int componentPosition,
             int repetitionPosition, string value)
         {
             _errors.Add(new ErrorContextDataElement(name, position, code, componentPosition, repetitionPosition, value));

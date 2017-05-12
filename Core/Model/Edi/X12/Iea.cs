@@ -12,19 +12,19 @@
 using System;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core.Model.Edifact
+namespace EdiFabric.Core.Model.Edi.X12
 {
     /// <summary>
-    /// Functional Group trailer.
+    /// Interchange trailer.
     /// </summary>
     [Serializable()]
-    [Segment("UNE")]
-    public class UNE : IEdiItem
+    [Segment("IEA")]
+    public class IEA : IEdiItem 
     {
         [Pos(1)]
-        public string GroupControlCount_1 { get; set; }
+        public string NumberOfIncludedGroups_1 { get; set; }
 
         [Pos(2)]
-        public string GroupReferenceNumber_2 { get; set; }
-    }
+        public string InterchangeControlNumber_2 { get; set; }
+    }     
 }

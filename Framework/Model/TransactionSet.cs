@@ -12,7 +12,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Core.Model;
+using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
 {
@@ -36,8 +38,10 @@ namespace EdiFabric.Framework.Model
         public void Analyze(IEnumerable<SegmentContext> segments, Separators separators)
         {
             var currSeg = Children.First() as Segment;
+            var index = 0;
             foreach (var segment in segments)
             {
+                index++;
                 if (segment.IsJump)
                 {
                     currSeg =
@@ -46,8 +50,9 @@ namespace EdiFabric.Framework.Model
                                 d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
-                        throw new ParsingException(ErrorCode.InvalidInterchangeContent, "Unable to resolve HL.",
-                            segment.Value);
+                        throw new SegmentException("HL not found.",
+                            new ErrorContextSegment(segment.Name, index,
+                                segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
@@ -55,20 +60,34 @@ namespace EdiFabric.Framework.Model
                 if (currSeg == null)
                 {
                     var message = "Segment was not in the correct position according to the rules class.";
-                    ErrorCode errorCode = ErrorCode.UnexpectedSegment;
+                    var errorCode = SegmentErrorCode.SegmentNotInProperSequence;
                     if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))
                     {
                         message = "Segment is not supported in rules class.";
-                        errorCode = ErrorCode.UnrecognizedSegment;
+                        errorCode = SegmentErrorCode.UnrecognizedSegment;
                     }
 
-                    throw new ParsingException(errorCode, message, segment.Value);
+                    throw new SegmentException(message,
+                            new ErrorContextSegment(segment.Name, index,
+                                segment.Value, errorCode));
                 }
 
                 if (currSeg.IsParsed)
                     currSeg = (Segment)currSeg.InsertRepetition();
 
-                currSeg.Parse(segment.Value, separators);               
+                try
+                {
+                    currSeg.Parse(segment.Value, separators);  
+                }
+                catch (ParsingException ex)
+                {
+                    var segmentContext = new ErrorContextSegment(segment.Name, index, segment.Value);
+                    segmentContext.Add(ex.Name, ex.Position, ex.ErrorCode, ex.ComponentPosition, ex.RepetitionPosition,
+                        ex.Value);
+
+                    throw new SegmentException(ex.Message, segmentContext);
+                }
+                             
             }
         }
 

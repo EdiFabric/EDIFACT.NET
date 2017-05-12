@@ -11,7 +11,7 @@
 
 using System;
 
-namespace EdiFabric.Core.Model
+namespace EdiFabric.Framework
 {
     /// <summary>
     /// The context of an EDI transaction set (or message).

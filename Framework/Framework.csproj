@@ -70,6 +70,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ReaderException.cs" />
+    <Compile Include="Exceptions\SegmentException.cs" />
+    <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="MessageContext.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Writers\EdiWriter.cs" />

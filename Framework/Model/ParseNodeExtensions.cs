@@ -117,10 +117,10 @@ namespace EdiFabric.Framework.Model
                 return new Segment(propertyInfo, attr as SegmentAttribute, instance);
 
             if (attr is CompositeAttribute)
-                return new ComplexDataElement(propertyInfo, instance);
+                return new ComplexDataElement(propertyInfo, attr as CompositeAttribute, instance);
 
             if (attr is GroupAttribute)
-                return new Loop(propertyInfo, instance);
+                return new Loop(propertyInfo, attr as GroupAttribute, instance);
 
             if (attr is AllAttribute)
                 return new AllLoop(propertyInfo, instance);

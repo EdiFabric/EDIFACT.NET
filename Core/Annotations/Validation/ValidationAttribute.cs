@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Core.Model.Validation;
 
 namespace EdiFabric.Core.Annotations.Validation

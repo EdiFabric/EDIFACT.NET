@@ -12,7 +12,7 @@
 using System;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core.Model.X12
+namespace EdiFabric.Core.Model.Edi.X12
 {
     /// <summary>
     /// Functional Group trailer.

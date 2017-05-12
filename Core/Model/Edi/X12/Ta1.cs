@@ -12,19 +12,28 @@
 using System;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core.Model.Edifact
+namespace EdiFabric.Core.Model.Edi.X12
 {
     /// <summary>
-    /// Interchange trailer.
+    /// Interchange acknowledgment.
     /// </summary>
     [Serializable()]
-    [Segment("UNZ")]
-    public class UNZ : IEdiItem
+    [Segment("TA1")]
+    public class TA1 : IEdiItem
     {
         [Pos(1)]
-        public string InterchangeControlCount_1 { get; set; }
+        public string InterchangeControlNumber_1 { get; set; }
 
         [Pos(2)]
-        public string InterchangeControlReference_2 { get; set; }
-    }  
+        public string InterchangeDate_2 { get; set; }
+
+        [Pos(3)]
+        public string InterchangeTime_3 { get; set; }
+
+        [Pos(4)]
+        public string InterchangeAcknowledgmentCode_4 { get; set; }
+
+        [Pos(5)]
+        public string InterchangeNoteCode_5 { get; set; }        
+    }      
 }
