@@ -70,6 +70,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\MessageException.cs" />
     <Compile Include="Exceptions\ReaderException.cs" />
     <Compile Include="Exceptions\SegmentException.cs" />
     <Compile Include="Exceptions\DataElementException.cs" />

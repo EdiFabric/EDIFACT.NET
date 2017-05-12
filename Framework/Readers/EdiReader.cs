@@ -255,6 +255,12 @@ namespace EdiFabric.Framework.Readers
                 errorContext.Add(ex.ErrorContext);
                 Item = errorContext;
             }
+            catch (MessageException ex)
+            {
+                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber,
+                    ex.ErrorCode);
+                Item = errorContext;
+            }
             finally
             {
                 CurrentSegments.Clear();
@@ -317,7 +323,7 @@ namespace EdiFabric.Framework.Readers
             {
                 parseNode.Parse(segmentValue, separators);
             }
-            catch (DataElementException ex)
+            catch (Exception ex)
             {
                 if(typeof(T).Name == "ISA" || typeof(T).Name == "UNB" || typeof(T).Name == "UNA")
                     throw new ReaderException(ex.Message, ReaderErrorCode.InvalidControlStructure);
@@ -346,7 +352,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                throw new ReaderException(ex.Message, ReaderErrorCode.RulesAssemblyNotFound);
+                throw new MessageException(ex.Message, MessageErrorCode.TransactionSetNotSupported);
             }
 
             var matches = assembly.GetTypes().Where(m =>
@@ -363,7 +369,7 @@ namespace EdiFabric.Framework.Readers
                 var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                throw new ReaderException(msg, ReaderErrorCode.TransactionSetNotSupported);
+                throw new MessageException(msg, MessageErrorCode.TransactionSetNotSupported);
             }
 
             if (matches.Count > 1)
@@ -371,7 +377,7 @@ namespace EdiFabric.Framework.Readers
                 var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                throw new ReaderException(msg, ReaderErrorCode.DuplicateTypeFound);
+                throw new MessageException(msg, MessageErrorCode.TransactionSetNotSupported);
             }
 
             return matches.First();

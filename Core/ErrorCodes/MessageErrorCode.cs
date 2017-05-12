@@ -53,6 +53,11 @@ namespace EdiFabric.Core.ErrorCodes
         /// <summary>
         /// Invalid interchange control number.
         /// </summary>
-        DuplicateInterchangeControlNumber
+        DuplicateInterchangeControlNumber,
+
+        /// <summary>
+        /// Transaction set is not supported.
+        /// </summary>
+        TransactionSetNotSupported, 
     }
 }

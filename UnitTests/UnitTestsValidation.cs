@@ -30,15 +30,15 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICAll>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsFalse(validationResult);
-            Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 6);
+            Assert.IsTrue(result.Errors.Any());
+            Assert.IsTrue(result.Errors.Count == 6);
 
-            var sErr1 = results.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
+            var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
             Assert.IsNotNull(sErr1);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
@@ -50,7 +50,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.Value == null);
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.RequiredDataElementMissing);
 
-            var sErr2 = results.SingleOrDefault(r => r.Name == "PCD" && r.Position == 14);
+            var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "PCD" && r.Position == 14);
             Assert.IsNotNull(sErr2);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
@@ -62,25 +62,25 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.Value == null);
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.RequiredDataElementMissing);
 
-            var sErr3 = results.SingleOrDefault(r => r.Name == "UNS" && r.Position == 32);
+            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "UNS" && r.Position == 32);
             Assert.IsNotNull(sErr3);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
-            var sErr4 = results.SingleOrDefault(r => r.Name == "MOA" && r.Position == 32);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "MOA" && r.Position == 32);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
             Assert.IsTrue(sErr4.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
-            var sErr5 = results.SingleOrDefault(r => r.Name == "PAI" && r.Position == 4);
+            var sErr5 = result.Errors.SingleOrDefault(r => r.Name == "PAI" && r.Position == 4);
             Assert.IsNotNull(sErr5);
             Assert.IsTrue(sErr5.Codes.Count == 1);
             Assert.IsTrue(sErr5.Errors.Count == 0);
             Assert.IsTrue(sErr5.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
-            var sErr6 = results.SingleOrDefault(r => r.Name == "UNT" && r.Position == 4);
+            var sErr6 = result.Errors.SingleOrDefault(r => r.Name == "UNT" && r.Position == 4);
             Assert.IsNotNull(sErr6);
             Assert.IsTrue(sErr6.Codes.Count == 1);
             Assert.IsTrue(sErr6.Errors.Count == 0);
@@ -102,15 +102,15 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsFalse(validationResult);
-            Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 4);
+            Assert.IsTrue(result.Errors.Any());
+            Assert.IsTrue(result.Errors.Count == 4);
 
-            var sErr1 = results.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
+            var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
@@ -122,7 +122,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.Value == null);
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.TooManyRepetitions);
 
-            var sErr2 = results.SingleOrDefault(r => r.Name == "COM" && r.Position == 15);
+            var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "COM" && r.Position == 15);
             Assert.IsNotNull(sErr2);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
@@ -134,13 +134,13 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.Value == null);
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.TooManyRepetitions);
 
-            var sErr3 = results.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
+            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
             Assert.IsNotNull(sErr3);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentExceedsMaximumUse));
 
-            var sErr4 = results.SingleOrDefault(r => r.Name == "TAX" && r.Position == 19);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 19);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
@@ -162,15 +162,15 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsFalse(validationResult);
-            Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 4);
+            Assert.IsTrue(result.Errors.Any());
+            Assert.IsTrue(result.Errors.Count == 4);
 
-            var sErr1 = results.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
+            var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
@@ -182,7 +182,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.Value == null);
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.TooFewRepetitions);
 
-            var sErr2 = results.SingleOrDefault(r => r.Name == "COM" && r.Position == 10);
+            var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "COM" && r.Position == 10);
             Assert.IsNotNull(sErr2);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
@@ -194,13 +194,13 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.Value == null);
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.TooFewRepetitions);
 
-            var sErr3 = results.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
+            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
             Assert.IsNotNull(sErr3);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentBelowMinimumUse));
 
-            var sErr4 = results.SingleOrDefault(r => r.Name == "TAX" && r.Position == 14);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 14);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
@@ -222,12 +222,13 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICInvalidAttributes>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            msg.IsValid(out result);
             
             // ASSERT
-            Assert.IsTrue(validationResult);
-            Assert.IsFalse(results.Any());
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Single() == MessageErrorCode.MessageTrailerMissing);
+            Assert.IsFalse(result.Errors.Any());
         }
 
         [TestMethod]
@@ -245,15 +246,15 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsFalse(validationResult);
-            Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 4);
+            Assert.IsTrue(result.Errors.Any());
+            Assert.IsTrue(result.Errors.Count == 3);
 
-            var sErr1 = results.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
+            var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
             Assert.IsNotNull(sErr1);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
@@ -265,10 +266,10 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.Value == "5");
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.DataElementTooShort);
 
-            var sErr2 = results.FirstOrDefault(r => r.Name == "BGM" && r.Position == 2);
+            var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr2);
             Assert.IsTrue(sErr2.Codes.Count == 0);
-            Assert.IsTrue(sErr2.Errors.Count == 1);
+            Assert.IsTrue(sErr2.Errors.Count == 2);
             var dErr2 = sErr2.Errors.First();
             Assert.IsTrue(dErr2.Name == "1225");
             Assert.IsTrue(dErr2.Position == 3);
@@ -276,12 +277,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.RepetitionPosition == 1);
             Assert.IsTrue(dErr2.Value == "B");
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.DataElementTooShort);
-
-            var sErr3 = results.LastOrDefault(r => r.Name == "BGM" && r.Position == 2);
-            Assert.IsNotNull(sErr3);
-            Assert.IsTrue(sErr3.Codes.Count == 0);
-            Assert.IsTrue(sErr3.Errors.Count == 1);
-            var dErr3 = sErr3.Errors.First();
+            var dErr3 = sErr2.Errors.Last();
             Assert.IsTrue(dErr3.Name == "1225");
             Assert.IsTrue(dErr3.Position == 3);
             Assert.IsTrue(dErr3.ComponentPosition == 0);
@@ -289,7 +285,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr3.Value == "CDEF");
             Assert.IsTrue(dErr3.Code == DataElementErrorCode.DataElementTooLong);
 
-            var sErr4 = results.SingleOrDefault(r => r.Name == "MOA" && r.Position == 16);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "MOA" && r.Position == 16);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 0);
             Assert.IsTrue(sErr4.Errors.Count == 1);
@@ -317,12 +313,13 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICNoAttributes>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            msg.IsValid(out result);
 
             // ASSERT
-            Assert.IsTrue(validationResult);
-            Assert.IsFalse(results.Any());
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Single() == MessageErrorCode.MessageTrailerMissing);
+            Assert.IsFalse(result.Errors.Any());
         }
 
         [TestMethod]
@@ -340,15 +337,15 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsFalse(validationResult);
-            Assert.IsTrue(results.Any());
-            Assert.IsTrue(results.Count == 1);
+            Assert.IsTrue(result.Errors.Any());
+            Assert.IsTrue(result.Errors.Count == 1);
 
-            var sErr1 = results.SingleOrDefault(r => r.Name == "CTA" && r.Position == 8);
+            var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "CTA" && r.Position == 8);
             Assert.IsNotNull(sErr1);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);

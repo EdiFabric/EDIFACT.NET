@@ -27,9 +27,9 @@ namespace EdiFabric.UnitTests
             }            
 
             // ASSERT
-            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.DuplicateTypeFound);  
+            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported));
         }
 
         [TestMethod]
@@ -48,9 +48,9 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.TransactionSetNotSupported);  
+            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported)); 
         }
 
         [TestMethod]
@@ -69,9 +69,9 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.RulesAssemblyNotFound);  
+            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported)); 
         }
     }
 }

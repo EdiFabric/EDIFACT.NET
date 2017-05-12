@@ -35,20 +35,5 @@ namespace EdiFabric.Core.ErrorCodes
         /// Unprocessed segments found before the end of the file.
         /// </summary>
         ImproperEndOfFile,
-
-        /// <summary>
-        /// The rules assembly was not found. 
-        /// </summary>
-        RulesAssemblyNotFound,
-
-        /// <summary>
-        /// Duplicate type was defined in the rules assembly. 
-        /// </summary>
-        DuplicateTypeFound,
-
-        /// <summary>
-        /// Transaction set is not supported.
-        /// </summary>
-        TransactionSetNotSupported, 
     }
 }

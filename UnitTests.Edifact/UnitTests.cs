@@ -818,12 +818,12 @@ namespace EdiFabric.UnitTests.Edifact
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<SegmentErrorContext> results;
-            var validationResult = msg.IsValid(out results);
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
 
             // ASSERT
             Assert.IsTrue(validationResult);
-            Assert.IsFalse(results.Any());
+            Assert.IsFalse(result.Errors.Any());
         }
 
         [TestMethod]

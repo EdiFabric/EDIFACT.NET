@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Model.Edi
@@ -38,7 +39,7 @@ namespace EdiFabric.Core.Model.Edi
             var type = GetType();
             var msgAttr = type.GetCustomAttribute<MessageAttribute>();
             if (msgAttr == null)
-                throw new Exception(string.Format("[MessageAttribute] was not found in {0} .", type.FullName));
+                throw new Exception(string.Format("{0} was not found in {1} .", typeof(MessageAttribute).Name, type.FullName));
 
             Format = msgAttr.Format;
             if (Format == null) throw new Exception("Format is null");
@@ -56,7 +57,7 @@ namespace EdiFabric.Core.Model.Edi
             if (Format == "EDIFACT")
                 return GetControlNumber("UNH", 1);
 
-            throw new NotImplementedException(Format);
+            throw new Exception(string.Format("GetControlNumber is not implemented for format {0} .", Format));
         }
 
         private string GetControlNumber(string tag, int position)
@@ -82,11 +83,11 @@ namespace EdiFabric.Core.Model.Edi
             return cnProperty.GetValue(headerValue) as string;
         }
 
-        public bool IsValid(out List<SegmentErrorContext> results)
+        public bool IsValid(out MessageErrorContext result)
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
-            results = new List<SegmentErrorContext>();
+            result = new MessageErrorContext(Name, GetControlNumber());
 
             stack.Push(new InstanceContext(this));
 
@@ -94,15 +95,20 @@ namespace EdiFabric.Core.Model.Edi
             var inSegmentIndex = 0;
             var inComponentIndex = 0;
 
+            var segmentsNum = 0;
+
             while (stack.Any())
             {
                 var current = stack.Pop();
+
+                if (current.IsInstanceOfType<SegmentAttribute>())
+                    segmentsNum++;
 
                 if (current.Instance != null && !(current.Instance is string) && !visited.Add(current.Instance))
                     continue;
 
                 current.SetIndexes(ref segmentIndex, ref inSegmentIndex, ref inComponentIndex);
-                results.AddRange(current.Validate(segmentIndex, inSegmentIndex, inComponentIndex));
+                result.AddRange(current.Validate(segmentIndex, inSegmentIndex, inComponentIndex));
 
                 var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p.Instance));
                 foreach (var neighbour in neighbours.Reverse())
@@ -111,7 +117,92 @@ namespace EdiFabric.Core.Model.Edi
                 }
             }
 
-            return !results.Any();
-        }                
+            foreach (var errorCode in ValidateStructure(segmentsNum))
+                result.Add(errorCode);
+
+            return !result.HasErrors;
+        }
+
+        private IEnumerable<MessageErrorCode> ValidateStructure(int segmentsNum)
+        {
+            if (Format == "X12")
+                return ValidateStructure("SE", segmentsNum);
+
+            if (Format == "EDIFACT")
+                return ValidateStructure("UNT", segmentsNum);
+
+            throw new Exception(string.Format("ValidateStructure is not implemented for format {0} .", Format));
+        }
+
+        private IEnumerable<MessageErrorCode> ValidateStructure(string tag, int segmentsNum)
+        {
+            var result = new List<MessageErrorCode>();
+            var controlNumber = GetControlNumber();
+
+            if (string.IsNullOrEmpty(controlNumber))
+                result.Add(MessageErrorCode.InvalidTransactionSetIdentifier);
+
+            var trailerProperty =
+                GetType()
+                    .GetProperties()
+                    .Where(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>() != null)
+                    .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
+
+            if (trailerProperty == null)
+            {
+                result.Add(MessageErrorCode.MessageTrailerMissing);
+                return result;
+            }
+
+            var trailerValue = trailerProperty.GetValue(this);
+            if (trailerValue == null)
+            {
+                result.Add(MessageErrorCode.MessageTrailerMissing);
+                return result;
+            }
+
+            var trailer = GetValues(trailerValue);
+
+           if(trailer.Item1 == -1)
+           {
+               result.Add(MessageErrorCode.SegmentsCountNotMatching);
+               return result;
+           }
+
+           if (string.IsNullOrEmpty(trailer.Item2))
+           {
+               result.Add(MessageErrorCode.ControlNumberNotMatching);
+               return result;
+           }
+
+           if (segmentsNum != trailer.Item1)
+                result.Add(MessageErrorCode.SegmentsCountNotMatching);
+
+            if (controlNumber != trailer.Item2)
+                result.Add(MessageErrorCode.ControlNumberNotMatching);
+
+            return result;
+        }
+
+        private Tuple<int, string> GetValues(object trailer)
+        {
+            var values =
+                trailer.GetType().GetProperties().Sort().Select(property => property.GetValue(trailer)).ToList();
+
+            if(values.Count != 2)
+                return new Tuple<int, string>(-1, null);
+
+            var sn = values[0] as string;
+            var cn = values[1] as string;
+
+            if(sn == null || cn == null)
+                return new Tuple<int, string>(-1, cn);
+
+            int trailerSegmentsNumber;
+            if (!Int32.TryParse(sn, out trailerSegmentsNumber))
+                return new Tuple<int, string>(-1, cn);
+
+            return new Tuple<int, string>(trailerSegmentsNumber, cn);
+        }
     }
 }
