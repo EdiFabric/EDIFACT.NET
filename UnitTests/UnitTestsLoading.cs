@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.Edi;
-using EdiFabric.Core.Model.Edi.Exceptions;
-using EdiFabric.Framework.Exceptions;
+using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Readers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -29,9 +27,9 @@ namespace EdiFabric.UnitTests
             }            
 
             // ASSERT
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ReaderErrorCode.DuplicateTypeFound);  
+            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.DuplicateTypeFound);  
         }
 
         [TestMethod]
@@ -50,9 +48,9 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ReaderErrorCode.TransactionSetNotSupported);  
+            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.TransactionSetNotSupported);  
         }
 
         [TestMethod]
@@ -71,9 +69,9 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ErrorCode == ReaderErrorCode.RulesAssemblyNotFound);  
+            Assert.IsTrue(error.ReaderErrorCode == ReaderErrorCode.RulesAssemblyNotFound);  
         }
     }
 }

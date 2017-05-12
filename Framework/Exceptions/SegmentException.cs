@@ -1,5 +1,5 @@
 ﻿using System;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -8,14 +8,14 @@ namespace EdiFabric.Framework.Exceptions
         /// <summary>
         /// The segment error context.
         /// </summary>
-        public ErrorContextSegment ErrorContext { get; set; }
+        public SegmentErrorContext ErrorContext { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReaderException"/> class.
         /// </summary>
         /// <param name="message">The error message.</param>
         /// <param name="errorContext">The segment error context.</param>
-        public SegmentException(string message, ErrorContextSegment errorContext)
+        public SegmentException(string message, SegmentErrorContext errorContext)
             : base(message)
         {
             ErrorContext = errorContext;

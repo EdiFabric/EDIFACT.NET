@@ -12,8 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
@@ -51,7 +51,7 @@ namespace EdiFabric.Framework.Model
 
                     if (currSeg == null)
                         throw new SegmentException("HL not found.",
-                            new ErrorContextSegment(segment.Name, index,
+                            new SegmentErrorContext(segment.Name, index,
                                 segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
                 }
 
@@ -68,7 +68,7 @@ namespace EdiFabric.Framework.Model
                     }
 
                     throw new SegmentException(message,
-                            new ErrorContextSegment(segment.Name, index,
+                            new SegmentErrorContext(segment.Name, index,
                                 segment.Value, errorCode));
                 }
 
@@ -79,9 +79,9 @@ namespace EdiFabric.Framework.Model
                 {
                     currSeg.Parse(segment.Value, separators);  
                 }
-                catch (ParsingException ex)
+                catch (DataElementException ex)
                 {
-                    var segmentContext = new ErrorContextSegment(segment.Name, index, segment.Value);
+                    var segmentContext = new SegmentErrorContext(segment.Name, index, segment.Value);
                     segmentContext.Add(ex.Name, ex.Position, ex.ErrorCode, ex.ComponentPosition, ex.RepetitionPosition,
                         ex.Value);
 

@@ -15,7 +15,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core;
 using EdiFabric.Core.Annotations.Edi;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
@@ -111,7 +111,7 @@ namespace EdiFabric.Framework.Model
                 }
 
                 if (index >= Children.Count)
-                    throw new ParsingException("Too many Data Elements", "", index,
+                    throw new DataElementException("Too many Data Elements", "", index,
                         DataElementErrorCode.TooManyDataElements,
                         currentToParse, 0, 0);
 
@@ -135,9 +135,9 @@ namespace EdiFabric.Framework.Model
                     {
                         currentElement.Parse(repetition, separators); 
                     }
-                    catch (ParsingException ex)
+                    catch (DataElementException ex)
                     {
-                        throw new ParsingException(ex.Message, currentElement.EdiName, index, ex.ErrorCode,
+                        throw new DataElementException(ex.Message, currentElement.EdiName, index, ex.ErrorCode,
                             repetition, ex.ComponentPosition, repIndex);
                     }
                                       

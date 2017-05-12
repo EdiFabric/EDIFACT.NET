@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.Annotations.Validation;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
-namespace EdiFabric.Core.Model.Validation
+namespace EdiFabric.Core.Model.Edi
 {
     public sealed class InstanceContext
     {
@@ -73,9 +73,9 @@ namespace EdiFabric.Core.Model.Validation
             _repetitionIndex = repetitionIndex;
         }
 
-        public List<ErrorContextSegment> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
+        public List<SegmentErrorContext> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
         {
-            var result = new List<ErrorContextSegment>();
+            var result = new List<SegmentErrorContext>();
 
             if (Property == null) return result;
 

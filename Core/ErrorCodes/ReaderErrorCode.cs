@@ -9,7 +9,7 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Core.Model.Edi.Exceptions
+namespace EdiFabric.Core.ErrorCodes
 {
     /// <summary>
     /// The internal error codes for all known error conditions.

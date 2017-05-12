@@ -13,9 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
-using EdiFabric.Core.Model.Edi.Exceptions;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
@@ -31,10 +31,10 @@ namespace EdiFabric.Core.Annotations.Validation
             DataType = dataType;
         }
 
-        public override List<ErrorContextSegment> IsValid(InstanceContext instanceContext, int segmentIndex,
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
-            var result = new List<ErrorContextSegment>();
+            var result = new List<SegmentErrorContext>();
 
             if (instanceContext.Instance == null)
                 return result;
@@ -58,7 +58,7 @@ namespace EdiFabric.Core.Annotations.Validation
             return result;
         }
 
-        private ErrorContextSegment ValidateDataElement(string value, InstanceContext instanceContext,
+        private SegmentErrorContext ValidateDataElement(string value, InstanceContext instanceContext,
             int segmentIndex, int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             if (instanceContext.Parent == null)
@@ -73,7 +73,7 @@ namespace EdiFabric.Core.Annotations.Validation
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-            var result = new ErrorContextSegment(segmentName, segmentIndex);
+            var result = new SegmentErrorContext(segmentName, segmentIndex);
             result.Add(name, inSegmentIndex, DataElementErrorCode.InvalidCodeValue, inCompositeIndex, repetitionIndex,
                 value);
             return result;

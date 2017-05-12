@@ -11,14 +11,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.ErrorCodes;
 
-namespace EdiFabric.Core.Model.Edi.Exceptions
+namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
     /// <summary>
     /// Information for the data, error codes and the context of the segments that failed.  
     /// </summary>
-    public sealed class ErrorContextMessage : IEdiItem
+    public sealed class MessageErrorContext : ErrorContext, IEdiItem
     {
         /// <summary>
         /// The type of message (or its tag).
@@ -29,12 +29,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         /// The message control number.
         /// </summary>
         public string ControlNumber { get; private set; }
-
-        /// <summary>
-        /// The copy of the segment in error.
-        /// </summary>
-        public string FailedSegment { get; private set; }
-
+        
         private readonly List<MessageErrorCode> _codes = new List<MessageErrorCode>();
         /// <summary>
         /// The syntax error codes.
@@ -44,11 +39,11 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
             get { return _codes.AsReadOnly(); }
         }
 
-        private readonly Dictionary<string, ErrorContextSegment> _errors = new Dictionary<string, ErrorContextSegment>();
+        private readonly Dictionary<string, SegmentErrorContext> _errors = new Dictionary<string, SegmentErrorContext>();
         /// <summary>
         /// The segment error contexts.
         /// </summary>
-        public IReadOnlyCollection<ErrorContextSegment> Errors
+        public IReadOnlyCollection<SegmentErrorContext> Errors
         {
             get { return _errors.Values.ToList().AsReadOnly(); }
         }
@@ -62,49 +57,24 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
+        /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
-        public ErrorContextMessage(string name, string controlNumber)
+        public MessageErrorContext(string name, string controlNumber)
         {
             Name = name;
             ControlNumber = controlNumber;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
-        /// </summary>
-        /// <param name="name">The message name (or tag).</param>
-        /// <param name="controlNumber">The message control number.</param>
-        /// <param name="failedSegment">The copy of the segment in error.</param>
-        public ErrorContextMessage(string name, string controlNumber, string failedSegment)
-            : this(name, controlNumber)
-        {
-            FailedSegment = failedSegment;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
+        /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public ErrorContextMessage(string name, string controlNumber, MessageErrorCode errorCode)
+        public MessageErrorContext(string name, string controlNumber, MessageErrorCode errorCode)
             : this(name, controlNumber)
-        {
-            _codes.Add(errorCode);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextMessage"/> class.
-        /// </summary>
-        /// <param name="name">The message name (or tag).</param>
-        /// <param name="controlNumber">The message control number.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        /// <param name="failedSegment">The copy of the segment in error.</param>
-        public ErrorContextMessage(string name, string controlNumber, MessageErrorCode errorCode, string failedSegment)
-            : this(name, controlNumber, failedSegment)
         {
             _codes.Add(errorCode);
         }
@@ -127,7 +97,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
             }
             else
             {
-                _errors.Add(key, new ErrorContextSegment(segmentName, segmentPosition, value, errorCode));
+                _errors.Add(key, new SegmentErrorContext(segmentName, segmentPosition, value, errorCode));
             }
         }
 
@@ -155,7 +125,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
             }
             else
             {
-                var segmentContext = new ErrorContextSegment(segmentName, segmentPosition, segmentValue);
+                var segmentContext = new SegmentErrorContext(segmentName, segmentPosition, segmentValue);
                 segmentContext.Add(name, position, code, componentPosition, repetitionPosition, value);
                 _errors.Add(key, segmentContext);
             }
@@ -167,7 +137,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         /// A segment is identified by its name (or segment ID) and its position.
         /// </summary>
         /// <param name="segmentContext">The segment error context to merge.</param>
-        public void Add(ErrorContextSegment segmentContext)
+        public void Add(SegmentErrorContext segmentContext)
         {
             var key = segmentContext.Name + segmentContext.Position;
             if (_errors.ContainsKey(key))

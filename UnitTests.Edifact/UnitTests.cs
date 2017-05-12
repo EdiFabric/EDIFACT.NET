@@ -4,13 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.Model;
-using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.Edifact;
-using EdiFabric.Core.Model.Edi.Exceptions;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.EDIFACT_D00A;
@@ -44,9 +41,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
-            File.WriteAllText(@"C:\Test\Expected.txt", expected);
-            File.WriteAllText(@"C:\Test\Actual.txt", actual);
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -75,7 +70,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -104,7 +99,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -114,15 +109,15 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_LF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
+            var expected = CommonHelper.LoadString(sample);
             List<object> ediItems;
             
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.UTF8))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = EdifactHelper.Generate(ediItems, null, "\n");
+            var actual = EdifactHelper.Generate(ediItems, null, "\n", Encoding.UTF8);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -131,7 +126,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -174,7 +169,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
         }
@@ -202,7 +197,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -228,7 +223,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 2);
             Assert.IsTrue(ediItems.OfType<UNE>().Count() == 1);
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 1);
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -254,7 +249,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 2);
             Assert.IsTrue(ediItems.OfType<UNE>().Count() == 2);
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 1);
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -280,7 +275,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 1);
             Assert.IsTrue(!ediItems.OfType<UNG>().Any());
             Assert.IsTrue(!ediItems.OfType<UNE>().Any());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -307,7 +302,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -354,7 +349,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -401,7 +396,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -428,7 +423,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -446,7 +441,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine);
+            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine, Encoding.UTF8);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -475,7 +470,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 1);
             Assert.AreEqual(expected, actual);
         }
@@ -531,7 +526,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<ErrorContextReader>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsNotNull(error.ReaderErrorCode == ReaderErrorCode.ImproperEndOfFile);
         }
@@ -551,7 +546,7 @@ namespace EdiFabric.UnitTests.Edifact
             }
 
             // ASSERT
-            var error = ediItems.OfType<ErrorContextReader>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsNotNull(error.ReaderErrorCode == ReaderErrorCode.InvalidControlStructure);
         }
@@ -576,7 +571,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
             //Assert.IsNotNull(error.ErrorCode == ErrorCode.DataElementsTooMany);
         }
@@ -601,7 +596,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
             //Assert.IsNotNull(error.ErrorCode == ErrorCode.ComponentDataElementsTooMany);
         }
@@ -626,7 +621,7 @@ namespace EdiFabric.UnitTests.Edifact
                     Assert.IsNotNull(ediItems.OfType<UNG>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<UNE>().SingleOrDefault());
-                    Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+                    Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
                     ediItems.Clear();
                 }
             }
@@ -654,7 +649,7 @@ namespace EdiFabric.UnitTests.Edifact
                     Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
                     Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
                     Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-                    Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+                    Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
                     ediItems.Clear();
                 }
             }
@@ -680,7 +675,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -703,7 +698,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 2);
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
         }
 
         [TestMethod]
@@ -726,7 +721,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<ReaderException>().SingleOrDefault();
+            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
             //Assert.IsNotNull(error.ErrorCode == ErrorCode.UnrecognizedSegment);
         }
@@ -755,7 +750,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
 
@@ -779,7 +774,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 3);
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 2);
-            Assert.IsNotNull(ediItems.OfType<ReaderException>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.IsTrue(ediItems.Count == 8);
         }
 
@@ -803,7 +798,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 3);
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<ReaderException>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<ErrorContext>().Count() == 2);
         }
 
         [TestMethod]
@@ -821,7 +816,7 @@ namespace EdiFabric.UnitTests.Edifact
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -852,7 +847,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<ReaderException>().SingleOrDefault());           
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());           
             Assert.AreEqual(expected, actual);
         }
 

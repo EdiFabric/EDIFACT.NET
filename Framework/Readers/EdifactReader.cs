@@ -15,8 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.Edifact;
-using EdiFabric.Core.Model.Edi.Exceptions;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 

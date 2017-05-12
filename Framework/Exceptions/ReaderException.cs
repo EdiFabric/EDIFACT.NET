@@ -10,7 +10,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Framework.Exceptions
 {
@@ -18,7 +18,7 @@ namespace EdiFabric.Framework.Exceptions
     /// Parsing exception.
     /// Raised during the parsing of EDI documents.
     /// </summary>
-    public class ReaderException : Exception
+    class ReaderException : Exception
     {
         /// <summary>
         /// The reader error code.

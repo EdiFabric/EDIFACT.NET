@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.EDIFACT_D00A.Rep;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +30,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICAll>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -102,7 +102,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -162,7 +162,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -222,7 +222,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICInvalidAttributes>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
             
             // ASSERT
@@ -245,7 +245,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT
@@ -317,7 +317,7 @@ namespace EdiFabric.UnitTests
             }
             var msg = ediItems.OfType<TSINVOICNoAttributes>().Single();
 
-            List<ErrorContextSegment> results;
+            List<SegmentErrorContext> results;
             var validationResult = msg.IsValid(out results);
 
             // ASSERT

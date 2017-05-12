@@ -72,7 +72,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ReaderException.cs" />
     <Compile Include="Exceptions\SegmentException.cs" />
-    <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="Exceptions\DataElementException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="StringExtensions.cs" />

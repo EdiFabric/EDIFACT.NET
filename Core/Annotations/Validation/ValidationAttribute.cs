@@ -11,8 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using EdiFabric.Core.Model.Edi.Exceptions;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
@@ -26,7 +26,7 @@ namespace EdiFabric.Core.Annotations.Validation
 
         public int Priority { get; private set; }
 
-        public abstract List<ErrorContextSegment> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
+        public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
             int inCompositeIndex, int repetitionIndex);
     }
 }

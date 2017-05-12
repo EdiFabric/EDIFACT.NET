@@ -11,15 +11,14 @@
 
 using System;
 using System.Collections.Generic;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.ErrorCodes;
 
-namespace EdiFabric.Core.Model.Edi.Exceptions
+namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
     /// <summary>
     /// Information for the data, error codes and the context of the data elements that failed.
     /// </summary>
-    public sealed class ErrorContextSegment
+    public sealed class SegmentErrorContext : ErrorContext
     {
         /// <summary>
         /// The segment ID.
@@ -46,21 +45,21 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
             get { return _codes.AsReadOnly(); }
         }
 
-        private readonly List<ErrorContextDataElement> _errors = new List<ErrorContextDataElement>();
+        private readonly List<DataElementErrorContext> _errors = new List<DataElementErrorContext>();
         /// <summary>
         /// The data element error contexts.
         /// </summary>
-        public IReadOnlyCollection<ErrorContextDataElement> Errors
+        public IReadOnlyCollection<DataElementErrorContext> Errors
         {
             get { return _errors.AsReadOnly(); }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        public ErrorContextSegment(string name, int position)
+        public SegmentErrorContext(string name, int position)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
@@ -72,37 +71,37 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public ErrorContextSegment(string name, int position, SegmentErrorCode errorCode)
+        public SegmentErrorContext(string name, int position, SegmentErrorCode errorCode)
             : this(name, position)
         {
             _codes.Add(errorCode);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="value">The segment line.</param>
-        public ErrorContextSegment(string name, int position, string value)
+        public SegmentErrorContext(string name, int position, string value)
             : this(name, position)
         {
             Value = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextSegment"/> class.
+        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
         /// <param name="value">The segment line.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public ErrorContextSegment(string name, int position, string value, SegmentErrorCode errorCode)
+        public SegmentErrorContext(string name, int position, string value, SegmentErrorCode errorCode)
             : this(name, position, errorCode)
         {
             Value = value;
@@ -129,7 +128,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         public void Add(string name, int position, DataElementErrorCode code, int componentPosition,
             int repetitionPosition, string value)
         {
-            _errors.Add(new ErrorContextDataElement(name, position, code, componentPosition, repetitionPosition, value));
+            _errors.Add(new DataElementErrorContext(name, position, code, componentPosition, repetitionPosition, value));
         }
     }
 }

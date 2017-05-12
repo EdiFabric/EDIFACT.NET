@@ -9,15 +9,14 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-using EdiFabric.Core.Model.Edi.ErrorCodes;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.ErrorCodes;
 
-namespace EdiFabric.Core.Model.Edi.Exceptions
+namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
     /// <summary>
     /// Information for the position, data and error code of the data element that failed. 
     /// </summary>
-    public sealed class ErrorContextDataElement
+    public sealed class DataElementErrorContext : ErrorContext
     {
         /// <summary>
         /// The reference number to locate the data element.
@@ -52,7 +51,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         public int RepetitionPosition { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorContextDataElement"/> class.
+        /// Initializes a new instance of the <see cref="DataElementErrorContext"/> class.
         /// </summary>
         /// <param name="name">The data element name.</param>
         /// <param name="position">The data element position.</param>
@@ -60,7 +59,7 @@ namespace EdiFabric.Core.Model.Edi.Exceptions
         /// <param name="componentPosition">The component data element position.</param>
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value.</param>
-        public ErrorContextDataElement(string name, int position, DataElementErrorCode code, int componentPosition,
+        public DataElementErrorContext(string name, int position, DataElementErrorCode code, int componentPosition,
             int repetitionPosition, string value)
         {
             Name = name;

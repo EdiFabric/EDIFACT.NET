@@ -14,7 +14,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core;
 using EdiFabric.Core.Annotations.Edi;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
@@ -47,7 +47,7 @@ namespace EdiFabric.Framework.Model
                 }
 
                 if (index >= Children.Count)
-                    throw new ParsingException("Too many components.", DataElementErrorCode.TooManyComponents, index);
+                    throw new DataElementException("Too many components.", DataElementErrorCode.TooManyComponents, index);
 
                 var currentElement = Children.ElementAt(index);
                 if (currentElement.IsParsed)

@@ -16,8 +16,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
-using EdiFabric.Core.Model.Edi.Exceptions;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
@@ -109,7 +110,7 @@ namespace EdiFabric.Framework.Readers
 
                     if (Separators == null)
                     {
-                        Item = new ErrorContextReader(ReaderErrorCode.InvalidControlStructure);
+                        Item = new ReaderErrorContext(ReaderErrorCode.InvalidControlStructure);
                         continue;
                     }
 
@@ -121,17 +122,17 @@ namespace EdiFabric.Framework.Readers
             }
             catch (ReaderException ex)
             {
-                Item = new ErrorContextReader(ex, ex.ErrorCode);
+                Item = new ReaderErrorContext(ex, ex.ErrorCode);
             }
             catch (Exception ex)
             {
-                Item = new ErrorContextReader(ex, ReaderErrorCode.Unknown);
+                Item = new ReaderErrorContext(ex, ReaderErrorCode.Unknown);
             }
 
             if (_streamReader.EndOfStream && CurrentSegments.Any())
-                Item = new ErrorContextReader(ReaderErrorCode.ImproperEndOfFile);
+                Item = new ReaderErrorContext(ReaderErrorCode.ImproperEndOfFile);
 
-            if (Item is ErrorContextReader || Item is ErrorContextMessage)
+            if (Item is ReaderErrorContext || Item is MessageErrorContext)
                 CurrentSegments.Clear();
 
             return Item != null;
@@ -250,7 +251,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (SegmentException ex)
             {
-                var errorContext = new ErrorContextMessage(messageContext.Name, messageContext.ControlNumber);
+                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber);
                 errorContext.Add(ex.ErrorContext);
                 Item = errorContext;
             }
@@ -316,7 +317,7 @@ namespace EdiFabric.Framework.Readers
             {
                 parseNode.Parse(segmentValue, separators);
             }
-            catch (ParsingException ex)
+            catch (DataElementException ex)
             {
                 if(typeof(T).Name == "ISA" || typeof(T).Name == "UNB" || typeof(T).Name == "UNA")
                     throw new ReaderException(ex.Message, ReaderErrorCode.InvalidControlStructure);

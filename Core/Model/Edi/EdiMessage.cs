@@ -14,8 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
-using EdiFabric.Core.Model.Edi.Exceptions;
-using EdiFabric.Core.Model.Validation;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Model.Edi
 {
@@ -83,11 +82,11 @@ namespace EdiFabric.Core.Model.Edi
             return cnProperty.GetValue(headerValue) as string;
         }
 
-        public bool IsValid(out List<ErrorContextSegment> results)
+        public bool IsValid(out List<SegmentErrorContext> results)
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
-            results = new List<ErrorContextSegment>();
+            results = new List<SegmentErrorContext>();
 
             stack.Push(new InstanceContext(this));
 

@@ -1,9 +1,9 @@
 ﻿using System;
-using EdiFabric.Core.Model.Edi.ErrorCodes;
+using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Framework.Exceptions 
 {
-    class ParsingException: Exception
+    class DataElementException: Exception
     {
         public string Name { get; private set; }
         public int Position { get; private set; }
@@ -12,7 +12,7 @@ namespace EdiFabric.Framework.Exceptions
         public int ComponentPosition { get; private set; }
         public int RepetitionPosition { get; private set; }
 
-        public ParsingException(string message, string name, int position, DataElementErrorCode errorCode, string value,
+        public DataElementException(string message, string name, int position, DataElementErrorCode errorCode, string value,
             int compositePosition, int repetitionPosition)
             : base(message)
         {
@@ -24,7 +24,7 @@ namespace EdiFabric.Framework.Exceptions
             RepetitionPosition = repetitionPosition;
         }
 
-        public ParsingException(string message, DataElementErrorCode errorCode, int compositePosition)
+        public DataElementException(string message, DataElementErrorCode errorCode, int compositePosition)
             : base(message)
         {
             ErrorCode = errorCode;
