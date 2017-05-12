@@ -73,7 +73,6 @@ namespace EdiFabric.Framework
             string senderQualifier, string receiverId, string receiverQualifier)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-            if (string.IsNullOrEmpty(controlNumber)) throw new ArgumentNullException("controlNumber");
             if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
             if (string.IsNullOrEmpty(format)) throw new ArgumentNullException("format");
             if (string.IsNullOrEmpty(senderId)) throw new ArgumentNullException("senderId");

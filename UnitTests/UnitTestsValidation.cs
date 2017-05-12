@@ -381,5 +381,130 @@ namespace EdiFabric.UnitTests
             // ASSERT
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void TestValidationNoControlNumber()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_NoControlNumber.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<Rules.EDIFACT_D00A.TSINVOIC>().Single();
+
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.ControlNumberNotMatching));
+        }
+
+        [TestMethod]
+        public void TestValidationNoTrailerControlNumber()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_NoTrailerControlNumber.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<Rules.EDIFACT_D00A.TSINVOIC>().Single();
+
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.ControlNumberNotMatching));
+        }
+
+        [TestMethod]
+        public void TestValidationNoTrailerSegmentCount()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_NoTrailerSegmentCount.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<Rules.EDIFACT_D00A.TSINVOIC>().Single();
+
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.SegmentsCountNotMatching));
+        }
+
+        [TestMethod]
+        public void TestValidationWrongControlNumber()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_WrongControlNumber.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<Rules.EDIFACT_D00A.TSINVOIC>().Single();
+
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(result.Errors.Count == 0);
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.ControlNumberNotMatching));
+        }
+
+        [TestMethod]
+        public void TestValidationWrongSegmentCount()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_WrongSegmentCount.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<Rules.EDIFACT_D00A.TSINVOIC>().Single();
+
+            MessageErrorContext result;
+            var validationResult = msg.IsValid(out result);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(result.Errors.Count == 0);
+            Assert.IsTrue(result.Codes.Count == 1);
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.SegmentsCountNotMatching));
+        }
     }
 }

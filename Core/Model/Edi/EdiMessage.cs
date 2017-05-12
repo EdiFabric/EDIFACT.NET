@@ -83,7 +83,7 @@ namespace EdiFabric.Core.Model.Edi
             return cnProperty.GetValue(headerValue) as string;
         }
 
-        public bool IsValid(out MessageErrorContext result, bool skipTrailerValidation = false)
+        public bool IsValid(out MessageErrorContext result, bool skipTrailer = false)
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
@@ -117,7 +117,7 @@ namespace EdiFabric.Core.Model.Edi
                 }
             }
 
-            if (!skipTrailerValidation)
+            if (!skipTrailer)
                 foreach (var errorCode in ValidateStructure(segmentsNum))
                     result.Add(errorCode);
 
@@ -141,7 +141,10 @@ namespace EdiFabric.Core.Model.Edi
             var controlNumber = GetControlNumber();
 
             if (string.IsNullOrEmpty(controlNumber))
+            {
                 result.Add(MessageErrorCode.ControlNumberNotMatching);
+                return result;
+            }
 
             var trailerProperty =
                 GetType()
@@ -195,9 +198,6 @@ namespace EdiFabric.Core.Model.Edi
 
             var sn = values[0] as string;
             var cn = values[1] as string;
-
-            if(sn == null || cn == null)
-                return new Tuple<int, string>(-1, cn);
 
             int trailerSegmentsNumber;
             if (!Int32.TryParse(sn, out trailerSegmentsNumber))
