@@ -87,7 +87,7 @@ namespace EdiFabric.Core.Model.Edi
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
-            result = new MessageErrorContext(Name, GetControlNumber());
+            result = new MessageErrorContext(Name, GetControlNumber(), null);
 
             stack.Push(new InstanceContext(this));
 

@@ -59,7 +59,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        public SegmentErrorContext(string name, int position)
+        public SegmentErrorContext(string name, int position) : base(null)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");

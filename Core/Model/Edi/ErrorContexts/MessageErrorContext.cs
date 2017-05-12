@@ -61,7 +61,8 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
-        public MessageErrorContext(string name, string controlNumber)
+        /// <param name="message">The error message.</param>
+        public MessageErrorContext(string name, string controlNumber, string message) : base(message)
         {
             Name = name;
             ControlNumber = controlNumber;
@@ -72,9 +73,10 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        /// <param name="message">The error message.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public MessageErrorContext(string name, string controlNumber, MessageErrorCode errorCode)
-            : this(name, controlNumber)
+        public MessageErrorContext(string name, string controlNumber, string message, MessageErrorCode errorCode)
+            : this(name, controlNumber, message)
         {
             _codes.Add(errorCode);
         }

@@ -251,13 +251,13 @@ namespace EdiFabric.Framework.Readers
             }
             catch (SegmentException ex)
             {
-                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber);
+                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message);
                 errorContext.Add(ex.ErrorContext);
                 Item = errorContext;
             }
             catch (MessageException ex)
             {
-                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber,
+                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message,
                     ex.ErrorCode);
                 Item = errorContext;
             }

@@ -60,7 +60,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// <param name="repetitionPosition">The repetition position.</param>
         /// <param name="value">The data element value.</param>
         public DataElementErrorContext(string name, int position, DataElementErrorCode code, int componentPosition,
-            int repetitionPosition, string value)
+            int repetitionPosition, string value) : base(null)
         {
             Name = name;
             Position = position;
