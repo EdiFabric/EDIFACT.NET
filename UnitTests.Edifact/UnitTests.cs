@@ -913,6 +913,6 @@ namespace EdiFabric.UnitTests.Edifact
 
             // ASSERT
             Assert.AreEqual(expected, actual);
-        }
+        }      
     }
 }

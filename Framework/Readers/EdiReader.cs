@@ -261,6 +261,12 @@ namespace EdiFabric.Framework.Readers
                     ex.ErrorCode);
                 Item = errorContext;
             }
+            catch (Exception ex)
+            {
+                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message,
+                    MessageErrorCode.MessageWithErrors);
+                Item = errorContext;
+            }
             finally
             {
                 CurrentSegments.Clear();

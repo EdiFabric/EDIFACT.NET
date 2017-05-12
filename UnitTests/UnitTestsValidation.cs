@@ -223,12 +223,10 @@ namespace EdiFabric.UnitTests
             var msg = ediItems.OfType<TSINVOICInvalidAttributes>().Single();
 
             MessageErrorContext result;
-            msg.IsValid(out result);
+            msg.IsValid(out result, true);
             
             // ASSERT
-            Assert.IsTrue(result.Codes.Count == 1);
-            Assert.IsTrue(result.Codes.Single() == MessageErrorCode.MessageTrailerMissing);
-            Assert.IsFalse(result.Errors.Any());
+            Assert.IsFalse(result.HasErrors);
         }
 
         [TestMethod]
@@ -314,12 +312,10 @@ namespace EdiFabric.UnitTests
             var msg = ediItems.OfType<TSINVOICNoAttributes>().Single();
 
             MessageErrorContext result;
-            msg.IsValid(out result);
+            msg.IsValid(out result, true);
 
             // ASSERT
-            Assert.IsTrue(result.Codes.Count == 1);
-            Assert.IsTrue(result.Codes.Single() == MessageErrorCode.MessageTrailerMissing);
-            Assert.IsFalse(result.Errors.Any());
+            Assert.IsFalse(result.HasErrors);
         }
 
         [TestMethod]
@@ -356,6 +352,34 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.RepetitionPosition == 0);
             Assert.IsTrue(dErr1.Value == "123");
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.InvalidCodeValue);
+        }
+
+        [TestMethod]
+        public void TestValidateWithNoTrailer()
+        {
+            // ARRANGE
+            var msg = EdifactHelper.CreateInvoice();
+
+            // ACT           
+            MessageErrorContext errorContext;
+            var result = msg.IsValid(out errorContext, true);
+
+            // ASSERT
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void TestValidateWithTrailer()
+        {
+            // ARRANGE
+            var msg = EdifactHelper.CreateInvoice();
+
+            // ACT           
+            MessageErrorContext errorContext;
+            var result = msg.IsValid(out errorContext);
+
+            // ASSERT
+            Assert.IsFalse(result);
         }
     }
 }

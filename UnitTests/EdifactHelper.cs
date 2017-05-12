@@ -107,8 +107,9 @@ namespace EdiFabric.UnitTests
                     MessageIdentifier_02 = new S009
                     {
                         MessageTypeIdentifier_01 = "INVOIC",
-                        MessageTypeVersionNumber_02 = "D00A",
-                        MessageTypeReleaseNumber_03 = "UN"
+                        MessageTypeVersionNumber_02 = "D00",
+                        MessageTypeReleaseNumber_03 = "A",
+                        ControllingAgency_04 = "UN"
                     }
                 },
                 BGM = new BGM
@@ -117,9 +118,9 @@ namespace EdiFabric.UnitTests
                     DOCUMENTMESSAGEIDENTIFICATION_02 = new C106
                     {
                         Documentidentifier_01 = "12345678",
-                        Versionidentifier_02 = "9"
+                        Versionidentifier_02 = "9",
                     },
-                    Messagefunctioncode_03 = "AA"
+                    Messagefunctioncode_03 = "8"
                 },
                 DTM = new List<DTM>(),
                 DGS = new DGS
@@ -130,7 +131,16 @@ namespace EdiFabric.UnitTests
                         Hazardidentificationcode_01 = "",
                         Additionalhazardclassificationidentifier_02 = ""
                     }
-                }
+                },
+                UNS = new UNS {Sectionidentification_01 = "B"},
+                MOALoop4 =
+                    new List<TSINVOIC_MOALoop4>
+                    {
+                        new TSINVOIC_MOALoop4
+                        {
+                            MOA = new MOA {MONETARYAMOUNT_01 = new C516 {Monetaryamounttypecodequalifier_01 = "10"}}
+                        }
+                    }
             };
 
             var dtm = new DTM
