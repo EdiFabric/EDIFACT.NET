@@ -324,5 +324,41 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(validationResult);
             Assert.IsFalse(results.Any());
         }
+
+        [TestMethod]
+        public void TestValidationInvalidCode()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_Val_InvalidCode.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<TSINVOIC>().Single();
+
+            List<SegmentErrorContext> results;
+            var validationResult = msg.IsValid(out results);
+
+            // ASSERT
+            Assert.IsFalse(validationResult);
+            Assert.IsTrue(results.Any());
+            Assert.IsTrue(results.Count == 1);
+
+            var sErr1 = results.SingleOrDefault(r => r.Name == "CTA" && r.Position == 8);
+            Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.Codes.Count == 0);
+            Assert.IsTrue(sErr1.Errors.Count == 1);
+            var dErr1 = sErr1.Errors.First();
+            Assert.IsTrue(dErr1.Name == "3139");
+            Assert.IsTrue(dErr1.Position == 1);
+            Assert.IsTrue(dErr1.ComponentPosition == 0);
+            Assert.IsTrue(dErr1.RepetitionPosition == 0);
+            Assert.IsTrue(dErr1.Value == "123");
+            Assert.IsTrue(dErr1.Code == DataElementErrorCode.InvalidCodeValue);
+        }
     }
 }
