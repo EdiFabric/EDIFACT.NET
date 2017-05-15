@@ -61,6 +61,18 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        public MessageErrorContext(string name, string controlNumber)
+            : base(null)
+        {
+            Name = name;
+            ControlNumber = controlNumber;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
+        /// </summary>
+        /// <param name="name">The message name (or tag).</param>
+        /// <param name="controlNumber">The message control number.</param>
         /// <param name="message">The error message.</param>
         public MessageErrorContext(string name, string controlNumber, string message) : base(message)
         {

@@ -15,9 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.X12;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
@@ -152,7 +150,7 @@ namespace EdiFabric.Framework.Readers
         protected override MessageContext BuildContext()
         {
             if (_currentIsa == null)
-                throw new ReaderException("Interchange header is missing.", ReaderErrorCode.InvalidControlStructure);
+                throw new Exception("Interchange header is missing.");
 
             if (CurrentSegments.Count == 1)
             {
@@ -166,18 +164,17 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_currentGroupHeader == null)
-                throw new ReaderException("GS was not found.", ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("GS was not found.");
 
             var ediCompositeDataElementsGs = _currentGroupHeader.Value.GetDataElements(Separators);
             if (ediCompositeDataElementsGs.Count() < 8)
-                throw new ReaderException("GS is invalid. Too little data elements.",
-                    ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("GS is invalid. Too little data elements.");
 
             var version = ediCompositeDataElementsGs[7];
 
             var st = CurrentSegments.SingleOrDefault(es => es.Name == "ST");
             if (st == null)
-                throw new ReaderException("ST was not found.", ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("ST was not found.");
 
             var ediCompositeDataElementsSt = st.Value.GetDataElements(Separators);
             var tag = ediCompositeDataElementsSt[0];
@@ -186,8 +183,7 @@ namespace EdiFabric.Framework.Readers
                 version = ediCompositeDataElementsSt[2];
             }
             if (ediCompositeDataElementsSt.Count() < 2)
-                throw new ReaderException("ST is invalid.Too little data elements.",
-                    ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("ST is invalid.Too little data elements.");
 
             var controlNumber = ediCompositeDataElementsSt[1];
 

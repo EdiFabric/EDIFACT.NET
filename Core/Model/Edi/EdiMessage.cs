@@ -69,7 +69,7 @@ namespace EdiFabric.Core.Model.Edi
                     .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
 
             if (headerProperty == null)
-                throw new Exception(string.Format("{0} segment was not found.", tag));
+                return null;
 
             var headerValue = headerProperty.GetValue(this);
             var cnProperty =
@@ -78,7 +78,7 @@ namespace EdiFabric.Core.Model.Edi
                     .SingleOrDefault(p => p.GetCustomAttribute<PosAttribute>().Pos == position);
 
             if (cnProperty == null)
-                throw new Exception(string.Format("{0} segment does not contain control number.", tag));
+                return null;
 
             return cnProperty.GetValue(headerValue) as string;
         }
@@ -142,7 +142,7 @@ namespace EdiFabric.Core.Model.Edi
 
             if (string.IsNullOrEmpty(controlNumber))
             {
-                result.Add(MessageErrorCode.ControlNumberNotMatching);
+                result.Add(MessageErrorCode.MissingOrInvalidControlNumber);
                 return result;
             }
 

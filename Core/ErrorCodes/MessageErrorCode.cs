@@ -34,16 +34,15 @@ namespace EdiFabric.Core.ErrorCodes
         /// Invalid transaction set control number.
         /// </summary>
         DuplicateMessageControlNumber,
-
-        /// <summary>
-        /// Segment has data element errors.
-        /// </summary>
-        SegmentWithErrors,
-
+        
         /// <summary>
         /// One or more segments in error.
         /// </summary>
         MessageWithErrors,
+
+        MissingOrInvalidControlNumber,
+
+        MissingOrInvalidTransactionSet,
 
         /// <summary>
         /// Invalid group control number.

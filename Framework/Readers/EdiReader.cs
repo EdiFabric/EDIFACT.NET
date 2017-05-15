@@ -109,10 +109,7 @@ namespace EdiFabric.Framework.Readers
                     var segment = ReadSegment();
 
                     if (Separators == null)
-                    {
-                        Item = new ReaderErrorContext(ReaderErrorCode.InvalidControlStructure);
-                        continue;
-                    }
+                        throw new Exception("No valid separator set was found.");
 
                     if(string.IsNullOrEmpty(segment))
                         continue;
@@ -264,7 +261,7 @@ namespace EdiFabric.Framework.Readers
             catch (Exception ex)
             {
                 var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message,
-                    MessageErrorCode.MessageWithErrors);
+                    MessageErrorCode.MissingOrInvalidTransactionSet);
                 Item = errorContext;
             }
             finally
@@ -331,9 +328,6 @@ namespace EdiFabric.Framework.Readers
             }
             catch (Exception ex)
             {
-                if(typeof(T).Name == "ISA" || typeof(T).Name == "UNB" || typeof(T).Name == "UNA")
-                    throw new ReaderException(ex.Message, ReaderErrorCode.InvalidControlStructure);
-
                 throw new ReaderException(ex.Message, ReaderErrorCode.InvalidInterchangeContent);
             }
             

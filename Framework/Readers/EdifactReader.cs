@@ -15,9 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.Edifact;
-using EdiFabric.Framework.Exceptions;
 using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
@@ -173,20 +171,19 @@ namespace EdiFabric.Framework.Readers
         protected override MessageContext BuildContext()
         {
             if (_currentUnb == null)
-                throw new ReaderException("Interchange header is missing.", ReaderErrorCode.InvalidControlStructure);
+                throw new Exception("Interchange header is missing.");
 
             var unh = CurrentSegments.SingleOrDefault(es => es.Name == "UNH");
             if (unh == null)
-                throw new ReaderException("UNH was not found.", ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("UNH was not found.");
 
             var ediCompositeDataElements = unh.Value.GetDataElements(Separators);
             if (ediCompositeDataElements.Count() < 2)
-                throw new ReaderException("UNH is invalid. Too little data elements.", ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("UNH is invalid. Too little data elements.");
 
             var ediDataElements = ediCompositeDataElements[1].GetComponentDataElements(Separators);
             if (ediDataElements.Count() < 3)
-                throw new ReaderException("UNH is invalid. Unable to read message type or version.",
-                    ReaderErrorCode.InvalidInterchangeContent);
+                throw new Exception("UNH is invalid. Unable to read message type or version.");
 
             var tag = ediDataElements[0];
             var version = ediDataElements[1] + ediDataElements[2];

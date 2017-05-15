@@ -39,6 +39,17 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// <summary>
         /// Initializes a new instance of the <see cref="ReaderErrorContext"/> class.
         /// </summary>
+        /// <param name="errorCode">The reader error code.</param>
+        /// <param name="message">The error message.</param>
+        public ReaderErrorContext(ReaderErrorCode errorCode, string message)
+            : base(null)
+        {
+            ReaderErrorCode = errorCode;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReaderErrorContext"/> class.
+        /// </summary>
         /// <param name="exception">The reader exception.</param>
         /// <param name="errorCode">The reader error code.</param>
         public ReaderErrorContext(Exception exception, ReaderErrorCode errorCode) 

@@ -13,7 +13,6 @@ namespace EdiFabric.Core.ErrorCodes
 {
     public enum SegmentErrorCode
     {
-        SegmentWithErrors,
         SegmentNotInProperSequence,
         UnrecognizedSegment,
         LoopExceedsMaximumUse,
