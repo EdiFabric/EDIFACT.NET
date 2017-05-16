@@ -13,12 +13,27 @@ using System;
 
 namespace EdiFabric.Core.Annotations.Edi
 {
+    /// <summary>
+    /// Attribute to mark a transaction set.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class MessageAttribute : EdiAttribute
     {
-        public string Format { get; set; }
-        public string Version { get; set; }
+        /// <summary>
+        /// EDI standard.
+        /// </summary>
+        public string Format { get; private set; }
+        /// <summary>
+        /// EDI version.
+        /// </summary>
+        public string Version { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageAttribute"/> class.
+        /// </summary>
+        /// <param name="format">EDI standard.</param>
+        /// <param name="version">EDI version.</param>
+        /// <param name="id">EDI transaction set id.</param>
         public MessageAttribute(string format, string version, string id)
             : base(id)
         {

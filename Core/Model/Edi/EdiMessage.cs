@@ -16,30 +16,42 @@ using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using System.Xml.Serialization;
 
 namespace EdiFabric.Core.Model.Edi
 {
+    /// <summary>
+    /// The base EDI message.
+    /// </summary>
     public class EdiMessage : IEdiItem
     {
         /// <summary>
         /// The message ID.
         /// </summary>
+        [XmlIgnore]
         public string Name { get; private set; }
         /// <summary>
         /// The message version (derived from the group if not explicitly set in the message).
         /// </summary>
+        [XmlIgnore]
         public string Version { get; private set; }
         /// <summary>
         /// The message format (X12 or Edifact or other).
         /// </summary>
+        [XmlIgnore]
         public string Format { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdiMessage"/> class.
+        /// </summary>
+        /// <exception cref="Exception">Throws exception if any of the EDI attributes is missing.</exception>
         public EdiMessage()
         {
             var type = GetType();
             var msgAttr = type.GetCustomAttribute<MessageAttribute>();
             if (msgAttr == null)
-                throw new Exception(string.Format("{0} was not found in {1} .", typeof(MessageAttribute).Name, type.FullName));
+                throw new Exception(string.Format("{0} was not found in {1} .", typeof (MessageAttribute).Name,
+                    type.FullName));
 
             Format = msgAttr.Format;
             if (Format == null) throw new Exception("Format is null");
@@ -49,6 +61,11 @@ namespace EdiFabric.Core.Model.Edi
             if (Name == null) throw new Exception("Name is null");
         }
 
+        /// <summary>
+        /// Gets the message control number if any, otherwise null.
+        /// </summary>
+        /// <returns>The message control number or null.</returns>
+        /// <exception cref="Exception">Throws exception if the format is unknown.</exception>
         public string GetControlNumber()
         {
             if (Format == "X12")
@@ -83,6 +100,12 @@ namespace EdiFabric.Core.Model.Edi
             return cnProperty.GetValue(headerValue) as string;
         }
 
+        /// <summary>
+        /// Validates a message according to its validation attributes.
+        /// </summary>
+        /// <param name="result">The resulting message context.</param>
+        /// <param name="skipTrailer">Whether to validate the trailer. Skip when validating custom created messages.</param>
+        /// <returns>Whether the message is valid or not. If not valid then the message error context will contain the reasons.</returns>
         public bool IsValid(out MessageErrorContext result, bool skipTrailer = false)
         {
             var visited = new HashSet<object>();

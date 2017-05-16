@@ -11,52 +11,50 @@
 
 namespace EdiFabric.Core.ErrorCodes
 {
+    /// <summary>
+    /// EDI message error codes.
+    /// Used in AK502 or IK502.
+    /// </summary>
     public enum MessageErrorCode
     {
-        MessageTrailerMissing,
-
         /// <summary>
-        /// Missing or invalid transaction set identifier.
+        /// 1
         /// </summary>
-        InvalidTransactionSetIdentifier,
+        TransactionSetNotSupported,
 
         /// <summary>
-        /// Transaction set control number in header and trailer do not match.
+        /// 2
+        /// </summary>
+        MessageTrailerMissing,
+        
+        /// <summary>
+        /// 3
         /// </summary>
         ControlNumberNotMatching,
 
         /// <summary>
-        /// Number of included segments does not match actual count.
+        /// 4
         /// </summary>
         SegmentsCountNotMatching,
 
         /// <summary>
-        /// Invalid transaction set control number.
-        /// </summary>
-        DuplicateMessageControlNumber,
-        
-        /// <summary>
-        /// One or more segments in error.
+        /// 5
         /// </summary>
         MessageWithErrors,
 
-        MissingOrInvalidControlNumber,
-
+        /// <summary>
+        /// 6
+        /// </summary>
         MissingOrInvalidTransactionSet,
 
         /// <summary>
-        /// Invalid group control number.
+        /// 7
         /// </summary>
-        DuplicateGroupControlNumber,
+        MissingOrInvalidControlNumber,
 
         /// <summary>
-        /// Invalid interchange control number.
+        /// 23
         /// </summary>
-        DuplicateInterchangeControlNumber,
-
-        /// <summary>
-        /// Transaction set is not supported.
-        /// </summary>
-        TransactionSetNotSupported, 
+        DuplicateMessageControlNumber
     }
 }

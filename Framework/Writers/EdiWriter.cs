@@ -198,7 +198,7 @@ namespace EdiFabric.Framework.Writers
                 segmentCounter++;
             }
 
-            if (transactionSet.EdiName == Ta)
+            if (message.Name == "TA1")
                 return;
 
             segmentCounter++;

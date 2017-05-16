@@ -37,7 +37,7 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// The current list of segments.
         /// </summary>
-        protected List<SegmentContext> CurrentSegments { get; private set; }
+        internal List<SegmentContext> CurrentSegments { get; private set; }
         
         /// <summary>
         /// EDI separators.

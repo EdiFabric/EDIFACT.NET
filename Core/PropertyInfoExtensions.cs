@@ -6,8 +6,16 @@ using EdiFabric.Core.Annotations.Edi;
 
 namespace EdiFabric.Core
 {
+    /// <summary>
+    /// PropertyInfo extensions
+    /// </summary>
     public static class PropertyInfoExtensions
     {
+        /// <summary>
+        /// Sorts the properties if they are marked with position attribute.
+        /// </summary>
+        /// <param name="propertyInfos">The properties to sort.</param>
+        /// <returns>The sorted properties.</returns>
         public static IEnumerable<PropertyInfo> Sort(this PropertyInfo[] propertyInfos)
         {
             return propertyInfos.OrderBy(
@@ -18,6 +26,11 @@ namespace EdiFabric.Core
                         .FirstOrDefault());
         }
 
+        /// <summary>
+        /// Gets the type of the generic property.
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
         public static Type GetGenericType(this PropertyInfo propertyInfo)
         {
             var type = propertyInfo.PropertyType;

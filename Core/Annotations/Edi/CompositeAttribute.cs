@@ -13,9 +13,16 @@ using System;
 
 namespace EdiFabric.Core.Annotations.Edi
 {
+    /// <summary>
+    /// Attribute to mark a composite element.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class CompositeAttribute : EdiAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompositeAttribute"/> class.
+        /// </summary>
+        /// <param name="id"></param>
         public CompositeAttribute(string id)
             : base(id)
         {

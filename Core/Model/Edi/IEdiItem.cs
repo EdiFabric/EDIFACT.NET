@@ -11,6 +11,14 @@
 
 namespace EdiFabric.Core.Model.Edi
 {
+    /// <summary>
+    /// This interface marks all EDI items, which are:
+    /// EDI transaction sets.
+    /// EDI interchange headers and trailers.
+    /// EDI functional group headers and trailers.
+    /// Reader error context.
+    /// Message error context.
+    /// </summary>
     public interface IEdiItem
     {
     }

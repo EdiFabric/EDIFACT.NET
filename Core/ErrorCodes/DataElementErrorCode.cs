@@ -11,15 +11,50 @@
 
 namespace EdiFabric.Core.ErrorCodes
 {
+    /// <summary>
+    /// EDI data element error codes.
+    /// Used in AK403 or IK403.
+    /// </summary>
     public enum DataElementErrorCode
     {
-        TooManyComponents,
-        TooManyDataElements,
-        InvalidCodeValue,
-        TooManyRepetitions,
-        TooFewRepetitions,
+        /// <summary>
+        /// 1
+        /// </summary>
         RequiredDataElementMissing,
+
+        /// <summary>
+        /// 3
+        /// </summary>
+        TooManyDataElements,
+
+        /// <summary>
+        /// 4
+        /// </summary>
         DataElementTooShort,
+
+        /// <summary>
+        /// 5
+        /// </summary>
         DataElementTooLong,
+
+        /// <summary>
+        /// 7
+        /// </summary>
+        InvalidCodeValue,
+
+        /// <summary>
+        /// 12
+        /// </summary>
+        TooManyRepetitions,
+
+        /// <summary>
+        /// 13
+        /// </summary>
+        TooManyComponents,
+
+        /// <summary>
+        /// I11
+        /// </summary>
+        TooFewRepetitions
     }
 }

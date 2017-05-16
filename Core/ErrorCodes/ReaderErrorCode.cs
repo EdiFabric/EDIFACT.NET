@@ -12,7 +12,7 @@
 namespace EdiFabric.Core.ErrorCodes
 {
     /// <summary>
-    /// The internal error codes for all known error conditions.
+    /// The reader error codes.
     /// </summary>
     public enum ReaderErrorCode
     {
@@ -22,18 +22,18 @@ namespace EdiFabric.Core.ErrorCodes
         Unknown,
 
         /// <summary>
-        /// Interchange control structure is invalid.
+        /// 022
         /// </summary>
         InvalidControlStructure,
 
         /// <summary>
-        /// Invalid interchange content.
-        /// </summary>
-        InvalidInterchangeContent,
-
-        /// <summary>
-        /// Unprocessed segments found before the end of the file.
+        /// 023
         /// </summary>
         ImproperEndOfFile,
+
+        /// <summary>
+        /// 024
+        /// </summary>
+        InvalidInterchangeContent
     }
 }

@@ -9,12 +9,27 @@ using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Model.Edi
 {
-    public sealed class InstanceContext
+    /// <summary>
+    /// The instance context used for validation
+    /// </summary>
+    sealed class InstanceContext
     {
-        public object Instance { get; private set; }
-        public PropertyInfo Property { get; private set; }
-        public InstanceContext Parent { get; private set; }
         private int _repetitionIndex;
+
+        /// <summary>
+        /// An instance.
+        /// </summary>
+        public object Instance { get; private set; }
+
+        /// <summary>
+        /// The property info for the instance.
+        /// </summary>
+        public PropertyInfo Property { get; private set; }
+
+        /// <summary>
+        /// The parent.
+        /// </summary>
+        public InstanceContext Parent { get; private set; }
 
         public string GetId()
         {
@@ -60,11 +75,22 @@ namespace EdiFabric.Core.Model.Edi
             return Property != null && Property.GetGenericType().GetCustomAttribute<T>() != null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstanceContext"/> class.
+        /// </summary>
+        /// <param name="instance">An instance.</param>
         public InstanceContext(object instance)
         {
             Instance = instance;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstanceContext"/> class.
+        /// </summary>
+        /// <param name="instance">An instance.</param>
+        /// <param name="property">The property info for the instance.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="repetitionIndex">The repetition index.</param>
         public InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int repetitionIndex)
             : this(instance)
         {

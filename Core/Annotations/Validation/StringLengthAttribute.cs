@@ -19,19 +19,42 @@ using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
+    /// <summary>
+    /// Validation attribute for the correct length of data elements.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class StringLengthAttribute : ValidationAttribute
     {
-        public int MinLen { get; set; }
-        public int MaxLen { get; set; }
+        /// <summary>
+        /// The minimum allowed length.
+        /// </summary>
+        public int MinLen { get; private set; }
+        /// <summary>
+        /// The maximum allowed length.
+        /// </summary>
+        public int MaxLen { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StringLengthAttribute"/> class.
+        /// </summary>
+        /// <param name="minLen">The minimum allowed length.</param>
+        /// <param name="maxLen">The maximum allowed length.</param>
         public StringLengthAttribute(int minLen, int maxLen) : base(3)
         {
             MinLen = minLen;
             MaxLen = maxLen;
         }
 
-        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        /// <summary>
+        /// Detects if the length of a data element is correct.
+        /// </summary>
+        /// <param name="instanceContext">The instance context.</param>
+        /// <param name="segmentIndex">The segment position.</param>
+        /// <param name="inSegmentIndex">The position within the segment.</param>
+        /// <param name="inCompositeIndex">The position within the component if any.</param>
+        /// <param name="repetitionIndex">The repetition position.</param>
+        /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
+        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();

@@ -19,19 +19,42 @@ using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
+    /// <summary>
+    /// Validation attribute for the data type of data elements.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class DataElementAttribute : ValidationAttribute
     {
-        public string Code { get; set; }
-        public Type DataType { get; set; }
+        /// <summary>
+        /// EDI code for the data element.
+        /// </summary>
+        public string Code { get; private set; }
+        /// <summary>
+        /// The type of the data element.
+        /// </summary>
+        public Type DataType { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataElementAttribute"/> class.
+        /// </summary>
+        /// <param name="code">EDI code for the data element.</param>
+        /// <param name="dataType">The type of the data element.</param>
         public DataElementAttribute(string code, Type dataType) : base(4)
         {
             Code = code;
             DataType = dataType;
         }
 
-        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        /// <summary>
+        /// Detects if a data element is valid according to its type.
+        /// </summary>
+        /// <param name="instanceContext">The instance context.</param>
+        /// <param name="segmentIndex">The segment position.</param>
+        /// <param name="inSegmentIndex">The position within the segment.</param>
+        /// <param name="inCompositeIndex">The position within the component if any.</param>
+        /// <param name="repetitionIndex">The repetition position.</param>
+        /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
+        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();

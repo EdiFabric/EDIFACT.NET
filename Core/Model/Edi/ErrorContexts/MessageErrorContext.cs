@@ -16,7 +16,7 @@ using EdiFabric.Core.ErrorCodes;
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
     /// <summary>
-    /// Information for the data, error codes and the context of the segments that failed.  
+    /// Information for the data, error codes and the context of the message that failed.  
     /// </summary>
     public sealed class MessageErrorContext : ErrorContext, IEdiItem
     {
@@ -61,20 +61,9 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
-        public MessageErrorContext(string name, string controlNumber)
-            : base(null)
-        {
-            Name = name;
-            ControlNumber = controlNumber;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageErrorContext"/> class.
-        /// </summary>
-        /// <param name="name">The message name (or tag).</param>
-        /// <param name="controlNumber">The message control number.</param>
         /// <param name="message">The error message.</param>
-        public MessageErrorContext(string name, string controlNumber, string message) : base(message)
+        public MessageErrorContext(string name, string controlNumber, string message) 
+            : base(message)
         {
             Name = name;
             ControlNumber = controlNumber;
@@ -92,59 +81,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         {
             _codes.Add(errorCode);
         }
-
-        /// <summary>
-        /// Merges a segment context into the errors collection.
-        /// There can be only one reference for a segment, containing all the errors for that segment.
-        /// A segment is identified by its name (or segment ID) and its position.
-        /// </summary>
-        /// <param name="segmentName">The segment name.</param>
-        /// <param name="segmentPosition">The segment position.</param>
-        /// <param name="value">The segment value.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public void Add(string segmentName, int segmentPosition, string value, SegmentErrorCode errorCode)
-        {
-            var key = segmentName + segmentPosition;
-            if (_errors.ContainsKey(key))
-            {
-                _errors[key].Add(errorCode);
-            }
-            else
-            {
-                _errors.Add(key, new SegmentErrorContext(segmentName, segmentPosition, value, errorCode));
-            }
-        }
-
-        /// <summary>
-        /// Merges a segment context into the errors collection.
-        /// There can be only one reference for a segment, containing all the errors for that segment.
-        /// A segment is identified by its name (or segment ID) and its position.
-        /// </summary>
-        /// <param name="segmentName">The segment name.</param>
-        /// <param name="segmentPosition">The segment position.</param>
-        /// <param name="segmentValue">The segment value.</param>
-        /// <param name="name">The data element name.</param>
-        /// <param name="position">The data element position.</param>
-        /// <param name="code">The syntax error code.</param>
-        /// <param name="componentPosition">The component data element position.</param>
-        /// <param name="repetitionPosition">The repetition position.</param>
-        /// <param name="value">The data element value;</param>
-        public void Add(string segmentName, int segmentPosition, string segmentValue, string name, int position, DataElementErrorCode code, int componentPosition,
-            int repetitionPosition, string value)
-        {
-            var key = segmentName + segmentPosition;
-            if (_errors.ContainsKey(key))
-            {
-                _errors[key].Add(name, position, code, componentPosition, repetitionPosition, value);
-            }
-            else
-            {
-                var segmentContext = new SegmentErrorContext(segmentName, segmentPosition, segmentValue);
-                segmentContext.Add(name, position, code, componentPosition, repetitionPosition, value);
-                _errors.Add(key, segmentContext);
-            }
-        }
-
+        
         /// <summary>
         /// Merges a segment context into the errors collection.
         /// There can be only one reference for a segment, containing all the errors for that segment.

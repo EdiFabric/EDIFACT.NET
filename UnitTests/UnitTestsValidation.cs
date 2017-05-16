@@ -119,7 +119,7 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.Position == 3);
             Assert.IsTrue(dErr1.ComponentPosition == 0);
             Assert.IsTrue(dErr1.RepetitionPosition == 4);
-            Assert.IsTrue(dErr1.Value == null);
+            Assert.IsTrue(dErr1.Value == "AC");
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.TooManyRepetitions);
 
             var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "COM" && r.Position == 15);
@@ -134,13 +134,13 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.Value == null);
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.TooManyRepetitions);
 
-            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
+            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 10);
             Assert.IsNotNull(sErr3);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentExceedsMaximumUse));
 
-            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 19);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 25);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
@@ -194,13 +194,13 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr2.Value == null);
             Assert.IsTrue(dErr2.Code == DataElementErrorCode.TooFewRepetitions);
 
-            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 4);
+            var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 6);
             Assert.IsNotNull(sErr3);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentBelowMinimumUse));
 
-            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 14);
+            var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 16);
             Assert.IsNotNull(sErr4);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
@@ -404,7 +404,7 @@ namespace EdiFabric.UnitTests
             Assert.IsFalse(validationResult);
             Assert.IsTrue(result.Errors.Count == 1);
             Assert.IsTrue(result.Codes.Count == 1);
-            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.ControlNumberNotMatching));
+            Assert.IsTrue(result.Codes.Contains(MessageErrorCode.MissingOrInvalidControlNumber));
         }
 
         [TestMethod]

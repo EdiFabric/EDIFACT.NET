@@ -20,25 +20,52 @@ using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
+    /// <summary>
+    /// Validation attribute for lists. Sets the minimum and maximum of the contained items.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ListCountAttribute : ValidationAttribute
     {
-        public int MinCount { get; set; }
-        public int MaxCount { get; set; }
+        /// <summary>
+        /// The minimum allowed items.
+        /// </summary>
+        public int MinCount { get; private set; }
+        /// <summary>
+        /// The maximum allowed items.
+        /// </summary>
+        public int MaxCount { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCountAttribute"/> class.
+        /// </summary>
+        /// <param name="minCount">The minimum allowed items.</param>
+        /// <param name="maxCount">The maximum allowed items.</param>
         public ListCountAttribute(int minCount, int maxCount) : base(2)
         {
             MinCount = minCount;
             MaxCount = maxCount;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCountAttribute"/> class.
+        /// </summary>
+        /// <param name="maxCount">The maximum allowed items.</param>
         public ListCountAttribute(int maxCount) : base(2)
         {
             MinCount = 0;
             MaxCount = maxCount;
         }
 
-        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        /// <summary>
+        /// Detects if a list has a valid number of items.
+        /// </summary>
+        /// <param name="instanceContext">The instance context.</param>
+        /// <param name="segmentIndex">The segment position.</param>
+        /// <param name="inSegmentIndex">The position within the segment.</param>
+        /// <param name="inCompositeIndex">The position within the component if any.</param>
+        /// <param name="repetitionIndex">The repetition position.</param>
+        /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
+        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();
@@ -94,7 +121,11 @@ namespace EdiFabric.Core.Annotations.Validation
                     ? SegmentErrorCode.LoopExceedsMaximumUse
                     : SegmentErrorCode.LoopBelowMinimumUse;
 
-            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode);
+            var repIndex = list.Count > MaxCount
+                    ? segmentIndex + 1 + MaxCount
+                    : segmentIndex + MinCount;
+
+            return new SegmentErrorContext(instanceContext.GetId(), repIndex, errorCode);
         }
 
         private SegmentErrorContext ValidateSegment(IList list, InstanceContext instanceContext, int segmentIndex)
@@ -103,7 +134,11 @@ namespace EdiFabric.Core.Annotations.Validation
                     ? SegmentErrorCode.SegmentExceedsMaximumUse
                     : SegmentErrorCode.SegmentBelowMinimumUse;
 
-            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex, errorCode);
+            var repIndex = list.Count > MaxCount
+                    ? segmentIndex + 1 + MaxCount
+                    : segmentIndex + MinCount;
+
+            return new SegmentErrorContext(instanceContext.GetId(), repIndex, errorCode);
         }
 
         private SegmentErrorContext ValidateComposite(IList list, InstanceContext instanceContext,
@@ -142,6 +177,10 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? MaxCount + 1
                 : MinCount - list.Count + 1;
 
+            var value = list.Count > MaxCount
+                ? list[MaxCount] as string
+                : null;
+
             var segmentName = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
                 ? instanceContext.Parent.GetId()
                 : instanceContext.Parent.GetDeclaringTypeId();
@@ -150,7 +189,7 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new SegmentErrorContext(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, null);
+            result.Add(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, value);
             return result;
         }
     }

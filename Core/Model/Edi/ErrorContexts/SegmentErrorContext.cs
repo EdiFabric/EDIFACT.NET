@@ -16,7 +16,7 @@ using EdiFabric.Core.ErrorCodes;
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
     /// <summary>
-    /// Information for the data, error codes and the context of the data elements that failed.
+    /// Information for the data, error codes and the context of the segments that failed.
     /// </summary>
     public sealed class SegmentErrorContext : ErrorContext
     {
@@ -26,7 +26,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         public string Name { get; private set; }
 
         /// <summary>
-        /// The numerical count position of the data segment from the start of the transaction set.
+        /// The numerical count position of the segment from the start of the transaction set.
         /// The transaction set header is count position 1.
         /// </summary>
         public int Position { get; private set; }

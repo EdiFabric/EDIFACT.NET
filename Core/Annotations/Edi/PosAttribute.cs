@@ -13,10 +13,20 @@ using System;
 
 namespace EdiFabric.Core.Annotations.Edi
 {
+    /// <summary>
+    /// Attribute to mark position.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class PosAttribute : Attribute
     {
-        public int Pos { get; set; }
+        /// <summary>
+        /// The position.
+        /// </summary>
+        public int Pos { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PosAttribute"/> class.
+        /// </summary>
+        /// <param name="pos">The position.</param>
         public PosAttribute(int pos)
         {
             Pos = pos;

@@ -13,12 +13,27 @@ using System;
 
 namespace EdiFabric.Core.Annotations.Edi
 {
+    /// <summary>
+    /// Attribute to mark a segment.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class SegmentAttribute : EdiAttribute
     {
-        public Type First { get; set; }
-        public Type Second { get; set; }
+        /// <summary>
+        /// The EDI codes for the first element.
+        /// </summary>
+        public Type First { get; private set; }
+        /// <summary>
+        /// The EDI codes for the second element.
+        /// </summary>
+        public Type Second { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentAttribute"/> class.
+        /// </summary>
+        /// <param name="id">The segment id.</param>
+        /// <param name="first">The EDI codes for the first element.</param>
+        /// <param name="second">The EDI codes for the second element.</param>
         public SegmentAttribute(string id, Type first = null, Type second = null)
             : base(id)
         {

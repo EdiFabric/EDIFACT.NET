@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;

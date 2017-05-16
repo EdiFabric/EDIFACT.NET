@@ -20,15 +20,30 @@ using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Core.Annotations.Validation
 {
+    /// <summary>
+    /// Validation attribute for mandatory items. 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class RequiredAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequiredAttribute"/> class.
+        /// </summary>
         public RequiredAttribute()
             : base(1)
         {
         }
 
-        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        /// <summary>
+        /// Detects if an item is mandatory and exists.
+        /// </summary>
+        /// <param name="instanceContext">The instance context.</param>
+        /// <param name="segmentIndex">The segment position.</param>
+        /// <param name="inSegmentIndex">The position within the segment.</param>
+        /// <param name="inCompositeIndex">The position within the component if any.</param>
+        /// <param name="repetitionIndex">The repetition position.</param>
+        /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
+        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();

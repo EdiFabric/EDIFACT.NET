@@ -13,10 +13,20 @@ using System;
 
 namespace EdiFabric.Core.Annotations.Edi
 {
+    /// <summary>
+    /// Attribute for EDI codes.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class EdiCodesAttribute : Attribute
     {
-        public string Codes { get; set; }
+        /// <summary>
+        /// The list of EDI codes.
+        /// </summary>
+        public string Codes { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdiCodesAttribute"/> class.
+        /// </summary>
+        /// <param name="codes"></param>
         public EdiCodesAttribute(string codes)
         {
             Codes = codes;

@@ -14,6 +14,9 @@ using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
 {
+    /// <summary>
+    /// The reason for any reader failure.
+    /// </summary>
     public class ReaderErrorContext : ErrorContext, IEdiItem
     {
         /// <summary>
@@ -42,7 +45,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// <param name="errorCode">The reader error code.</param>
         /// <param name="message">The error message.</param>
         public ReaderErrorContext(ReaderErrorCode errorCode, string message)
-            : base(null)
+            : base(message)
         {
             ReaderErrorCode = errorCode;
         }
