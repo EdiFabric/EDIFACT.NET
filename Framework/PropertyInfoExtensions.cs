@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 
-namespace EdiFabric.Core
+namespace EdiFabric.Framework
 {
     /// <summary>
     /// PropertyInfo extensions
