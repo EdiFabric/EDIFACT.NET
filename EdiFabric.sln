@@ -182,9 +182,6 @@ Global
 		{F66E2275-FAE0-4876-8F12-831A2A90C7A7} = {A6391E1B-988A-48B7-8146-E899C391C3DF}
 		{A1E921DC-B93B-41A7-81B4-4EA15193AE10} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
 	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = EdiFabric.vsmdi
 	EndGlobalSection

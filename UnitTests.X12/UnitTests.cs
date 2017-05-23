@@ -717,14 +717,8 @@ namespace EdiFabric.UnitTests.X12
 
         private static Assembly AssemblyLoadFactory(MessageContext messageContext)
         {
-            Assert.IsNotNull(messageContext.ControlNumber);
-            Assert.IsNotNull(messageContext.Format);
-            Assert.IsNotNull(messageContext.Name);
-            Assert.IsNotNull(messageContext.ReceiverId);
-            Assert.IsNotNull(messageContext.ReceiverQualifier);
-            Assert.IsNotNull(messageContext.SenderId);
-            Assert.IsNotNull(messageContext.SenderQualifier);
-            Assert.IsNotNull(messageContext.Version);
+            if (messageContext.SenderId == "PartnerA")
+                return Assembly.Load("EdiFabric.Rules.PartnerA.X12002040");
 
             return Assembly.Load("EdiFabric.Rules.X12002040");
         }
@@ -742,9 +736,9 @@ namespace EdiFabric.UnitTests.X12
             {
                 var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine, true);
 
-                writer.WriteInterchange(X12Helper.CreateIsa());
-                writer.WriteGroup(X12Helper.CreateGs());
-                writer.WriteMessage(X12Helper.CreateInvoice());
+                writer.Write(X12Helper.CreateIsa());
+                writer.Write(X12Helper.CreateGs());
+                writer.Write(X12Helper.CreateInvoice());
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);
@@ -767,9 +761,9 @@ namespace EdiFabric.UnitTests.X12
             {
                 var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine);
 
-                writer.WriteInterchange(X12Helper.CreateIsa());
-                writer.WriteGroup(X12Helper.CreateGs());
-                writer.WriteMessage(X12Helper.CreateInvoice());
+                writer.Write(X12Helper.CreateIsa());
+                writer.Write(X12Helper.CreateGs());
+                writer.Write(X12Helper.CreateInvoice());
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);

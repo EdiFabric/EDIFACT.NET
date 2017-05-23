@@ -18,20 +18,20 @@ namespace EdiFabric.UnitTests
             {
                 var writer = new EdifactWriter(stream, encoding, postFix);
                 if (!string.IsNullOrEmpty(una))
-                    writer.WriteSegment(una);
+                    writer.Write(una);
                 foreach (var item in items)
                 {
                     var message = item as EdiMessage;
                     if (message != null)
                     {
-                        writer.WriteMessage(message);
+                        writer.Write(message);
                         continue;
                     }
 
                     var gs = item as UNG;
                     if (gs != null)
                     {
-                        writer.WriteGroup(gs);
+                        writer.Write(gs);
                         continue;
                     }
 
@@ -44,7 +44,7 @@ namespace EdiFabric.UnitTests
                     var unb = item as UNB;
                     if (unb != null)
                     {
-                        writer.WriteInterchange(unb, separators);
+                        writer.Write(unb, separators);
                     }
                 }
                 writer.Flush();

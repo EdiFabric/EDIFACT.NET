@@ -880,8 +880,8 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine, true);
 
-                writer.WriteInterchange(EdifactHelper.CreateUnb());
-                writer.WriteMessage(EdifactHelper.CreateInvoice());                
+                writer.Write(EdifactHelper.CreateUnb());
+                writer.Write(EdifactHelper.CreateInvoice());                
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);
@@ -904,8 +904,8 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine);
 
-                writer.WriteInterchange(EdifactHelper.CreateUnb());
-                writer.WriteMessage(EdifactHelper.CreateInvoice());
+                writer.Write(EdifactHelper.CreateUnb());
+                writer.Write(EdifactHelper.CreateInvoice());
                 writer.Flush();
 
                 actual = CommonHelper.LoadString(stream);

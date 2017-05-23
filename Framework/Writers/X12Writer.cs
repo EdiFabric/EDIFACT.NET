@@ -11,7 +11,6 @@
 
 using System.IO;
 using System.Text;
-using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.Edi.X12;
 
 namespace EdiFabric.Framework.Writers
@@ -48,7 +47,7 @@ namespace EdiFabric.Framework.Writers
             SetFormatTags();
         }
 
-        public override void WriteInterchange(ISA interchangeHeader, Separators separators = null)
+        public override void Write(ISA interchangeHeader, Separators separators = null)
         {
             var sep = separators ?? Separators.X12;
             interchangeHeader.ComponentElementSeparator_16 = sep.ComponentDataElement.ToString();
@@ -58,7 +57,7 @@ namespace EdiFabric.Framework.Writers
             BeginInterchange(interchangeHeader, interchangeHeader.InterchangeControlNumber_13, sep);
         }
 
-        public override void WriteGroup(GS groupHeader)
+        public override void Write(GS groupHeader)
         {
             BeginGroup(groupHeader, groupHeader.GroupControlNumber_6);
         }

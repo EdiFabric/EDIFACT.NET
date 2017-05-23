@@ -22,14 +22,14 @@ namespace EdiFabric.UnitTests
                     var message = item as EdiMessage;
                     if (message != null)
                     {
-                        writer.WriteMessage(message);
+                        writer.Write(message);
                         continue;
                     }
 
                     var gs = item as GS;
                     if (gs != null)
                     {
-                        writer.WriteGroup(gs);
+                        writer.Write(gs);
                         continue;
                     }
 
@@ -42,13 +42,13 @@ namespace EdiFabric.UnitTests
                     var ta1 = item as TA1;
                     if (ta1 != null)
                     {
-                        writer.WriteSegment(ToString(ta1, separators));
+                        writer.Write(ToString(ta1, separators));
                     }
 
                     var isa = item as ISA;
                     if (isa != null)
                     {
-                        writer.WriteInterchange(isa, separators);
+                        writer.Write(isa, separators);
                     }
                 }
                 writer.Flush();

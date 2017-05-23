@@ -92,7 +92,7 @@ namespace EdiFabric.Framework.Writers
         /// <param name="separators">The separators.
         /// Allows to write multiple interchanges to the destination, each with its own separators.
         /// </param>
-        public abstract void WriteInterchange(T interchangeHeader, Separators separators = null);
+        public abstract void Write(T interchangeHeader, Separators separators = null);
 
         /// <summary>
         /// Writes an interchange header to the destination to start a new interchange.
@@ -116,7 +116,7 @@ namespace EdiFabric.Framework.Writers
             _interchangeControlNr = controlNumber;
 
             var segment = new Segment(typeof(T), interchangeHeader);
-            WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
+            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
         private void EndInterchange()
@@ -125,7 +125,7 @@ namespace EdiFabric.Framework.Writers
             {
                 var trailer = BuildTrailer(InterchangeTrailer, _interchangeControlNr,
                     _groupCounter > 0 ? _groupCounter : _messageCounter);
-                WriteSegment(trailer);
+                Write(trailer);
             }
 
             _messageCounter = 0;
@@ -139,7 +139,7 @@ namespace EdiFabric.Framework.Writers
         /// Closes the last started group if any.
         /// </summary>
         /// <param name="groupHeader">The group header.</param>
-        public abstract void WriteGroup(U groupHeader);
+        public abstract void Write(U groupHeader);
 
         /// <summary>
         /// Writes a group header to the destination to start a new group.
@@ -161,7 +161,7 @@ namespace EdiFabric.Framework.Writers
             _groupControlNr = controlNumber;
 
             var segment = new Segment(typeof(U), groupHeader);
-            WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
+            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
         private void EndGroup()
@@ -169,7 +169,7 @@ namespace EdiFabric.Framework.Writers
             if (_groupControlNr != null)
             {
                 var trailer = BuildTrailer(GroupTrailer, _groupControlNr, _messageCounter);
-                WriteSegment(trailer);
+                Write(trailer);
 
                 _messageCounter = 0;
             }
@@ -181,7 +181,7 @@ namespace EdiFabric.Framework.Writers
         /// Writes a message to the destination.
         /// </summary>
         /// <param name="message">The message to write.</param>
-        public void WriteMessage(EdiMessage message)
+        public void Write(EdiMessage message)
         {
             if (_separators == null)
                 throw new Exception("No interchange was started.");
@@ -194,7 +194,7 @@ namespace EdiFabric.Framework.Writers
 
             foreach (var segment in transactionSet.Descendants<Segment>())
             {
-                WriteSegment(segment.GenerateSegment(_separators, _preserveWhitespace));
+                Write(segment.GenerateSegment(_separators, _preserveWhitespace));
                 segmentCounter++;
             }
 
@@ -203,14 +203,14 @@ namespace EdiFabric.Framework.Writers
 
             segmentCounter++;
             var trailer = BuildTrailer(MessageTrailer, message.GetControlNumber(), segmentCounter);
-            WriteSegment(trailer);
+            Write(trailer);
         }
         
         /// <summary>
         /// Write the string representation of a segment to the destination.
         /// </summary>
         /// <param name="segment">The segment.</param>
-        public void WriteSegment(string segment)
+        public void Write(string segment)
         {
             _writer.Write(segment + _postFix);
         }

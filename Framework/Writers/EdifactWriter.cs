@@ -49,16 +49,16 @@ namespace EdiFabric.Framework.Writers
             SetFormatTags();
         }
 
-        public override void WriteInterchange(UNB interchangeHeader, Separators separators = null)
+        public override void Write(UNB interchangeHeader, Separators separators = null)
         {
             var sep = separators ?? Separators.Edifact;
             if (sep.IsDifferent(Separators.Edifact))
-                WriteSegment(sep.ToUna());
+                Write(sep.ToUna());
 
             BeginInterchange(interchangeHeader, interchangeHeader.InterchangeControlReference_5, sep);
         }
 
-        public override void WriteGroup(UNG groupHeader)
+        public override void Write(UNG groupHeader)
         {
             BeginGroup(groupHeader, groupHeader.GroupReferenceNumber_5);
         }
