@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using EdiFabric.Core.Model.Edi;
 
 namespace EdiFabric.UnitTests
 {
@@ -16,9 +20,9 @@ namespace EdiFabric.UnitTests
             return Assembly.Load(assemblyName).GetManifestResourceStream(qualifiedFileName);
         }
 
-        public static string LoadString(string qualifiedFileName, Encoding encoding = null)
+        public static string LoadString(string qualifiedFileName, Encoding encoding = null, bool noType = true)
         {
-            return LoadString(LoadStream(qualifiedFileName), encoding);
+            return LoadString(LoadStream(qualifiedFileName, noType), encoding);
         }
 
         public static string LoadString(Stream stream, Encoding encoding = null)
@@ -27,6 +31,20 @@ namespace EdiFabric.UnitTests
             using (var reader = new StreamReader(stream, encoding ?? Encoding.Default))
             {
                 return reader.ReadToEnd();
+            }
+        }
+
+        public static XDocument Serialize(EdiMessage instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException("instance");
+
+            var serializer = new XmlSerializer(instance.GetType());
+            using (var ms = new MemoryStream())
+            {
+                serializer.Serialize(ms, instance);
+                ms.Position = 0;
+                return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
             }
         }
     }
