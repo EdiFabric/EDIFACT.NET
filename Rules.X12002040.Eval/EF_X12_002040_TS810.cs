@@ -43,13 +43,5 @@ namespace EdiFabric.Rules.X12_002040
         public N1 N1 { get; set; }
         [Pos(2)]
         public List<N2> N2 { get; set; }
-        [Pos(3)]
-        public List<N3> N3 { get; set; }
-        [Pos(4)]
-        public N4 N4 { get; set; }
-        [Pos(5)]
-        public List<REF> REF { get; set; }
-        [Pos(6)]
-        public List<PER> PER { get; set; }
     }
 }

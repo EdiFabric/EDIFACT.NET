@@ -41,50 +41,6 @@ namespace EdiFabric.Rules.X12_002040
     }
     
     [Serializable()]
-    [Segment("PER")]
-    public class PER
-    {
-        
-        [Pos(1)]
-        public string ContactFunctionCode_01 { get; set; }
-        [Pos(2)]
-        public string Name_02 { get; set; }
-    }
-    
-    [Serializable()]
-    [Segment("REF")]
-    public class REF
-    {
-        
-        [Pos(1)]
-        public string ReferenceNumberQualifier_01 { get; set; }
-        [Pos(2)]
-        public string ReferenceNumber_02 { get; set; }
-    }
-    
-    [Serializable()]
-    [Segment("N4")]
-    public class N4
-    {
-        
-        [Pos(1)]
-        public string CityName_01 { get; set; }
-        [Pos(2)]
-        public string StateorProvinceCode_02 { get; set; }
-    }
-    
-    [Serializable()]
-    [Segment("N3")]
-    public class N3
-    {
-        
-        [Pos(1)]
-        public string AddressInformation_01 { get; set; }
-        [Pos(2)]
-        public string AddressInformation_02 { get; set; }
-    }
-    
-    [Serializable()]
     [Segment("N2")]
     public class N2
     {
@@ -104,6 +60,28 @@ namespace EdiFabric.Rules.X12_002040
         public string EntityIdentifierCode_01 { get; set; }
         [Pos(2)]
         public string Name_02 { get; set; }
+    }
+    
+    [Serializable()]
+    [Segment("PER")]
+    public class PER
+    {
+        
+        [Pos(1)]
+        public string ContactFunctionCode_01 { get; set; }
+        [Pos(2)]
+        public string Name_02 { get; set; }
+    }
+    
+    [Serializable()]
+    [Segment("REF")]
+    public class REF
+    {
+        
+        [Pos(1)]
+        public string ReferenceNumberQualifier_01 { get; set; }
+        [Pos(2)]
+        public string ReferenceNumber_02 { get; set; }
     }
     
     [Serializable()]
