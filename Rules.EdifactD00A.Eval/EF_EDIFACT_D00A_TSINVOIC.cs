@@ -32,7 +32,5 @@ namespace EdiFabric.Rules.EDIFACT_D00A
         public List<GIS> GIS { get; set; }
         [Pos(10)]
         public DGS DGS { get; set; }
-        [Pos(11)]
-        public List<GIR> GIR { get; set; }
     }
 }

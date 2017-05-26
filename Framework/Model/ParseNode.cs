@@ -110,7 +110,7 @@ namespace EdiFabric.Framework.Model
             throw new NotImplementedException(Type.FullName);
         }
 
-        public virtual void Parse(string value, Separators separators)
+        public virtual void Parse(string value, Separators separators, bool allowPartial)
         {
             throw new NotImplementedException(Type.FullName);
         }

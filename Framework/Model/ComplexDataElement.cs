@@ -34,7 +34,7 @@ namespace EdiFabric.Framework.Model
             BuildChildren(null, true);
         }
 
-        public override void Parse(string value, Separators separators)
+        public override void Parse(string value, Separators separators, bool allowPartial)
         {
             IsParsed = true;
             var index = 0;
@@ -47,7 +47,12 @@ namespace EdiFabric.Framework.Model
                 }
 
                 if (index >= Children.Count)
+                {
+                    if (allowPartial)
+                        continue;
+
                     throw new DataElementException("Too many components.", DataElementErrorCode.TooManyComponents, index);
+                }
 
                 var currentElement = Children.ElementAt(index);
                 if (currentElement.IsParsed)
@@ -55,7 +60,7 @@ namespace EdiFabric.Framework.Model
                     currentElement = currentElement.InsertRepetition();
                     index++;
                 }
-                currentElement.Parse(currentToParse, separators);
+                currentElement.Parse(currentToParse, separators, allowPartial);
                 index++;
             }
         }

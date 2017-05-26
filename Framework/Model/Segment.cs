@@ -91,7 +91,7 @@ namespace EdiFabric.Framework.Model
                 Parent.SetParsed();
         }
 
-        public override void Parse(string value, Separators separators)
+        public override void Parse(string value, Separators separators, bool allowPartial)
         {
             if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
             if (separators == null) throw new ArgumentNullException("separators");
@@ -111,9 +111,14 @@ namespace EdiFabric.Framework.Model
                 }
 
                 if (index >= Children.Count)
+                {
+                    if (allowPartial)
+                        continue;
+
                     throw new DataElementException("Too many Data Elements", "", index,
                         DataElementErrorCode.TooManyDataElements,
                         currentToParse, 0, 0);
+                }
 
                 var currentElement = Children.ElementAt(index);
 
@@ -133,7 +138,7 @@ namespace EdiFabric.Framework.Model
                     }
                     try
                     {
-                        currentElement.Parse(repetition, separators); 
+                        currentElement.Parse(repetition, separators, allowPartial); 
                     }
                     catch (DataElementException ex)
                     {

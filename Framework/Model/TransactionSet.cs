@@ -85,7 +85,7 @@ namespace EdiFabric.Framework.Model
 
                 try
                 {
-                    currSeg.Parse(segment.Value, separators);  
+                    currSeg.Parse(segment.Value, separators, allowPartial);  
                 }
                 catch (DataElementException ex)
                 {

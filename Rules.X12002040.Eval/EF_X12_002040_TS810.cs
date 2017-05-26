@@ -32,8 +32,6 @@ namespace EdiFabric.Rules.X12_002040
         public List<DTM> DTM { get; set; }
         [Pos(10)]
         public FOB FOB { get; set; }
-        [Pos(11)]
-        public List<PID> PID { get; set; }
     }
     
     [Serializable()]

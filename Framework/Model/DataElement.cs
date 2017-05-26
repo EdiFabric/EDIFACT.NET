@@ -29,7 +29,7 @@ namespace EdiFabric.Framework.Model
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
         }
 
-        public override void Parse(string value, Separators separators)
+        public override void Parse(string value, Separators separators, bool allowPartial)
         {
             IsParsed = true;
             Value = value.UnEscapeLine(separators);

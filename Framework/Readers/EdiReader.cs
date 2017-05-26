@@ -324,12 +324,12 @@ namespace EdiFabric.Framework.Readers
         /// <param name="separators">The separators.</param>
         /// <typeparam name="T">The type of segment.</typeparam>
         /// <returns>The parsed segment.</returns>
-        protected static T ParseSegment<T>(string segmentValue, Separators separators)
+        protected T ParseSegment<T>(string segmentValue, Separators separators)
         {
             var parseNode = new Segment(typeof(T));
             try
             {
-                parseNode.Parse(segmentValue, separators);
+                parseNode.Parse(segmentValue, separators, _allowPartial);
             }
             catch (Exception ex)
             {
