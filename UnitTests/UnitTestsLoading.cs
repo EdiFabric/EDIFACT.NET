@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Readers;

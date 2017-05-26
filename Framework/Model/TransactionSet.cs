@@ -35,7 +35,7 @@ namespace EdiFabric.Framework.Model
             return result;
         }
         
-        public void Analyze(IEnumerable<SegmentContext> segments, Separators separators)
+        public void Analyze(IEnumerable<SegmentContext> segments, Separators separators, bool allowPartial)
         {
             var currSeg = Children.First() as Segment;
             var index = 0;
@@ -50,15 +50,23 @@ namespace EdiFabric.Framework.Model
                                 d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
+                    {
+                        if (allowPartial)
+                            break;
+
                         throw new SegmentException("HL not found.",
                             new SegmentErrorContext(segment.Name, index,
                                 segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
+                    }
                 }
 
                 currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
 
                 if (currSeg == null)
                 {
+                    if (allowPartial)
+                        break;
+
                     var message = "Segment was not in the correct position according to the rules class.";
                     var errorCode = SegmentErrorCode.SegmentNotInProperSequence;
                     if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))

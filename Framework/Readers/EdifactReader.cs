@@ -50,9 +50,10 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="allowPartial">Used in conjunction with all evaluation specs.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public EdifactReader(Stream ediStream, string rulesAssembly, Encoding encoding = null)
-            : base(ediStream, rulesAssembly, encoding)
+        public EdifactReader(Stream ediStream, string rulesAssembly, Encoding encoding = null, bool allowPartial = false)
+            : base(ediStream, rulesAssembly, encoding, allowPartial)
         {
         }
 
@@ -62,9 +63,10 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="allowPartial">Used in conjunction with all evaluation specs.</param>
         /// <returns>A new instance of the <see cref="EdifactReader"/> class.</returns>
-        public EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null)
-            : base(ediStream, rulesAssembly, encoding)
+        public EdifactReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding = null, bool allowPartial = false)
+            : base(ediStream, rulesAssembly, encoding, allowPartial)
         {
         }
 

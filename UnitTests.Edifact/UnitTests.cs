@@ -913,6 +913,61 @@ namespace EdiFabric.UnitTests.Edifact
 
             // ASSERT
             Assert.AreEqual(expected, actual);
-        }      
+        }
+
+        [TestMethod]
+        public void TestEval()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
+            const string sampleEval = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Eval.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sampleEval);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Eval", null, true))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOICEval>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestNoValidationAttributes()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.NoValidation"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOICNoValidation>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

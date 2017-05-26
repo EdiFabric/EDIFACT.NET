@@ -772,6 +772,61 @@ namespace EdiFabric.UnitTests.X12
             // ASSERT
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestEval()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+            const string sampleEval = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_Eval.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sampleEval);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Eval", null, true))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810Eval>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestNoValidationAttributes()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<object> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.NoValidation"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810NoValidation>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
 

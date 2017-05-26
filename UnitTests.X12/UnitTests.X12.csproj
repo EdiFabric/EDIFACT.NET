@@ -62,6 +62,14 @@
       <Project>{d39915c6-da36-406f-828e-4c8c2e299324}</Project>
       <Name>Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rules.X12002040.Eval\Rules.X12002040.Eval.csproj">
+      <Project>{395dfe7d-2676-47b5-bcc9-878ee6f8cf12}</Project>
+      <Name>Rules.X12002040.Eval</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rules.X12002040.NoValidation\Rules.X12002040.NoValidation.csproj">
+      <Project>{1928fb85-d646-466a-8e6b-ff3c3a6cbce5}</Project>
+      <Name>Rules.X12002040.NoValidation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rules.X12002040.Rep\Rules.X12002040.Rep.csproj">
       <Project>{8ccc6ec4-a522-463f-bb5d-1c7c07a87460}</Project>
       <Name>Rules.X12002040.Rep</Name>
@@ -159,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_WriteNoPreserveWhitespace.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_Eval.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
