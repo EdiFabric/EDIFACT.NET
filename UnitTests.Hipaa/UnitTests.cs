@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
@@ -19,7 +20,7 @@ namespace EdiFabric.UnitTests.Hipaa
             const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00401.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, HipaaFactory))
@@ -42,7 +43,7 @@ namespace EdiFabric.UnitTests.Hipaa
             const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, HipaaFactory))
@@ -65,7 +66,7 @@ namespace EdiFabric.UnitTests.Hipaa
             const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_HL.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, HipaaFactory))
@@ -88,7 +89,7 @@ namespace EdiFabric.UnitTests.Hipaa
             const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_LF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             Separators separators;
 
             // ACT

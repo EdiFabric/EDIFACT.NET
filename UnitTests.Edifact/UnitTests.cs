@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework;
@@ -25,7 +26,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -52,7 +53,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_DefaultUNA.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -81,7 +82,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -110,7 +111,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_LF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -137,7 +138,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -158,7 +159,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BadSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -183,7 +184,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Group.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -210,7 +211,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -236,7 +237,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -262,7 +263,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -288,7 +289,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -315,7 +316,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -335,7 +336,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -362,7 +363,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -382,7 +383,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -409,7 +410,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -436,7 +437,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BOM.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -457,7 +458,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sampleClean);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -484,7 +485,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            var ediItems = new List<object>();
+            var ediItems = new List<IEdiItem>();
 
             // ACT
             var actual = "";
@@ -514,7 +515,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidTrailers.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -539,7 +540,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidHeader.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -559,7 +560,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -584,7 +585,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_InvalidSegment2.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -663,7 +664,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MissingGroupTrailer.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -686,7 +687,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MissingInterchangeTrailer.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -709,7 +710,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -736,7 +737,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sampleClean);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -762,7 +763,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -786,7 +787,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInvalidMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -809,7 +810,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Valid.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
@@ -833,7 +834,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, AssemblyLoadFactory))
@@ -923,7 +924,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sampleEval = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Eval.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sampleEval);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Eval", null, true))
@@ -950,7 +951,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<object> ediItems;
+            List<IEdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.NoValidation"))

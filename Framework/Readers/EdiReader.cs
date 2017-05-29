@@ -144,7 +144,7 @@ namespace EdiFabric.Framework.Readers
         /// Reads the stream to the end.
         /// </summary>
         /// <returns>All items that were found in the stream.</returns>
-        public IEnumerable<object> ReadToEnd()
+        public IEnumerable<IEdiItem> ReadToEnd()
         {
             while (Read())
             {

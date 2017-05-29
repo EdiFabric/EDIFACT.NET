@@ -11,7 +11,7 @@ namespace EdiFabric.UnitTests
 {
     public class EdifactHelper
     {
-        public static string Generate(List<object> items, Separators separators, string postFix,
+        public static string Generate(List<IEdiItem> items, Separators separators, string postFix,
             Encoding encoding = null, string una = null)
         {
             using (var stream = new MemoryStream())
