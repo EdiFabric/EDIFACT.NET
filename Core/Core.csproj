@@ -67,7 +67,7 @@
     <Compile Include="Model\Edi\X12\Isa.cs" />
     <Compile Include="Model\Edi\X12\Ta1.cs" />
     <Compile Include="Model\Edi\ErrorContexts\DataElementErrorContext.cs" />
-    <Compile Include="Model\Edi\IEdiItem.cs" />
+    <Compile Include="Model\Edi\EdiItem.cs" />
     <Compile Include="Model\Edi\EdiMessage.cs" />
     <Compile Include="Model\Edi\ErrorContexts\SegmentErrorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

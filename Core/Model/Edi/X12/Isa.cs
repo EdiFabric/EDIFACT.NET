@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("ISA")]
-    public class ISA : IEdiItem
+    public class ISA : EdiItem
     {
         [Pos(1)]
         public string AuthorizationInformationQualifier_1 { get; set; }

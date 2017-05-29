@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("GS")]
-    public class GS : IEdiItem
+    public class GS : EdiItem
     {
         [Pos(1)]
         public string CodeIdentifyingInformationType_1 { get; set; }

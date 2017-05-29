@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("IEA")]
-    public class IEA : IEdiItem 
+    public class IEA : EdiItem 
     {
         [Pos(1)]
         public string NumberOfIncludedGroups_1 { get; set; }

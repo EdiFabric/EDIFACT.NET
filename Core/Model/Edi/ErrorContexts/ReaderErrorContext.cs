@@ -17,7 +17,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
     /// <summary>
     /// The reason for any reader failure.
     /// </summary>
-    public class ReaderErrorContext : ErrorContext, IEdiItem
+    public class ReaderErrorContext : ErrorContext
     {
         /// <summary>
         /// The reader error code.

@@ -25,7 +25,7 @@ namespace EdiFabric.UnitTests
             const string expectedSample = "EdiFabric.UnitTests.Xml.Edifact_INVOIC_D00A.xml";
             var ediStream = CommonHelper.LoadStream(sample, false);
             var expected = XDocument.Parse(CommonHelper.LoadString(expectedSample, Encoding.UTF8, false));
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))

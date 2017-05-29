@@ -19,7 +19,7 @@ namespace EdiFabric.UnitTests
             const string sample = "EdiFabric.UnitTests.Edi.X12_820_00204.txt";
             var ediStream = CommonHelper.LoadStream(sample, false);
            
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
@@ -40,7 +40,7 @@ namespace EdiFabric.UnitTests
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00B.txt";
             var ediStream = CommonHelper.LoadStream(sample, false);
 
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.UnitTests"))
@@ -61,7 +61,7 @@ namespace EdiFabric.UnitTests
             const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample, false);
 
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new EdifactReader(ediStream, a => Assembly.Load("nosuchassembly")))

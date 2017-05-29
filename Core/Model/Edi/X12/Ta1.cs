@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("TA1")]
-    public class TA1 : IEdiItem
+    public class TA1 : EdiItem
     {
         [Pos(1)]
         public string InterchangeControlNumber_1 { get; set; }

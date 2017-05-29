@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     /// </summary>
     [Serializable()]
     [Segment("UNB")]
-    public class UNB : IEdiItem
+    public class UNB : EdiItem
     {
         [Pos(1)]
         public S001 SYNTAXIDENTIFIER_1 { get; set; }

@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("GE")]
-    public class GE : IEdiItem
+    public class GE : EdiItem
     {
         [Pos(1)]
         public string NumberOfIncludedSets_1 { get; set; }

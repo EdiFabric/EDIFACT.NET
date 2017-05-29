@@ -23,7 +23,7 @@ namespace EdiFabric.Core.Model.Edi
     /// <summary>
     /// The base EDI message.
     /// </summary>
-    public class EdiMessage : IEdiItem
+    public class EdiMessage : EdiItem
     {
         /// <summary>
         /// The message ID.

@@ -11,7 +11,7 @@ namespace EdiFabric.UnitTests
 {
     public class X12Helper
     {
-        public static string Generate(List<IEdiItem> items, Separators separators, string postFix,
+        public static string Generate(List<EdiItem> items, Separators separators, string postFix,
             Encoding encoding = null)
         {
             using (var stream = new MemoryStream())

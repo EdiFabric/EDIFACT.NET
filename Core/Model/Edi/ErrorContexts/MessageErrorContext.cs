@@ -18,7 +18,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
     /// <summary>
     /// Information for the data, error codes and the context of the message that failed.  
     /// </summary>
-    public sealed class MessageErrorContext : ErrorContext, IEdiItem
+    public sealed class MessageErrorContext : ErrorContext
     {
         /// <summary>
         /// The type of message (or its tag).
@@ -122,6 +122,61 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         public void Add(MessageErrorCode errorCode)
         {
             _codes.Add(errorCode);
+        }
+
+        /// <summary>
+        /// Flattens the error hierarchy.
+        /// Iterates through all errors in all contexts and outputs an easy to read error message
+        /// for each error or code found.
+        /// </summary>
+        /// <returns>
+        /// A collection of formatted error messages.
+        /// </returns>
+        public IEnumerable<string> Flatten()
+        {
+            foreach (var code in Codes)
+            {
+                yield return
+                    string.Format("[{0} with control nr {1}] {2}", Name,
+                        ControlNumber, code);
+            }
+
+            foreach (var error in Errors)
+            {
+                foreach (var code in error.Codes)
+                {
+                    var errorMsg = string.Format("[{0}", error.Name);
+
+                    if (error.Position > 0)
+                        errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", error.Position));
+
+                    errorMsg = string.Concat(errorMsg, string.Format("] {0}", code));
+                    yield return errorMsg;
+                }
+
+                foreach (var deError in error.Errors)
+                {
+                    var errorMsg = string.Format(
+                        "[{0} at pos {1}] [{2}",
+                        error.Name, error.Position, deError.Name);
+
+                    if (deError.Position > 0)
+                        errorMsg = string.Concat(errorMsg, string.Format(" at pos {0}", deError.Position));
+
+                    if (deError.ComponentPosition > 1)
+                        errorMsg = string.Concat(errorMsg,
+                            string.Format(" and at component pos {0}", deError.ComponentPosition));
+                    if (deError.RepetitionPosition > 1)
+                        errorMsg = string.Concat(errorMsg,
+                            string.Format(" and at repetition pos {0}", deError.RepetitionPosition));
+                    if (!string.IsNullOrEmpty(deError.Value))
+                        errorMsg = string.Concat(errorMsg, string.Format(" with value {0}", deError.Value));
+
+                    errorMsg = string.Concat(errorMsg, string.Format("] {0}", deError.Code));
+
+                    yield return errorMsg;
+                }
+            }
         }
     }
 }

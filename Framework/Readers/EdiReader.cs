@@ -48,7 +48,7 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// The last item that was read.
         /// </summary>
-        public IEdiItem Item { get; protected set; }
+        public EdiItem Item { get; protected set; }
         
         /// <summary>
         /// Indicates whether the current stream position is at the end of the stream.
@@ -144,7 +144,7 @@ namespace EdiFabric.Framework.Readers
         /// Reads the stream to the end.
         /// </summary>
         /// <returns>All items that were found in the stream.</returns>
-        public IEnumerable<IEdiItem> ReadToEnd()
+        public IEnumerable<EdiItem> ReadToEnd()
         {
             while (Read())
             {

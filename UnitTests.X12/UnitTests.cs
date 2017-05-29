@@ -26,7 +26,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -53,7 +53,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_RepetitionSeparator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -83,7 +83,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_RepetitionSeparator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -105,7 +105,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_SegmentSeparatorLF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -134,7 +134,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_LF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -162,7 +162,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BadSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -187,7 +187,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleGroups.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -213,7 +213,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -239,7 +239,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BOM.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -260,7 +260,7 @@ namespace EdiFabric.UnitTests.X12
             const string cleanSample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(cleanSample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -287,7 +287,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInterchanges.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            var ediItems = new List<IEdiItem>();
+            var ediItems = new List<EdiItem>();
 
             // ACT
             var actual = "";
@@ -317,7 +317,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidTrailers.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -342,7 +342,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidHeader.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -362,7 +362,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -387,7 +387,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_InvalidSegment2.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
@@ -466,7 +466,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MissingGroupTrailer.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -489,7 +489,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MissingInterchangeTrailer.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -512,7 +512,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_ValidAndInvalidMessage.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -537,7 +537,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_VersionFromSt.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -561,7 +561,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_NoRepetition.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -589,7 +589,7 @@ namespace EdiFabric.UnitTests.X12
             const string cleanSample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_BlankRepetitionClean.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(cleanSample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -618,7 +618,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -641,7 +641,7 @@ namespace EdiFabric.UnitTests.X12
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
@@ -666,7 +666,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_TA1.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
             Separators separators;
 
             // ACT
@@ -696,7 +696,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, AssemblyLoadFactory))
@@ -782,7 +782,7 @@ namespace EdiFabric.UnitTests.X12
             const string sampleEval = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_Eval.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sampleEval);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Eval", null, true))
@@ -809,7 +809,7 @@ namespace EdiFabric.UnitTests.X12
             const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204.txt";
             var ediStream = CommonHelper.LoadStream(sample);
             var expected = CommonHelper.LoadString(sample);
-            List<IEdiItem> ediItems;
+            List<EdiItem> ediItems;
 
             // ACT
             using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.NoValidation"))

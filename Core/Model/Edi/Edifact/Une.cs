@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     /// </summary>
     [Serializable()]
     [Segment("UNE")]
-    public class UNE : IEdiItem
+    public class UNE : EdiItem
     {
         [Pos(1)]
         public string GroupControlCount_1 { get; set; }
