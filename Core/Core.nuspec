@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>ediFabric.Framework</id>
-    <version>8.0.0</version>
-    <title>The Ultimate EDI Framework for .NET</title>
+    <id>ediFabric.Core</id>
+    <version>1.0.0</version>
+    <title>The Ultimate EDI Framework for .NET (Core)</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
     <licenseUrl>http://edifabric.com/files/lgpl.pdf</licenseUrl>
     <projectUrl>http://edifabric.com/</projectUrl>
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>.NET framework for reading and writing EDI documents.</description>
+    <description>.NET framework for reading and creating of EDI documents (Core).</description>
     <releaseNotes>Annotated specs</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>.NET EDI Framework EDIFACT X12 HIPAA</tags>
