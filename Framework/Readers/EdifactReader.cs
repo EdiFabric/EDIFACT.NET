@@ -191,6 +191,15 @@ namespace EdiFabric.Framework.Readers
             var version = ediDataElements[1] + ediDataElements[2];
             var controlNumber = ediCompositeDataElements[0];
 
+            if (ediDataElements.Count() >= 5 && ediDataElements[4].StartsWith("EAN"))
+            {
+                version = version + "EAN";
+                if (version.StartsWith("D01B"))
+                {
+                    version = version + _currentUnb.SYNTAXIDENTIFIER_1.SyntaxVersionNumber_2;
+                }
+            }
+
             return new MessageContext(tag, controlNumber, version, "EDIFACT",
                 _currentUnb.INTERCHANGESENDER_2.InterchangeSenderIdentification_1,
                 _currentUnb.INTERCHANGESENDER_2.IdentificationCodeQualifier_2,

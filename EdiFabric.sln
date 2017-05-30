@@ -44,6 +44,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules.X12002040.Eval", "Rul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules.X12002040.NoValidation", "Rules.X12002040.NoValidation\Rules.X12002040.NoValidation.csproj", "{1928FB85-D646-466A-8E6B-FF3C3A6CBCE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rules.EancomD01BEAN3", "Rules.EancomD01BEAN3\Rules.EancomD01BEAN3.csproj", "{344F2698-7A31-4DDB-9053-9F8BA8A53131}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Eancom", "UnitTests.Eancom\UnitTests.Eancom.csproj", "{085CA191-2F38-4633-84E1-92BDD6B9C142}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -214,6 +218,26 @@ Global
 		{1928FB85-D646-466A-8E6B-FF3C3A6CBCE5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1928FB85-D646-466A-8E6B-FF3C3A6CBCE5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1928FB85-D646-466A-8E6B-FF3C3A6CBCE5}.Release|x86.ActiveCfg = Release|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131}.Release|x86.ActiveCfg = Release|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Release|Any CPU.Build.0 = Release|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{085CA191-2F38-4633-84E1-92BDD6B9C142}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +257,8 @@ Global
 		{B23595A4-D9CE-420D-A1AC-BA2E7CE91E71} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
 		{395DFE7D-2676-47B5-BCC9-878EE6F8CF12} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
 		{1928FB85-D646-466A-8E6B-FF3C3A6CBCE5} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
+		{344F2698-7A31-4DDB-9053-9F8BA8A53131} = {BBCBB763-8BC4-403E-8D8D-427E4396F8DE}
+		{085CA191-2F38-4633-84E1-92BDD6B9C142} = {A6391E1B-988A-48B7-8146-E899C391C3DF}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = EdiFabric.vsmdi
