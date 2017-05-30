@@ -14,5 +14,8 @@
     <releaseNotes>Annotated specs</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>.NET EDI Framework EDIFACT X12 HIPAA</tags>
+    <dependencies>
+      <dependency id="ediFabric.Core" version="1.0.0" />
+    </dependencies>
   </metadata>
 </package>
