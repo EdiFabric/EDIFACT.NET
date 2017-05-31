@@ -927,7 +927,7 @@ namespace EdiFabric.UnitTests.Edifact
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Eval", null, true))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Eval"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

@@ -33,7 +33,6 @@ namespace EdiFabric.Framework.Readers
         private readonly Queue<char> _buffer;
         private readonly StreamReader _streamReader;
         private char[] _trims;
-        private readonly bool _allowPartial;
         
         /// <summary>
         /// The current list of segments.
@@ -64,8 +63,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        /// <param name="allowPartial">Used in conjunction with all evaluation specs.</param>
-        protected EdiReader(Stream ediStream, string rulesAssembly, Encoding encoding, bool allowPartial)
+        protected EdiReader(Stream ediStream, string rulesAssembly, Encoding encoding)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (string.IsNullOrEmpty(rulesAssembly)) throw new ArgumentNullException("rulesAssembly");
@@ -75,7 +73,6 @@ namespace EdiFabric.Framework.Readers
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
             _trims = new[] { '\r', '\n', ' ' };
-            _allowPartial = allowPartial;
         }
 
         /// <summary>
@@ -84,8 +81,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        /// <param name="allowPartial">Used in conjunction with all evaluation specs.</param>
-        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding, bool allowPartial)
+        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
@@ -95,12 +91,10 @@ namespace EdiFabric.Framework.Readers
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
             _trims = new[] { '\r', '\n', ' ' };
-            _allowPartial = allowPartial;
         }
 
         /// <summary>
         /// Reads an EDI item from the stream.
-        /// An EDI item is an IEdiControl or a message or a ParsingException.
         /// </summary>
         /// <returns>Indication if an item was read.</returns>
         public bool Read()
@@ -176,7 +170,7 @@ namespace EdiFabric.Framework.Readers
         
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
-        /// Breaks if no segment terminator was encountered after 10000 symbols were read. 
+        /// Breaks if no segment terminator was encountered after 5000 symbols were read. 
         /// This is to avoid loading large and corrupt files. 
         /// </summary>
         /// <returns>
@@ -247,8 +241,9 @@ namespace EdiFabric.Framework.Readers
             var messageContext = BuildContext();
             try
             {
-                var message = new TransactionSet(GetType(messageContext));
-                message.Analyze(CurrentSegments, Separators, _allowPartial);
+                var specDetails = GetSpecDetails(messageContext);
+                var message = new TransactionSet(specDetails.Item1);
+                message.Analyze(CurrentSegments, Separators, specDetails.Item2);
                 Item = (EdiMessage) message.ToInstance();
             }
             catch (SegmentException ex)
@@ -329,7 +324,7 @@ namespace EdiFabric.Framework.Readers
             var parseNode = new Segment(typeof(T));
             try
             {
-                parseNode.Parse(segmentValue, separators, _allowPartial);
+                parseNode.Parse(segmentValue, separators, false);
             }
             catch (Exception ex)
             {
@@ -348,7 +343,7 @@ namespace EdiFabric.Framework.Readers
                 _streamReader.Dispose();
         }
 
-        private Type GetType(MessageContext messageContext)
+        private Tuple<Type, bool> GetSpecDetails(MessageContext messageContext)
         {
             Assembly assembly;
             try
@@ -360,10 +355,12 @@ namespace EdiFabric.Framework.Readers
                 throw new MessageException(ex.Message, MessageErrorCode.TransactionSetNotSupported);
             }
 
+            var isEval = false;
             var matches = assembly.GetTypes().Where(m =>
             {
                 var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
                 if (att == null) return false;
+                isEval = att.IsEvaluation;
                 return att.Format == messageContext.Format && att.Version == messageContext.Version && att.Id == messageContext.Name;
             }).ToList();
 
@@ -385,7 +382,7 @@ namespace EdiFabric.Framework.Readers
                 throw new MessageException(msg, MessageErrorCode.TransactionSetNotSupported);
             }
 
-            return matches.First();
+            return new Tuple<Type, bool>(matches.First(), isEval);
         }
 
         private void Buffer(IEnumerable<char> data)

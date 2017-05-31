@@ -785,7 +785,7 @@ namespace EdiFabric.UnitTests.X12
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Eval", null, true))
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Eval"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

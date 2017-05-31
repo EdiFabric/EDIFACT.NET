@@ -28,14 +28,17 @@ namespace EdiFabric.Framework.Model
         /// The value of the first data element.
         /// </summary>
         public string FirstValue { get; private set; }
+
         /// <summary>
         /// The value of the second data element.
         /// </summary>
         public string SecondValue { get; private set; }
+
         /// <summary>
         /// The original segment line.
         /// </summary>
         public string Value { get; private set; }
+
         /// <summary>
         /// If it is HL that is not a direct child of its parent.
         /// </summary>

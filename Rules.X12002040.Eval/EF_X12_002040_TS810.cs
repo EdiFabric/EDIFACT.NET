@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.X12_002040
     
     
     [Serializable()]
-    [Message("X12", "002040", "810")]
+    [Message("X12", "002040", "810", true)]
     public class TS810Eval : EdiMessage
     {
         

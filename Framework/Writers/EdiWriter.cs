@@ -12,7 +12,6 @@
 using System;
 using System.IO;
 using System.Text;
-using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Framework.Model;
 
@@ -45,10 +44,10 @@ namespace EdiFabric.Framework.Writers
         /// Initializes a new instance of the <see cref="EdiWriter{T, U}"/> class.
         /// </summary>
         /// <param name="stream">The stream to write to.</param>
-        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
-        protected EdiWriter(Stream stream, Encoding encoding, string postfix, bool preserveWhitespace)
+        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        protected EdiWriter(Stream stream, string postfix, bool preserveWhitespace, Encoding encoding)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -67,10 +66,10 @@ namespace EdiFabric.Framework.Writers
         /// </summary>
         /// <param name="path">The path to the file to write to.</param>
         /// <param name="append">Whether to append to the file. The file will be overwritten by default.</param>
-        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
-        protected EdiWriter(string path, bool append, Encoding encoding, string postfix, bool preserveWhitespace)
+        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        protected EdiWriter(string path, bool append, string postfix, bool preserveWhitespace, Encoding encoding)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException("path");

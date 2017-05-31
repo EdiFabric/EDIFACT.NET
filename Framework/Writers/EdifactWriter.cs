@@ -11,7 +11,6 @@
 
 using System.IO;
 using System.Text;
-using EdiFabric.Core.Model;
 using EdiFabric.Core.Model.Edi.Edifact;
 
 namespace EdiFabric.Framework.Writers
@@ -30,7 +29,7 @@ namespace EdiFabric.Framework.Writers
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
         
         public EdifactWriter(Stream stream, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
-            : base(stream, encoding ?? Encoding.Default, postfix ?? "", preserveWhitespace)
+            : base(stream, postfix ?? "", preserveWhitespace, encoding ?? Encoding.Default)
         {
             SetFormatTags();
         }
@@ -44,7 +43,7 @@ namespace EdiFabric.Framework.Writers
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
         public EdifactWriter(string path, bool append, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
-            : base(path, append, encoding ?? Encoding.Default, postfix ?? "", preserveWhitespace)
+            : base(path, append, postfix ?? "", preserveWhitespace, encoding ?? Encoding.Default)
         {
             SetFormatTags();
         }

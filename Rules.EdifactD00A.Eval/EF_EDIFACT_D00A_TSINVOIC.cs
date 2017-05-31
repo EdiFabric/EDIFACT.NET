@@ -8,7 +8,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A
     
     
     [Serializable()]
-    [Message("EDIFACT", "D00A", "INVOIC")]
+    [Message("EDIFACT", "D00A", "INVOIC", true)]
     public class TSINVOICEval : EdiMessage
     {
         

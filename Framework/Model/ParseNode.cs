@@ -13,7 +13,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using EdiFabric.Core;
 
 namespace EdiFabric.Framework.Model
 {

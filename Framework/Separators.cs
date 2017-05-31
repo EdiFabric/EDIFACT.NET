@@ -113,7 +113,7 @@ namespace EdiFabric.Framework
         /// </summary>
         /// <param name="separators">The separator set to compare to.</param>
         /// <returns>Indicates if the separator sets are different.</returns>
-        public bool IsDifferent(Separators separators)
+        internal bool IsDifferent(Separators separators)
         {
             return separators.ComponentDataElement != ComponentDataElement ||
                    separators.DataElement != DataElement ||

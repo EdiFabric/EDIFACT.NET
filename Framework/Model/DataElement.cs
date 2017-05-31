@@ -10,7 +10,6 @@
 //---------------------------------------------------------------------
 
 using System.Reflection;
-using EdiFabric.Core;
 using EdiFabric.Core.Annotations.Validation;
 
 namespace EdiFabric.Framework.Model

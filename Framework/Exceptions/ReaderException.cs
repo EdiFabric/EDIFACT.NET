@@ -15,8 +15,8 @@ using EdiFabric.Core.ErrorCodes;
 namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// Parsing exception.
-    /// Raised during the parsing of EDI documents.
+    /// Reader exception.
+    /// Raised when no valid interchange header was found.
     /// </summary>
     class ReaderException : Exception
     {

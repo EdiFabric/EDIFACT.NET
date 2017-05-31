@@ -27,6 +27,10 @@ namespace EdiFabric.Core.Annotations.Edi
         /// EDI version.
         /// </summary>
         public string Version { get; private set; }
+        /// <summary>
+        /// Specifies if the spec is for evaluation.
+        /// </summary>
+        public bool IsEvaluation { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageAttribute"/> class.
@@ -34,11 +38,13 @@ namespace EdiFabric.Core.Annotations.Edi
         /// <param name="format">EDI standard.</param>
         /// <param name="version">EDI version.</param>
         /// <param name="id">EDI transaction set id.</param>
-        public MessageAttribute(string format, string version, string id)
+        /// <param name="isEvaluation">Specifies if the spec is for evaluation.</param>
+        public MessageAttribute(string format, string version, string id, bool isEvaluation = false)
             : base(id)
         {
             Format = format;
             Version = version;
+            IsEvaluation = isEvaluation;
         }
     }
 }
