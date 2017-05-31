@@ -175,6 +175,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Eval.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_CR.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

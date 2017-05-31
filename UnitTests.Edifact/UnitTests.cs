@@ -970,5 +970,32 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestPostfixCr()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_CR.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = EdifactHelper.Generate(ediItems, null, "\r");
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

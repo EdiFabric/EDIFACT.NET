@@ -828,6 +828,64 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestSegmentSeparatorCr()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_SegmentSeparatorCR.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<EdiItem> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = X12Helper.Generate(ediItems, separators, "");
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestPostfixCr()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_CR.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<EdiItem> ediItems;
+            Separators separators;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+                separators = ediReader.Separators;
+            }
+            var actual = X12Helper.Generate(ediItems, separators, "\r");
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
 
