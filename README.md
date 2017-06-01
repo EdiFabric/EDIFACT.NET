@@ -3,7 +3,7 @@ One framework to find them all and in Object bind them.</h3>
 
 An open source framework that empowers developers and businesses interested in enabling their software systems with EDI capabilities and can be integrated into your business applications.
 
-We support a vast collection of the most popular versions for X12, HIPAA and EDIFACT. All of our ready-to-use EDI specs are configurable and can adhere to any custom requirement.
+We support a vast collection of the most popular versions for X12, HIPAA, EDIFACT and EANCOM. All of our ready-to-use EDI specs are configurable and can adhere to any custom requirement.
 
 Enables you to read, create from scratch and validate EDI documents, and to communicate reliably with your business partners by sending back acknowledgments and detecting duplicates.
 
