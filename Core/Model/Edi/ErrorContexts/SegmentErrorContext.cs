@@ -103,7 +103,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             : this(name, position, message)
         {
             Value = value;
-            _codes.Add(errorCode);
+            Add(errorCode);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         public SegmentErrorContext(string name, int position, SegmentErrorCode errorCode, string message = null)
             : this(name, position, message)
         {
-            _codes.Add(errorCode);
+            Add(errorCode);
         }
         
         /// <summary>
@@ -125,7 +125,8 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// <param name="errorCode">The syntax error code.</param>
         public void Add(SegmentErrorCode errorCode)
         {
-            _codes.Add(errorCode);
+            if (!_codes.Contains(errorCode))
+                _codes.Add(errorCode);
         }
 
         /// <summary>

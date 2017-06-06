@@ -42,6 +42,7 @@
     <Compile Include="EF_EDIFACT_D00A_Codes.cs" />
     <Compile Include="EF_EDIFACT_D00A_ComplexElements.cs" />
     <Compile Include="EF_EDIFACT_D00A_Segments.cs" />
+    <Compile Include="EF_EDIFACT_D00A_TSINVOICSplit.cs" />
     <Compile Include="EF_EDIFACT_D00A_TSINVOICAll.cs" />
     <Compile Include="EF_EDIFACT_D00A_TSINVOICNoAttributes.cs" />
     <Compile Include="EF_EDIFACT_D00A_TSINVOICInvalidAttributes.cs" />

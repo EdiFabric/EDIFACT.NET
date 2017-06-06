@@ -103,11 +103,9 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         }
 
         /// <summary>
-        /// Merges a segment context into the errors collection.
-        /// There can be only one reference for a segment, containing all the errors for that segment.
-        /// A segment is identified by its name (or segment ID) and its position.
+        /// Merges segment contexts into the errors collection.
         /// </summary>
-        /// <param name="segmentContext">The segment error context to merge.</param>
+        /// <param name="segmentContext">The segment error contexts to merge.</param>
         public void Add(SegmentErrorContext segmentContext)
         {
             var key = segmentContext.Name + segmentContext.Position;
@@ -124,12 +122,23 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         }
 
         /// <summary>
+        /// Merges error codes into the error codes collection.
+        /// </summary>
+        /// <param name="errorCodes">The error codes to merge.</param>
+        public void AddRange(IEnumerable<MessageErrorCode> errorCodes)
+        {
+            foreach (var errorCode in errorCodes)
+                Add(errorCode);
+        }
+
+        /// <summary>
         /// Adds a syntax error code to the error codes collection.
         /// </summary>
         /// <param name="errorCode">The syntax error code.</param>
         public void Add(MessageErrorCode errorCode)
         {
-            _codes.Add(errorCode);
+            if (!_codes.Contains(errorCode))
+                _codes.Add(errorCode);
         }
 
         /// <summary>

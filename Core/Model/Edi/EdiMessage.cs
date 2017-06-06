@@ -107,41 +107,20 @@ namespace EdiFabric.Core.Model.Edi
         /// <returns>Whether the message is valid or not. If not valid then the message error context will contain the reasons.</returns>
         public bool IsValid(out MessageErrorContext result, bool skipTrailer = false)
         {
-            var visited = new HashSet<object>();
-            var stack = new Stack<InstanceContext>();
             result = new MessageErrorContext(Name, ControlNumber, MessagePart, null);
 
-            stack.Push(new InstanceContext(this));
-
-            var segmentIndex = 0;
-            var inSegmentIndex = 0;
-            var inComponentIndex = 0;
-
-            var segmentsNum = 0;
-
-            while (stack.Any())
-            {
-                var current = stack.Pop();
-
-                if (current.IsInstanceOfType<SegmentAttribute>())
-                    segmentsNum++;
-
-                if (current.Instance != null && !(current.Instance is string) && !visited.Add(current.Instance))
-                    continue;
-
-                current.SetIndexes(ref segmentIndex, ref inSegmentIndex, ref inComponentIndex);
-                result.AddRange(current.Validate(segmentIndex, inSegmentIndex, inComponentIndex));
-
-                var neighbours = current.GetNeigbours().Where(p => !visited.Contains(p.Instance));
-                foreach (var neighbour in neighbours.Reverse())
-                {
-                    stack.Push(neighbour);
-                }
-            }
-
+            int segmentsNum;
+            result.AddRange(Validate(out segmentsNum));
+        
             if (!skipTrailer)
                 foreach (var errorCode in ValidateStructure(segmentsNum))
                     result.Add(errorCode);
+
+            if (HasErrors)
+            {
+                result.AddRange(ErrorContext.Errors);
+                result.AddRange(ErrorContext.Codes);
+            }
 
             return !result.HasErrors;
         }

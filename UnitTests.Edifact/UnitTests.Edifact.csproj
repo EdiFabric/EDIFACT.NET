@@ -70,6 +70,10 @@
       <Project>{b23595a4-d9ce-420d-a1ac-ba2e7ce91e71}</Project>
       <Name>Rules.EdifactD00A.NoValidation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rules.EdifactD00A.Rep\Rules.EdifactD00A.Rep.csproj">
+      <Project>{a1e921dc-b93b-41a7-81b4-4ea15193ae10}</Project>
+      <Name>Rules.EdifactD00A.Rep</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rules.EdifactD00A\Rules.EdifactD00A.csproj">
       <Project>{17947e82-982a-4828-8e8b-e36ce8e86636}</Project>
       <Name>Rules.EdifactD00A</Name>
@@ -177,6 +181,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_CR.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Split.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

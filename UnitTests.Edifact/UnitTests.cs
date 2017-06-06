@@ -1001,5 +1001,88 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestSplitMessage()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Split.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            var messages = ediItems.OfType<Rules.EDIFACT_D00A.Rep.TSINVOICSplit>().ToList();
+            Assert.IsTrue(messages.Count(m => !m.HasErrors) == 3);
+
+            foreach (var msg in messages)
+            {
+                Assert.IsTrue(msg.MessagePart > 0);
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.ControlNumber));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Name));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Format));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Version));
+
+                MessageErrorContext mec;
+                if (!msg.IsValid(out mec))
+                {
+                    Assert.IsTrue(mec.MessagePart > 0);
+                    Assert.IsTrue(!string.IsNullOrEmpty(mec.ControlNumber));
+                    Assert.IsTrue(!string.IsNullOrEmpty(mec.Name));
+                }
+            }
+
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+            var errors = ediItems.OfType<Rules.EDIFACT_D00A.Rep.TSINVOICSplit>().Where(m => m.HasErrors).ToList();
+            Assert.IsTrue(errors.Count() == 1);
+
+            foreach (var err in errors)
+            {
+                Assert.IsTrue(err.MessagePart > 0);
+                Assert.IsTrue(!string.IsNullOrEmpty(err.ControlNumber));
+                Assert.IsTrue(!string.IsNullOrEmpty(err.Name));
+            }
+        }
+
+        [TestMethod]
+        public void TestSplitWithValidation()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Split.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
+            Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
+            var messages = ediItems.OfType<Rules.EDIFACT_D00A.Rep.TSINVOICSplit>().ToList();
+            Assert.IsTrue(messages.Count(m => !m.HasErrors) == 3);
+            Assert.IsTrue(messages.Count(m => m.HasErrors) == 1);
+            Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
+
+            var linLoops = messages.Where(msg => msg.LINLoop1 != null).SelectMany(msg => msg.LINLoop1).ToList();
+            Assert.IsTrue(linLoops.Count > 1);
+            Assert.IsTrue(linLoops.First().Validate().ToList().Count == 1);
+
+            foreach (var linLoop in linLoops.Skip(1))
+                Assert.IsTrue(linLoop.Validate().ToList().Count == 0);
+        }       
     }
 }

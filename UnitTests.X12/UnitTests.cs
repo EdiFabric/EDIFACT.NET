@@ -975,6 +975,38 @@ namespace EdiFabric.UnitTests.X12
                 Assert.IsTrue(!string.IsNullOrEmpty(err.Name));
             }
         }
+
+        [TestMethod]
+        public void TestSplitWithValidation()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_Split.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            var messages = ediItems.OfType<TS810Split>().ToList();
+            Assert.IsTrue(messages.Count(m => !m.HasErrors) == 7);
+            Assert.IsTrue(messages.Count(m => m.HasErrors) == 2);
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+
+            var n1Loops = messages.Where(msg => msg.N1Loop1 != null).SelectMany(msg => msg.N1Loop1).ToList();
+            Assert.IsTrue(n1Loops.Count > 1);
+            Assert.IsTrue(n1Loops.First().Validate().ToList().Count == 1);
+
+            foreach (var n1Loop in n1Loops.Skip(1))
+                Assert.IsTrue(n1Loop.Validate().ToList().Count == 0);
+        }       
     }
 }
 

@@ -163,7 +163,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
     
     [Serializable()]
     [Group("LIN")]
-    public class TSINVOIC_LINLoop1
+    public class TSINVOIC_LINLoop1 : EdiItem
     {
         
         [Required]
