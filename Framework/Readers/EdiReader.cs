@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
@@ -29,15 +28,15 @@ namespace EdiFabric.Framework.Readers
     /// </summary>
     public abstract class EdiReader : IDisposable
     {
-        private readonly Func<MessageContext, Assembly> _rulesAssembly;
         private readonly Queue<char> _buffer;
         private readonly StreamReader _streamReader;
         private char[] _trims;
         
-        /// <summary>
-        /// The current list of segments.
-        /// </summary>
         internal List<SegmentContext> CurrentSegments { get; private set; }
+        internal MessageContext CurrentMessageContext;
+        internal int SegmentIndex;
+        internal int PartsIndex;
+        internal readonly Func<MessageContext, Assembly> RulesAssembly;
         
         /// <summary>
         /// EDI separators.
@@ -69,7 +68,7 @@ namespace EdiFabric.Framework.Readers
             if (string.IsNullOrEmpty(rulesAssembly)) throw new ArgumentNullException("rulesAssembly");
             
             _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
-            _rulesAssembly = mc => Assembly.Load(rulesAssembly); 
+            RulesAssembly = mc => Assembly.Load(rulesAssembly); 
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
             _trims = new[] { '\r', '\n', ' ' };
@@ -87,7 +86,7 @@ namespace EdiFabric.Framework.Readers
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
 
             _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
-            _rulesAssembly = rulesAssembly;   
+            RulesAssembly = rulesAssembly;   
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
             _trims = new[] { '\r', '\n', ' ' };
@@ -100,7 +99,7 @@ namespace EdiFabric.Framework.Readers
         public bool Read()
         {
             Item = null;
-           
+
             try
             {
                 while ((!_streamReader.EndOfStream || _buffer.Any()) && Item == null)
@@ -110,15 +109,21 @@ namespace EdiFabric.Framework.Readers
                     if (Separators == null)
                         throw new Exception("No valid separator set was found.");
 
-                    if(string.IsNullOrEmpty(segment))
+                    if (string.IsNullOrEmpty(segment))
                         continue;
 
-                    ProcessSegment(segment);
-                }               
+                    Item = Split(segment) ?? Process(segment);
+                }
             }
             catch (ReaderException ex)
             {
                 Item = new ReaderErrorContext(ex, ex.ErrorCode);
+            }
+            catch (ParserMessageException ex)
+            {
+                Item = new MessageErrorContext(ex.Name,
+                    ex.ControlNumber, PartsIndex, ex.Message,
+                    ex.ErrorCode);
             }
             catch (Exception ex)
             {
@@ -160,7 +165,20 @@ namespace EdiFabric.Framework.Readers
         /// Converts EDI segments into typed objects. 
         /// </summary>
         /// <param name="segment">The segment to be processed.</param>
-        protected abstract void ProcessSegment(string segment);
+        protected abstract EdiItem Process(string segment);
+
+        private EdiItem Split(string segment)
+        {
+            if (CurrentMessageContext == null || 
+                string.IsNullOrEmpty(CurrentMessageContext.SplitterValue) ||
+                CurrentSegments.Count == 0 ||
+                !segment.StartsWith(CurrentMessageContext.SplitterValue, StringComparison.Ordinal))
+                return null;
+
+            PartsIndex++;
+            Buffer(segment + Separators.Segment);
+            return ParseSegments();
+        }
 
         /// <summary>
         /// Extracts the format, the version and the tag of the EDI document.
@@ -236,38 +254,36 @@ namespace EdiFabric.Framework.Readers
         /// <summary>
         /// Parses the accumulated segments.
         /// </summary>
-        protected void ParseSegments()
+        protected EdiItem ParseSegments()
         {
-            var messageContext = BuildContext();
+            if (CurrentMessageContext == null)
+                throw new Exception("No message context was loaded.");
+
+            EdiItem result;
             try
             {
-                var specDetails = GetSpecDetails(messageContext);
-                var message = new TransactionSet(specDetails.Item1);
-                message.Analyze(CurrentSegments, Separators, specDetails.Item2);
-                Item = (EdiMessage) message.ToInstance();
-            }
-            catch (SegmentException ex)
-            {
-                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message);
-                errorContext.Add(ex.ErrorContext);
-                Item = errorContext;
-            }
-            catch (MessageException ex)
-            {
-                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message,
-                    ex.ErrorCode);
-                Item = errorContext;
+                var message = new TransactionSet(CurrentMessageContext.MessageType);
+                var errorContext = message.Analyze(CurrentSegments, CurrentMessageContext, Separators, PartsIndex, SegmentIndex);
+                
+                var ediMessage = (EdiMessage)message.ToInstance();
+                ediMessage.MessagePart = PartsIndex;
+                ediMessage.ControlNumber = CurrentMessageContext.ControlNumber;
+                ediMessage.ErrorContext = errorContext;
+                result = ediMessage;         
             }
             catch (Exception ex)
             {
-                var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, ex.Message,
+                result = new MessageErrorContext(CurrentMessageContext.Name,
+                    CurrentMessageContext.ControlNumber, PartsIndex, ex.Message,
                     MessageErrorCode.MissingOrInvalidTransactionSet);
-                Item = errorContext;
             }
             finally
             {
+                SegmentIndex = SegmentIndex + CurrentSegments.Count;
                 CurrentSegments.Clear();
             }
+
+            return result;
         }
 
         /// <summary>
@@ -319,7 +335,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="separators">The separators.</param>
         /// <typeparam name="T">The type of segment.</typeparam>
         /// <returns>The parsed segment.</returns>
-        protected T ParseSegment<T>(string segmentValue, Separators separators)
+        protected T ParseSegment<T>(string segmentValue, Separators separators) where T : EdiItem
         {
             var parseNode = new Segment(typeof(T));
             try
@@ -342,49 +358,7 @@ namespace EdiFabric.Framework.Readers
             if (_streamReader != null)
                 _streamReader.Dispose();
         }
-
-        private Tuple<Type, bool> GetSpecDetails(MessageContext messageContext)
-        {
-            Assembly assembly;
-            try
-            {
-                assembly = _rulesAssembly(messageContext);
-            }
-            catch (Exception ex)
-            {
-                throw new MessageException(ex.Message, MessageErrorCode.TransactionSetNotSupported);
-            }
-
-            var isEval = false;
-            var matches = assembly.GetTypes().Where(m =>
-            {
-                var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
-                if (att == null) return false;
-                isEval = att.IsEvaluation;
-                return att.Format == messageContext.Format && att.Version == messageContext.Version && att.Id == messageContext.Name;
-            }).ToList();
-
-            var attribute = "[Message(" + messageContext.Format + ", " + messageContext.Version + ", " + messageContext.Name + ")]";
-
-            if (!matches.Any())
-            {
-                var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
-                    assembly.FullName);
-
-                throw new MessageException(msg, MessageErrorCode.TransactionSetNotSupported);
-            }
-
-            if (matches.Count > 1)
-            {
-                var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
-                    assembly.FullName);
-
-                throw new MessageException(msg, MessageErrorCode.TransactionSetNotSupported);
-            }
-
-            return new Tuple<Type, bool>(matches.First(), isEval);
-        }
-
+        
         private void Buffer(IEnumerable<char> data)
         {
             foreach (var c in data)

@@ -29,6 +29,11 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// The message control number.
         /// </summary>
         public string ControlNumber { get; private set; }
+
+        /// <summary>
+        /// Message part index.
+        /// </summary>
+        public int MessagePart { get; private set; }
         
         private readonly List<MessageErrorCode> _codes = new List<MessageErrorCode>();
         /// <summary>
@@ -61,12 +66,14 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        /// <param name="messagePart">Message part index.</param>
         /// <param name="message">The error message.</param>
-        public MessageErrorContext(string name, string controlNumber, string message) 
+        public MessageErrorContext(string name, string controlNumber, int messagePart, string message) 
             : base(message)
         {
             Name = name;
             ControlNumber = controlNumber;
+            MessagePart = messagePart;
         }
 
         /// <summary>
@@ -74,10 +81,11 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        /// <param name="messagePart">Message part index.</param>
         /// <param name="message">The error message.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public MessageErrorContext(string name, string controlNumber, string message, MessageErrorCode errorCode)
-            : this(name, controlNumber, message)
+        public MessageErrorContext(string name, string controlNumber, int messagePart, string message, MessageErrorCode errorCode)
+            : this(name, controlNumber, messagePart, message)
         {
             _codes.Add(errorCode);
         }
@@ -106,8 +114,8 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             if (_errors.ContainsKey(key))
             {
                 foreach (var error in segmentContext.Errors)
-                    _errors[key].Add(error.Name, error.Position, error.Code, error.ComponentPosition,
-                        error.RepetitionPosition, error.Value);
+                    _errors[key].Add(new DataElementErrorContext(error.Name, error.Position, error.Code, error.ComponentPosition,
+                        error.RepetitionPosition, error.Value, null));
             }
             else
             {

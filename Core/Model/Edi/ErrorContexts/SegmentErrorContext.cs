@@ -59,7 +59,8 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        public SegmentErrorContext(string name, int position) : base(null)
+        public SegmentErrorContext(string name, int position)
+            : base(null)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
@@ -69,16 +70,39 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             Name = name;
             Position = position;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
+        /// </summary>
+        /// <param name="name">The segment ID.</param>
+        /// <param name="position">The segment position.</param>
+        /// <param name="value">The segment line.</param>
+        /// <param name="message">The message.</param>
+        public SegmentErrorContext(string name, int position, string value, string message = null)
+            : base(message)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+            if (position <= 0)
+                throw new Exception("position must be greater tan zero.");
+
+            Name = name;
+            Position = position;
+            Value = value;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public SegmentErrorContext(string name, int position, SegmentErrorCode errorCode)
-            : this(name, position)
+        /// <param name="value">The segment line.</param>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The message.</param>
+        public SegmentErrorContext(string name, int position, string value, SegmentErrorCode errorCode, string message = null)
+            : this(name, position, message)
         {
+            Value = value;
             _codes.Add(errorCode);
         }
 
@@ -87,26 +111,14 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        /// <param name="value">The segment line.</param>
-        public SegmentErrorContext(string name, int position, string value)
-            : this(name, position)
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The message.</param>
+        public SegmentErrorContext(string name, int position, SegmentErrorCode errorCode, string message = null)
+            : this(name, position, message)
         {
-            Value = value;
+            _codes.Add(errorCode);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SegmentErrorContext"/> class.
-        /// </summary>
-        /// <param name="name">The segment ID.</param>
-        /// <param name="position">The segment position.</param>
-        /// <param name="value">The segment line.</param>
-        /// <param name="errorCode">The syntax error code.</param>
-        public SegmentErrorContext(string name, int position, string value, SegmentErrorCode errorCode)
-            : this(name, position, errorCode)
-        {
-            Value = value;
-        }
-
+        
         /// <summary>
         /// Adds a syntax error code to the error codes collection.
         /// </summary>
@@ -119,16 +131,10 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// <summary>
         /// Adds a new data element context into the errors collection.
         /// </summary>
-        /// <param name="name">The data element name.</param>
-        /// <param name="position">The data element position.</param>
-        /// <param name="code">The error code.</param>
-        /// <param name="componentPosition">The component data element position.</param>
-        /// <param name="repetitionPosition">The repetition position.</param>
-        /// <param name="value">The data element value;</param>
-        public void Add(string name, int position, DataElementErrorCode code, int componentPosition,
-            int repetitionPosition, string value)
+        /// <param name="errorContext">The data element error context.</param>
+        public void Add(DataElementErrorContext errorContext)
         {
-            _errors.Add(new DataElementErrorContext(name, position, code, componentPosition, repetitionPosition, value));
+            _errors.Add(errorContext);
         }
     }
 }

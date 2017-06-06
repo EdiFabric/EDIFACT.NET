@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework.Model
@@ -114,9 +115,9 @@ namespace EdiFabric.Framework.Model
                     if (allowPartial)
                         continue;
 
-                    throw new DataElementException("Too many Data Elements", "", index,
-                        DataElementErrorCode.TooManyDataElements,
-                        currentToParse, 0, 0);
+                    var errorContext = new DataElementErrorContext("", index, DataElementErrorCode.TooManyDataElements,
+                            0, 0, currentToParse, "Too many Data Elements");
+                    throw new ParserSegmentException(errorContext);
                 }
 
                 var currentElement = Children.ElementAt(index);
@@ -139,10 +140,11 @@ namespace EdiFabric.Framework.Model
                     {
                         currentElement.Parse(repetition, separators, allowPartial); 
                     }
-                    catch (DataElementException ex)
+                    catch (ParserElementException ex)
                     {
-                        throw new DataElementException(ex.Message, currentElement.EdiName, index, ex.ErrorCode,
-                            repetition, ex.ComponentPosition, repIndex);
+                        var errorContext = new DataElementErrorContext(currentElement.EdiName, index, ex.ErrorCode,
+                            ex.ComponentPosition, repIndex, repetition, ex.Message);
+                        throw new ParserSegmentException(errorContext);
                     }
                                       
                 }

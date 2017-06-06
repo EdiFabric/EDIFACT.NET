@@ -122,7 +122,9 @@ namespace EdiFabric.Core.Annotations.Validation
                     instanceContext.Property.Name));
 
             var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
-            result.Add(instanceContext.GetId(), inSegmentIndex, DataElementErrorCode.RequiredDataElementMissing, 0, 0, null);
+            var errorContext = new DataElementErrorContext(instanceContext.GetId(), inSegmentIndex,
+                DataElementErrorCode.RequiredDataElementMissing, 0, 0, null);
+            result.Add(errorContext);
             
             return result;
         }
@@ -142,8 +144,10 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new SegmentErrorContext(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, DataElementErrorCode.RequiredDataElementMissing, inCompositeIndex, 0, null);
-            
+            var errorContext = new DataElementErrorContext(name, inSegmentIndex,
+                DataElementErrorCode.RequiredDataElementMissing, inCompositeIndex, 0, null);
+            result.Add(errorContext);
+
             return result;
         }
     }

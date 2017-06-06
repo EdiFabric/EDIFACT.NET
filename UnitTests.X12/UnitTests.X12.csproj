@@ -180,6 +180,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Edi\X12_810_00204_CRLF.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\X12_810_00204_Split.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

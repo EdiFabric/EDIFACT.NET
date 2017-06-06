@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework.Model;
 
@@ -89,8 +90,10 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        protected override EdiItem Process(string segment)
         {
+            EdiItem result = null;
+
             var segmentContext = new SegmentContext(segment, Separators);
             switch (segmentContext.Name)
             {
@@ -102,8 +105,11 @@ namespace EdiFabric.Framework.Readers
                     if (CurrentSegments.Any())
                     {
                         Buffer(segment + Separators.Segment);
-                        ParseSegments();
-                        return;
+                        result = ParseSegments();
+                        CurrentMessageContext = null;
+                        SegmentIndex = 0;
+                        PartsIndex = 0;
+                        return result;
                     }
                     break;
             }
@@ -113,30 +119,36 @@ namespace EdiFabric.Framework.Readers
                 case "ISA":
                     var isa = ParseSegment<ISA>(segmentContext.Value, Separators);
                     _currentIsa = isa;
-                    Item = isa;
+                    result = isa;
                     _currentGroupHeader = null;
                     break;
                 case "TA1":
-                    Item = ParseSegment<TA1>(segmentContext.Value, Separators);
+                    result = ParseSegment<TA1>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     break;
                 case "GS":
-                    Item = ParseSegment<GS>(segmentContext.Value, Separators);
+                    result = ParseSegment<GS>(segmentContext.Value, Separators);
                     _currentGroupHeader = segmentContext;
                     break;
                 case "ST":
-                    CurrentSegments.Add(segmentContext);                   
+                    CurrentSegments.Add(segmentContext);
+                    CurrentMessageContext = BuildContext();
+                    SegmentIndex = 0;
+                    PartsIndex = 0;
                     break;
                 case "SE":
                     CurrentSegments.Add(segmentContext);
-                    ParseSegments();
+                    result = ParseSegments();
+                    CurrentMessageContext = null;
+                    SegmentIndex = 0;
+                    PartsIndex = 0;
                     break;
                 case "GE":
-                    Item = ParseSegment<GE>(segmentContext.Value, Separators);
+                    result = ParseSegment<GE>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     break;
                 case "IEA":
-                    Item = ParseSegment<IEA>(segmentContext.Value, Separators);
+                    result = ParseSegment<IEA>(segmentContext.Value, Separators);
                     _currentGroupHeader = null;
                     _currentIsa = null;
                     break;
@@ -144,6 +156,8 @@ namespace EdiFabric.Framework.Readers
                     CurrentSegments.Add(segmentContext);
                     break;
             }
+
+            return result;
         }
 
         protected override MessageContext BuildContext()
@@ -158,7 +172,7 @@ namespace EdiFabric.Framework.Readers
                 {
                     return new MessageContext("TA1", "", "", "X12", _currentIsa.InterchangeSenderID_6,
                         _currentIsa.SenderIDQualifier_5, _currentIsa.InterchangeReceiverID_8,
-                        _currentIsa.ReceiverIDQualifier_7);
+                        _currentIsa.ReceiverIDQualifier_7, RulesAssembly);
                 }
             }
 
@@ -187,7 +201,7 @@ namespace EdiFabric.Framework.Readers
             var controlNumber = ediCompositeDataElementsSt[1];
 
             return new MessageContext(tag, controlNumber, version, "X12", _currentIsa.InterchangeSenderID_6,
-                _currentIsa.SenderIDQualifier_5, _currentIsa.InterchangeReceiverID_8, _currentIsa.ReceiverIDQualifier_7);
+                _currentIsa.SenderIDQualifier_5, _currentIsa.InterchangeReceiverID_8, _currentIsa.ReceiverIDQualifier_7, RulesAssembly);
         }
     }
 }

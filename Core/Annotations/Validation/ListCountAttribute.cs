@@ -157,7 +157,9 @@ namespace EdiFabric.Core.Annotations.Validation
                 : MinCount - list.Count + 1;
 
             var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
-            result.Add(instanceContext.GetId(), inSegmentIndex, errorCode, 0, repIndex, null);
+            var errorContext = new DataElementErrorContext(instanceContext.GetId(), inSegmentIndex, errorCode, 0,
+                repIndex, null);
+            result.Add(errorContext);
             return result;
         }
 
@@ -189,7 +191,8 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new SegmentErrorContext(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, value);
+            var errorContext = new DataElementErrorContext(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, value);
+            result.Add(errorContext);
             return result;
         }
     }

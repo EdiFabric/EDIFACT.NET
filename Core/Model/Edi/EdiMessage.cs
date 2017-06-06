@@ -40,6 +40,43 @@ namespace EdiFabric.Core.Model.Edi
         /// </summary>
         [XmlIgnore]
         public string Format { get; private set; }
+        /// <summary>
+        /// Message part index.
+        /// </summary>
+        [XmlIgnore]
+        public int MessagePart { get; set; }
+
+        private string _controlNumber;
+        /// <summary>
+        /// The message control number.
+        /// </summary>
+        [XmlIgnore]
+        public string ControlNumber
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_controlNumber))
+                    _controlNumber = GetControlNumber();
+                
+                return _controlNumber;
+            }
+            set { _controlNumber = value; }
+        }
+
+        /// <summary>
+        /// If it was parsed in full.
+        /// </summary>
+        [XmlIgnore]
+        public bool HasErrors
+        {
+            get { return ErrorContext != null && ErrorContext.HasErrors; }
+        }
+
+        /// <summary>
+        /// Message error context.
+        /// </summary>
+        [XmlIgnore]
+        public MessageErrorContext ErrorContext { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiMessage"/> class.
@@ -59,45 +96,7 @@ namespace EdiFabric.Core.Model.Edi
             if (Version == null) throw new Exception("Version is null");
             Name = msgAttr.Id;
             if (Name == null) throw new Exception("Name is null");
-        }
-
-        /// <summary>
-        /// Gets the message control number if any, otherwise null.
-        /// </summary>
-        /// <returns>The message control number or null.</returns>
-        /// <exception cref="Exception">Throws exception if the format is unknown.</exception>
-        public string GetControlNumber()
-        {
-            if (Format == "X12")
-                return GetControlNumber("ST", 2);
-
-            if (Format == "EDIFACT")
-                return GetControlNumber("UNH", 1);
-
-            throw new Exception(string.Format("GetControlNumber is not implemented for format {0} .", Format));
-        }
-
-        private string GetControlNumber(string tag, int position)
-        {
-            var headerProperty =
-                GetType()
-                    .GetProperties()
-                    .Where(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>() != null)
-                    .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
-
-            if (headerProperty == null)
-                return null;
-
-            var headerValue = headerProperty.GetValue(this);
-            var cnProperty =
-                headerValue.GetType()
-                    .GetProperties()
-                    .SingleOrDefault(p => p.GetCustomAttribute<PosAttribute>().Pos == position);
-
-            if (cnProperty == null)
-                return null;
-
-            return cnProperty.GetValue(headerValue) as string;
+            MessagePart = 0;
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace EdiFabric.Core.Model.Edi
         {
             var visited = new HashSet<object>();
             var stack = new Stack<InstanceContext>();
-            result = new MessageErrorContext(Name, GetControlNumber(), null);
+            result = new MessageErrorContext(Name, ControlNumber, MessagePart, null);
 
             stack.Push(new InstanceContext(this));
 
@@ -161,7 +160,7 @@ namespace EdiFabric.Core.Model.Edi
         private IEnumerable<MessageErrorCode> ValidateStructure(string tag, int segmentsNum)
         {
             var result = new List<MessageErrorCode>();
-            var controlNumber = GetControlNumber();
+            var controlNumber = ControlNumber;
 
             if (string.IsNullOrEmpty(controlNumber))
             {
@@ -228,5 +227,39 @@ namespace EdiFabric.Core.Model.Edi
 
             return new Tuple<int, string>(trailerSegmentsNumber, cn);
         }
+
+        private string GetControlNumber()
+        {
+            if (Format == "X12")
+                return GetControlNumber("ST", 2);
+
+            if (Format == "EDIFACT")
+                return GetControlNumber("UNH", 1);
+
+            throw new Exception(string.Format("GetControlNumber is not implemented for format {0} .", Format));
+        }
+
+        private string GetControlNumber(string tag, int position)
+        {
+            var headerProperty =
+                GetType()
+                    .GetProperties()
+                    .Where(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>() != null)
+                    .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
+
+            if (headerProperty == null)
+                return null;
+
+            var headerValue = headerProperty.GetValue(this);
+            var cnProperty =
+                headerValue.GetType()
+                    .GetProperties()
+                    .SingleOrDefault(p => p.GetCustomAttribute<PosAttribute>().Pos == position);
+
+            if (cnProperty == null)
+                return null;
+
+            return cnProperty.GetValue(headerValue) as string;
+        }        
     }
 }

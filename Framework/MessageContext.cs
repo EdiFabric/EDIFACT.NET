@@ -10,6 +10,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Reflection;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
 {
@@ -59,6 +64,21 @@ namespace EdiFabric.Framework
         public string ReceiverQualifier { get; private set; }
 
         /// <summary>
+        /// The type of message.
+        /// </summary>
+        public Type MessageType { get; private set; }
+
+        /// <summary>
+        /// Whether allows partial reading.
+        /// </summary>
+        public bool PartialAllowed { get; private set; }
+
+         /// <summary>
+        /// The value to split by.
+        /// </summary>
+        public string SplitterValue { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
         /// </summary>
         /// <param name="name">The message tag or ID.</param>
@@ -69,8 +89,9 @@ namespace EdiFabric.Framework
         /// <param name="senderQualifier">UNB 2.2 or ISA5 .</param>
         /// <param name="receiverId">UNB 3.1 or ISA8 .</param>
         /// <param name="receiverQualifier">UNB 3.2 or ISA7 .</param>
+        /// <param name="rulesAssembly">Delegate to retrieve the assembly containing the specs.</param>
         public MessageContext(string name, string controlNumber, string version, string format, string senderId,
-            string senderQualifier, string receiverId, string receiverQualifier)
+            string senderQualifier, string receiverId, string receiverQualifier, Func<MessageContext, Assembly> rulesAssembly)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
             if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
@@ -88,6 +109,60 @@ namespace EdiFabric.Framework
             SenderQualifier = senderQualifier;
             ReceiverId = receiverId;
             ReceiverQualifier = receiverQualifier;
+
+            ReadAttributes(rulesAssembly);
+        }
+
+        private void ReadAttributes(Func<MessageContext, Assembly> rulesAssembly)
+        {
+            if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
+
+            if (MessageType != null)
+                return;
+
+            Assembly assembly;
+            try
+            {
+                assembly = rulesAssembly(this);
+            }
+            catch (Exception ex)
+            {
+                throw new ParserMessageException(Name, ControlNumber, ex.Message, MessageErrorCode.TransactionSetNotSupported);
+            }
+
+            var matches = assembly.GetTypes().Where(m =>
+            {
+                var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
+                if (att == null) return false;
+
+                if (att.Format == Format && att.Version == Version && att.Id == Name)
+                {
+                    PartialAllowed = att.IsEvaluation;
+                    SplitterValue = att.Splitter;
+                    return true;
+                }
+                return false;
+            }).ToList();
+
+            var attribute = "[Message(" + Format + ", " + Version + ", " + Name + ")]";
+
+            if (!matches.Any())
+            {
+                var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
+                    assembly.FullName);
+
+                throw new ParserMessageException(Name, ControlNumber, msg, MessageErrorCode.TransactionSetNotSupported);
+            }
+
+            if (matches.Count > 1)
+            {
+                var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
+                    assembly.FullName);
+
+                throw new ParserMessageException(Name, ControlNumber, msg, MessageErrorCode.TransactionSetNotSupported);
+            }
+
+            MessageType = matches.First();
         }
     }
 }

@@ -170,9 +170,10 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
         }
@@ -571,12 +572,13 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
         }
 
         [TestMethod]
@@ -596,12 +598,13 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
         }
 
         [TestMethod]
@@ -721,12 +724,13 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<UNB>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault(m => m.HasErrors));
+            Assert.IsNotNull(ediItems.OfType<TSINVOIC>().SingleOrDefault(m => !m.HasErrors));
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TSINVOIC>().SingleOrDefault(m => m.HasErrors);
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
         }
 
         [TestMethod]
@@ -798,10 +802,10 @@ namespace EdiFabric.UnitTests.Edifact
             // ASSERT
             Assert.IsTrue(ediItems.OfType<UNB>().Count() == 1);
             Assert.IsNull(ediItems.OfType<UNG>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count() == 3);
+            Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count(m => !m.HasErrors) == 3);
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsTrue(ediItems.OfType<UNZ>().Count() == 1);
-            Assert.IsTrue(ediItems.OfType<MessageErrorContext>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<TSINVOIC>().Count(m => m.HasErrors) == 2);
         }
 
         [TestMethod]

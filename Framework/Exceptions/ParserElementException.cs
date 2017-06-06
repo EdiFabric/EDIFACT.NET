@@ -14,14 +14,16 @@ using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Framework.Exceptions
 {
-    class ReaderException : Exception
+    class ParserElementException : Exception
     {
-        public ReaderErrorCode ErrorCode { get; set; }
-
-        public ReaderException(string message, ReaderErrorCode errorCode)
+        public DataElementErrorCode ErrorCode { get; private set; }
+        public int ComponentPosition { get; private set; }
+        
+        public ParserElementException(string message, DataElementErrorCode errorCode, int compositePosition)
             : base(message)
         {
             ErrorCode = errorCode;
+            ComponentPosition = compositePosition;
         }
     }
 }

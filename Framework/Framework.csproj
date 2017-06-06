@@ -70,10 +70,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\MessageException.cs" />
+    <Compile Include="Exceptions\ParserElementException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\ParserMessageException.cs" />
+    <Compile Include="Exceptions\ParserSegmentException.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Exceptions\ReaderException.cs" />
-    <Compile Include="Exceptions\SegmentException.cs" />
-    <Compile Include="Exceptions\DataElementException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Separators.cs" />

@@ -31,6 +31,10 @@ namespace EdiFabric.Core.Annotations.Edi
         /// Specifies if the spec is for evaluation.
         /// </summary>
         public bool IsEvaluation { get; private set; }
+        /// <summary>
+        /// The value to look for when splitting.
+        /// </summary>
+        public string Splitter { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageAttribute"/> class.
@@ -45,6 +49,23 @@ namespace EdiFabric.Core.Annotations.Edi
             Format = format;
             Version = version;
             IsEvaluation = isEvaluation;
+            Splitter = null;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageAttribute"/> class.
+        /// </summary>
+        /// <param name="format">EDI standard.</param>
+        /// <param name="version">EDI version.</param>
+        /// <param name="id">EDI transaction set id.</param>
+        /// <param name="splitter">The value to look for when splitting.</param>
+        public MessageAttribute(string format, string version, string id, string splitter)
+            : base(id)
+        {
+            Format = format;
+            Version = version;
+            IsEvaluation = false;
+            Splitter = splitter;
         }
     }
 }

@@ -12,7 +12,9 @@ using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.X12_002040;
+using EdiFabric.Rules.X12_002040.Rep;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TS810 = EdiFabric.Rules.X12_002040.TS810;
 
 namespace EdiFabric.UnitTests.X12
 {
@@ -173,9 +175,10 @@ namespace EdiFabric.UnitTests.X12
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TS810>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
         }
@@ -373,12 +376,13 @@ namespace EdiFabric.UnitTests.X12
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TS810>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
         }
 
         [TestMethod]
@@ -398,12 +402,13 @@ namespace EdiFabric.UnitTests.X12
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            Assert.IsNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<Rules.X12_002040.Rep.TS810>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<Rules.X12_002040.Rep.TS810>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+            Assert.IsTrue(error.HasErrors);Assert.IsNotNull(error);
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
         }
 
         [TestMethod]
@@ -523,12 +528,13 @@ namespace EdiFabric.UnitTests.X12
             // ASSERT
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-             Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault(m => m.HasErrors));
+            Assert.IsNotNull(ediItems.OfType<TS810>().SingleOrDefault(m => !m.HasErrors));
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<TS810>().SingleOrDefault(m => m.HasErrors);
             Assert.IsNotNull(error);
-            Assert.IsNotNull(error.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
         }
 
         [TestMethod]
@@ -653,10 +659,10 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 3);
+            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => !m.HasErrors) == 3);
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<MessageErrorContext>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => m.HasErrors) == 2);
         }
 
         [TestMethod]
@@ -799,6 +805,9 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
+            
             Assert.AreEqual(expected, actual);
         }
 
@@ -914,6 +923,57 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSplitMessage()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_Split.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+           
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            var messages = ediItems.OfType<TS810Split>().ToList();
+            Assert.IsTrue(messages.Count(m => !m.HasErrors) == 7);
+
+            foreach (var msg in messages)
+            {
+                Assert.IsTrue(msg.MessagePart > 0);
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.ControlNumber));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Name));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Format));
+                Assert.IsTrue(!string.IsNullOrEmpty(msg.Version));
+
+                MessageErrorContext mec;
+                if (!msg.IsValid(out mec))
+                {
+                    Assert.IsTrue(mec.MessagePart > 0);
+                    Assert.IsTrue(!string.IsNullOrEmpty(mec.ControlNumber));
+                    Assert.IsTrue(!string.IsNullOrEmpty(mec.Name));
+                }
+            }
+
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            var errors = ediItems.OfType<TS810Split>().Where(m => m.HasErrors).ToList();
+            Assert.IsTrue(errors.Count() == 2);
+
+            foreach (var err in errors)
+            {
+                Assert.IsTrue(err.MessagePart > 0);
+                Assert.IsTrue(!string.IsNullOrEmpty(err.ControlNumber));
+                Assert.IsTrue(!string.IsNullOrEmpty(err.Name));
+            }
         }
     }
 }

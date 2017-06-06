@@ -50,7 +50,7 @@ namespace EdiFabric.Framework.Model
                     if (allowPartial)
                         continue;
 
-                    throw new DataElementException("Too many components.", DataElementErrorCode.TooManyComponents, index);
+                    throw new ParserElementException("Too many components.", DataElementErrorCode.TooManyComponents, index);
                 }
 
                 var currentElement = Children.ElementAt(index);

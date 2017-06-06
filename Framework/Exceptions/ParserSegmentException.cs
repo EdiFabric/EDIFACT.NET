@@ -9,25 +9,29 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
-namespace EdiFabric.Core.Model.Edi.ErrorContexts
+using System;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
+
+namespace EdiFabric.Framework.Exceptions
 {
     /// <summary>
-    /// The abstract error context.
+    /// Thrown during parsing.
     /// </summary>
-    public abstract class ErrorContext : EdiItem
+    class ParserSegmentException : Exception
     {
         /// <summary>
-        /// Error message.
+        /// The error context.
         /// </summary>
-        public string Message { get; private set; }
-
+        public DataElementErrorContext ErrorContext { get; set; }
+        
         /// <summary>
-        /// Protected constructor. Initializes a new instance of the <see cref="ErrorContext"/> class.
+        /// Initializes a new instance of the <see cref="ParserSegmentException"/> class.
         /// </summary>
-        /// <param name="message">Error message.</param>
-        protected ErrorContext(string message)
+        /// <param name="errorContext">The data element error context.</param>
+        public ParserSegmentException(DataElementErrorContext errorContext)
+            : base(errorContext.Message)
         {
-            Message = message;
+            ErrorContext = errorContext;
         }
     }
 }

@@ -97,8 +97,10 @@ namespace EdiFabric.Core.Annotations.Validation
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
             var result = new SegmentErrorContext(segmentName, segmentIndex);
-            result.Add(name, inSegmentIndex, DataElementErrorCode.InvalidCodeValue, inCompositeIndex, repetitionIndex,
+            var errorContext = new DataElementErrorContext(name, inSegmentIndex, DataElementErrorCode.InvalidCodeValue,
+                inCompositeIndex, repetitionIndex,
                 value);
+            result.Add(errorContext);
             return result;
         }
     }

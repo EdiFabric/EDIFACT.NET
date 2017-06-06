@@ -34,11 +34,15 @@ namespace EdiFabric.Framework.Model
                 result.AddRange(Children);
             return result;
         }
-        
-        public void Analyze(IEnumerable<SegmentContext> segments, Separators separators, bool allowPartial)
+
+        public MessageErrorContext Analyze(IEnumerable<SegmentContext> segments, MessageContext messageContext,
+            Separators separators, int partsIndex, int segmentIndex)
         {
+            var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, partsIndex,
+                "Message was parsed with errors.");
+
             var currSeg = Children.First() as Segment;
-            var index = 0;
+            var index = segmentIndex;
             foreach (var segment in segments)
             {
                 index++;
@@ -51,52 +55,55 @@ namespace EdiFabric.Framework.Model
 
                     if (currSeg == null)
                     {
-                        if (allowPartial)
-                            break;
+                        errorContext.Add(new SegmentErrorContext(segment.Name, index,
+                            segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
 
-                        throw new SegmentException("HL not found.",
-                            new SegmentErrorContext(segment.Name, index,
-                                segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
+                        return errorContext;
                     }
                 }
 
-                currSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
-
-                if (currSeg == null)
+                var tempSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
+                if (tempSeg == null)
                 {
-                    if (allowPartial)
-                        break;
-
-                    var message = "Segment was not in the correct position according to the rules class.";
                     var errorCode = SegmentErrorCode.SegmentNotInProperSequence;
                     if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))
-                    {
-                        message = "Segment is not supported in rules class.";
                         errorCode = SegmentErrorCode.UnrecognizedSegment;
+
+                    errorContext.Add(new SegmentErrorContext(segment.Name, index,
+                        segment.Value, errorCode));
+
+                    if (messageContext.PartialAllowed)
+                    {
+                        tempSeg = currSeg;
+                        continue;
                     }
 
-                    throw new SegmentException(message,
-                            new SegmentErrorContext(segment.Name, index,
-                                segment.Value, errorCode));
+                    return errorContext;
                 }
+                
+                currSeg = tempSeg;
 
                 if (currSeg.IsParsed)
-                    currSeg = (Segment)currSeg.InsertRepetition();
+                    currSeg = (Segment) currSeg.InsertRepetition();
 
                 try
                 {
-                    currSeg.Parse(segment.Value, separators, allowPartial);  
+                    currSeg.Parse(segment.Value, separators, messageContext.PartialAllowed);
                 }
-                catch (DataElementException ex)
+                catch (ParserSegmentException ex)
                 {
                     var segmentContext = new SegmentErrorContext(segment.Name, index, segment.Value);
-                    segmentContext.Add(ex.Name, ex.Position, ex.ErrorCode, ex.ComponentPosition, ex.RepetitionPosition,
-                        ex.Value);
+                    segmentContext.Add(ex.ErrorContext);
+                    errorContext.Add(segmentContext);
 
-                    throw new SegmentException(ex.Message, segmentContext);
+                    if (messageContext.PartialAllowed)
+                        continue;
+
+                    return errorContext;
                 }
-                             
             }
+
+            return errorContext.HasErrors ? errorContext : null;
         }
 
         public void RemoveTrailer(string trailerTag)

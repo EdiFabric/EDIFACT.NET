@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Framework.Model;
 
@@ -116,8 +117,10 @@ namespace EdiFabric.Framework.Readers
             return false;
         }
 
-        protected override void ProcessSegment(string segment)
+        protected override EdiItem Process(string segment)
         {
+            EdiItem result = null;
+
             var segmentContext = new SegmentContext(segment, Separators);
             switch (segmentContext.Name)
             {
@@ -130,8 +133,11 @@ namespace EdiFabric.Framework.Readers
                     if (CurrentSegments.Any())
                     {
                         Buffer(segment + Separators.Segment);
-                        ParseSegments();
-                        return;
+                        result = ParseSegments();
+                        CurrentMessageContext = null;
+                        SegmentIndex = 0;
+                        PartsIndex = 0;
+                        return result;
                     }
                     break;
             }
@@ -143,29 +149,37 @@ namespace EdiFabric.Framework.Readers
                 case "UNB":
                     var unb = ParseSegment<UNB>(segmentContext.Value, Separators);
                     _currentUnb = unb;
-                    Item = unb;
+                    result = unb;
                     break;
                 case "UNG":
-                    Item = ParseSegment<UNG>(segmentContext.Value, Separators);
+                    result = ParseSegment<UNG>(segmentContext.Value, Separators);
                     break;
                 case "UNH":
                     CurrentSegments.Add(segmentContext);
+                    CurrentMessageContext = BuildContext();
+                    SegmentIndex = 0;
+                    PartsIndex = 0;
                     break;
                 case "UNT":
                     CurrentSegments.Add(segmentContext);
-                    ParseSegments();
+                    result = ParseSegments();
+                    CurrentMessageContext = null;
+                    SegmentIndex = 0;
+                    PartsIndex = 0;
                     break;
                 case "UNE":
-                    Item = ParseSegment<UNE>(segmentContext.Value, Separators);
+                    result = ParseSegment<UNE>(segmentContext.Value, Separators);
                     break;
                 case "UNZ":
-                    Item = ParseSegment<UNZ>(segmentContext.Value, Separators);
+                    result = ParseSegment<UNZ>(segmentContext.Value, Separators);
                     _currentUnb = null;
                     break;
                 default:
                     CurrentSegments.Add(segmentContext);
                     break;
             }
+
+            return result;
         }
 
         protected override MessageContext BuildContext()
@@ -202,7 +216,7 @@ namespace EdiFabric.Framework.Readers
                 _currentUnb.INTERCHANGESENDER_2.InterchangeSenderIdentification_1,
                 _currentUnb.INTERCHANGESENDER_2.IdentificationCodeQualifier_2,
                 _currentUnb.INTERCHANGERECIPIENT_3.InterchangeRecipientIdentification_1,
-                _currentUnb.INTERCHANGERECIPIENT_3.IdentificationCodeQualifier_2);
+                _currentUnb.INTERCHANGERECIPIENT_3.IdentificationCodeQualifier_2, RulesAssembly);
         }
 
         private bool IsUnb(string toCompare, char dataElementSep, char componentSep)
