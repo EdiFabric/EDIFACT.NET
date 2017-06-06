@@ -382,7 +382,12 @@ namespace EdiFabric.UnitTests.X12
             var error = ediItems.OfType<TS810>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
-            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+
+            MessageErrorContext mec;
+            Assert.IsFalse(error.IsValid(out mec));
+            Assert.IsTrue(mec.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+            Assert.IsTrue(mec.Errors.Count > 1);
         }
 
         [TestMethod]
@@ -407,8 +412,14 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             var error = ediItems.OfType<Rules.X12_002040.Rep.TS810>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.HasErrors);Assert.IsNotNull(error);
-            Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+            Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+
+            MessageErrorContext mec;
+            Assert.IsFalse(error.IsValid(out mec));
+            Assert.IsTrue(mec.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+            Assert.IsTrue(mec.Errors.Count > 1);
         }
 
         [TestMethod]
