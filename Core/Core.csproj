@@ -55,6 +55,7 @@
     <Compile Include="Model\Edi\ErrorContexts\ReaderErrorContext.cs" />
     <Compile Include="ErrorCodes\ReaderErrorCode.cs" />
     <Compile Include="Model\Edi\ErrorContexts\MessageErrorContext.cs" />
+    <Compile Include="Model\Edi\X12\Codes.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Model\Edi\InstanceContext.cs" />
     <Compile Include="Model\Edi\Edifact\Unb.cs" />

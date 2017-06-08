@@ -110,49 +110,5 @@ namespace EdiFabric.Core.Model.Edi.X12
         [DataElement("I15", null)]
         [Pos(16)]
         public string ComponentElementSeparator_16 { get; set; }
-    }
-
-    [Serializable()]
-    [EdiCodes(",00,01,02,03,04,05,06,")]
-    public class X12_ID_I01
-    {
-    }
-
-    [Serializable()]
-    [EdiCodes(",00,01,")]
-    public class X12_ID_I03
-    {
-    }
-
-    [Serializable()]
-    [EdiCodes(",01,02,03,04,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,AM,NR,SA,SN,ZZ,")]
-    public class X12_ID_I05
-    {
-    }
-
-    [Serializable()]
-    [EdiCodes(",I,P,T,")]
-    public class X12_ID_I14
-    {
-    }
-
-    [Serializable()]
-    public class X12_AN
-    {
-    }
-
-    [Serializable()]
-    public class X12_DT
-    {
-    }
-
-    [Serializable()]
-    public class X12_TM
-    {
-    }
-
-    [Serializable()]
-    public class X12_N0
-    {
-    }
+    }  
 }
