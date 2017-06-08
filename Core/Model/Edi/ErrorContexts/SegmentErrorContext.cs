@@ -64,9 +64,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
-            if (position <= 0)
-                throw new Exception("position must be greater tan zero.");
-
+            
             Name = name;
             Position = position;
         }
@@ -83,9 +81,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
-            if (position <= 0)
-                throw new Exception("position must be greater tan zero.");
-
+            
             Name = name;
             Position = position;
             Value = value;

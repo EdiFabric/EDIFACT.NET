@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EF_HIPAA_005010X220A1_834.cs" />
     <Compile Include="EF_HIPAA_005010X222A1_837.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

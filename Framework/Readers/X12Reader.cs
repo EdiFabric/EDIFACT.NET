@@ -76,13 +76,18 @@ namespace EdiFabric.Framework.Readers
                         repetitionDataElement = isaElements[10].First();
                     var segment = isaElements[15].Last();
 
+                    var noSegmentTerminator = probed.Substring(0, probed.Length - 1);
+                    if (noSegmentTerminator.Contains(segment) || isaElements.Any(string.IsNullOrEmpty) ||
+                        noSegmentTerminator.Contains('\r') || noSegmentTerminator.Contains('\n') ||
+                        char.IsUpper(segment) || char.IsNumber(segment))
+                        return false;
+
                     separators = new Separators(segment, componentDataElement, dataElement,
                         repetitionDataElement, null);
-
-                    return true;
+                    return true;            
                 }
             }
-            catch
+            catch (Exception)
             {
                 // ignored
             }

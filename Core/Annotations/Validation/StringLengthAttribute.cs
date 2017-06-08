@@ -93,6 +93,15 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? instanceContext.Parent.GetId()
                 : instanceContext.Parent.GetDeclaringTypeId();
 
+            if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
+            {
+                var ediAttribute = instanceContext.Parent.Instance.GetType().GetCustomAttribute<EdiAttribute>();
+                if (ediAttribute == null)
+                    throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
+
+                segmentName = ediAttribute.Id;
+            }
+
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
