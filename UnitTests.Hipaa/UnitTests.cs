@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Model.Edi;
@@ -56,6 +57,31 @@ namespace EdiFabric.UnitTests.Hipaa
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Test5010Isa()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_ISA.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            var expected = CommonHelper.LoadString(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
             Assert.AreEqual(expected, actual);
         }
 

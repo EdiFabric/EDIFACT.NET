@@ -191,11 +191,7 @@ namespace EdiFabric.Framework.Readers
             var line = "";
             while (!_streamReader.EndOfStream || _buffer.Any())
             {
-                var symbol = _buffer.Any()
-                    ? _buffer.Dequeue().ToString()
-                    : Read(1);
-
-                line = line + symbol;
+                line = line + Read(1);
                 if (line.Length > 2)
                 {
                     var last3 = line.Substring(line.Length - 3);
@@ -320,6 +316,28 @@ namespace EdiFabric.Framework.Readers
         /// <returns>The string read from the stream.</returns>
         protected string Read(int bytes)
         {
+            var result = "";
+            var index = 0;
+            while (index < bytes)
+            {
+                if (_buffer.Count > 0)
+                    result += _buffer.Dequeue().ToString();
+                else
+                    result += ReadFromStream(1);
+
+                index++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Reads number of bytes from the stream.
+        /// </summary>
+        /// <param name="bytes">The number of bytes.</param>
+        /// <returns>The string read from the stream.</returns>
+        protected string ReadFromStream(int bytes)
+        {
             var result = new char[bytes];
             _streamReader.Read(result, 0, result.Length);
             return String.Concat(result);
@@ -379,7 +397,15 @@ namespace EdiFabric.Framework.Readers
 
         private void Buffer(IEnumerable<char> data)
         {
+            var existing = new List<char>();
+
+            while (_buffer.Any())
+                    existing.Add(_buffer.Dequeue());
+
             foreach (var c in data)
+                _buffer.Enqueue(c);
+
+            foreach (var c in existing)
                 _buffer.Enqueue(c);
         }
     }

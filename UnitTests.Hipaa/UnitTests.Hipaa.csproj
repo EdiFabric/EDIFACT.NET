@@ -85,6 +85,7 @@
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_HL.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Edi\Hipaa_837P_00501_ISA.txt" />
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_LF.txt" />
   </ItemGroup>
   <ItemGroup>

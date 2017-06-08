@@ -816,9 +816,6 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
-            File.WriteAllText(@"C:\Test\Actual.txt", actual);
-            File.WriteAllText(@"C:\Test\Expected.txt", expected);
-            
             Assert.AreEqual(expected, actual);
         }
 

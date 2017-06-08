@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Rules.EDIFACT_D00A.Rep;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -506,6 +508,40 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(result.Errors.Count == 0);
             Assert.IsTrue(result.Codes.Count == 1);
             Assert.IsTrue(result.Codes.Contains(MessageErrorCode.SegmentsCountNotMatching));
+        }
+
+        [TestMethod]
+        public void TestValidationOfReaderErrorContext()
+        {
+            // ARRANGE
+            var readerErrorContext = new ReaderErrorContext(new Exception("test"),
+                ReaderErrorCode.InvalidControlStructure);
+
+            // ACT
+            var result = readerErrorContext.Validate();
+
+            // ASSERT
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [TestMethod]
+        public void TestValidationIsa()
+        {
+            //  ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.X12_820_00204.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            ISA isa;
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040.Rep"))
+            {
+                var ediItems = ediReader.ReadToEnd().ToList();
+                isa = ediItems.OfType<ISA>().Single();
+            } 
+
+            //  ACT
+            var result = isa.Validate();
+
+            //  ASSERT
+
         }
     }
 }

@@ -69,6 +69,9 @@ namespace EdiFabric.Core.Annotations.Validation
             if (instanceContext.Property.GetGenericType() != typeof(string))
                 return result;
 
+            if(DataType == null)
+                return result;
+
             var eAttr = DataType.GetCustomAttribute<EdiCodesAttribute>();
             if (eAttr == null)
                 return result;

@@ -85,7 +85,7 @@ namespace EdiFabric.Core.Model.Edi.X12
         public string InterchangeControlStandardsIdentifier_11 { get; set; }
 
         [Required]
-        [DataElement("I11", typeof(X12_ID_I11))]
+        [StringLength(5, 5)]
         [Pos(12)]
         public string InterchangeControlVersionNumber_12 { get; set; }
 
@@ -97,7 +97,7 @@ namespace EdiFabric.Core.Model.Edi.X12
 
         [Required]
         [StringLength(1, 1)]
-        [DataElement("I13", typeof(X12_N0))]
+        [DataElement("I13", null)]
         [Pos(14)]
         public string AcknowledgementRequested_14 { get; set; }
 
@@ -107,7 +107,7 @@ namespace EdiFabric.Core.Model.Edi.X12
         public string UsageIndicator_15 { get; set; }
 
         [Required]
-        [DataElement("I15", typeof(X12_AN))]
+        [DataElement("I15", null)]
         [Pos(16)]
         public string ComponentElementSeparator_16 { get; set; }
     }
@@ -127,12 +127,6 @@ namespace EdiFabric.Core.Model.Edi.X12
     [Serializable()]
     [EdiCodes(",01,02,03,04,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,AM,NR,SA,SN,ZZ,")]
     public class X12_ID_I05
-    {
-    }
-
-    [Serializable()]
-    [EdiCodes(",00501,00401,")]
-    public class X12_ID_I11
     {
     }
 
