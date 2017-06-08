@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
 
 namespace EdiFabric.Framework
@@ -127,7 +128,9 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                throw new ParserMessageException(Name, ControlNumber, ex.Message, MessageErrorCode.TransactionSetNotSupported);
+                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, ex.Message,
+                    MessageErrorCode.TransactionSetNotSupported);
+                throw new ParserMessageException(errorContext);
             }
 
             var matches = assembly.GetTypes().Where(m =>
@@ -151,7 +154,9 @@ namespace EdiFabric.Framework
                 var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                throw new ParserMessageException(Name, ControlNumber, msg, MessageErrorCode.TransactionSetNotSupported);
+                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, msg,
+                    MessageErrorCode.TransactionSetNotSupported);
+                throw new ParserMessageException(errorContext);
             }
 
             if (matches.Count > 1)
@@ -159,7 +164,9 @@ namespace EdiFabric.Framework
                 var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                throw new ParserMessageException(Name, ControlNumber, msg, MessageErrorCode.TransactionSetNotSupported);
+                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, msg,
+                                   MessageErrorCode.TransactionSetNotSupported);
+                throw new ParserMessageException(errorContext);
             }
 
             MessageType = matches.First();

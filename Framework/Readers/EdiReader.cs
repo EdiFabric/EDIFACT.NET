@@ -121,9 +121,7 @@ namespace EdiFabric.Framework.Readers
             }
             catch (ParserMessageException ex)
             {
-                Item = new MessageErrorContext(ex.Name,
-                    ex.ControlNumber, PartsIndex, ex.Message,
-                    ex.ErrorCode);
+                Item = new ReaderErrorContext(ex, ReaderErrorCode.InvalidSpecOrAssembly, ex.MessageErrorContext);
             }
             catch (Exception ex)
             {
@@ -131,11 +129,11 @@ namespace EdiFabric.Framework.Readers
             }
 
             if (_streamReader.EndOfStream && CurrentSegments.Any())
-                Item = new ReaderErrorContext(ReaderErrorCode.ImproperEndOfFile);
+                Item = new ReaderErrorContext(new Exception("Improper end of file."), ReaderErrorCode.ImproperEndOfFile);
 
-            if (Item is ReaderErrorContext || Item is MessageErrorContext)
+            if (Item is ReaderErrorContext)
                 CurrentSegments.Clear();
-
+            
             return Item != null;
         }
 
@@ -179,12 +177,6 @@ namespace EdiFabric.Framework.Readers
             Buffer(segment + Separators.Segment);
             return ParseSegments();
         }
-
-        /// <summary>
-        /// Extracts the format, the version and the tag of the EDI document.
-        /// </summary>
-        /// <returns>The message context.</returns>
-        protected abstract MessageContext BuildContext();
         
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
@@ -257,25 +249,30 @@ namespace EdiFabric.Framework.Readers
         protected EdiItem ParseSegments()
         {
             if (CurrentMessageContext == null)
-                throw new Exception("No message context was loaded.");
+            {
+                CurrentSegments.Clear();
+                return null;
+            }
 
             EdiItem result;
             try
             {
                 var message = new TransactionSet(CurrentMessageContext.MessageType);
-                var errorContext = message.Analyze(CurrentSegments, CurrentMessageContext, Separators, PartsIndex, SegmentIndex);
-                
-                var ediMessage = (EdiMessage)message.ToInstance();
+                var errorContext = message.Analyze(CurrentSegments, CurrentMessageContext, Separators, PartsIndex,
+                    SegmentIndex);
+
+                var ediMessage = (EdiMessage) message.ToInstance();
                 ediMessage.MessagePart = PartsIndex;
                 ediMessage.ControlNumber = CurrentMessageContext.ControlNumber;
                 ediMessage.ErrorContext = errorContext;
-                result = ediMessage;         
+                result = ediMessage;
             }
             catch (Exception ex)
             {
-                result = new MessageErrorContext(CurrentMessageContext.Name,
-                    CurrentMessageContext.ControlNumber, PartsIndex, ex.Message,
-                    MessageErrorCode.MissingOrInvalidTransactionSet);
+                result = new ReaderErrorContext(ex, ReaderErrorCode.InvalidSpecOrAssembly,
+                    new MessageErrorContext(CurrentMessageContext.Name,
+                        CurrentMessageContext.ControlNumber, PartsIndex, ex.Message,
+                        MessageErrorCode.MissingOrInvalidTransactionSet));
             }
             finally
             {
@@ -358,7 +355,28 @@ namespace EdiFabric.Framework.Readers
             if (_streamReader != null)
                 _streamReader.Dispose();
         }
-        
+
+        /// <summary>
+        /// Flushes any remaining data before a control segment.
+        /// </summary>
+        /// <param name="segment">The control segment.</param>
+        /// <returns>The parsed segments.</returns>
+        protected EdiItem Flush(string segment)
+        {
+            if (!CurrentSegments.Any()) return null;
+            
+            var firstSegment = CurrentSegments.First().Value;
+            Buffer(segment + Separators.Segment);
+            var result = ParseSegments() ?? new ReaderErrorContext(
+                new Exception(string.Format("Invalid control structure beginning with {0}",
+                    firstSegment)), ReaderErrorCode.InvalidControlStructure);
+            CurrentMessageContext = null;
+            SegmentIndex = 0;
+            PartsIndex = 0;
+
+            return result;           
+        }
+
         private void Buffer(IEnumerable<char> data)
         {
             foreach (var c in data)

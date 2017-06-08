@@ -22,6 +22,11 @@ namespace EdiFabric.Core.ErrorCodes
         Unknown,
 
         /// <summary>
+        /// When the spec cannot be loaded (custom).
+        /// </summary>
+        InvalidSpecOrAssembly,
+
+        /// <summary>
         /// 022
         /// </summary>
         InvalidControlStructure,

@@ -14,7 +14,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
     /// <summary>
     /// The abstract error context.
     /// </summary>
-    public abstract class ErrorContext : EdiItem
+    public abstract class ErrorContext
     {
         /// <summary>
         /// Error message.

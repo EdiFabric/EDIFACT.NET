@@ -113,7 +113,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             {
                 foreach (var error in segmentContext.Errors)
                     _errors[key].Add(new DataElementErrorContext(error.Name, error.Position, error.Code, error.ComponentPosition,
-                        error.RepetitionPosition, error.Value, null));
+                        error.RepetitionPosition, error.Value));
             }
             else
             {

@@ -10,6 +10,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
@@ -17,49 +18,44 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
     /// <summary>
     /// The reason for any reader failure.
     /// </summary>
-    public class ReaderErrorContext : ErrorContext
+    public class ReaderErrorContext : EdiItem
     {
-        /// <summary>
-        /// The reader error code.
-        /// </summary>
-        public ReaderErrorCode ReaderErrorCode { get; private set; }
-
         /// <summary>
         /// The reader exception.
         /// </summary>
         public Exception Exception { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReaderErrorContext"/> class.
+        /// The reader error code.
         /// </summary>
-        /// <param name="errorCode">The reader error code.</param>
-        public ReaderErrorContext(ReaderErrorCode errorCode)
-            : base(null)
-        {
-            ReaderErrorCode = errorCode;
-        }
+        public ReaderErrorCode ReaderErrorCode { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReaderErrorContext"/> class.
+        /// The message context if any.
         /// </summary>
-        /// <param name="errorCode">The reader error code.</param>
-        /// <param name="message">The error message.</param>
-        public ReaderErrorContext(ReaderErrorCode errorCode, string message)
-            : base(message)
-        {
-            ReaderErrorCode = errorCode;
-        }
+        public MessageErrorContext MessageErrorContext { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReaderErrorContext"/> class.
         /// </summary>
         /// <param name="exception">The reader exception.</param>
-        /// <param name="errorCode">The reader error code.</param>
-        public ReaderErrorContext(Exception exception, ReaderErrorCode errorCode) 
-            : base(exception.Message)
+        /// <param name="readerErrorCode">The reader error code.</param>
+        /// <param name="messageErrorContext">The message context if any.</param>
+        public ReaderErrorContext(Exception exception, ReaderErrorCode readerErrorCode,
+            MessageErrorContext messageErrorContext = null)
         {
             Exception = exception;
-            ReaderErrorCode = errorCode;
+            ReaderErrorCode = readerErrorCode;
+            MessageErrorContext = messageErrorContext;
+        }
+
+        /// <summary>
+        ///  Validates an item according to its validation attributes.
+        /// </summary>
+        /// <returns>A list of segment error contexts.</returns>
+        public override List<SegmentErrorContext> Validate()
+        {
+            return new List<SegmentErrorContext>();
         }
     }
 }

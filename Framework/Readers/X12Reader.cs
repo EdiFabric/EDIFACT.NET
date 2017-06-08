@@ -15,7 +15,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework.Model;
 
@@ -107,15 +109,9 @@ namespace EdiFabric.Framework.Readers
                 case "ST":
                 case "GE":
                 case "IEA":
-                    if (CurrentSegments.Any())
-                    {
-                        Buffer(segment + Separators.Segment);
-                        result = ParseSegments();
-                        CurrentMessageContext = null;
-                        SegmentIndex = 0;
-                        PartsIndex = 0;
+                    result = Flush(segment);
+                    if (result != null)
                         return result;
-                    }
                     break;
             }
 
@@ -165,7 +161,7 @@ namespace EdiFabric.Framework.Readers
             return result;
         }
 
-        protected override MessageContext BuildContext()
+        private MessageContext BuildContext()
         {
             if (_currentIsa == null)
                 throw new Exception("Interchange header is missing.");

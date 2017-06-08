@@ -28,7 +28,7 @@ namespace EdiFabric.Core.Model.Edi
         ///  Validates an item according to its validation attributes.
         /// </summary>
         /// <returns>A list of segment error contexts.</returns>
-        public List<SegmentErrorContext> Validate()
+        public virtual List<SegmentErrorContext> Validate()
         {
             int segmentsNum;
             return Validate(out segmentsNum);

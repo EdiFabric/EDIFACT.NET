@@ -28,9 +28,10 @@ namespace EdiFabric.UnitTests
             }            
 
             // ASSERT
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported));
+            Assert.IsNotNull(error.MessageErrorContext);
+            Assert.IsTrue(error.MessageErrorContext.Codes.Contains(MessageErrorCode.TransactionSetNotSupported));
         }
 
         [TestMethod]
@@ -49,9 +50,10 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported)); 
+            Assert.IsNotNull(error.MessageErrorContext);
+            Assert.IsTrue(error.MessageErrorContext.Codes.Contains(MessageErrorCode.TransactionSetNotSupported));
         }
 
         [TestMethod]
@@ -70,9 +72,10 @@ namespace EdiFabric.UnitTests
             }
 
             // ASSERT
-            var error = ediItems.OfType<MessageErrorContext>().SingleOrDefault();
+            var error = ediItems.OfType<ReaderErrorContext>().SingleOrDefault();
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.Codes.Contains(MessageErrorCode.TransactionSetNotSupported)); 
+            Assert.IsNotNull(error.MessageErrorContext);
+            Assert.IsTrue(error.MessageErrorContext.Codes.Contains(MessageErrorCode.TransactionSetNotSupported));
         }
     }
 }

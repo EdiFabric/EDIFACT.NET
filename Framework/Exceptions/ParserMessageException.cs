@@ -1,23 +1,16 @@
 ﻿using System;
-using EdiFabric.Core.ErrorCodes;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 
 namespace EdiFabric.Framework.Exceptions
 {
     class ParserMessageException : Exception
     {
-        public MessageErrorCode ErrorCode { get; set; }
-        public string Name { get; private set; }
-        public string ControlNumber { get; private set; }
+        public MessageErrorContext MessageErrorContext { get; private set; }
 
-        public ParserMessageException(string name, string controlNumber, string message, MessageErrorCode errorCode)
-            : base(message)
+        public ParserMessageException(MessageErrorContext messageErrorContext)
+            : base(messageErrorContext.Message)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-            if (string.IsNullOrEmpty(controlNumber)) throw new ArgumentNullException("controlNumber");
-
-            Name = name;
-            ControlNumber = controlNumber;
-            ErrorCode = errorCode;
+            MessageErrorContext = messageErrorContext;
         }
     }
 }
