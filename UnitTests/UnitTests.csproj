@@ -91,11 +91,24 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_InvalidAttributes.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_InvalidCode.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_ListCountMax.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_ListCountMin.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_NoAttributes.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_NoControlNumber.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_NoTrailerControlNumber.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_NoTrailerSegmentCount.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_RequiredMissing.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_StringLen.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_WrongControlNumber.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Val_WrongSegmentCount.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00B.txt" />
+    <EmbeddedResource Include="Edi1\X12_820_00204.txt" />
     <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Edi\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

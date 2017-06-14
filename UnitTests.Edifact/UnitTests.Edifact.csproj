@@ -83,8 +83,42 @@
       <Name>UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Edi\" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_BadSegment.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_BlankRepetition.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_BOM.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_CR.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_DefaultUNA.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_EscapedEscape.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_EscapedRepetition.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Eval.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Group.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_GroupMultipleMessages.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_InvalidHeader.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_InvalidSegment.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_InvalidSegment2.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_InvalidTrailers.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_LF.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MissingGroupTrailer.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MissingInterchangeTrailer.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MultipleGroups.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MultipleInterchange.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MultipleInvalidInterchanges.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MultipleInvalidMessages.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_MultipleMessages.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_NonDefaultSeparators.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_RepeatingDataElement.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_RepeatingSegment.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Split.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_TrailingBlanks.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_TrailingSeparator.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Valid.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_ValidAndInvalidMessage.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_Write.txt" />
+    <EmbeddedResource Include="Edi1\Edifact_INVOIC_D00A_WriteNoPreserveWhitespace.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
