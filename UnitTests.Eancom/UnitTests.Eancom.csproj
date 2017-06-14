@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Edi1\Eancom_INVOIC_D01BEAN3.txt" />
+    <EmbeddedResource Include="Edi\Eancom_INVOIC_D01BEAN3.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

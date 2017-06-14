@@ -80,8 +80,6 @@ namespace EdiFabric.UnitTests.Hipaa
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            File.WriteAllText(@"C:\Test\Actual.txt", actual);
-            File.WriteAllText(@"C:\Test\Expected.txt", expected);
             Assert.AreEqual(expected, actual);
         }
 
