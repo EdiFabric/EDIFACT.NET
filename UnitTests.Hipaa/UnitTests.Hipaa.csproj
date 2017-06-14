@@ -75,20 +75,13 @@
       <Name>UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00401.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_HL.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_ISA.txt" />
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_LF.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Edi\Hipaa_837P_00501_NoEnum.txt" />
   </ItemGroup>
   <Choose>
