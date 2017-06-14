@@ -75,14 +75,8 @@
       <Name>UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Hipaa_837P_00401.txt" />
-    <EmbeddedResource Include="Edi\Hipaa_837P_00501.txt" />
-    <EmbeddedResource Include="Edi\Hipaa_837P_00501_HL.txt" />
-    <EmbeddedResource Include="Edi\Hipaa_837P_00501_ISA.txt" />
-    <EmbeddedResource Include="Edi\Hipaa_837P_00501_LF.txt" />
-    <EmbeddedResource Include="Edi\Hipaa_837P_00501_NoEnum.txt" />
+    <Folder Include="Edi\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

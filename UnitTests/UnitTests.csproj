@@ -88,53 +88,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_ListCountMin.txt" />
-    <EmbeddedResource Include="Edi\X12_820_00204.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00B.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_ListCountMax.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_RequiredMissing.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_InvalidAttributes.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_StringLen.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_NoAttributes.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_InvalidCode.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_NoControlNumber.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_NoTrailerControlNumber.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_NoTrailerSegmentCount.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_WrongControlNumber.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_Val_WrongSegmentCount.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Edi\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

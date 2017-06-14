@@ -54,9 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Edi\Eancom_INVOIC_D01BEAN3.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{6ce3310f-1dc2-4074-8559-27c5adb46fe7}</Project>
       <Name>Core</Name>
@@ -73,6 +70,9 @@
       <Project>{f66e2275-fae0-4876-8f12-831a2a90c7a7}</Project>
       <Name>UnitTests</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Edi\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
