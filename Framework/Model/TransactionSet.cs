@@ -51,7 +51,7 @@ namespace EdiFabric.Framework.Model
                     currSeg =
                         this.Descendants<Segment>()
                             .LastOrDefault(
-                                d => d.EdiName == "HL" && d.Children.ElementAt(1).Value == segment.SecondValue);
+                                d => d.EdiName == "HL" && d.Children.Count > 1 && d.Children.ElementAt(1).Value == segment.SecondValue);
 
                     if (currSeg == null)
                     {
