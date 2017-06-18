@@ -59,7 +59,7 @@ namespace EdiFabric.Framework.Model
                     continue;
                 }
 
-                if (property.PropertyType.IsGenericType)
+                if (property.PropertyType.GetTypeInfo().IsGenericType)
                 {
                     var currentList = property.GetValue(instance) as IList;
                     if (currentList == null) continue;
@@ -101,7 +101,7 @@ namespace EdiFabric.Framework.Model
        
         public IEnumerable<PropertyInfo> GetProperties()
         {
-            return Type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance).Sort();
+            return Type.GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance).Sort();
         }
 
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
@@ -140,7 +140,7 @@ namespace EdiFabric.Framework.Model
                     throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
                         Type.Name));
 
-                if (propertyInfo.PropertyType.IsGenericType)
+                if (propertyInfo.PropertyType.GetTypeInfo().IsGenericType)
                 {
                     IList list;
                     if (!listTypes.TryGetValue(propertyInfo.MetadataToken.ToString(), out list))

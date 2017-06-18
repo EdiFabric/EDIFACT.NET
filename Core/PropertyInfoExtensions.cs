@@ -34,10 +34,12 @@ namespace EdiFabric.Core
         public static Type GetGenericType(this PropertyInfo propertyInfo)
         {
             var type = propertyInfo.PropertyType;
-            if (type.IsGenericType)
-                type = type.GenericTypeArguments.First();
+            //if (type.GetTypeInfo().IsGenericType)
+            //    type = type.GetTypeInfo().GenericTypeArguments.First();
 
-            return type;
+            //return type;
+
+            return type.GetTypeInfo().GenericTypeArguments.FirstOrDefault() ?? type;
         }
     }
 }

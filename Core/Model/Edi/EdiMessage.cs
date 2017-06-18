@@ -192,7 +192,7 @@ namespace EdiFabric.Core.Model.Edi
         private Tuple<int, string> GetValues(object trailer)
         {
             var values =
-                trailer.GetType().GetProperties().Sort().Select(property => property.GetValue(trailer)).ToList();
+                trailer.GetType().GetTypeInfo().GetProperties().Sort().Select(property => property.GetValue(trailer)).ToList();
 
             if(values.Count != 2)
                 return new Tuple<int, string>(-1, null);

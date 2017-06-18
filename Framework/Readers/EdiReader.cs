@@ -67,8 +67,8 @@ namespace EdiFabric.Framework.Readers
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (string.IsNullOrEmpty(rulesAssembly)) throw new ArgumentNullException("rulesAssembly");
             
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
-            RulesAssembly = mc => Assembly.Load(rulesAssembly); 
+            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.GetEncoding(0), true);
+            RulesAssembly = mc => Assembly.Load(new AssemblyName(rulesAssembly)); 
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
             _trims = new[] { '\r', '\n', ' ' };
@@ -85,7 +85,7 @@ namespace EdiFabric.Framework.Readers
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
 
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.Default, true);
+            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.GetEncoding(0), true);
             RulesAssembly = rulesAssembly;   
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();

@@ -133,7 +133,7 @@ namespace EdiFabric.Core.Model.Edi
                 {
                     foreach (
                         var propertyInfo in
-                            Instance.GetType()
+                            Instance.GetType().GetTypeInfo()
                                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
                                 .Sort())
                     {

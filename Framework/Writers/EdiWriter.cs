@@ -76,9 +76,10 @@ namespace EdiFabric.Framework.Writers
             if (encoding == null)
                 throw new ArgumentNullException("encoding");
             if (postfix == null)
-                throw new ArgumentNullException("postfix");             
+                throw new ArgumentNullException("postfix");
 
-            _writer = new StreamWriter(path, append, encoding);
+            var fileStream = File.Open(path, append ? FileMode.Append : FileMode.Create, FileAccess.Write);
+            _writer = new StreamWriter(fileStream, encoding);
             _postFix = postfix;
             _preserveWhitespace = preserveWhitespace;
         }

@@ -28,7 +28,7 @@ namespace EdiFabric.Framework.Writers
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
         public X12Writer(Stream stream, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
-            : base(stream, postfix ?? "", preserveWhitespace, encoding ?? Encoding.Default)
+            : base(stream, postfix ?? "", preserveWhitespace, encoding ?? Encoding.GetEncoding(0))
         {
             SetFormatTags();
         }
@@ -42,7 +42,7 @@ namespace EdiFabric.Framework.Writers
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
         public X12Writer(string path, bool append, Encoding encoding = null, string postfix = "", bool preserveWhitespace = false)
-            : base(path, append, postfix ?? "", preserveWhitespace, encoding ?? Encoding.Default)
+            : base(path, append, postfix ?? "", preserveWhitespace, encoding ?? Encoding.GetEncoding(0))
         {
             SetFormatTags();
         }
