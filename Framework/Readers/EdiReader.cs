@@ -31,6 +31,8 @@ namespace EdiFabric.Framework.Readers
         private readonly Queue<char> _buffer;
         private readonly StreamReader _streamReader;
         private char[] _trims;
+        private readonly bool _continueOnError;
+        private readonly int _maxSegmentLength;
         
         internal List<SegmentContext> CurrentSegments { get; private set; }
         internal MessageContext CurrentMessageContext;
@@ -60,36 +62,23 @@ namespace EdiFabric.Framework.Readers
         /// Initializes a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
-        /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        protected EdiReader(Stream ediStream, string rulesAssembly, Encoding encoding)
-        {
-            if (ediStream == null) throw new ArgumentNullException("ediStream");
-            if (string.IsNullOrEmpty(rulesAssembly)) throw new ArgumentNullException("rulesAssembly");
-            
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.GetEncoding(0), true);
-            RulesAssembly = mc => Assembly.Load(new AssemblyName(rulesAssembly)); 
-            CurrentSegments = new List<SegmentContext>();
-            _buffer = new Queue<char>();
-            _trims = new[] { '\r', '\n', ' ' };
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdiReader"/> class.
-        /// </summary>
-        /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
-        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding)
+        /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
+        /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
+        protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding,
+            bool continueOnError = false, int maxSegmentLength = 5000)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
 
             _streamReader = new StreamReader(ediStream, encoding ?? Encoding.GetEncoding(0), true);
-            RulesAssembly = rulesAssembly;   
+            RulesAssembly = rulesAssembly;
             CurrentSegments = new List<SegmentContext>();
             _buffer = new Queue<char>();
-            _trims = new[] { '\r', '\n', ' ' };
+            _trims = new[] {'\r', '\n', ' '};
+            _continueOnError = continueOnError;
+            _maxSegmentLength = maxSegmentLength;
         }
 
         /// <summary>
@@ -98,6 +87,9 @@ namespace EdiFabric.Framework.Readers
         /// <returns>Indication if an item was read.</returns>
         public bool Read()
         {
+            if (Item != null && Separators == null && !_continueOnError)
+                return false;
+
             Item = null;
 
             try
@@ -107,7 +99,7 @@ namespace EdiFabric.Framework.Readers
                     var segment = ReadSegment();
 
                     if (Separators == null)
-                        throw new Exception("No valid separator set was found.");
+                        throw new ReaderException("No valid separator set was found.", ReaderErrorCode.InvalidControlStructure);
 
                     if (string.IsNullOrEmpty(segment))
                         continue;
@@ -131,9 +123,14 @@ namespace EdiFabric.Framework.Readers
             if (_streamReader.EndOfStream && CurrentSegments.Any())
                 Item = new ReaderErrorContext(new Exception("Improper end of file."), ReaderErrorCode.ImproperEndOfFile);
 
-            if (Item is ReaderErrorContext)
+            var readerErrorContext = Item as ReaderErrorContext;
+            if (readerErrorContext != null)
+            {
                 CurrentSegments.Clear();
-            
+                if(readerErrorContext.MessageErrorContext == null)
+                    Separators = null;
+            }
+
             return Item != null;
         }
 
@@ -211,10 +208,15 @@ namespace EdiFabric.Framework.Readers
                 }
 
                 // Segment terminator may never be reached
-                if (line.Count() > 5000)
+                if (line.Length > _maxSegmentLength)
                 {
-                    line = "";
-                    continue;
+                    //  Reset and continue or break
+                    if (_continueOnError)
+                        line = "";
+                    else
+                        throw new ReaderException(
+                            string.Format("Segment length exceeds the allowed maximum of {0}.", _maxSegmentLength),
+                            ReaderErrorCode.InvalidInterchangeContent);
                 }
 
                 if (Separators == null)

@@ -630,6 +630,29 @@ namespace EdiFabric.UnitTests.X12
         }
 
         [TestMethod]
+        public void TestMultipleInvalidInterchangesWithContinueOnError()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidInterchanges.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.Default, true))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 1);
+            Assert.IsNotNull(ediItems.OfType<ReaderErrorContext>().SingleOrDefault());
+        }
+
+        [TestMethod]
         public void TestMultipleInvalidInterchanges()
         {
             // ARRANGE
@@ -644,12 +667,36 @@ namespace EdiFabric.UnitTests.X12
             }
             
             // ASSERT
-            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 3);
-            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 2);
-            Assert.IsTrue(ediItems.OfType<GS>().Count() == 3);
-            Assert.IsTrue(ediItems.OfType<GE>().Count() == 3);
-            Assert.IsTrue(ediItems.OfType<IEA>().Count() == 2);
+            Assert.IsTrue(ediItems.OfType<TS810>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<ISA>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GS>().Count() == 1);
+            Assert.IsTrue(ediItems.OfType<GE>().Count() == 1);
+            Assert.IsTrue(!ediItems.OfType<IEA>().Any());
             Assert.IsNotNull(ediItems.OfType<ReaderErrorContext>().SingleOrDefault());
+        }
+
+        [TestMethod]
+        public void TestMultipleInvalidIMessagesWithContinueOnError()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.X12.Edi.X12_810_00204_MultipleInvalidMessages.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.Default, true))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+
+            // ASSERT
+            Assert.IsNotNull(ediItems);
+            Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => !m.HasErrors) == 3);
+            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
+            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
+            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => m.HasErrors) == 2);
         }
 
         [TestMethod]
@@ -668,12 +715,10 @@ namespace EdiFabric.UnitTests.X12
 
             // ASSERT
             Assert.IsNotNull(ediItems);
+            Assert.IsTrue(ediItems.Count == 3);
             Assert.IsNotNull(ediItems.OfType<ISA>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<GS>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => !m.HasErrors) == 3);
-            Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
-            Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
-            Assert.IsTrue(ediItems.OfType<TS810>().Count(m => m.HasErrors) == 2);
+            Assert.IsNotNull(ediItems.OfType<ReaderErrorContext>().SingleOrDefault());          
         }
 
         [TestMethod]
