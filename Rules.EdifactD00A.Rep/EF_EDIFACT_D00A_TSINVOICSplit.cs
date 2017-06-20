@@ -11,7 +11,7 @@ namespace EdiFabric.Rules.EDIFACT_D00A.Rep
 
 
     [Serializable()]
-    [Message("EDIFACT", "D00B", "INVOIC", "LIN+1")]
+    [Message("EDIFACT", "D00B", "INVOIC", @"^(LIN\+1)")]
     public class TSINVOICSplit : EdiMessage
     {
         

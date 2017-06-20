@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
@@ -165,9 +166,9 @@ namespace EdiFabric.Framework.Readers
         private EdiItem Split(string segment)
         {
             if (CurrentMessageContext == null || 
-                string.IsNullOrEmpty(CurrentMessageContext.SplitterValue) ||
+                string.IsNullOrEmpty(CurrentMessageContext.SplitterRegex) ||
                 CurrentSegments.Count == 0 ||
-                !segment.StartsWith(CurrentMessageContext.SplitterValue, StringComparison.Ordinal))
+                !Regex.IsMatch(segment, CurrentMessageContext.SplitterRegex))
                 return null;
 
             PartsIndex++;

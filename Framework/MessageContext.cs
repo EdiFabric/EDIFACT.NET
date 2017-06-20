@@ -75,9 +75,9 @@ namespace EdiFabric.Framework
         public bool PartialAllowed { get; private set; }
 
          /// <summary>
-        /// The value to split by.
+        /// he regex to match for each segment.
         /// </summary>
-        public string SplitterValue { get; private set; }
+        public string SplitterRegex { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageContext"/> class.
@@ -141,7 +141,7 @@ namespace EdiFabric.Framework
                 if (att.Format == Format && att.Version == Version && att.Id == Name)
                 {
                     PartialAllowed = att.IsEvaluation;
-                    SplitterValue = att.Splitter;
+                    SplitterRegex = att.SplitterRegex;
                     return true;
                 }
                 return false;

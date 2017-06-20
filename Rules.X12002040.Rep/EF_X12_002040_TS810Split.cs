@@ -7,7 +7,7 @@ using EdiFabric.Core.Model.Edi;
 namespace EdiFabric.Rules.X12_002040.Rep
 {
     [Serializable()]
-    [Message("X12", "002050", "810", "N1*")]
+    [Message("X12", "002050", "810", @"^(N1\*)")]
     public class TS810Split : EdiMessage
     {
         [Pos(1)]

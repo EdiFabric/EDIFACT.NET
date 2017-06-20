@@ -32,9 +32,9 @@ namespace EdiFabric.Core.Annotations.Edi
         /// </summary>
         public bool IsEvaluation { get; private set; }
         /// <summary>
-        /// The value to look for when splitting.
+        /// The regex to match for each segment.
         /// </summary>
-        public string Splitter { get; private set; }
+        public string SplitterRegex { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageAttribute"/> class.
@@ -49,7 +49,7 @@ namespace EdiFabric.Core.Annotations.Edi
             Format = format;
             Version = version;
             IsEvaluation = isEvaluation;
-            Splitter = null;
+            SplitterRegex = null;
         }
 
         /// <summary>
@@ -58,14 +58,14 @@ namespace EdiFabric.Core.Annotations.Edi
         /// <param name="format">EDI standard.</param>
         /// <param name="version">EDI version.</param>
         /// <param name="id">EDI transaction set id.</param>
-        /// <param name="splitter">The value to look for when splitting.</param>
-        public MessageAttribute(string format, string version, string id, string splitter)
+        /// <param name="splitterRegex">The regex to match for each segment.</param>
+        public MessageAttribute(string format, string version, string id, string splitterRegex)
             : base(id)
         {
             Format = format;
             Version = version;
             IsEvaluation = false;
-            Splitter = splitter;
+            SplitterRegex = splitterRegex;
         }
     }
 }
