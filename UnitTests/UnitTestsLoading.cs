@@ -66,7 +66,7 @@ namespace EdiFabric.UnitTests
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, a => Assembly.Load("nosuchassembly")))
+            using (var ediReader = new EdifactReader(ediStream, a => Assembly.Load(new AssemblyName("nosuchassembly"))))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

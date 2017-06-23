@@ -31,15 +31,17 @@ namespace EdiFabric.Framework
         /// </summary>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        public static Type GetGenericType(this PropertyInfo propertyInfo)
+        public static TypeInfo GetGenericType(this PropertyInfo propertyInfo)
         {
-            var type = propertyInfo.PropertyType;
-            //if (type.GetTypeInfo().IsGenericType)
-            //    type = type.GenericTypeArguments.First();
+            var type = propertyInfo.GetStandardType();
+            var genericType = type.GenericTypeArguments.FirstOrDefault();
 
-            //return type;
+            return genericType != null ? genericType.GetTypeInfo() : type;
+        }
 
-            return type.GetTypeInfo().GenericTypeArguments.FirstOrDefault() ?? type;
+        public static TypeInfo GetStandardType(this PropertyInfo propertyInfo)
+        {
+            return propertyInfo.PropertyType.GetTypeInfo();
         }
     }
 }

@@ -66,7 +66,7 @@ namespace EdiFabric.Core.Annotations.Validation
             if (string.IsNullOrEmpty(value))
                 return result;
 
-            if (instanceContext.Property.GetGenericType() != typeof(string))
+            if (!instanceContext.Property.IsString())
                 return result;
 
             if (value.Length >= MinLen && value.Length <= MaxLen)
@@ -95,7 +95,7 @@ namespace EdiFabric.Core.Annotations.Validation
 
             if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
             {
-                var ediAttribute = instanceContext.Parent.Instance.GetType().GetCustomAttribute<EdiAttribute>();
+                var ediAttribute = instanceContext.Parent.Instance.GetStandardType().GetCustomAttribute<EdiAttribute>();
                 if (ediAttribute == null)
                     throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
 

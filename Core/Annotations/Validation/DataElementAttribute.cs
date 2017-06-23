@@ -32,7 +32,7 @@ namespace EdiFabric.Core.Annotations.Validation
         /// <summary>
         /// The type of the data element.
         /// </summary>
-        public Type DataType { get; private set; }
+        public TypeInfo DataType { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataElementAttribute"/> class.
@@ -42,7 +42,8 @@ namespace EdiFabric.Core.Annotations.Validation
         public DataElementAttribute(string code, Type dataType) : base(4)
         {
             Code = code;
-            DataType = dataType;
+            if (dataType != null)
+                DataType = dataType.GetTypeInfo();
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace EdiFabric.Core.Annotations.Validation
             if (string.IsNullOrEmpty(value))
                 return result;
 
-            if (instanceContext.Property.GetGenericType() != typeof(string))
+            if (!instanceContext.Property.IsString())
                 return result;
 
             if(DataType == null)
@@ -98,7 +99,7 @@ namespace EdiFabric.Core.Annotations.Validation
 
             if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
             {
-                var ediAttribute = instanceContext.Parent.Instance.GetType().GetCustomAttribute<EdiAttribute>();
+                var ediAttribute = instanceContext.Parent.Instance.GetStandardType().GetCustomAttribute<EdiAttribute>();
                 if(ediAttribute == null)
                     throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
 

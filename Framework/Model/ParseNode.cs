@@ -19,6 +19,7 @@ namespace EdiFabric.Framework.Model
     class ParseNode 
     {
         public Type Type { get; private set; }
+        public TypeInfo TypeInfo { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
         public ParseNode Parent { get; private set; }
@@ -44,6 +45,7 @@ namespace EdiFabric.Framework.Model
         protected ParseNode(Type type, string name, string ediName)
         {
             Type = type;
+            TypeInfo = Type.GetTypeInfo();
             Name = name;
             EdiName = ediName;
             IsParsed = false;
@@ -59,7 +61,7 @@ namespace EdiFabric.Framework.Model
                     continue;
                 }
 
-                if (property.PropertyType.GetTypeInfo().IsGenericType)
+                if (property.GetStandardType().IsGenericType)
                 {
                     var currentList = property.GetValue(instance) as IList;
                     if (currentList == null) continue;
@@ -101,7 +103,7 @@ namespace EdiFabric.Framework.Model
        
         public IEnumerable<PropertyInfo> GetProperties()
         {
-            return Type.GetTypeInfo().GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance).Sort();
+            return TypeInfo.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance).Sort();
         }
 
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
@@ -140,7 +142,7 @@ namespace EdiFabric.Framework.Model
                     throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
                         Type.Name));
 
-                if (propertyInfo.PropertyType.GetTypeInfo().IsGenericType)
+                if (propertyInfo.GetStandardType().IsGenericType)
                 {
                     IList list;
                     if (!listTypes.TryGetValue(propertyInfo.MetadataToken.ToString(), out list))

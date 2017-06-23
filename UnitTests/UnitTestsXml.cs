@@ -16,7 +16,6 @@ namespace EdiFabric.UnitTests
     [TestClass]
     public class UnitTestsXml
     {
-
         [TestMethod]
         public void TestSerialization()
         {
@@ -28,13 +27,13 @@ namespace EdiFabric.UnitTests
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep", Encoding.UTF8))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
             var msg = ediItems.OfType<TSINVOIC>().Single();
-            var actual = CommonHelper.Serialize(msg);
-            
+            var actual = CommonHelper.Serialize(msg, Encoding.UTF8);
+
             // ASSERT
             //File.WriteAllText(@"C:\Test\Actual.txt", actual.Root.ToString());
             //File.WriteAllText(@"C:\Test\Expected.txt", expected.Root.ToString());

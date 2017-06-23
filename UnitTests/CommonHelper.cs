@@ -17,7 +17,7 @@ namespace EdiFabric.UnitTests
             if (noType)
                 assemblyName = assemblyName + "." + parts[2];
 
-            return Assembly.Load(assemblyName).GetManifestResourceStream(qualifiedFileName);
+            return Assembly.Load(new AssemblyName(assemblyName)).GetManifestResourceStream(qualifiedFileName);
         }
 
         public static string LoadString(string qualifiedFileName, Encoding encoding = null, bool noType = true)
@@ -28,13 +28,13 @@ namespace EdiFabric.UnitTests
         public static string LoadString(Stream stream, Encoding encoding = null)
         {
             stream.Position = 0;
-            using (var reader = new StreamReader(stream, encoding ?? Encoding.Default))
+            using (var reader = new StreamReader(stream, encoding ?? Encoding.GetEncoding(0)))
             {
                 return reader.ReadToEnd();
             }
         }
 
-        public static XDocument Serialize(EdiMessage instance)
+        public static XDocument Serialize(EdiMessage instance, Encoding encoding = null)
         {
             if (instance == null)
                 throw new ArgumentNullException("instance");
@@ -44,7 +44,8 @@ namespace EdiFabric.UnitTests
             {
                 serializer.Serialize(ms, instance);
                 ms.Position = 0;
-                return XDocument.Load(ms, LoadOptions.PreserveWhitespace);
+                var str = LoadString(ms, encoding);
+                return XDocument.Parse(str);
             }
         }
     }

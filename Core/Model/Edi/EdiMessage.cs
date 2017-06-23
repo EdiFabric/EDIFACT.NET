@@ -84,7 +84,7 @@ namespace EdiFabric.Core.Model.Edi
         /// <exception cref="Exception">Throws exception if any of the EDI attributes is missing.</exception>
         public EdiMessage()
         {
-            var type = GetType();
+            var type = this.GetStandardType();
             var msgAttr = type.GetCustomAttribute<MessageAttribute>();
             if (msgAttr == null)
                 throw new Exception(string.Format("{0} was not found in {1} .", typeof (MessageAttribute).Name,
@@ -148,10 +148,10 @@ namespace EdiFabric.Core.Model.Edi
             }
 
             var trailerProperty =
-                GetType()
+                this.GetStandardType()
                     .GetProperties()
-                    .Where(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>() != null)
-                    .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
+                    .Where(p => p.GetStandardType().GetCustomAttribute<SegmentAttribute>() != null)
+                    .SingleOrDefault(p => p.GetStandardType().GetCustomAttribute<SegmentAttribute>().Id == tag);
 
             if (trailerProperty == null)
             {
@@ -192,7 +192,7 @@ namespace EdiFabric.Core.Model.Edi
         private Tuple<int, string> GetValues(object trailer)
         {
             var values =
-                trailer.GetType().GetTypeInfo().GetProperties().Sort().Select(property => property.GetValue(trailer)).ToList();
+                trailer.GetStandardType().GetProperties().Sort().Select(property => property.GetValue(trailer)).ToList();
 
             if(values.Count != 2)
                 return new Tuple<int, string>(-1, null);
@@ -221,17 +221,17 @@ namespace EdiFabric.Core.Model.Edi
         private string GetControlNumber(string tag, int position)
         {
             var headerProperty =
-                GetType()
+                this.GetStandardType()
                     .GetProperties()
-                    .Where(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>() != null)
-                    .SingleOrDefault(p => p.PropertyType.GetCustomAttribute<SegmentAttribute>().Id == tag);
+                    .Where(p => p.GetStandardType().GetCustomAttribute<SegmentAttribute>() != null)
+                    .SingleOrDefault(p => p.GetStandardType().GetCustomAttribute<SegmentAttribute>().Id == tag);
 
             if (headerProperty == null)
                 return null;
 
             var headerValue = headerProperty.GetValue(this);
             var cnProperty =
-                headerValue.GetType()
+                headerValue.GetStandardType()
                     .GetProperties()
                     .SingleOrDefault(p => p.GetCustomAttribute<PosAttribute>().Pos == position);
 

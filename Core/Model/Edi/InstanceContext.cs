@@ -49,10 +49,11 @@ namespace EdiFabric.Core.Model.Edi
             if (Property == null || Property.DeclaringType == null)
                 return null;
 
-            var ediAttr = Property.DeclaringType.GetCustomAttribute<EdiAttribute>();
+            var decalringType = Property.GetStandardDeclaringType();
+            var ediAttr = decalringType.GetCustomAttribute<EdiAttribute>();
             if (ediAttr == null)
                 throw new Exception(string.Format("The type {0} declaring property {1} is not annotated with {2}.",
-                    Property.DeclaringType.Name, Property.Name, typeof(EdiAttribute).Name));
+                    decalringType.Name, Property.Name, typeof(EdiAttribute).Name));
 
             return ediAttr.Id;
         }
@@ -133,7 +134,7 @@ namespace EdiFabric.Core.Model.Edi
                 {
                     foreach (
                         var propertyInfo in
-                            Instance.GetType().GetTypeInfo()
+                            Instance.GetStandardType()
                                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
                                 .Sort())
                     {
