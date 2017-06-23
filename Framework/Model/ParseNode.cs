@@ -18,7 +18,6 @@ namespace EdiFabric.Framework.Model
 {
     class ParseNode 
     {
-        public Type Type { get; private set; }
         public TypeInfo TypeInfo { get; private set; }
         public string Name { get; private set; }
         public string EdiName { get; private set; }
@@ -42,10 +41,9 @@ namespace EdiFabric.Framework.Model
             get { return _children.AsReadOnly(); }
         }
 
-        protected ParseNode(Type type, string name, string ediName)
+        protected ParseNode(TypeInfo typeInfo, string name, string ediName)
         {
-            Type = type;
-            TypeInfo = Type.GetTypeInfo();
+            TypeInfo = typeInfo;
             Name = name;
             EdiName = ediName;
             IsParsed = false;
@@ -108,17 +106,17 @@ namespace EdiFabric.Framework.Model
 
         public virtual IEnumerable<ParseNode> NeighboursWithExclusion(IEnumerable<ParseNode> exclusion)
         {
-            throw new NotImplementedException(Type.FullName);
+            throw new NotImplementedException(TypeInfo.FullName);
         }
 
         public virtual void Parse(string value, Separators separators, bool allowPartial)
         {
-            throw new NotImplementedException(Type.FullName);
+            throw new NotImplementedException(TypeInfo.FullName);
         }
 
         public virtual ParseNode InsertRepetition()
         {
-            throw new NotImplementedException(Type.FullName);
+            throw new NotImplementedException(TypeInfo.FullName);
         }
 
         public virtual void SetParsed()
@@ -130,24 +128,24 @@ namespace EdiFabric.Framework.Model
 
         public virtual object ToInstance()
         {
-            var result = Activator.CreateInstance(Type);
+            var result = Activator.CreateInstance(TypeInfo.AsType());
 
             var listTypes = new Dictionary<string, IList>();
             foreach (var nodeChild in Children)
             {
                 if (!nodeChild.IsParsed) continue;
 
-                var propertyInfo = Type.GetProperty(nodeChild.Name);
+                var propertyInfo = TypeInfo.GetProperty(nodeChild.Name);
                 if (propertyInfo == null)
                     throw new Exception(string.Format("Property {0} was not found in type {1}", nodeChild.Name,
-                        Type.Name));
+                        TypeInfo.Name));
 
                 if (propertyInfo.GetStandardType().IsGenericType)
                 {
                     IList list;
                     if (!listTypes.TryGetValue(propertyInfo.MetadataToken.ToString(), out list))
                     {
-                        list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(nodeChild.Type));
+                        list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(nodeChild.TypeInfo.AsType()));
                         propertyInfo.SetValue(result, list, null);
 
                         listTypes.Clear();

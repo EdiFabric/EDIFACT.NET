@@ -39,8 +39,8 @@ namespace EdiFabric.Framework.Model
             get { return Parent is Loop && IndexInParent() == 0; }
         }
 
-        private Segment(Type type, string name, string ediName, object instance = null)
-            : base(type, name, ediName)
+        private Segment(TypeInfo typeInfo, string name, string ediName, object instance = null)
+            : base(typeInfo, name, ediName)
         {
             if (instance == null) return;
             BuildChildren(instance, true);
@@ -51,7 +51,7 @@ namespace EdiFabric.Framework.Model
         {
             if (sAttr.First != null)
             {
-                var eAttr = (EdiCodesAttribute)sAttr.First.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
+                var eAttr = (EdiCodesAttribute)sAttr.First.GetTypeInfo().GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                 if (eAttr == null)
                     throw new Exception(string.Format("Type {0} is not annotated with {1}.",
                         sAttr.First.Name, typeof(EdiCodesAttribute).Name));
@@ -59,7 +59,7 @@ namespace EdiFabric.Framework.Model
 
                 if (sAttr.Second != null)
                 {
-                    var eAttrS = (EdiCodesAttribute)sAttr.Second.GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
+                    var eAttrS = (EdiCodesAttribute)sAttr.Second.GetTypeInfo().GetCustomAttributes(typeof(EdiCodesAttribute)).SingleOrDefault();
                     if (eAttrS == null)
                         throw new Exception(string.Format("Type {0} is not annotated with {1}.",
                             sAttr.Second.Name, typeof(EdiCodesAttribute).Name));
@@ -68,13 +68,13 @@ namespace EdiFabric.Framework.Model
             }
         }
 
-        public Segment(Type type, object instance = null)
-            : this(type, type.Name, type.Name, instance)
+        public Segment(TypeInfo typeInfo, object instance = null)
+            : this(typeInfo, typeInfo.Name, typeInfo.Name, instance)
         {
         }
 
         public Segment(Segment segment)
-            : this(segment.Type, segment.Name, segment.EdiName)
+            : this(segment.TypeInfo, segment.Name, segment.EdiName)
         {
             segment.Parent.InsertChild(segment.IndexInParent() + 1, this);
         }
@@ -186,8 +186,8 @@ namespace EdiFabric.Framework.Model
                 {
                     var de = element as DataElement;
                     if (de == null)
-                        throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.Type.FullName,
-                            element.Parent.Type.FullName));
+                        throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.TypeInfo.FullName,
+                            element.Parent.TypeInfo.FullName));
 
                     value = de.Value.EscapeLine(separators);
                 }

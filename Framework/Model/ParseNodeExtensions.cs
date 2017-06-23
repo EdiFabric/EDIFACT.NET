@@ -104,8 +104,7 @@ namespace EdiFabric.Framework.Model
 
         public static ParseNode ToParseNode(this PropertyInfo propertyInfo, object instance = null)
         {
-            var type = propertyInfo.GetGenericType();
-            if(type == typeof(string))
+            if(propertyInfo.IsString())
                 return new DataElement(propertyInfo, instance);
 
             var attr = propertyInfo.GetGenericType().GetCustomAttribute<EdiAttribute>();

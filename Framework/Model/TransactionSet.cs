@@ -15,13 +15,14 @@ using System.Linq;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
+using System.Reflection;
 
 namespace EdiFabric.Framework.Model
 {
     class TransactionSet : ParseNode
     {
-        public TransactionSet(Type type, object instance = null)
-            : base(type, type.Name, type.Name)
+        public TransactionSet(TypeInfo typeInfo, object instance = null)
+            : base(typeInfo, typeInfo.Name, typeInfo.Name)
         {
             BuildChildren(instance);
         }

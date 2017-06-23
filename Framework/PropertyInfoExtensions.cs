@@ -39,9 +39,19 @@ namespace EdiFabric.Framework
             return genericType != null ? genericType.GetTypeInfo() : type;
         }
 
+        public static TypeInfo GetStandardType(this object instance)
+        {
+            return instance.GetType().GetTypeInfo();
+        }
+
         public static TypeInfo GetStandardType(this PropertyInfo propertyInfo)
         {
             return propertyInfo.PropertyType.GetTypeInfo();
+        }
+
+        public static bool IsString(this PropertyInfo propertyInfo)
+        {
+            return propertyInfo.GetGenericType() == typeof(string).GetTypeInfo();
         }
     }
 }

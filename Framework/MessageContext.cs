@@ -67,7 +67,7 @@ namespace EdiFabric.Framework
         /// <summary>
         /// The type of message.
         /// </summary>
-        public Type MessageType { get; private set; }
+        public TypeInfo MessageType { get; private set; }
 
         /// <summary>
         /// Whether allows partial reading.
@@ -135,7 +135,7 @@ namespace EdiFabric.Framework
 
             var matches = assembly.GetTypes().Where(m =>
             {
-                var att = ((MessageAttribute)m.GetCustomAttribute(typeof(MessageAttribute)));
+                var att = ((MessageAttribute)m.GetTypeInfo().GetCustomAttribute(typeof(MessageAttribute)));
                 if (att == null) return false;
 
                 if (att.Format == Format && att.Version == Version && att.Id == Name)
@@ -169,7 +169,7 @@ namespace EdiFabric.Framework
                 throw new ParserMessageException(errorContext);
             }
 
-            MessageType = matches.First();
+            MessageType = matches.First().GetTypeInfo();
         }
     }
 }

@@ -355,7 +355,7 @@ namespace EdiFabric.Framework.Readers
         /// <returns>The parsed segment.</returns>
         protected T ParseSegment<T>(string segmentValue, Separators separators) where T : EdiItem
         {
-            var parseNode = new Segment(typeof(T));
+            var parseNode = new Segment(typeof(T).GetTypeInfo());
             try
             {
                 parseNode.Parse(segmentValue, separators, false);

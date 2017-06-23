@@ -14,6 +14,7 @@ using System.IO;
 using System.Text;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Framework.Model;
+using System.Reflection;
 
 namespace EdiFabric.Framework.Writers
 {
@@ -115,7 +116,7 @@ namespace EdiFabric.Framework.Writers
 
             _interchangeControlNr = controlNumber;
 
-            var segment = new Segment(typeof(T), interchangeHeader);
+            var segment = new Segment(typeof(T).GetTypeInfo(), interchangeHeader);
             Write(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
@@ -160,7 +161,7 @@ namespace EdiFabric.Framework.Writers
 
             _groupControlNr = controlNumber;
 
-            var segment = new Segment(typeof(U), groupHeader);
+            var segment = new Segment(typeof(U).GetTypeInfo(), groupHeader);
             Write(segment.GenerateSegment(_separators, _preserveWhitespace));
         }
 
@@ -189,7 +190,7 @@ namespace EdiFabric.Framework.Writers
             _messageCounter++;
 
             var segmentCounter = 0;
-            var transactionSet = new TransactionSet(message.GetType(), message);
+            var transactionSet = new TransactionSet(message.GetStandardType(), message);
             transactionSet.RemoveTrailer(MessageTrailer);
 
             foreach (var segment in transactionSet.Descendants<Segment>())

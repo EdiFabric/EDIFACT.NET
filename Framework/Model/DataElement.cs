@@ -23,7 +23,7 @@ namespace EdiFabric.Framework.Model
         }
 
         public DataElement(ParseNode parseNode)
-            : base(parseNode.Type, parseNode.Name, parseNode.EdiName)
+            : base(parseNode.TypeInfo, parseNode.Name, parseNode.EdiName)
         {
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
         }
