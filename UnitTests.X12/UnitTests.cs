@@ -638,7 +638,7 @@ namespace EdiFabric.UnitTests.X12
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.Default, true))
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.UTF8, true))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -684,7 +684,7 @@ namespace EdiFabric.UnitTests.X12
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.Default, true))
+            using (var ediReader = new X12Reader(ediStream, "EdiFabric.Rules.X12002040", Encoding.UTF8, true))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -781,9 +781,9 @@ namespace EdiFabric.UnitTests.X12
         private static Assembly AssemblyLoadFactory(MessageContext messageContext)
         {
             if (messageContext.SenderId == "PartnerA")
-                return Assembly.Load("EdiFabric.Rules.PartnerA.X12002040");
+                return Assembly.Load(new AssemblyName("EdiFabric.Rules.PartnerA.X12002040"));
 
-            return Assembly.Load("EdiFabric.Rules.X12002040");
+            return Assembly.Load(new AssemblyName("EdiFabric.Rules.X12002040"));
         }
 
         [TestMethod]
@@ -797,7 +797,7 @@ namespace EdiFabric.UnitTests.X12
             // ACT
             using (var stream = new MemoryStream())
             {
-                var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine, true);
+                var writer = new X12Writer(stream, Encoding.UTF8, Environment.NewLine, true);
 
                 writer.Write(X12Helper.CreateIsa());
                 writer.Write(X12Helper.CreateGs());
@@ -822,7 +822,7 @@ namespace EdiFabric.UnitTests.X12
             // ACT
             using (var stream = new MemoryStream())
             {
-                var writer = new X12Writer(stream, Encoding.Default, Environment.NewLine);
+                var writer = new X12Writer(stream, Encoding.UTF8, Environment.NewLine);
 
                 writer.Write(X12Helper.CreateIsa());
                 writer.Write(X12Helper.CreateGs());

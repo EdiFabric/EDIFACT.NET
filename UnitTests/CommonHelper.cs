@@ -28,7 +28,7 @@ namespace EdiFabric.UnitTests
         public static string LoadString(Stream stream, Encoding encoding = null)
         {
             stream.Position = 0;
-            using (var reader = new StreamReader(stream, encoding ?? Encoding.GetEncoding(0)))
+            using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
             {
                 return reader.ReadToEnd();
             }

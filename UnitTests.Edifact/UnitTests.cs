@@ -25,7 +25,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
             
             // ACT
@@ -33,7 +33,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine);
+            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine, Encoding.UTF8);
             
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -52,7 +52,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_DefaultUNA.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
             Separators separators;
 
@@ -62,7 +62,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine, null, separators.ToUna());
+            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine, Encoding.UTF8, separators.ToUna());
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -81,7 +81,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
             Separators separators;
 
@@ -91,7 +91,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine, Encoding.UTF8);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -110,7 +110,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_LF.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
             
             // ACT
@@ -137,7 +137,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_NonDefaultSeparators.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
             Separators separators;
 
@@ -147,7 +147,7 @@ namespace EdiFabric.UnitTests.Edifact
                 ediItems = ediReader.ReadToEnd().ToList();
                 separators = ediReader.Separators;
             }
-            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine);
+            var actual = EdifactHelper.Generate(ediItems, separators, Environment.NewLine, Encoding.UTF8);
 
             // ASSERT
             Assert.AreEqual(expected, actual);
@@ -184,7 +184,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Group.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -192,7 +192,7 @@ namespace EdiFabric.UnitTests.Edifact
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine);
+            var actual = EdifactHelper.Generate(ediItems, null, Environment.NewLine, Encoding.UTF8);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
@@ -211,7 +211,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_GroupMultipleMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -237,7 +237,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleGroups.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -263,7 +263,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleMessages.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -289,7 +289,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedSegmentTerminator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -316,7 +316,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingSegment.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -336,7 +336,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedEscape.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -363,7 +363,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_TrailingSeparator.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -383,7 +383,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_RepeatingDataElement.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -410,7 +410,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_EscapedRepetition.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -437,7 +437,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BOM.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -458,7 +458,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_TrailingBlanks.txt";
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sampleClean);
+            var expected = CommonHelper.LoadString(sampleClean, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -485,7 +485,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_MultipleInterchange.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             var ediItems = new List<EdiItem>();
 
             // ACT
@@ -750,7 +750,7 @@ namespace EdiFabric.UnitTests.Edifact
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_BlankRepetition.txt";
             const string sampleClean = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sampleClean);
+            var expected = CommonHelper.LoadString(sampleClean, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -780,7 +780,7 @@ namespace EdiFabric.UnitTests.Edifact
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.Default, true))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.UTF8, true))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -828,7 +828,7 @@ namespace EdiFabric.UnitTests.Edifact
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.Default, true))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A", Encoding.UTF8, true))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -892,7 +892,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -924,7 +924,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(messageContext.SenderQualifier);
             Assert.IsNotNull(messageContext.Version);
 
-            return Assembly.Load("EdiFabric.Rules.EdifactD00A");
+            return Assembly.Load(new AssemblyName("EdiFabric.Rules.EdifactD00A"));
         }
 
         [TestMethod]
@@ -932,13 +932,13 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_Write.txt";
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             string actual;
             
             // ACT
             using (var stream = new MemoryStream())
             {
-                var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine, true);
+                var writer = new EdifactWriter(stream, Encoding.UTF8, Environment.NewLine, true);
 
                 writer.Write(EdifactHelper.CreateUnb());
                 writer.Write(EdifactHelper.CreateInvoice());                
@@ -956,13 +956,13 @@ namespace EdiFabric.UnitTests.Edifact
         {
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_WriteNoPreserveWhitespace.txt";
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             string actual;
 
             // ACT
             using (var stream = new MemoryStream())
             {
-                var writer = new EdifactWriter(stream, Encoding.Default, Environment.NewLine);
+                var writer = new EdifactWriter(stream, Encoding.UTF8, Environment.NewLine);
 
                 writer.Write(EdifactHelper.CreateUnb());
                 writer.Write(EdifactHelper.CreateInvoice());
@@ -1009,7 +1009,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT
@@ -1036,7 +1036,7 @@ namespace EdiFabric.UnitTests.Edifact
             // ARRANGE
             const string sample = "EdiFabric.UnitTests.Edifact.Edi.Edifact_INVOIC_D00A_CR.txt";
             var ediStream = CommonHelper.LoadStream(sample);
-            var expected = CommonHelper.LoadString(sample);
+            var expected = CommonHelper.LoadString(sample, Encoding.UTF8);
             List<EdiItem> ediItems;
 
             // ACT

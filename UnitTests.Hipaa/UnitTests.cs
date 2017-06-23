@@ -130,13 +130,12 @@ namespace EdiFabric.UnitTests.Hipaa
             Assert.AreEqual(expected, actual);
         }
 
-
         private Assembly HipaaFactory(MessageContext mc)
         {
             if (mc.Version == "005010X222A1")
-                return Assembly.Load("EdiFabric.Rules.Hipaa005010");
+                return Assembly.Load(new AssemblyName("EdiFabric.Rules.Hipaa005010"));
             if (mc.Version == "004010X098A1")
-                return Assembly.Load("EdiFabric.Rules.Hipaa004010");
+                return Assembly.Load(new AssemblyName("EdiFabric.Rules.Hipaa004010"));
 
             throw new Exception("Not supported!");
         }
