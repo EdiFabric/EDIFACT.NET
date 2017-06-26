@@ -7,6 +7,8 @@ We support a vast collection of the most popular versions for X12, HIPAA, EDIFAC
 
 Enables you to read, create from scratch and validate EDI documents, and to communicate reliably with your business partners by sending back acknowledgments and detecting duplicates.
 
+The framework requires .NET Framework 4.5 as a minimum and is compatible with .NET Standard 1.6
+
 For more info please visit our web site www.edifabric.com.
 
 This project has migrated from CodePlex, for old discussions and issues please go to http://edifabric.codeplex.com/
