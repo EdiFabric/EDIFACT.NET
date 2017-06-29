@@ -216,7 +216,7 @@ namespace EdiFabric.Framework.Readers
                         line = "";
                     else
                         throw new ReaderException(
-                            string.Format("Segment length exceeds the allowed maximum of {0}.", _maxSegmentLength),
+                            string.Format("No segment was found before the buffer reached the allowed maximum of {0}.", _maxSegmentLength),
                             ReaderErrorCode.InvalidInterchangeContent);
                 }
 
