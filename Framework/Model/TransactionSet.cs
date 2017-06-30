@@ -46,24 +46,20 @@ namespace EdiFabric.Framework.Model
             var index = segmentIndex;
             foreach (var segment in segments)
             {
+                Segment tempSeg;
                 index++;
                 if (segment.IsJump)
                 {
-                    currSeg =
+                    tempSeg =
                         this.Descendants<Segment>()
                             .LastOrDefault(
                                 d => d.EdiName == "HL" && d.Children.Count > 1 && d.Children.ElementAt(1).Value == segment.SecondValue);
 
-                    if (currSeg == null)
-                    {
-                        errorContext.Add(new SegmentErrorContext(segment.Name, index,
-                            segment.Value, SegmentErrorCode.SegmentNotInProperSequence));
-
-                        return errorContext;
-                    }
+                    if (tempSeg != null)
+                        currSeg = tempSeg;
                 }
 
-                var tempSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
+                tempSeg = currSeg.TraverseDepthFirst().FirstOrDefault(n => n.Match(segment));
                 if (tempSeg == null)
                 {
                     var errorCode = SegmentErrorCode.SegmentNotInProperSequence;

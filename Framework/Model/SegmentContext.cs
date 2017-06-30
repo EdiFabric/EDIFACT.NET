@@ -81,11 +81,20 @@ namespace EdiFabric.Framework.Model
 
         private bool Jump()
         {
+            if (Name != "HL")
+                return false;
+
             int fv;
-            int p;
-            return Name == "HL" && FirstValue != null && FirstValue != "1" && int.TryParse(FirstValue, out fv) &&
-                     int.TryParse(SecondValue ?? "0", out p) &&
-                     (fv - p > 1);
+            int sv;
+
+            //  All top level: HL*2**, HL*3**, etc.
+            if (int.TryParse(FirstValue, out fv) && fv > 1 && string.IsNullOrEmpty(SecondValue))
+                return true;
+
+            if (int.TryParse(SecondValue, out sv) && (fv - sv > 1))
+                return true;
+
+            return false;
         }
     }
 }

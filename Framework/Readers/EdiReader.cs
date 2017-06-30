@@ -88,7 +88,7 @@ namespace EdiFabric.Framework.Readers
         /// <returns>Indication if an item was read.</returns>
         public bool Read()
         {
-            if (Item != null && Separators == null && !_continueOnError)
+            if (Item is ReaderErrorContext && !_continueOnError)
                 return false;
 
             Item = null;
