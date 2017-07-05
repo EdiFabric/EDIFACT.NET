@@ -24,7 +24,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for mandatory items. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class RequiredAttribute : ValidationAttribute
+    public class RequiredAttribute : ValidationAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RequiredAttribute"/> class.
@@ -43,7 +43,7 @@ namespace EdiFabric.Core.Annotations.Validation
         /// <param name="inCompositeIndex">The position within the component if any.</param>
         /// <param name="repetitionIndex">The repetition position.</param>
         /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
-        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();

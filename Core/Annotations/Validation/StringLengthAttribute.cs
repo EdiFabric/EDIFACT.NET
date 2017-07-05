@@ -23,7 +23,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for the correct length of data elements.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class StringLengthAttribute : ValidationAttribute
+    public class StringLengthAttribute : ValidationAttribute
     {
         /// <summary>
         /// The minimum allowed length.
@@ -54,7 +54,7 @@ namespace EdiFabric.Core.Annotations.Validation
         /// <param name="inCompositeIndex">The position within the component if any.</param>
         /// <param name="repetitionIndex">The repetition position.</param>
         /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
-        internal override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
+        public override List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex,
             int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
         {
             var result = new List<SegmentErrorContext>();

@@ -1,4 +1,15 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +23,12 @@ namespace EdiFabric.Core.Model.Edi
     /// <summary>
     /// The instance context used for validation
     /// </summary>
-    sealed class InstanceContext
+    public sealed class InstanceContext
     {
         private int _repetitionIndex;
 
         /// <summary>
-        /// An instance.
+        /// The instance.
         /// </summary>
         public object Instance { get; private set; }
 
@@ -31,7 +42,13 @@ namespace EdiFabric.Core.Model.Edi
         /// </summary>
         public InstanceContext Parent { get; private set; }
 
-        public string GetId()
+        /// <summary>
+        /// Gets the Edi Id from the property attributes.
+        /// </summary>
+        /// <returns>
+        /// Identifier of the Edi item or throws an exception if property is not annotated with EdiAttribute.
+        /// </returns>
+        internal string GetId()
         {
             if (Property == null)
                 return null;
@@ -44,7 +61,13 @@ namespace EdiFabric.Core.Model.Edi
             return ediAttr.Id;
         }
 
-        public string GetDeclaringTypeId()
+        /// <summary>
+        /// Gets the declaring type of the property.
+        /// </summary>
+        /// <returns>
+        /// The declaring type of the property or null if the property is null.
+        /// </returns>
+        internal string GetDeclaringTypeId()
         {
             if (Property == null || Property.DeclaringType == null)
                 return null;
@@ -58,7 +81,13 @@ namespace EdiFabric.Core.Model.Edi
             return ediAttr.Id;
         }
 
-        public bool IsInstanceOfType<T>() where T : EdiAttribute
+        /// <summary>
+        /// Detects if the property contains an attribute inheriting from EdiAttribute.
+        /// Only checks properties if the instance is not null and not a list.
+        /// </summary>
+        /// <typeparam name="T">The type of the property to look for.</typeparam>
+        /// <returns>True if the property was found and False otherwise. Returns null if the instance is either null or list.</returns>
+        internal bool IsInstanceOfType<T>() where T : EdiAttribute
         {
             if (Instance == null)
                 return false;
@@ -71,7 +100,12 @@ namespace EdiFabric.Core.Model.Edi
             return IsPropertyOfType<T>();
         }
 
-        public bool IsPropertyOfType<T>() where T : EdiAttribute
+        /// <summary>
+        /// Detects if the property contains an attribute inheriting from EdiAttribute.
+        /// </summary>
+        /// <typeparam name="T">The type of the property to look for.</typeparam>
+        /// <returns>True if the property was found and False otherwise.</returns>
+        internal bool IsPropertyOfType<T>() where T : EdiAttribute
         {
             return Property != null && Property.GetGenericType().GetCustomAttribute<T>() != null;
         }
@@ -92,7 +126,7 @@ namespace EdiFabric.Core.Model.Edi
         /// <param name="property">The property info for the instance.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="repetitionIndex">The repetition index.</param>
-        public InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int repetitionIndex)
+        internal InstanceContext(object instance, PropertyInfo property, InstanceContext parent, int repetitionIndex)
             : this(instance)
         {
             Property = property;
@@ -100,7 +134,7 @@ namespace EdiFabric.Core.Model.Edi
             _repetitionIndex = repetitionIndex;
         }
 
-        public List<SegmentErrorContext> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
+        internal List<SegmentErrorContext> Validate(int segmentIndex, int inSegmentIndex, int inComponentIndex)
         {
             var result = new List<SegmentErrorContext>();
 
@@ -116,7 +150,7 @@ namespace EdiFabric.Core.Model.Edi
             return result;
         }
 
-        public IEnumerable<InstanceContext> GetNeigbours()
+        internal IEnumerable<InstanceContext> GetNeigbours()
         {
             if (Instance != null && !(Instance is string))
             {
@@ -147,7 +181,7 @@ namespace EdiFabric.Core.Model.Edi
                 yield return Parent;
         }
 
-        public void SetIndexes(ref int segmentIndex, ref int inSegmentIndex, ref int inComponentIndex)
+        internal void SetIndexes(ref int segmentIndex, ref int inSegmentIndex, ref int inComponentIndex)
         {
             if (IsInstanceOfType<SegmentAttribute>())
             {

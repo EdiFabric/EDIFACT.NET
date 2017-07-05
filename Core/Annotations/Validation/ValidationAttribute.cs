@@ -45,7 +45,7 @@ namespace EdiFabric.Core.Annotations.Validation
         /// <param name="inCompositeIndex">The position within the component if any.</param>
         /// <param name="repetitionIndex">The repetition position.</param>
         /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
-        internal abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
+        public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
             int inCompositeIndex, int repetitionIndex);
     }
 }

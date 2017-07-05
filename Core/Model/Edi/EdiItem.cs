@@ -27,14 +27,20 @@ namespace EdiFabric.Core.Model.Edi
         /// <summary>
         ///  Validates an item according to its validation attributes.
         /// </summary>
-        /// <returns>A list of segment error contexts.</returns>
-        public virtual List<SegmentErrorContext> Validate()
+        /// <returns>A list of segment error contexts. The list is empty if the item is valid.</returns>
+        public List<SegmentErrorContext> Validate()
         {
             int segmentsNum;
             return Validate(out segmentsNum);
         }
 
-        internal List<SegmentErrorContext> Validate(out int segmentsNum)
+        /// <summary>
+        /// Validates an item according to its validation attributes.
+        /// This is internally called to validate an EdiMessage.
+        /// </summary>
+        /// <param name="segmentsNum">The number of segments that were validated.</param>
+        /// <returns>A list of segment error contexts. The list is empty if the item is valid.</returns>
+        protected virtual List<SegmentErrorContext> Validate(out int segmentsNum)
         {
             var result = new List<SegmentErrorContext>();
 

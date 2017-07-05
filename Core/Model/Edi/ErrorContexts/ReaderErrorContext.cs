@@ -18,7 +18,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
     /// <summary>
     /// The reason for any reader failure.
     /// </summary>
-    public class ReaderErrorContext : EdiItem
+    public sealed class ReaderErrorContext : EdiItem
     {
         /// <summary>
         /// The reader exception.
@@ -53,8 +53,9 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         ///  Validates an item according to its validation attributes.
         /// </summary>
         /// <returns>A list of segment error contexts.</returns>
-        public override List<SegmentErrorContext> Validate()
+        protected override List<SegmentErrorContext> Validate(out int segmentsNum)
         {
+            segmentsNum = 0;
             return new List<SegmentErrorContext>();
         }
     }
