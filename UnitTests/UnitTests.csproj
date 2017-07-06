@@ -108,7 +108,9 @@
     <EmbeddedResource Include="Edi\X12_820_00204.txt" />
     <EmbeddedResource Include="Xml\Edifact_INVOIC_D00A.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Edifact_INVOIC_D00A_ValidUnb.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

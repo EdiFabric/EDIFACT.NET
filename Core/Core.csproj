@@ -51,6 +51,7 @@
     <Compile Include="ErrorCodes\DataElementErrorCode.cs" />
     <Compile Include="ErrorCodes\MessageErrorCode.cs" />
     <Compile Include="ErrorCodes\SegmentErrorCode.cs" />
+    <Compile Include="Model\Edi\Edifact\Codes.cs" />
     <Compile Include="Model\Edi\EdiItem.cs">
       <SubType>Code</SubType>
     </Compile>

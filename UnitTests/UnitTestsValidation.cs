@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework.Readers;
@@ -527,7 +527,27 @@ namespace EdiFabric.UnitTests
             var result = isa.Validate();
 
             //  ASSERT
+            Assert.IsTrue(!result.Any());
+        }
 
+        [TestMethod]
+        public void TestValidationUnb()
+        {
+            //  ARRANGE
+            const string sample = "EdiFabric.UnitTests.Edi.Edifact_INVOIC_D00A_ValidUnb.txt";
+            var ediStream = CommonHelper.LoadStream(sample, false);
+            UNB unb;
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Rules.EdifactD00A.Rep"))
+            {
+                var ediItems = ediReader.ReadToEnd().ToList();
+                unb = ediItems.OfType<UNB>().Single();
+            }
+
+            //  ACT
+            var result = unb.Validate();
+
+            //  ASSERT
+            Assert.IsTrue(!result.Any());
         }
     }
 }

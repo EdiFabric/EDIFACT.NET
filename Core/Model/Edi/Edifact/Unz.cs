@@ -11,6 +11,7 @@
 
 using System;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
 
 namespace EdiFabric.Core.Model.Edi.Edifact
 {
@@ -21,9 +22,15 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     [Segment("UNZ")]
     public class UNZ : EdiSegment
     {
+        [Required]
+        [StringLength(1, 6)]
+        [DataElement("0036", typeof(EDIFACT_N))]
         [Pos(1)]
         public string InterchangeControlCount_1 { get; set; }
 
+        [Required]
+        [StringLength(1, 14)]
+        [DataElement("0020", typeof(EDIFACT_AN))]
         [Pos(2)]
         public string InterchangeControlReference_2 { get; set; }
     }  

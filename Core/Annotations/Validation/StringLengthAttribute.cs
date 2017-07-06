@@ -23,7 +23,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for the correct length of data elements.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class StringLengthAttribute : ValidationAttribute
+    public sealed class StringLengthAttribute : ValidationAttribute
     {
         /// <summary>
         /// The minimum allowed length.

@@ -11,6 +11,7 @@
 
 using System;
 using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
 
 namespace EdiFabric.Core.Model.Edi.Edifact
 {
@@ -21,6 +22,8 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     [Segment("UNG")]
     public class UNG : EdiSegment
     {
+        [StringLength(1, 6)]
+        [DataElement("0038", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string MessageGroupIdentification_1 { get; set; }
 
@@ -33,17 +36,25 @@ namespace EdiFabric.Core.Model.Edi.Edifact
         [Pos(4)]
         public S004 DATEANDTIMEOFPREPARATION_4 { get; set; }
 
+        [Required]
+        [StringLength(1, 14)]
+        [DataElement("0048", typeof(EDIFACT_AN))]
         [Pos(5)]
         public string GroupReferenceNumber_5 { get; set; }
 
+        [Required]
+        [StringLength(1, 2)]
+        [DataElement("0051", typeof(EDIFACT_AN))]
         [Pos(6)]
         public string ControllingAgency_6 { get; set; }
 
         [Pos(7)]
-        public S008 MESSAGEVERSION { get; set; }
+        public S008 MESSAGEVERSION_7 { get; set; }
 
+        [StringLength(1, 14)]
+        [DataElement("0058 ", typeof(EDIFACT_AN))]
         [Pos(8)]
-        public string D_0058_8 { get; set; }
+        public string D_ApplicationPassword_8 { get; set; }
     }
 
     /// <summary>
@@ -53,9 +64,13 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     [Composite("S006")]
     public class S006
     {
+        [Required]
+        [StringLength(1, 35)]
+        [DataElement("0040", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string ApplicationSenderIdentification_1 { get; set; }
 
+        [DataElement("0007", typeof(EDIFACT_ID_0007))]
         [Pos(2)]
         public string IdentificationCodeQualifier_2 { get; set; }
     }
@@ -67,9 +82,13 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     [Composite("S007")]
     public class S007
     {
+        [Required]
+        [StringLength(1, 35)]
+        [DataElement("0044", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string ApplicationRecipientIdentification_1 { get; set; }
 
+        [DataElement("0007", typeof(EDIFACT_ID_0007))]
         [Pos(2)]
         public string IdentificationCodeQualifier_2 { get; set; }
     }
@@ -81,12 +100,20 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     [Composite("S008")]
     public class S008
     {
+        [Required]
+        [StringLength(1, 3)]
+        [DataElement("0052 ", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string MessageVersionNumber_1 { get; set; }
 
+        [Required]
+        [StringLength(1, 3)]
+        [DataElement("0054 ", typeof(EDIFACT_AN))]
         [Pos(2)]
         public string MessageReleaseNumber_2 { get; set; }
 
+        [StringLength(1, 6)]
+        [DataElement("0057 ", typeof(EDIFACT_AN))]
         [Pos(3)]
         public string AssociationAssignedCode_3 { get; set; }
     }
