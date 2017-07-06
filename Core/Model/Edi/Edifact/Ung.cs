@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     /// </summary>
     [Serializable()]
     [Segment("UNG")]
-    public class UNG : EdiItem
+    public class UNG : EdiSegment
     {
         [Pos(1)]
         public string MessageGroupIdentification_1 { get; set; }

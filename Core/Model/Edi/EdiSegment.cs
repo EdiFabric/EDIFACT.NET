@@ -9,15 +9,24 @@
 // PURPOSE.
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
+
 namespace EdiFabric.Core.Model.Edi
 {
     /// <summary>
-    /// EDI items are:
-    /// All EDI transaction sets.
-    /// All EDI control segments.
-    /// ReaderErrorContext.
+    /// EDI segment with validation.
     /// </summary>
-    public abstract class EdiItem
-    {        
+    public class EdiSegment : EdiItem
+    {
+        /// <summary>
+        ///  Validates an item according to its validation attributes.
+        /// </summary>
+        /// <returns>A list of segment error contexts. The list is empty if the item is valid.</returns>
+        public virtual List<SegmentErrorContext> Validate()
+        {
+            int segmentsNum;
+            return this.Validate(out segmentsNum);
+        }
     }
 }

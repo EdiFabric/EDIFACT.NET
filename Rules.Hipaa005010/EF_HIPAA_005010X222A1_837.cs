@@ -77,7 +77,7 @@ namespace EdiFabric.Rules.HIPAA_005010X222A1_837
     
     [Serializable()]
     [Group("HL")]
-    public class Loop_2000A
+    public partial class Loop_2000A
     {
         
         [Required]

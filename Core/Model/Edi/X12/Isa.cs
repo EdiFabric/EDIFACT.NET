@@ -20,7 +20,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("ISA")]
-    public class ISA : EdiItem
+    public class ISA : EdiSegment
     {
         [Required]
         [DataElement("I01", typeof(X12_ID_I01))]

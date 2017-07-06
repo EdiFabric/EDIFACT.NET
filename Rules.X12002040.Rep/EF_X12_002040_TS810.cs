@@ -212,7 +212,7 @@ namespace EdiFabric.Rules.X12_002040.Rep
     
     [Serializable()]
     [Group("N1")]
-    public class TS810_N1Loop1 : EdiItem
+    public class TS810_N1Loop1 : EdiSegment
     {
         
         [Required]

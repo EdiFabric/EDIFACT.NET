@@ -143,9 +143,19 @@ namespace EdiFabric.Core.Model.Edi
             var validationAttributes = Property.GetCustomAttributes<ValidationAttribute>().OrderBy(a => a.Priority);
             foreach (var validationAttribute in validationAttributes)
             {
-                result.AddRange(validationAttribute.IsValid(this, segmentIndex, inSegmentIndex, inComponentIndex,
+                result.AddRange(validationAttribute.Validate(this, segmentIndex, inSegmentIndex, inComponentIndex,
                     _repetitionIndex));
             }
+
+            if (Instance == null)
+                return result;
+
+            var customValidator = Instance as IValidator;
+            if (customValidator == null)
+                return result;
+
+            result.AddRange(customValidator.Validate(this, segmentIndex, inSegmentIndex, inComponentIndex,
+                    _repetitionIndex));
 
             return result;
         }

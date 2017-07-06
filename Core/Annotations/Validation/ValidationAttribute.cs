@@ -20,7 +20,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Abstract attribute for validation.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public abstract class ValidationAttribute : Attribute
+    public abstract class ValidationAttribute : Attribute, IValidator
     {
         /// <summary>
         /// Protected constructor. Initializes a new instance of the <see cref="ValidationAttribute"/> class.
@@ -45,7 +45,13 @@ namespace EdiFabric.Core.Annotations.Validation
         /// <param name="inCompositeIndex">The position within the component if any.</param>
         /// <param name="repetitionIndex">The repetition position.</param>
         /// <returns>A list of segment errors if invalid, otherwise nothing.</returns>
-        public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
-            int inCompositeIndex, int repetitionIndex);
+        //public abstract List<SegmentErrorContext> IsValid(InstanceContext instanceContext, int segmentIndex, int inSegmentIndex,
+        //    int inCompositeIndex, int repetitionIndex);
+
+        public virtual List<SegmentErrorContext> Validate(InstanceContext instanceContext, int segmentIndex,
+            int inSegmentIndex, int inCompositeIndex, int repetitionIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

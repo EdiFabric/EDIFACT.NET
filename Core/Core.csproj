@@ -51,10 +51,16 @@
     <Compile Include="ErrorCodes\DataElementErrorCode.cs" />
     <Compile Include="ErrorCodes\MessageErrorCode.cs" />
     <Compile Include="ErrorCodes\SegmentErrorCode.cs" />
+    <Compile Include="Model\Edi\EdiItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\Edi\EdiSegment.cs" />
     <Compile Include="Model\Edi\ErrorContexts\ErrorContext.cs" />
     <Compile Include="Model\Edi\ErrorContexts\ReaderErrorContext.cs" />
     <Compile Include="ErrorCodes\ReaderErrorCode.cs" />
     <Compile Include="Model\Edi\ErrorContexts\MessageErrorContext.cs" />
+    <Compile Include="Model\Edi\IValidator.cs" />
+    <Compile Include="Model\Edi\ValidationExtensions.cs" />
     <Compile Include="Model\Edi\X12\Codes.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Model\Edi\InstanceContext.cs" />
@@ -68,7 +74,6 @@
     <Compile Include="Model\Edi\X12\Isa.cs" />
     <Compile Include="Model\Edi\X12\Ta1.cs" />
     <Compile Include="Model\Edi\ErrorContexts\DataElementErrorContext.cs" />
-    <Compile Include="Model\Edi\EdiItem.cs" />
     <Compile Include="Model\Edi\EdiMessage.cs" />
     <Compile Include="Model\Edi\ErrorContexts\SegmentErrorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

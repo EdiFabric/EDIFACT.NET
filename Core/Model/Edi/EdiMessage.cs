@@ -110,7 +110,7 @@ namespace EdiFabric.Core.Model.Edi
             result = new MessageErrorContext(Name, ControlNumber, MessagePart, null);
 
             int segmentsNum;
-            result.AddRange(Validate(out segmentsNum));
+            result.AddRange(this.Validate(out segmentsNum));
         
             if (!skipTrailer)
                 foreach (var errorCode in ValidateStructure(segmentsNum))
@@ -239,6 +239,6 @@ namespace EdiFabric.Core.Model.Edi
                 return null;
 
             return cnProperty.GetValue(headerValue) as string;
-        }        
+        }       
     }
 }

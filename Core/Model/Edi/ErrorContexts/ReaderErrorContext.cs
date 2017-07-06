@@ -10,7 +10,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
@@ -47,16 +46,6 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             Exception = exception;
             ReaderErrorCode = readerErrorCode;
             MessageErrorContext = messageErrorContext;
-        }
-
-        /// <summary>
-        ///  Validates an item according to its validation attributes.
-        /// </summary>
-        /// <returns>A list of segment error contexts.</returns>
-        protected override List<SegmentErrorContext> Validate(out int segmentsNum)
-        {
-            segmentsNum = 0;
-            return new List<SegmentErrorContext>();
         }
     }
 }

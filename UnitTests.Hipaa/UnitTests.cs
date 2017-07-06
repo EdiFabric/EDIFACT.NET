@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Model.Edi;
+using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
+using EdiFabric.Rules.HIPAA_005010X222A1_837;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdiFabric.UnitTests.Hipaa
@@ -138,6 +140,28 @@ namespace EdiFabric.UnitTests.Hipaa
                 return Assembly.Load(new AssemblyName("EdiFabric.Rules.Hipaa004010"));
 
             throw new Exception("Not supported!");
+        }
+
+        [TestMethod]
+        public void Test5010WithCustomValidation()
+        {
+            // ARRANGE
+            const string sample = "EdiFabric.UnitTests.Hipaa.Edi.Hipaa_837P_00501_Custom.txt";
+            var ediStream = CommonHelper.LoadStream(sample);
+            List<EdiItem> ediItems;
+
+            // ACT
+            using (var ediReader = new X12Reader(ediStream, HipaaFactory))
+            {
+                ediItems = ediReader.ReadToEnd().ToList();
+            }
+            var msg = ediItems.OfType<TS837>().Single();
+            MessageErrorContext ec;
+            msg.IsValid(out ec);
+
+            // ASSERT
+            Assert.IsNotNull(ec);
+            Assert.IsNotNull(ec.Errors.SingleOrDefault(e => e.Name == "CustomValidationSegment"));
         }
     }
 }

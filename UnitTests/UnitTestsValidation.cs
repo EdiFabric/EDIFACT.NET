@@ -511,20 +511,6 @@ namespace EdiFabric.UnitTests
         }
 
         [TestMethod]
-        public void TestValidationOfReaderErrorContext()
-        {
-            // ARRANGE
-            var readerErrorContext = new ReaderErrorContext(new Exception("test"),
-                ReaderErrorCode.InvalidControlStructure);
-
-            // ACT
-            var result = readerErrorContext.Validate();
-
-            // ASSERT
-            Assert.IsTrue(result.Count == 0);
-        }
-
-        [TestMethod]
         public void TestValidationIsa()
         {
             //  ARRANGE

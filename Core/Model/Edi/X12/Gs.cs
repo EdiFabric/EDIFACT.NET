@@ -20,7 +20,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("GS")]
-    public class GS : EdiItem
+    public class GS : EdiSegment
     {
         [Required]
         [StringLength(2, 2)]

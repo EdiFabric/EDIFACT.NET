@@ -20,7 +20,7 @@ namespace EdiFabric.Core.Model.Edi.X12
     /// </summary>
     [Serializable()]
     [Segment("IEA")]
-    public class IEA : EdiItem 
+    public class IEA : EdiSegment 
     {
         [Required]
         [StringLength(1, 5)]

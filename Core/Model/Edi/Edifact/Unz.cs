@@ -19,7 +19,7 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     /// </summary>
     [Serializable()]
     [Segment("UNZ")]
-    public class UNZ : EdiItem
+    public class UNZ : EdiSegment
     {
         [Pos(1)]
         public string InterchangeControlCount_1 { get; set; }
