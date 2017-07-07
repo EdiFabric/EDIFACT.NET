@@ -24,7 +24,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for mandatory items. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class RequiredAttribute : ValidationAttribute
+    public class RequiredAttribute : ValidationAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RequiredAttribute"/> class.

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ediFabric.Framework</id>
-    <version>8.1.0</version>
+    <version>8.1.1</version>
     <title>The Ultimate EDI Framework for .NET</title>
     <authors>ediFabric</authors>
     <owners>ediFabric</owners>
@@ -11,11 +11,11 @@
     <iconUrl>http://edifabric.com/images/favicon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>.NET framework for reading and creating EDI documents.</description>
-    <releaseNotes>Compatibility with .NET Standard 1.6.</releaseNotes>
+    <releaseNotes>Added ability for custom validation.</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>.NET EDI Framework EDIFACT X12 HIPAA EANCOM</tags>
     <dependencies>
-      <dependency id="ediFabric.Core" version="1.1.0" />
+      <dependency id="ediFabric.Core" version="1.1.1" />
     </dependencies>
   </metadata>
 </package>

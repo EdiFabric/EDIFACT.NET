@@ -23,7 +23,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for the data type of data elements.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class DataElementAttribute : ValidationAttribute
+    public class DataElementAttribute : ValidationAttribute
     {
         /// <summary>
         /// EDI code for the data element.

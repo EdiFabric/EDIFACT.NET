@@ -24,7 +24,7 @@ namespace EdiFabric.Core.Annotations.Validation
     /// Validation attribute for lists. Sets the minimum and maximum of the contained items.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class ListCountAttribute : ValidationAttribute
+    public class ListCountAttribute : ValidationAttribute
     {
         /// <summary>
         /// The minimum allowed items.
