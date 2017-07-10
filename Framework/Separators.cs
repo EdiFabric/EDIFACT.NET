@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EdiFabric.Core.Model.Edi.Edifact;
 
 namespace EdiFabric.Framework
 {
@@ -103,9 +104,19 @@ namespace EdiFabric.Framework
         /// Creates UNA segment.
         /// </summary>
         /// <returns>The separators.</returns>
-        public string ToUna()
+        public UNA ToUna()
         {
-            return "UNA" + ComponentDataElement + DataElement + "." + Escape + " " + Segment;
+            var result = new UNA
+            {
+                ComponentDataElement = ComponentDataElement,
+                DataElement = DataElement,
+                DecimalNotation = '.',
+                ReleaseIndicator = Escape ?? '?',
+                Reserved = ' ',
+                Segment = Segment
+            };
+
+            return result;
         }
 
         /// <summary>

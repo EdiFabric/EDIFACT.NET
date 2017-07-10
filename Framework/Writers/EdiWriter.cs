@@ -15,6 +15,7 @@ using System.Text;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Framework.Model;
 using System.Reflection;
+using EdiFabric.Core.Model.Edi.Edifact;
 
 namespace EdiFabric.Framework.Writers
 {
@@ -208,12 +209,22 @@ namespace EdiFabric.Framework.Writers
         }
         
         /// <summary>
-        /// Write the string representation of a segment to the destination.
+        /// Write a segment to the destination.
         /// </summary>
-        /// <param name="segment">The segment.</param>
-        public void Write(string segment)
+        /// <param name="ediSegment">The segment.</param>
+        public void Write(EdiSegment ediSegment)
         {
-            _writer.Write(segment + _postFix);
+            var segment = new Segment(ediSegment.GetStandardType(), ediSegment);
+            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
+        }
+
+        /// <summary>
+        /// Write UNA to the destination.
+        /// </summary>
+        /// <param name="ediSegment">The UNA.</param>
+        public void Write(UNA ediSegment)
+        {
+            Write(ediSegment.GenerateSegment());
         }
         
         /// <summary>
@@ -237,6 +248,17 @@ namespace EdiFabric.Framework.Writers
             if (_writer != null)
                 _writer.Dispose();
         }
+
+        /// <summary>
+        /// Write the string representation of a segment to the destination.
+        /// </summary>
+        /// <param name="segment">The segment.</param>
+        private void Write(string segment)
+        {
+            _writer.Write(segment + _postFix);
+        }
+
+        
 
         private string BuildTrailer(string tag, string controlNumber, int count)
         {

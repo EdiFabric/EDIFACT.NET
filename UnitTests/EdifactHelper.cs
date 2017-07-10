@@ -12,12 +12,12 @@ namespace EdiFabric.UnitTests
     public class EdifactHelper
     {
         public static string Generate(List<EdiItem> items, Separators separators, string postFix,
-            Encoding encoding = null, string una = null)
+            Encoding encoding = null, UNA una = null)
         {
             using (var stream = new MemoryStream())
             {
                 var writer = new EdifactWriter(stream, encoding, postFix);
-                if (!string.IsNullOrEmpty(una))
+                if (una != null)
                     writer.Write(una);
                 foreach (var item in items)
                 {
