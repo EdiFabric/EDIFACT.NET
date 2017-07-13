@@ -43,6 +43,14 @@
     <Compile Include="Annotations\Edi\MessageAttribute.cs" />
     <Compile Include="Annotations\Edi\PosAttribute.cs" />
     <Compile Include="Annotations\Edi\SegmentAttribute.cs" />
+    <Compile Include="Model\Ack\AckEventArgs.cs" />
+    <Compile Include="Model\Ack\AckSettings.cs" />
+    <Compile Include="Model\Ack\ControlIncrementers.cs" />
+    <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_Codes.cs" />
+    <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_ComplexElements.cs" />
+    <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_Segments.cs" />
+    <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_TSCONTRL.cs" />
+    <Compile Include="Model\Ack\MessageEventArgs.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_ComplexElements.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_Segments.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_TS997.cs" />
