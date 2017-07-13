@@ -22,16 +22,16 @@ namespace EdiFabric.Framework.Model
 {
     class Segment : ParseNode
     {
-        private readonly List<string> _firstChildValues = new List<string>();
-        public IReadOnlyCollection<string> FirstChildValues
+        private readonly List<string> _firstMatchValues = new List<string>();
+        public IReadOnlyCollection<string> FirstMatchValues
         {
-            get { return _firstChildValues.AsReadOnly(); }
+            get { return _firstMatchValues.AsReadOnly(); }
         }
 
-        private readonly List<string> _secondChildValues = new List<string>();
-        public IReadOnlyCollection<string> SecondChildValues
+        private readonly List<string> _secondMatchValues = new List<string>();
+        public IReadOnlyCollection<string> SecondMatchValues
         {
-            get { return _secondChildValues.AsReadOnly(); }
+            get { return _secondMatchValues.AsReadOnly(); }
         }
 
         public bool IsTrigger
@@ -55,7 +55,7 @@ namespace EdiFabric.Framework.Model
                 if (eAttr == null)
                     throw new Exception(string.Format("Type {0} is not annotated with {1}.",
                         sAttr.First.Name, typeof(EdiCodesAttribute).Name));
-                _firstChildValues = eAttr.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                _firstMatchValues = eAttr.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (sAttr.Second != null)
                 {
@@ -63,7 +63,7 @@ namespace EdiFabric.Framework.Model
                     if (eAttrS == null)
                         throw new Exception(string.Format("Type {0} is not annotated with {1}.",
                             sAttr.Second.Name, typeof(EdiCodesAttribute).Name));
-                    _secondChildValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    _secondMatchValues = eAttrS.Codes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 }
             }
         }
@@ -210,21 +210,17 @@ namespace EdiFabric.Framework.Model
             if (EdiName == segmentContext.Name)
             {
                 // If no identity match is required, mark this as a match
-                if (String.IsNullOrEmpty(segmentContext.FirstValue) || !FirstChildValues.Any())
+                if (String.IsNullOrEmpty(segmentContext.FirstValue) || !FirstMatchValues.Any())
                     return true;
-
-                if (!String.IsNullOrEmpty(segmentContext.ThirdValue) && FirstChildValues.Any() &&
-                    FirstChildValues.Contains(segmentContext.ThirdValue))
-                    return true;
-                
+               
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
-                if (FirstChildValues.Any() && !String.IsNullOrEmpty(segmentContext.FirstValue) &&
-                    FirstChildValues.Contains(segmentContext.FirstValue))
+                if (FirstMatchValues.Any() && !String.IsNullOrEmpty(segmentContext.FirstValue) &&
+                    FirstMatchValues.Contains(segmentContext.FirstValue))
                 {
-                    if (SecondChildValues.Any() && !String.IsNullOrEmpty(segmentContext.SecondValue))
+                    if (SecondMatchValues.Any() && !String.IsNullOrEmpty(segmentContext.SecondValue))
                     {
-                        return SecondChildValues.Contains(segmentContext.SecondValue);
+                        return SecondMatchValues.Contains(segmentContext.SecondValue);
                     }
 
                     return true;

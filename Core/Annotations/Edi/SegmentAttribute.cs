@@ -20,11 +20,11 @@ namespace EdiFabric.Core.Annotations.Edi
     public sealed class SegmentAttribute : EdiAttribute
     {
         /// <summary>
-        /// The EDI codes for the first element.
+        /// The EDI codes to match first.
         /// </summary>
         public Type First { get; private set; }
         /// <summary>
-        /// The EDI codes for the second element.
+        /// The EDI codes to match second.
         /// </summary>
         public Type Second { get; private set; }
 
@@ -32,8 +32,8 @@ namespace EdiFabric.Core.Annotations.Edi
         /// Initializes a new instance of the <see cref="SegmentAttribute"/> class.
         /// </summary>
         /// <param name="id">The segment id.</param>
-        /// <param name="first">The EDI codes for the first element.</param>
-        /// <param name="second">The EDI codes for the second element.</param>
+        /// <param name="first">he EDI codes to match first.</param>
+        /// <param name="second">The EDI codes to match second.</param>
         public SegmentAttribute(string id, Type first = null, Type second = null)
             : base(id)
         {

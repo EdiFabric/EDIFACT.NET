@@ -25,20 +25,15 @@ namespace EdiFabric.Framework.Model
         public string Name { get; private set; }
         
         /// <summary>
-        /// The value of the first data element.
+        /// The value to match first.
         /// </summary>
         public string FirstValue { get; private set; }
 
         /// <summary>
-        /// The value of the second data element.
+        /// The value to match second.
         /// </summary>
         public string SecondValue { get; private set; }
-
-        /// <summary>
-        /// The value of the third data element.
-        /// </summary>
-        public string ThirdValue { get; private set; }
-
+        
         /// <summary>
         /// The original segment line.
         /// </summary>
@@ -79,33 +74,34 @@ namespace EdiFabric.Framework.Model
                             StringSplitOptions.None);
                     if (!string.IsNullOrEmpty(secondComponentDataElements[0]))
                         SecondValue = secondComponentDataElements[0];
-                }
-
-                if (Name == "HL" && dataElements.Length > 3)
-                {
-                    var thirdComponentDataElements = dataElements[3].Split(new[] { separators.ComponentDataElement },
-                    StringSplitOptions.None);
-                    if (!string.IsNullOrEmpty(thirdComponentDataElements[0]))
-                        ThirdValue = thirdComponentDataElements[0];
-                }
+                }               
             }
 
-            IsJump = Jump();
+            IsJump = Jump(Name, FirstValue, SecondValue);
+
+            // Remember to call IsJump before changing the first value
+            if (Name == "HL" && dataElements.Length > 3)
+            {
+                var thirdComponentDataElements = dataElements[3].Split(new[] { separators.ComponentDataElement },
+                StringSplitOptions.None);
+                if (!string.IsNullOrEmpty(thirdComponentDataElements[0]))
+                    FirstValue = thirdComponentDataElements[0];
+            }
         }
 
-        private bool Jump()
+        private static bool Jump(string name, string firstValue, string secondValue)
         {
-            if (Name != "HL")
+            if (name != "HL")
                 return false;
 
             int fv;
             int sv;
 
             //  All top level: HL*2**, HL*3**, etc.
-            if (int.TryParse(FirstValue, out fv) && fv > 1 && string.IsNullOrEmpty(SecondValue))
+            if (int.TryParse(firstValue, out fv) && fv > 1 && string.IsNullOrEmpty(secondValue))
                 return true;
 
-            if (int.TryParse(SecondValue, out sv) && (fv - sv > 1))
+            if (int.TryParse(secondValue, out sv) && (fv - sv > 1))
                 return true;
 
             return false;
