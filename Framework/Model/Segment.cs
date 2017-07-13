@@ -213,6 +213,10 @@ namespace EdiFabric.Framework.Model
                 if (String.IsNullOrEmpty(segmentContext.FirstValue) || !FirstChildValues.Any())
                     return true;
 
+                if (!String.IsNullOrEmpty(segmentContext.ThirdValue) && FirstChildValues.Any() &&
+                    FirstChildValues.Contains(segmentContext.ThirdValue))
+                    return true;
+                
                 // Match the value 
                 // This must have been defined in the enum of the first element of the segment.
                 if (FirstChildValues.Any() && !String.IsNullOrEmpty(segmentContext.FirstValue) &&

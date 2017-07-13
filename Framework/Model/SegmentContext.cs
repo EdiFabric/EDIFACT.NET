@@ -35,6 +35,11 @@ namespace EdiFabric.Framework.Model
         public string SecondValue { get; private set; }
 
         /// <summary>
+        /// The value of the third data element.
+        /// </summary>
+        public string ThirdValue { get; private set; }
+
+        /// <summary>
         /// The original segment line.
         /// </summary>
         public string Value { get; private set; }
@@ -63,6 +68,7 @@ namespace EdiFabric.Framework.Model
             if (dataElements.Length > 1)
             {
                 // Handle blank segments, e.g. BHT+'
+
                 var firstComponentDataElements = dataElements[1].Split(new[] {separators.ComponentDataElement},
                     StringSplitOptions.None);
                 FirstValue = firstComponentDataElements[0];
@@ -73,6 +79,14 @@ namespace EdiFabric.Framework.Model
                             StringSplitOptions.None);
                     if (!string.IsNullOrEmpty(secondComponentDataElements[0]))
                         SecondValue = secondComponentDataElements[0];
+                }
+
+                if (Name == "HL" && dataElements.Length > 3)
+                {
+                    var thirdComponentDataElements = dataElements[3].Split(new[] { separators.ComponentDataElement },
+                    StringSplitOptions.None);
+                    if (!string.IsNullOrEmpty(thirdComponentDataElements[0]))
+                        ThirdValue = thirdComponentDataElements[0];
                 }
             }
 
