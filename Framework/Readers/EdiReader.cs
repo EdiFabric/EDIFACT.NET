@@ -37,7 +37,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
         protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding,
-            bool continueOnError = false, int maxSegmentLength = 5000)
+            bool continueOnError, int maxSegmentLength)
             : base(ediStream, encoding, continueOnError, maxSegmentLength)
         {
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
@@ -105,7 +105,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>Indicates if an interchange header was found.</returns>
-        protected virtual bool TryReadHeader(string segmentName, out string probed, out Separators separators)
+        protected override bool TryReadHeader(string segmentName, out string probed, out Separators separators)
         {
             throw new NotImplementedException();
         }
@@ -114,7 +114,7 @@ namespace EdiFabric.Framework.Readers
         /// Converts EDI segments into typed objects. 
         /// </summary>
         /// <param name="segment">The segment to be processed.</param>
-        protected virtual EdiItem Process(string segment)
+        protected override EdiItem Process(string segment)
         {
             throw new NotImplementedException();
         }

@@ -25,7 +25,7 @@ namespace EdiFabric.UnitTests.Vda
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new VdaReader(ediStream, MessageContextFactory, Encoding.UTF8, Environment.NewLine))
+            using (var ediReader = new VdaReader1(ediStream, MessageContextFactory, Encoding.UTF8, Environment.NewLine))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

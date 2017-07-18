@@ -17,33 +17,46 @@ using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
+using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
     /// Reads EDI documents into .NET objects.
     /// </summary>
-    public class PositionalReader : BaseReader
+    public class VdaReader1 : BaseReader
     {
         internal readonly Func<string, MessageContext> MessageContext;
         private readonly string _postFix;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PositionalReader"/> class.
+        /// Initializes a new instance of the <see cref="VdaReader1"/> class.
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="messageContext">The delegate to return the message context.</param>
         /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
         /// <param name="postFix">The postfix.</param>
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
-        /// <param name="segmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
-        protected PositionalReader(Stream ediStream, Func<string, MessageContext> messageContext, Encoding encoding,
-            int segmentLength, string postFix = null, bool continueOnError = false)
-            : base(ediStream, encoding, continueOnError, segmentLength)
+        public VdaReader1(Stream ediStream, Func<string, MessageContext> messageContext, Encoding encoding = null,
+            string postFix = null, bool continueOnError = false)
+            : base(ediStream, encoding, continueOnError, 128)
         {
             if (messageContext == null) throw new ArgumentNullException("messageContext");
             MessageContext = messageContext;
             _postFix = postFix;
+        }
+
+        /// <summary>
+        /// Probes for interchange header.
+        /// Sets the separators if header was found.
+        /// </summary>
+        /// <param name="segmentName">The probed segment name.</param>
+        /// <param name="probed">The probed text.</param>
+        /// <param name="separators">The new separators.</param>
+        /// <returns>Indicates if an interchange header was found.</returns>
+        protected override bool TryReadHeader(string segmentName, out string probed, out Separators separators)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -94,13 +107,27 @@ namespace EdiFabric.Framework.Readers
             return Item != null;
         }
 
-        /// <summary>
-        /// Converts EDI segments into typed objects. 
-        /// </summary>
-        /// <param name="segment">The segment to be processed.</param>
-        protected virtual EdiItem Process(string segment)
+        protected override EdiItem Process(string segment)
         {
-            throw new NotImplementedException();
+            var segmentContext = new SegmentContext(segment, SetSegmentContext);
+            var messageContext = MessageContext(segment);
+            if (messageContext != null)
+            {
+                var result = Flush(segment);
+                if (result != null)
+                    return result;
+
+                CurrentMessageContext = messageContext;
+            }
+
+            CurrentSegments.Add(segmentContext);
+
+            return null;
+        }
+
+        private Tuple<string, string, string, bool> SetSegmentContext(string segment)
+        {
+            return new Tuple<string, string, string, bool>(segment.Substring(0, 3), segment.Substring(3, 2), null, false);
         }
         
         /// <summary>

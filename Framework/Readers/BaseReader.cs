@@ -68,7 +68,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="encoding">The encoding. The default is UTF8.</param>
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
-        protected BaseReader(Stream ediStream, Encoding encoding, bool continueOnError = false, int maxSegmentLength = 5000)
+        protected BaseReader(Stream ediStream, Encoding encoding, bool continueOnError, int maxSegmentLength)
         {
             if (ediStream == null) throw new ArgumentNullException("ediStream");
             
@@ -85,7 +85,23 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <returns>Indication if an item was read.</returns>
         public abstract bool Read();
-       
+
+        /// <summary>
+        /// Probes for interchange header.
+        /// Sets the separators if header was found.
+        /// </summary>
+        /// <param name="segmentName">The probed segment name.</param>
+        /// <param name="probed">The probed text.</param>
+        /// <param name="separators">The new separators.</param>
+        /// <returns>Indicates if an interchange header was found.</returns>
+        protected abstract bool TryReadHeader(string segmentName, out string probed, out Separators separators);
+
+        /// <summary>
+        /// Converts EDI segments into typed objects. 
+        /// </summary>
+        /// <param name="segment">The segment to be processed.</param>
+        protected abstract EdiItem Process(string segment);
+        
         /// <summary>
         /// Reads the stream to the end.
         /// </summary>
