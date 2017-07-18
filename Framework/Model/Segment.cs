@@ -232,6 +232,37 @@ namespace EdiFabric.Framework.Model
 
         public override void ParsePositional(string value, bool allowPartial)
         {
+            if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
+            
+            if (!Children.Any())
+                BuildChildren();
+
+            SetParsed();
+
+            var remainder = value;
+            var index = 0;
+            foreach (var child in Children.OfType<DataElement>())
+            {
+                index++;
+                if (child.MaxSize == 0)
+                {
+                    throw new Exception(string.Format("DataElement {0} MaxSize is 0.", child.EdiName));
+                }
+
+                if (remainder.Length < child.MaxSize)
+                {
+                    if (allowPartial)
+                        continue;
+
+                    var errorContext = new DataElementErrorContext("", index, DataElementErrorCode.TooManyDataElements,
+                            0, 0, remainder, "Too many Data Elements");
+                    throw new ParserSegmentException(errorContext);
+                }
+
+                var current = remainder.Substring(0, child.MaxSize);
+                remainder = remainder.Substring(child.MaxSize);
+                child.ParsePositional(current, allowPartial);
+            }
         }
     }
 }

@@ -16,15 +16,23 @@ namespace EdiFabric.Framework.Model
 {
     class DataElement : ParseNode
     {
+        public int MaxSize { get; private set; }
+
         public DataElement(PropertyInfo propertyInfo, object instance = null)
             : base(propertyInfo.GetGenericType(), propertyInfo.Name, GetEdiName(propertyInfo))
         {
+            MaxSize = 0;
+            var attr = propertyInfo.GetCustomAttribute<StringLengthAttribute>();
+            if (attr != null)
+                MaxSize = attr.MaxLen;
+            
             Value = instance as string;
         }
 
         public DataElement(ParseNode parseNode)
             : base(parseNode.TypeInfo, parseNode.Name, parseNode.EdiName)
         {
+            MaxSize = ((DataElement) parseNode).MaxSize;
             parseNode.Parent.InsertChild(parseNode.IndexInParent() + 1, this);
         }
 
@@ -32,6 +40,12 @@ namespace EdiFabric.Framework.Model
         {
             IsParsed = true;
             Value = value.UnEscapeLine(separators);
+        }
+
+        public override void ParsePositional(string value, bool allowPartial)
+        {
+            IsParsed = true;
+            Value = value;
         }
 
         public override ParseNode InsertRepetition()

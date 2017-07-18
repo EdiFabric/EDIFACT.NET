@@ -33,7 +33,7 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The name of the assembly containing the EDI classes.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.UTF8.</param>
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>
@@ -48,7 +48,7 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.UTF8.</param>
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
         /// <returns>A new instance of the <see cref="X12Reader"/> class.</returns>

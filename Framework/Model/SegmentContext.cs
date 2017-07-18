@@ -92,19 +92,21 @@ namespace EdiFabric.Framework.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="SegmentContext"/> class.
         /// </summary>
-        /// <param name="ediSegment">The segment line.</param>
-        /// <param name="setter">The function to set all properties.</param>
-        public SegmentContext(string ediSegment, Func<string, Tuple<string, string, string, bool>> setter)
+        /// <param name="name">The segment ID.</param>
+        /// <param name="value">The original segment line.</param>
+        /// <param name="firstValue">The value to match first.</param>
+        /// <param name="secondValue">The value to match second.</param>
+        /// <param name="isJump">If it is HL that is not a direct child of its parent.</param>
+        public SegmentContext(string name, string value, string firstValue, string secondValue, bool isJump)
         {
-            if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
 
-            var properties = setter(ediSegment);
-
-            Name = properties.Item1;
-            FirstValue = properties.Item2;
-            SecondValue = properties.Item3;
-            Value = ediSegment;
-            IsJump = properties.Item4;            
+            Name = name;
+            Value = value;
+            FirstValue = firstValue;
+            SecondValue = secondValue;
+            IsJump = isJump;            
         }
 
         private static bool Jump(string name, string firstValue, string secondValue)

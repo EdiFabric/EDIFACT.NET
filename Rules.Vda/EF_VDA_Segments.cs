@@ -5,7 +5,7 @@ using EdiFabric.Core.Annotations.Validation;
 namespace EdiFabric.Rules.Vda
 {
     [Serializable()]
-    [Segment("511", typeof(VDA_ID_511_01), typeof(VDA_ID_V2))]
+    [Segment("511", typeof(VDA_ID_V2))]
     public class S511
     {
         [Required]
@@ -63,7 +63,7 @@ namespace EdiFabric.Rules.Vda
     }
     
     [Serializable()]
-    [Segment("512", typeof(VDA_ID_512_01), typeof(VDA_ID_V1))]
+    [Segment("512", typeof(VDA_ID_V1))]
     public class S512
     {
         [Required]
@@ -182,7 +182,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("513", typeof(VDA_ID_513_01), typeof(VDA_ID_V1))]
+    [Segment("513", typeof(VDA_ID_V1))]
     public class S513
     {
         [Required]
@@ -290,7 +290,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("514", typeof(VDA_ID_514_01), typeof(VDA_ID_V1))]
+    [Segment("514", typeof(VDA_ID_V1))]
     public class S514
     {
         [Required]
@@ -395,7 +395,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("515", typeof(VDA_ID_515_01), typeof(VDA_ID_V2))]
+    [Segment("515", typeof(VDA_ID_V1))]
     public class S515
     {
         [Required]
@@ -406,7 +406,7 @@ namespace EdiFabric.Rules.Vda
 
         [Required]
         [StringLength(2, 2)]
-        [DataElement("515_02", typeof(VDA_ID_V2))]
+        [DataElement("515_02", typeof(VDA_ID_V1))]
         [Pos(2)]
         public string Version_02 { get; set; }
 
@@ -472,7 +472,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("517", typeof(VDA_ID_517_01), typeof(VDA_ID_V1))]
+    [Segment("517", typeof(VDA_ID_V1))]
     public class S517
     {
         [Required]
@@ -511,7 +511,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("518", typeof(VDA_ID_518_01), typeof(VDA_ID_V1))]
+    [Segment("518", typeof(VDA_ID_V1))]
     public class S518
     {
         [Required]
@@ -549,7 +549,7 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    [Segment("519", typeof(VDA_ID_519_01), typeof(VDA_ID_V2))]
+    [Segment("519", typeof(VDA_ID_V1))]
     public class S519
     {
         [Required]
@@ -560,7 +560,7 @@ namespace EdiFabric.Rules.Vda
 
         [Required]
         [StringLength(2, 2)]
-        [DataElement("519_02", typeof(VDA_ID_V2))]
+        [DataElement("519_02", typeof(VDA_ID_V1))]
         [Pos(2)]
         public string Version_02 { get; set; }
 

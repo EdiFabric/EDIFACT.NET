@@ -83,7 +83,7 @@
     <Compile Include="Readers\EdifactReader.cs" />
     <Compile Include="Readers\BaseReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
-    <Compile Include="Readers\VdaReader1.cs" />
+    <Compile Include="Readers\VdaReader.cs" />
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="StringExtensions.cs" />

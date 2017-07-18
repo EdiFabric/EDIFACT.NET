@@ -87,16 +87,6 @@ namespace EdiFabric.Framework.Readers
         public abstract bool Read();
 
         /// <summary>
-        /// Probes for interchange header.
-        /// Sets the separators if header was found.
-        /// </summary>
-        /// <param name="segmentName">The probed segment name.</param>
-        /// <param name="probed">The probed text.</param>
-        /// <param name="separators">The new separators.</param>
-        /// <returns>Indicates if an interchange header was found.</returns>
-        protected abstract bool TryReadHeader(string segmentName, out string probed, out Separators separators);
-
-        /// <summary>
         /// Converts EDI segments into typed objects. 
         /// </summary>
         /// <param name="segment">The segment to be processed.</param>
@@ -126,11 +116,11 @@ namespace EdiFabric.Framework.Readers
 
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
-        /// Breaks if no segment terminator was encountered after 5000 symbols were read. 
+        /// Breaks if no segment terminator was encountered after the max segment length symbols were read. 
         /// This is to avoid loading large and corrupt files. 
         /// </summary>
         /// <returns>
-        /// An EDI segment.
+        /// The segment.
         /// </returns>
         protected abstract string ReadSegment();
         

@@ -33,7 +33,7 @@ namespace EdiFabric.Framework.Readers
         /// </summary>
         /// <param name="ediStream">The EDI stream to read from.</param>
         /// <param name="rulesAssembly">The delegate to return the assembly containing the EDI classes.</param>
-        /// <param name="encoding">The encoding. The default is Encoding.Default.</param>
+        /// <param name="encoding">The encoding. The default is Encoding.UTF8.</param>
         /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
         protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding,
@@ -105,7 +105,7 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>Indicates if an interchange header was found.</returns>
-        protected override bool TryReadHeader(string segmentName, out string probed, out Separators separators)
+        protected virtual bool TryReadHeader(string segmentName, out string probed, out Separators separators)
         {
             throw new NotImplementedException();
         }
