@@ -17,7 +17,7 @@ namespace EdiFabric.Framework.Model
     /// <summary>
     /// Extends a segment line with additional attributes inferred from the data.
     /// </summary>
-    sealed class SegmentContext
+    public sealed class SegmentContext
     {
         /// <summary>
         /// The segment ID.

@@ -81,6 +81,7 @@
     <Compile Include="MessageContext.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
     <Compile Include="Readers\EdifactReader.cs" />
+    <Compile Include="Readers\BaseReader.cs" />
     <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Readers\PositionalReader.cs" />
     <Compile Include="Readers\VdaReader.cs" />

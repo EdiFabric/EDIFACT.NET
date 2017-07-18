@@ -10,55 +10,24 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework.Exceptions;
-using EdiFabric.Framework.Model;
 
 namespace EdiFabric.Framework.Readers
 {
     /// <summary>
     /// Reads EDI documents into .NET objects.
     /// </summary>
-    public abstract class EdiReader : IDisposable
+    public class EdiReader : BaseReader
     {
-        private readonly Queue<char> _buffer;
-        private readonly StreamReader _streamReader;
-        private char[] _trims;
-        private readonly bool _continueOnError;
-        private readonly int _maxSegmentLength;
-        
-        internal List<SegmentContext> CurrentSegments { get; private set; }
-        internal MessageContext CurrentMessageContext;
-        internal int SegmentIndex;
-        internal int PartsIndex;
         internal readonly Func<MessageContext, Assembly> RulesAssembly;
         
-        /// <summary>
-        /// EDI separators.
-        /// </summary>
-        public Separators Separators { get; private set; }
-
-        /// <summary>
-        /// The last item that was read.
-        /// </summary>
-        public EdiItem Item { get; protected set; }
-        
-        /// <summary>
-        /// Indicates whether the current stream position is at the end of the stream.
-        /// </summary>
-        public bool EndOfStream
-        {
-            get { return _streamReader.EndOfStream; }
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EdiReader"/> class.
         /// </summary>
@@ -69,33 +38,26 @@ namespace EdiFabric.Framework.Readers
         /// <param name="maxSegmentLength">The maximum length of a segment after which the search for segment terminator seizes.</param>
         protected EdiReader(Stream ediStream, Func<MessageContext, Assembly> rulesAssembly, Encoding encoding,
             bool continueOnError = false, int maxSegmentLength = 5000)
+            : base(ediStream, encoding, continueOnError, maxSegmentLength)
         {
-            if (ediStream == null) throw new ArgumentNullException("ediStream");
             if (rulesAssembly == null) throw new ArgumentNullException("rulesAssembly");
-
-            _streamReader = new StreamReader(ediStream, encoding ?? Encoding.UTF8, true);
-            RulesAssembly = rulesAssembly;
-            CurrentSegments = new List<SegmentContext>();
-            _buffer = new Queue<char>();
-            _trims = new[] {'\r', '\n', ' '};
-            _continueOnError = continueOnError;
-            _maxSegmentLength = maxSegmentLength;
+            RulesAssembly = rulesAssembly;            
         }
 
         /// <summary>
         /// Reads an EDI item from the stream.
         /// </summary>
         /// <returns>Indication if an item was read.</returns>
-        public bool Read()
+        public override bool Read()
         {
-            if (Item is ReaderErrorContext && !_continueOnError)
+            if (Item is ReaderErrorContext && !ContinueOnError)
                 return false;
 
             Item = null;
 
             try
             {
-                while ((!_streamReader.EndOfStream || _buffer.Any()) && Item == null)
+                while ((!StreamReader.EndOfStream || InternalBuffer.Any()) && Item == null)
                 {
                     var segment = ReadSegment();
 
@@ -121,7 +83,7 @@ namespace EdiFabric.Framework.Readers
                 Item = new ReaderErrorContext(ex, ReaderErrorCode.Unknown);
             }
 
-            if (_streamReader.EndOfStream && CurrentSegments.Any())
+            if (StreamReader.EndOfStream && CurrentSegments.Any())
                 Item = new ReaderErrorContext(new Exception("Improper end of file."), ReaderErrorCode.ImproperEndOfFile);
 
             var readerErrorContext = Item as ReaderErrorContext;
@@ -136,18 +98,6 @@ namespace EdiFabric.Framework.Readers
         }
 
         /// <summary>
-        /// Reads the stream to the end.
-        /// </summary>
-        /// <returns>All items that were found in the stream.</returns>
-        public IEnumerable<EdiItem> ReadToEnd()
-        {
-            while (Read())
-            {
-                yield return Item;
-            }
-        }
-
-        /// <summary>
         /// Probes for interchange header.
         /// Sets the separators if header was found.
         /// </summary>
@@ -155,27 +105,20 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>Indicates if an interchange header was found.</returns>
-        protected abstract bool TryReadHeader(string segmentName, out string probed, out Separators separators);
+        protected virtual bool TryReadHeader(string segmentName, out string probed, out Separators separators)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Converts EDI segments into typed objects. 
         /// </summary>
         /// <param name="segment">The segment to be processed.</param>
-        protected abstract EdiItem Process(string segment);
-
-        private EdiItem Split(string segment)
+        protected virtual EdiItem Process(string segment)
         {
-            if (CurrentMessageContext == null || 
-                string.IsNullOrEmpty(CurrentMessageContext.SplitterRegex) ||
-                CurrentSegments.Count == 0 ||
-                !Regex.IsMatch(segment, CurrentMessageContext.SplitterRegex))
-                return null;
-
-            PartsIndex++;
-            Buffer(segment + Separators.Segment);
-            return ParseSegments();
+            throw new NotImplementedException();
         }
-        
+
         /// <summary>
         /// Reads from the stream until a non-escaped segment terminator was reached.
         /// Breaks if no segment terminator was encountered after 5000 symbols were read. 
@@ -184,10 +127,10 @@ namespace EdiFabric.Framework.Readers
         /// <returns>
         /// An EDI segment.
         /// </returns>
-        private string ReadSegment()
+        protected override string ReadSegment()
         {
             var line = "";
-            while (!_streamReader.EndOfStream || _buffer.Any())
+            while (!StreamReader.EndOfStream || InternalBuffer.Any())
             {
                 line = line + Read(1);
                 if (line.Length > 2)
@@ -198,7 +141,7 @@ namespace EdiFabric.Framework.Readers
                     if (TryReadHeader(last3, out probed, out separators))
                     {
                         Separators = separators;
-                        _trims = _trims.Except(new[] {Separators.Segment}).ToArray();
+                        Trims = Trims.Except(new[] {Separators.Segment}).ToArray();
                         line = probed;
                     }
                     else
@@ -209,14 +152,14 @@ namespace EdiFabric.Framework.Readers
                 }
 
                 // Segment terminator may never be reached
-                if (line.Length > _maxSegmentLength)
+                if (line.Length > MaxSegmentLength)
                 {
                     //  Reset and continue or break
-                    if (_continueOnError)
+                    if (ContinueOnError)
                         line = "";
                     else
                         throw new ReaderException(
-                            string.Format("No segment was found before the buffer reached the allowed maximum of {0}.", _maxSegmentLength),
+                            string.Format("No segment was found before the buffer reached the allowed maximum of {0}.", MaxSegmentLength),
                             ReaderErrorCode.InvalidInterchangeContent);
                 }
 
@@ -239,177 +182,7 @@ namespace EdiFabric.Framework.Readers
                     break;
             }
 
-            return line.Trim(_trims);
-        }
-
-        /// <summary>
-        /// Parses the accumulated segments.
-        /// </summary>
-        protected EdiItem ParseSegments()
-        {
-            if (CurrentMessageContext == null)
-            {
-                CurrentSegments.Clear();
-                return null;
-            }
-
-            EdiItem result;
-            try
-            {
-                var message = new TransactionSet(CurrentMessageContext.MessageType);
-                var errorContext = message.Analyze(CurrentSegments, CurrentMessageContext, Separators, PartsIndex,
-                    SegmentIndex);
-
-                var ediMessage = (EdiMessage) message.ToInstance();
-                ediMessage.MessagePart = PartsIndex;
-                ediMessage.ControlNumber = CurrentMessageContext.ControlNumber;
-                ediMessage.ErrorContext = errorContext;
-                result = ediMessage;
-            }
-            catch (Exception ex)
-            {
-                result = new ReaderErrorContext(ex, ReaderErrorCode.InvalidSpecOrAssembly,
-                    new MessageErrorContext(CurrentMessageContext.Name,
-                        CurrentMessageContext.ControlNumber, PartsIndex, ex.Message,
-                        MessageErrorCode.MissingOrInvalidTransactionSet));
-            }
-            finally
-            {
-                SegmentIndex = SegmentIndex + CurrentSegments.Count;
-                CurrentSegments.Clear();
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Enqueues a string to the internal buffer.
-        /// </summary>
-        /// <param name="data">The data to buffer.</param>
-        protected void Buffer(string data)
-        {
-            Buffer(data.ToCharArray());
-        }        
-
-        /// <summary>
-        /// Reads number of bytes from the stream.
-        /// Skips over any known trim symbol.
-        /// </summary>
-        /// <param name="bytes">The number of bytes.</param>
-        /// <returns>The string read from the stream.</returns>
-        protected string ReadWithTrims(int bytes)
-        {
-            string result = null;
-            var counter = 0;
-            while (counter < bytes && !_streamReader.EndOfStream)
-            {
-                var symbol = Read(1).Trim(_trims);
-                if (!String.IsNullOrEmpty(symbol))
-                    counter += 1;
-                result += symbol;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Reads number of bytes from the stream.
-        /// </summary>
-        /// <param name="bytes">The number of bytes.</param>
-        /// <returns>The string read from the stream.</returns>
-        protected string Read(int bytes)
-        {
-            var result = "";
-            var index = 0;
-            while (index < bytes)
-            {
-                if (_buffer.Count > 0)
-                    result += _buffer.Dequeue().ToString();
-                else
-                    result += ReadFromStream(1);
-
-                index++;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Reads number of bytes from the stream.
-        /// </summary>
-        /// <param name="bytes">The number of bytes.</param>
-        /// <returns>The string read from the stream.</returns>
-        protected string ReadFromStream(int bytes)
-        {
-            var result = new char[bytes];
-            _streamReader.Read(result, 0, result.Length);
-            return String.Concat(result);
-        }
-
-        /// <summary>
-        /// Parses a segment.
-        /// </summary>
-        /// <param name="segmentValue">The segment string.</param>
-        /// <param name="separators">The separators.</param>
-        /// <typeparam name="T">The type of segment.</typeparam>
-        /// <returns>The parsed segment.</returns>
-        protected T ParseSegment<T>(string segmentValue, Separators separators) where T : EdiItem
-        {
-            var parseNode = new Segment(typeof(T).GetTypeInfo());
-            try
-            {
-                parseNode.Parse(segmentValue, separators, false);
-            }
-            catch (Exception ex)
-            {
-                throw new ReaderException(ex.Message, ReaderErrorCode.InvalidInterchangeContent);
-            }
-            
-            return (T)parseNode.ToInstance();
-        }
-        
-        /// <summary>
-        /// Disposes the reader.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_streamReader != null)
-                _streamReader.Dispose();
-        }
-
-        /// <summary>
-        /// Flushes any remaining data before a control segment.
-        /// </summary>
-        /// <param name="segment">The control segment.</param>
-        /// <returns>The parsed segments.</returns>
-        protected EdiItem Flush(string segment)
-        {
-            if (!CurrentSegments.Any()) return null;
-            
-            var firstSegment = CurrentSegments.First().Value;
-            Buffer(segment + Separators.Segment);
-            var result = ParseSegments() ?? new ReaderErrorContext(
-                new Exception(string.Format("Invalid control structure beginning with {0}",
-                    firstSegment)), ReaderErrorCode.InvalidControlStructure);
-            CurrentMessageContext = null;
-            SegmentIndex = 0;
-            PartsIndex = 0;
-
-            return result;           
-        }
-
-        private void Buffer(IEnumerable<char> data)
-        {
-            var existing = new List<char>();
-
-            while (_buffer.Any())
-                    existing.Add(_buffer.Dequeue());
-
-            foreach (var c in data)
-                _buffer.Enqueue(c);
-
-            foreach (var c in existing)
-                _buffer.Enqueue(c);
-        }
+            return line.Trim(Trims);
+        }       
     }
 }

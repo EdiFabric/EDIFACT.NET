@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Framework;
@@ -23,7 +25,7 @@ namespace EdiFabric.UnitTests.Vda
             List<EdiItem> ediItems;
 
             // ACT
-            using (var ediReader = new VdaReader(ediStream, MessageContextFactory))
+            using (var ediReader = new VdaReader(ediStream, MessageContextFactory, Encoding.UTF8, Environment.NewLine))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

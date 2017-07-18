@@ -1,5 +1,4 @@
-﻿
-//---------------------------------------------------------------------
+﻿//---------------------------------------------------------------------
 // This file is part of ediFabric
 //
 // Copyright (c) ediFabric. All rights reserved.
@@ -28,7 +27,6 @@ namespace EdiFabric.Framework.Readers
     {
         private SegmentContext _currentGroupHeader;
         private ISA _currentIsa;
-
         
         /// <summary>
         /// Initializes a new instance of the <see cref="X12Reader"/> class.
