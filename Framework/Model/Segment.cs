@@ -228,6 +228,10 @@ namespace EdiFabric.Framework.Model
             }
 
             return false;
-        }        
+        }
+
+        public override void ParsePositional(string value, bool allowPartial)
+        {
+        }
     }
 }

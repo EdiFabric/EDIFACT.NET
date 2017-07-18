@@ -71,6 +71,7 @@ namespace EdiFabric.Framework.Model
 
                     if (messageContext.PartialAllowed)
                     {
+                        // ReSharper disable once RedundantAssignment
                         tempSeg = currSeg;
                         continue;
                     }
@@ -85,7 +86,10 @@ namespace EdiFabric.Framework.Model
 
                 try
                 {
-                    currSeg.Parse(segment.Value, separators, messageContext.PartialAllowed);
+                    if (separators == null)
+                        currSeg.ParsePositional(segment.Value, messageContext.PartialAllowed);
+                    else
+                        currSeg.Parse(segment.Value, separators, messageContext.PartialAllowed);
                 }
                 catch (ParserSegmentException ex)
                 {

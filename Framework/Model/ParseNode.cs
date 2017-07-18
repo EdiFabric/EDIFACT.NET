@@ -114,6 +114,11 @@ namespace EdiFabric.Framework.Model
             throw new NotImplementedException(TypeInfo.FullName);
         }
 
+        public virtual void ParsePositional(string value, bool allowPartial)
+        {
+            throw new NotImplementedException(TypeInfo.FullName);
+        }
+
         public virtual ParseNode InsertRepetition()
         {
             throw new NotImplementedException(TypeInfo.FullName);

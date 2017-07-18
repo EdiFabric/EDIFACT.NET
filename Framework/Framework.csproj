@@ -80,6 +80,11 @@
     <Compile Include="Exceptions\ReaderException.cs" />
     <Compile Include="MessageContext.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />
+    <Compile Include="Readers\EdifactReader.cs" />
+    <Compile Include="Readers\EdiReader.cs" />
+    <Compile Include="Readers\PositionalReader.cs" />
+    <Compile Include="Readers\VdaReader.cs" />
+    <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
@@ -92,10 +97,7 @@
     <Compile Include="Model\ParseNode.cs" />
     <Compile Include="Model\Segment.cs" />
     <Compile Include="Model\TransactionSet.cs" />
-    <Compile Include="Readers\EdifactReader.cs" />
-    <Compile Include="Readers\EdiReader.cs" />
     <Compile Include="Model\ParseNodeExtensions.cs" />
-    <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Model\SegmentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -127,6 +129,7 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

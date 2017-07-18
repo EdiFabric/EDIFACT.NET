@@ -89,6 +89,24 @@ namespace EdiFabric.Framework.Model
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SegmentContext"/> class.
+        /// </summary>
+        /// <param name="ediSegment">The segment line.</param>
+        /// <param name="setter">The function to set all properties.</param>
+        public SegmentContext(string ediSegment, Func<string, Tuple<string, string, string, bool>> setter)
+        {
+            if (string.IsNullOrEmpty(ediSegment)) throw new ArgumentNullException("ediSegment");
+
+            var properties = setter(ediSegment);
+
+            Name = properties.Item1;
+            FirstValue = properties.Item2;
+            SecondValue = properties.Item3;
+            Value = ediSegment;
+            IsJump = properties.Item4;            
+        }
+
         private static bool Jump(string name, string firstValue, string secondValue)
         {
             if (name != "HL")

@@ -97,11 +97,7 @@ namespace EdiFabric.Framework
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
             if (string.IsNullOrEmpty(version)) throw new ArgumentNullException("version");
             if (string.IsNullOrEmpty(format)) throw new ArgumentNullException("format");
-            if (string.IsNullOrEmpty(senderId)) throw new ArgumentNullException("senderId");
-            if (string.IsNullOrEmpty(senderQualifier)) throw new ArgumentNullException("senderQualifier");
-            if (string.IsNullOrEmpty(receiverId)) throw new ArgumentNullException("receiverId");
-            if (string.IsNullOrEmpty(receiverQualifier)) throw new ArgumentNullException("receiverQualifier");
-
+            
             Name = name;
             ControlNumber = controlNumber;
             Version = version;
