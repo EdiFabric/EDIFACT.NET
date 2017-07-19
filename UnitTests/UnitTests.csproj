@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="EdifactHelper.cs" />
     <Compile Include="UnitTestsXml.cs" />
+    <Compile Include="VdaHelper.cs" />
     <Compile Include="X12Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestsLoading.cs" />

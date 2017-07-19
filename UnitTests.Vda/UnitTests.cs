@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using EdiFabric.Core.Model.Edi;
@@ -29,13 +30,15 @@ namespace EdiFabric.UnitTests.Vda
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
-            //var actual = X12Helper.Generate(ediItems, null, Environment.NewLine);
+            var actual = VdaHelper.Generate(ediItems, Environment.NewLine);
 
             // ASSERT
             Assert.IsNotNull(ediItems);
             Assert.IsNotNull(ediItems.OfType<TS4905>().SingleOrDefault());
             Assert.IsNull(ediItems.OfType<ErrorContext>().SingleOrDefault());
-            //Assert.AreEqual(expected, actual);
+            File.WriteAllText(@"C:\Test\Actual.txt", actual);
+            File.WriteAllText(@"C:\Test\Expected.txt", expected);
+            Assert.AreEqual(expected, actual);
         }
 
         private MessageContext MessageContextFactory(string segment)

@@ -87,8 +87,10 @@
     <Compile Include="Readers\X12Reader.cs" />
     <Compile Include="Separators.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Writers\BaseWriter.cs" />
     <Compile Include="Writers\EdiWriter.cs" />
     <Compile Include="Writers\EdifactWriter.cs" />
+    <Compile Include="Writers\VdaWriter.cs" />
     <Compile Include="Writers\X12Writer.cs" />
     <Compile Include="Model\AllLoop.cs" />
     <Compile Include="Model\ComplexDataElement.cs" />

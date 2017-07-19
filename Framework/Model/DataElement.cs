@@ -42,7 +42,7 @@ namespace EdiFabric.Framework.Model
             Value = value.UnEscapeLine(separators);
         }
 
-        public override void ParsePositional(string value, bool allowPartial)
+        public override void Parse(string value, bool allowPartial)
         {
             IsParsed = true;
             Value = value;

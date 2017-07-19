@@ -162,7 +162,7 @@ namespace EdiFabric.Framework.Model
             return new Segment(this);
         }
 
-        public string GenerateSegment(Separators separators, bool preserveWhitespace)
+        public string Generate(Separators separators, bool preserveWhitespace)
         {
             if (separators == null) throw new ArgumentNullException("separators");
 
@@ -230,7 +230,7 @@ namespace EdiFabric.Framework.Model
             return false;
         }
 
-        public override void ParsePositional(string value, bool allowPartial)
+        public override void Parse(string value, bool allowPartial)
         {
             if (String.IsNullOrEmpty(value)) throw new ArgumentNullException("value");
             
@@ -261,8 +261,35 @@ namespace EdiFabric.Framework.Model
 
                 var current = remainder.Substring(0, child.MaxSize);
                 remainder = remainder.Substring(child.MaxSize);
-                child.ParsePositional(current, allowPartial);
+                child.Parse(current, allowPartial);
             }
+        }
+
+        public string Generate(Func<DataElement, string> pad)
+        {
+            var result = "";
+
+            foreach (var element in Children)
+            {
+                if (element is ComplexDataElement)
+                {
+                    foreach (var child in element.Children.OfType<DataElement>())
+                    {
+                        result = result + pad(child);
+                    }                    
+                }
+                else
+                {
+                    var de = element as DataElement;
+                    if (de == null)
+                        throw new Exception(String.Format("Unexpected node {0} under parent {1}", element.TypeInfo.FullName,
+                            element.Parent.TypeInfo.FullName));
+
+                    result = result + pad(de);
+                }
+            }
+
+            return result;
         }
     }
 }

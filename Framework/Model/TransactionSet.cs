@@ -87,7 +87,7 @@ namespace EdiFabric.Framework.Model
                 try
                 {
                     if (separators == null)
-                        currSeg.ParsePositional(segment.Value, messageContext.PartialAllowed);
+                        currSeg.Parse(segment.Value, messageContext.PartialAllowed);
                     else
                         currSeg.Parse(segment.Value, separators, messageContext.PartialAllowed);
                 }

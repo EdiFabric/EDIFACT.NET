@@ -24,7 +24,7 @@ namespace EdiFabric.Framework.Readers
     /// <summary>
     /// Reads EDI documents into .NET objects.
     /// </summary>
-    public class EdiReader : BaseReader
+    public abstract class EdiReader : BaseReader
     {
         internal readonly Func<MessageContext, Assembly> RulesAssembly;
         
@@ -105,11 +105,8 @@ namespace EdiFabric.Framework.Readers
         /// <param name="probed">The probed text.</param>
         /// <param name="separators">The new separators.</param>
         /// <returns>Indicates if an interchange header was found.</returns>
-        protected virtual bool TryReadHeader(string segmentName, out string probed, out Separators separators)
-        {
-            throw new NotImplementedException();
-        }
-
+        protected abstract bool TryReadHeader(string segmentName, out string probed, out Separators separators);
+        
         /// <summary>
         /// Converts EDI segments into typed objects. 
         /// </summary>

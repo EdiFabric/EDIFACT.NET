@@ -25,17 +25,15 @@ namespace EdiFabric.Framework.Writers
     /// <typeparam name="T">The interchange header.</typeparam>
     /// <typeparam name="U">The group header.</typeparam>
     // ReSharper disable once InconsistentNaming
-    public abstract class EdiWriter<T, U> : IDisposable  
+    public abstract class EdiWriter<T, U> : BaseWriter  
     {
-        private readonly StreamWriter _writer;             
-        private readonly string _postFix;
+        
         private string _interchangeControlNr;
         private string _groupControlNr;
         private int _messageCounter;
         private int _groupCounter;        
         private Separators _separators;
-        private readonly bool _preserveWhitespace;
-
+        
         protected string Format;
         protected string InterchangeTrailer;
         protected string GroupTrailer;
@@ -48,19 +46,10 @@ namespace EdiFabric.Framework.Writers
         /// <param name="stream">The stream to write to.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
-        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        /// <param name="encoding">The encoding. Encoding.UTF8 by default.</param>
         protected EdiWriter(Stream stream, string postfix, bool preserveWhitespace, Encoding encoding)
+            : base(stream, postfix, preserveWhitespace, encoding)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-            if (encoding == null)
-                throw new ArgumentNullException("encoding");
-            if (postfix == null)
-                throw new ArgumentNullException("postfix");
-
-            _writer = new StreamWriter(stream, encoding);
-            _postFix = postfix;
-            _preserveWhitespace = preserveWhitespace;
         }
 
         /// <summary>
@@ -70,20 +59,10 @@ namespace EdiFabric.Framework.Writers
         /// <param name="append">Whether to append to the file. The file will be overwritten by default.</param>
         /// <param name="postfix">The postfix after each segment line.</param>
         /// <param name="preserveWhitespace">Whether to preserve whitespace. White-spaces at the end of a segment or component are trimmed by default.</param>
-        /// <param name="encoding">The encoding. Encoding.Deafult by default.</param>
+        /// <param name="encoding">The encoding. Encoding.UTF8 by default.</param>
         protected EdiWriter(string path, bool append, string postfix, bool preserveWhitespace, Encoding encoding)
+            : base(path, append, postfix, preserveWhitespace, encoding)
         {
-            if (string.IsNullOrEmpty(path))
-                throw new ArgumentNullException("path");
-            if (encoding == null)
-                throw new ArgumentNullException("encoding");
-            if (postfix == null)
-                throw new ArgumentNullException("postfix");
-
-            var fileStream = File.Open(path, append ? FileMode.Append : FileMode.Create, FileAccess.Write);
-            _writer = new StreamWriter(fileStream, encoding);
-            _postFix = postfix;
-            _preserveWhitespace = preserveWhitespace;
         }
 
         /// <summary>
@@ -118,7 +97,7 @@ namespace EdiFabric.Framework.Writers
             _interchangeControlNr = controlNumber;
 
             var segment = new Segment(typeof(T).GetTypeInfo(), interchangeHeader);
-            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
+            Write(segment.Generate(_separators, PreserveWhitespace));
         }
 
         private void EndInterchange()
@@ -163,7 +142,7 @@ namespace EdiFabric.Framework.Writers
             _groupControlNr = controlNumber;
 
             var segment = new Segment(typeof(U).GetTypeInfo(), groupHeader);
-            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
+            Write(segment.Generate(_separators, PreserveWhitespace));
         }
 
         private void EndGroup()
@@ -183,7 +162,7 @@ namespace EdiFabric.Framework.Writers
         /// Writes a message to the destination.
         /// </summary>
         /// <param name="message">The message to write.</param>
-        public void Write(EdiMessage message)
+        public override void Write(EdiMessage message)
         {
             if (_separators == null)
                 throw new Exception("No interchange was started.");
@@ -196,7 +175,7 @@ namespace EdiFabric.Framework.Writers
 
             foreach (var segment in transactionSet.Descendants<Segment>())
             {
-                Write(segment.GenerateSegment(_separators, _preserveWhitespace));
+                Write(segment.Generate(_separators, PreserveWhitespace));
                 segmentCounter++;
             }
 
@@ -212,10 +191,10 @@ namespace EdiFabric.Framework.Writers
         /// Write a segment to the destination.
         /// </summary>
         /// <param name="ediSegment">The segment.</param>
-        public void Write(EdiSegment ediSegment)
+        public override void Write(EdiSegment ediSegment)
         {
             var segment = new Segment(ediSegment.GetStandardType(), ediSegment);
-            Write(segment.GenerateSegment(_separators, _preserveWhitespace));
+            Write(segment.Generate(_separators, PreserveWhitespace));
         }
 
         /// <summary>
@@ -232,7 +211,7 @@ namespace EdiFabric.Framework.Writers
         /// Closes the last started interchange and group if any.
         /// Flushes the underlying StreamWriter to clear the buffer.
         /// </summary>
-        public void Flush()
+        public override void Flush()
         {
             if (_separators != null)
             {
@@ -240,26 +219,9 @@ namespace EdiFabric.Framework.Writers
                 EndInterchange();
             }
 
-            _writer.Flush();
-        }
-
-        public void Dispose()
-        {
-            if (_writer != null)
-                _writer.Dispose();
-        }
-
-        /// <summary>
-        /// Write the string representation of a segment to the destination.
-        /// </summary>
-        /// <param name="segment">The segment.</param>
-        private void Write(string segment)
-        {
-            _writer.Write(segment + _postFix);
-        }
-
+            Writer.Flush();
+        }       
         
-
         private string BuildTrailer(string tag, string controlNumber, int count)
         {
             return tag + _separators.DataElement + count + _separators.DataElement +
