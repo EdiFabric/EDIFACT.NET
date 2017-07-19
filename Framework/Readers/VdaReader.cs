@@ -36,10 +36,9 @@ namespace EdiFabric.Framework.Readers
         /// <param name="messageContext">The delegate to return the message context.</param>
         /// <param name="encoding">The encoding. The default is Encoding.UTF8.</param>
         /// <param name="postFix">The postfix.</param>
-        /// <param name="continueOnError">Whether to continue searching for valid data after an error occurs.</param>
         public VdaReader(Stream ediStream, Func<string, MessageContext> messageContext, Encoding encoding = null,
-            string postFix = null, bool continueOnError = false)
-            : base(ediStream, encoding, continueOnError, 128)
+            string postFix = "")
+            : base(ediStream, encoding, false, 128)
         {
             if (messageContext == null) throw new ArgumentNullException("messageContext");
             MessageContext = messageContext;
@@ -101,7 +100,7 @@ namespace EdiFabric.Framework.Readers
             var messageContext = MessageContext(segment);
             if (messageContext != null)
             {
-                var result = Flush(segment);
+                var result = Flush(segment + _postFix);
                 if (result != null)
                     return result;
 

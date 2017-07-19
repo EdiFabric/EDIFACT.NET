@@ -8,7 +8,7 @@ namespace EdiFabric.UnitTests
 {
     public class VdaHelper
     {
-        public static string Generate(List<EdiItem> items, string postFix,
+        public static string Generate(List<EdiItem> items, string postFix = null,
             Encoding encoding = null)
         {
             using (var stream = new MemoryStream())

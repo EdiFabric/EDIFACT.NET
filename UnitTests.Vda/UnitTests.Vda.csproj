@@ -74,6 +74,27 @@
   <ItemGroup>
     <EmbeddedResource Include="Edi\Vda_4905_02.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_MultipleMessages.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_MultipleInvalidMessages.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_ShortSegment.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_MultipleInvalidMessagesWithShortSegment.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_BOM.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_NoPostfix.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Edi\Vda_4905_02_Trailing.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
