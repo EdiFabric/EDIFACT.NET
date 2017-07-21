@@ -44,6 +44,7 @@
     <Compile Include="Annotations\Edi\PosAttribute.cs" />
     <Compile Include="Annotations\Edi\SegmentAttribute.cs" />
     <Compile Include="Model\Ack\AckEventArgs.cs" />
+    <Compile Include="Model\Ack\AckContainer.cs" />
     <Compile Include="Model\Ack\AckSettings.cs" />
     <Compile Include="Model\Ack\ControlIncrementers.cs" />
     <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_Codes.cs" />
