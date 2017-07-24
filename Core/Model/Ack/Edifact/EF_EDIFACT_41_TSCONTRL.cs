@@ -19,17 +19,17 @@ namespace EdiFabric.Rules.EDIFACT_41
         public UCI UCI { get; set; }
         [ListCount(999999)]
         [Pos(3)]
-        public List<TSCONTRL_UCMLoop1> UCMLoop1 { get; set; }
+        public List<TSCONTRL_UCMLoop> UCMLoop { get; set; }
         [ListCount(999999)]
         [Pos(4)]
-        public List<TSCONTRL_UCFLoop1> UCFLoop1 { get; set; }
+        public List<TSCONTRL_UCFLoop> UCFLoop { get; set; }
         [Pos(5)]
         public UNT UNT { get; set; }
     }
     
     [Serializable()]
     [Group("UCF")]
-    public class TSCONTRL_UCFLoop1
+    public class TSCONTRL_UCFLoop
     {
         
         [Required]
@@ -37,12 +37,12 @@ namespace EdiFabric.Rules.EDIFACT_41
         public UCF UCF { get; set; }
         [ListCount(999999)]
         [Pos(2)]
-        public List<TSCONTRL_UCMLoop2> UCMLoop2 { get; set; }
+        public List<TSCONTRL_UCMLoop> UCMLoop { get; set; }
     }
     
     [Serializable()]
     [Group("UCM")]
-    public class TSCONTRL_UCMLoop2
+    public class TSCONTRL_UCMLoop
     {
         
         [Required]
@@ -50,38 +50,12 @@ namespace EdiFabric.Rules.EDIFACT_41
         public UCM UCM { get; set; }
         [ListCount(999)]
         [Pos(2)]
-        public List<TSCONTRL_UCSLoop2> UCSLoop2 { get; set; }
+        public List<TSCONTRL_UCSLoop> UCSLoop { get; set; }
     }
     
     [Serializable()]
     [Group("UCS")]
-    public class TSCONTRL_UCSLoop2
-    {
-        
-        [Required]
-        [Pos(1)]
-        public UCS UCS { get; set; }
-        [ListCount(99)]
-        [Pos(2)]
-        public List<UCD> UCD { get; set; }
-    }
-    
-    [Serializable()]
-    [Group("UCM")]
-    public class TSCONTRL_UCMLoop1
-    {
-        
-        [Required]
-        [Pos(1)]
-        public UCM UCM { get; set; }
-        [ListCount(999)]
-        [Pos(2)]
-        public List<TSCONTRL_UCSLoop1> UCSLoop1 { get; set; }
-    }
-    
-    [Serializable()]
-    [Group("UCS")]
-    public class TSCONTRL_UCSLoop1
+    public class TSCONTRL_UCSLoop
     {
         
         [Required]
