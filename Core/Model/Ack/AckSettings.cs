@@ -42,6 +42,11 @@ namespace EdiFabric.Core.Model.Ack
         /// A delegate to detect duplicate interchanges.
         /// </summary>
         public Func<string, bool> InterchangeDuplicates { get; set; }
+        /// <summary>
+        /// Controls the generation of technical acknowledgment.
+        /// By default it generates it according to the ISA14 flag (for X12) or UNB9 flag (for EDIFACT). 
+        /// </summary>
+        public TechnicalAck TechnicalAck { get; set; }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AckSettings{T, U}"/> class.
@@ -55,7 +60,8 @@ namespace EdiFabric.Core.Model.Ack
             MessageHandler = null;
             TransactionSetDuplicates = false;
             GroupDuplicates = false;
-            InterchangeDuplicates = null;            
+            InterchangeDuplicates = null;
+            TechnicalAck = TechnicalAck.Default;
         }
     }
 }

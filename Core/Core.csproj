@@ -52,6 +52,7 @@
     <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_Segments.cs" />
     <Compile Include="Model\Ack\Edifact\EF_EDIFACT_41_TSCONTRL.cs" />
     <Compile Include="Model\Ack\MessageEventArgs.cs" />
+    <Compile Include="Model\Ack\TechnicalAck.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_ComplexElements.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_Segments.cs" />
     <Compile Include="Model\Ack\X12\EF_X12_005010_TS997.cs" />
