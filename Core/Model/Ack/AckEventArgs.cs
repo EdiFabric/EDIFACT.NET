@@ -31,7 +31,11 @@ namespace EdiFabric.Core.Model.Ack
         /// <summary>
         /// The EDI message.
         /// </summary>
-        public EdiMessage Message { get; private set; }     
+        public EdiMessage Message { get; private set; }
+        /// <summary>
+        /// The acknowledgment type.
+        /// </summary>
+        public AckType AckType { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AckEventArgs{T, U}"/> class.
@@ -39,11 +43,13 @@ namespace EdiFabric.Core.Model.Ack
         /// <param name="interchangeHeader">The interchange header.</param>
         /// <param name="groupHeader">The group header.</param>
         /// <param name="message">The EDI message.</param>
-        protected AckEventArgs(T interchangeHeader, U groupHeader, EdiMessage message)
+        /// <param name="ackType">The acknowledgment type.</param>
+        protected AckEventArgs(T interchangeHeader, U groupHeader, EdiMessage message, AckType ackType)
         {
             InterchangeHeader = interchangeHeader;
             GroupHeader = groupHeader;
             Message = message;
+            AckType = ackType;
         }
     }
 }

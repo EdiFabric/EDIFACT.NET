@@ -72,9 +72,8 @@ namespace EdiFabric.Core.Model.Ack
         /// Create a new header from the existing header by swapping the sender and receiver and assigning a new control number.
         /// </summary>
         /// <param name="controlNr">The control number to use.</param>
-        /// <param name="version">The version to use.</param>
         /// <returns>Returns a new interchange or group header.</returns>
-        public abstract T ToAckHeader(int controlNr, string version);
+        public abstract T ToAckHeader(int controlNr);
 
 
         /// <summary>

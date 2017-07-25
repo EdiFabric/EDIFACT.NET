@@ -47,6 +47,10 @@ namespace EdiFabric.Core.Model.Ack
         /// By default it generates it according to the ISA14 flag (for X12) or UNB9 flag (for EDIFACT). 
         /// </summary>
         public TechnicalAck TechnicalAck { get; set; }
+        /// <summary>
+        /// Indicates if message ack segments are generated for valid messages.
+        /// </summary>
+        public bool GenerateForValidMessages { get; set; }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AckSettings{T, U}"/> class.
@@ -62,6 +66,7 @@ namespace EdiFabric.Core.Model.Ack
             GroupDuplicates = false;
             InterchangeDuplicates = null;
             TechnicalAck = TechnicalAck.Default;
+            GenerateForValidMessages = false;
         }
     }
 }
