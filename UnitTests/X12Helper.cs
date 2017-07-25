@@ -6,6 +6,7 @@ using EdiFabric.Core.Model.Edi.X12;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Rules.X12_002040;
+using ST = EdiFabric.Rules.X12_002040.ST;
 
 namespace EdiFabric.UnitTests
 {

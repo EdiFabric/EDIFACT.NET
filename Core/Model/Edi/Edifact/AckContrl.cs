@@ -1,12 +1,21 @@
-namespace EdiFabric.Rules.EDIFACT_41
+//---------------------------------------------------------------------
+// This file is part of ediFabric
+//
+// Copyright (c) ediFabric. All rights reserved.
+//
+// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+// KIND, WHETHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
+// PURPOSE.
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.Annotations.Validation;
+
+namespace EdiFabric.Core.Model.Edi.Edifact
 {
-    using System;
-    using System.Collections.Generic;
-    using EdiFabric.Core.Annotations.Edi;
-    using EdiFabric.Core.Model.Edi;
-    using EdiFabric.Core.Annotations.Validation;
-    
-    
     [Serializable()]
     [Message("EDIFACT", "41", "CONTRL")]
     public class TSCONTRL : EdiMessage
@@ -64,5 +73,5 @@ namespace EdiFabric.Rules.EDIFACT_41
         [ListCount(99)]
         [Pos(2)]
         public List<UCD> UCD { get; set; }
-    }
+    }    
 }
