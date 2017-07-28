@@ -204,15 +204,18 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     {
 
         [Required]
-        [DataElement("0065", typeof(EDIFACT_ID_0065))]
+        [StringLength(1, 6)]
+        [DataElement("0065", typeof(EDIFACT_AN))]
         [Pos(1)]
         public string Messagetype_01 { get; set; }
         [Required]
-        [DataElement("0052", typeof(EDIFACT_ID_0052))]
+        [StringLength(1, 3)]
+        [DataElement("0052", typeof(EDIFACT_AN))]
         [Pos(2)]
         public string Messageversionnumber_02 { get; set; }
         [Required]
-        [DataElement("0054", typeof(EDIFACT_ID_0054))]
+        [StringLength(1, 3)]
+        [DataElement("0054", typeof(EDIFACT_AN))]
         [Pos(3)]
         public string Messagereleasenumber_03 { get; set; }
         [Required]
