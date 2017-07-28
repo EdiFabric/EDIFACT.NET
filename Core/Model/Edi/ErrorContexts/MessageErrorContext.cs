@@ -31,6 +31,11 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         public string ControlNumber { get; private set; }
 
         /// <summary>
+        /// The message version.
+        /// </summary>
+        public string Version { get; private set; }
+
+        /// <summary>
         /// Message part index.
         /// </summary>
         public int MessagePart { get; private set; }
@@ -66,13 +71,15 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        /// <param name="version">The message version.</param>
         /// <param name="messagePart">Message part index.</param>
         /// <param name="message">The error message.</param>
-        public MessageErrorContext(string name, string controlNumber, int messagePart, string message) 
+        public MessageErrorContext(string name, string controlNumber, string version, int messagePart, string message) 
             : base(message)
         {
             Name = name;
             ControlNumber = controlNumber;
+            Version = version;
             MessagePart = messagePart;
         }
 
@@ -81,11 +88,12 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The message name (or tag).</param>
         /// <param name="controlNumber">The message control number.</param>
+        /// <param name="version">The message version.</param>
         /// <param name="messagePart">Message part index.</param>
         /// <param name="message">The error message.</param>
         /// <param name="errorCode">The syntax error code.</param>
-        public MessageErrorContext(string name, string controlNumber, int messagePart, string message, MessageErrorCode errorCode)
-            : this(name, controlNumber, messagePart, message)
+        public MessageErrorContext(string name, string controlNumber, string version, int messagePart, string message, MessageErrorCode errorCode)
+            : this(name, controlNumber, version, messagePart, message)
         {
             _codes.Add(errorCode);
         }

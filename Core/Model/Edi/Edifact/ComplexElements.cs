@@ -174,24 +174,6 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     }
 
     /// <summary>
-    /// APPLICATION RECIPIENT IDENTIFICATION.
-    /// </summary>
-    [Serializable()]
-    [Composite("S007")]
-    public class S007_UCF
-    {
-        [Required]
-        [StringLength(1, 35)]
-        [DataElement("0044", typeof(EDIFACT_AN))]
-        [Pos(1)]
-        public string ApplicationRecipientIdentification_1 { get; set; }
-
-        [DataElement("0007", typeof(EDIFACT_ID_0007_UCF))]
-        [Pos(2)]
-        public string IdentificationCodeQualifier_2 { get; set; }
-    }
-
-    /// <summary>
     /// MESSAGE VERSION.
     /// </summary>
     [Serializable()]

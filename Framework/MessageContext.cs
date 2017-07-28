@@ -126,7 +126,7 @@ namespace EdiFabric.Framework
             }
             catch (Exception ex)
             {
-                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, ex.Message,
+                var errorContext = new MessageErrorContext(Name, ControlNumber, Version, 0, ex.Message,
                     MessageErrorCode.TransactionSetNotSupported);
                 throw new ParserMessageException(errorContext);
             }
@@ -152,7 +152,7 @@ namespace EdiFabric.Framework
                 var msg = String.Format("Type with attribute'{0}' was not found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, msg,
+                var errorContext = new MessageErrorContext(Name, ControlNumber, Version, 0, msg,
                     MessageErrorCode.TransactionSetNotSupported);
                 throw new ParserMessageException(errorContext);
             }
@@ -162,7 +162,7 @@ namespace EdiFabric.Framework
                 var msg = String.Format("Multiple types with attribute'{0}' were found in assembly '{1}'.", attribute,
                     assembly.FullName);
 
-                var errorContext = new MessageErrorContext(Name, ControlNumber, 0, msg,
+                var errorContext = new MessageErrorContext(Name, ControlNumber, Version, 0, msg,
                                    MessageErrorCode.TransactionSetNotSupported);
                 throw new ParserMessageException(errorContext);
             }

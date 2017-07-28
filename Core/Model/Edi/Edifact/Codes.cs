@@ -52,14 +52,6 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     }
 
     [Serializable()]
-    [EdiCodes(
-        ",1,4,5,8,9,14,18,22,30,31,33,34,51,52,53,54,55,57,58,59,61,63,65,80,82,84,85,86,87,88,89,90,91,92,103,128,129,144,145,146,147,148,Z01,ZZZ,"
-        )]
-    public class EDIFACT_ID_0007
-    {
-    }
-
-    [Serializable()]
     [EdiCodes(",AA,BB,")]
     public class EDIFACT_ID_0025
     {
@@ -135,9 +127,10 @@ namespace EdiFabric.Core.Model.Edi.Edifact
     }
 
     [Serializable()]
-    [EdiCodes(",1,103,12,128,129,14,144,145,146,147,148,18,22,30,31,33,34,4,5,51,52,53,54,55,57," +
-        "58,59,61,63,65,8,80,82,84,85,86,87,89,9,90,91,92,ZZZ,")]
-    public class EDIFACT_ID_0007_UCF
+    [EdiCodes(
+        ",1,4,5,8,9,14,18,22,30,31,33,34,51,52,53,54,55,57,58,59,61,63,65,80,82,84,85,86,87,88,89,90,91,92,103,128,129,144,145,146,147,148,Z01,ZZZ,"
+        )]
+    public class EDIFACT_ID_0007
     {
     }
 }

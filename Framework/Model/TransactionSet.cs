@@ -39,7 +39,8 @@ namespace EdiFabric.Framework.Model
         public MessageErrorContext Analyze(IEnumerable<SegmentContext> segments, MessageContext messageContext,
             Separators separators, int partsIndex, int segmentIndex)
         {
-            var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber, partsIndex,
+            var errorContext = new MessageErrorContext(messageContext.Name, messageContext.ControlNumber,
+                messageContext.Version, partsIndex,
                 "Message was parsed with errors.");
 
             var currSeg = Children.First() as Segment;

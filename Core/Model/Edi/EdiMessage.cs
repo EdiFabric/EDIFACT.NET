@@ -107,7 +107,7 @@ namespace EdiFabric.Core.Model.Edi
         /// <returns>Whether the message is valid or not. If not valid then the message error context will contain the reasons.</returns>
         public bool IsValid(out MessageErrorContext result, bool skipTrailer = false)
         {
-            result = new MessageErrorContext(Name, ControlNumber, MessagePart, null);
+            result = new MessageErrorContext(Name, ControlNumber, Version, MessagePart, null);
 
             int segmentsNum;
             result.AddRange(this.Validate(out segmentsNum));

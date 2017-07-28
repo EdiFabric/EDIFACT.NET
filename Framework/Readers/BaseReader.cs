@@ -170,7 +170,7 @@ namespace EdiFabric.Framework.Readers
             {
                 result = new ReaderErrorContext(ex, ReaderErrorCode.InvalidSpecOrAssembly,
                     new MessageErrorContext(CurrentMessageContext.Name,
-                        CurrentMessageContext.ControlNumber, PartsIndex, ex.Message,
+                        CurrentMessageContext.ControlNumber, CurrentMessageContext.Version, PartsIndex, ex.Message,
                         MessageErrorCode.MissingOrInvalidTransactionSet));
             }
             finally

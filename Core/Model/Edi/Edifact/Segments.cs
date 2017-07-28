@@ -322,7 +322,7 @@ namespace EdiFabric.Core.Model.Edi.Edifact
         [Pos(2)]
         public S006 APPLICATIONSENDERIDENTIFICATION_02 { get; set; }
         [Pos(3)]
-        public S007_UCF APPLICATIONRECIPIENTIDENTIFICATION_03 { get; set; }
+        public S007 APPLICATIONRECIPIENTIDENTIFICATION_03 { get; set; }
         [Required]
         [DataElement("0083", typeof(EDIFACT_ID_0083))]
         [Pos(4)]
