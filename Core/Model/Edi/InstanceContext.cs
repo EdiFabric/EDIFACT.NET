@@ -97,7 +97,10 @@ namespace EdiFabric.Core.Model.Edi
             if (list != null)
                 return false;
 
-            return IsPropertyOfType<T>();
+            if (Property != null)
+                return IsPropertyOfType<T>();
+            
+            return Instance.GetStandardType().GetCustomAttribute<T>() != null;
         }
 
         /// <summary>
