@@ -64,10 +64,14 @@ namespace EdiFabric.Framework.Model
                 if (tempSeg == null)
                 {
                     var errorCode = SegmentErrorCode.SegmentNotInProperSequence;
-                    if (this.Descendants<Segment>().All(d => d.EdiName != segment.Name))
+                    TypeInfo type = null;
+                    var notFoundSegment = this.Descendants<Segment>().FirstOrDefault(d => d.EdiName == segment.Name);
+                    if (notFoundSegment == null)
                         errorCode = SegmentErrorCode.UnrecognizedSegment;
+                    else
+                        type = notFoundSegment.TypeInfo;
 
-                    errorContext.Add(new SegmentErrorContext(segment.Name, index,
+                    errorContext.Add(new SegmentErrorContext(segment.Name, index, type,
                         segment.Value, errorCode));
 
                     if (messageContext.PartialAllowed)
@@ -79,7 +83,7 @@ namespace EdiFabric.Framework.Model
 
                     return errorContext;
                 }
-                
+
                 currSeg = tempSeg;
 
                 if (currSeg.IsParsed)
@@ -94,7 +98,7 @@ namespace EdiFabric.Framework.Model
                 }
                 catch (ParserSegmentException ex)
                 {
-                    var segmentContext = new SegmentErrorContext(segment.Name, index, segment.Value);
+                    var segmentContext = new SegmentErrorContext(segment.Name, index, currSeg.TypeInfo, segment.Value);
                     segmentContext.Add(ex.ErrorContext);
                     errorContext.Add(segmentContext);
 

@@ -125,7 +125,7 @@ namespace EdiFabric.Core.Annotations.Validation
                     ? segmentIndex + 1 + MaxCount
                     : segmentIndex + MinCount;
 
-            return new SegmentErrorContext(instanceContext.GetId(), repIndex, errorCode);
+            return new SegmentErrorContext(instanceContext.GetId(), repIndex, instanceContext.GetStandardType(), errorCode);
         }
 
         private SegmentErrorContext ValidateSegment(IList list, InstanceContext instanceContext, int segmentIndex)
@@ -138,7 +138,7 @@ namespace EdiFabric.Core.Annotations.Validation
                     ? segmentIndex + 1 + MaxCount
                     : segmentIndex + MinCount;
 
-            return new SegmentErrorContext(instanceContext.GetId(), repIndex, errorCode);
+            return new SegmentErrorContext(instanceContext.GetId(), repIndex, instanceContext.GetStandardType(), errorCode);
         }
 
         private SegmentErrorContext ValidateComposite(IList list, InstanceContext instanceContext,
@@ -156,7 +156,7 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? MaxCount + 1
                 : MinCount - list.Count + 1;
 
-            var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
+            var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex, instanceContext.Parent.GetStandardType());
             var errorContext = new DataElementErrorContext(instanceContext.GetId(), inSegmentIndex, errorCode, 0,
                 repIndex, null);
             result.Add(errorContext);
@@ -187,19 +187,25 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? instanceContext.Parent.GetId()
                 : instanceContext.Parent.GetDeclaringTypeId();
 
+            var segmentType = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
+                ? instanceContext.Parent.GetStandardType()
+                : instanceContext.Parent.Property.GetStandardDeclaringType();
+
             if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
             {
-                var ediAttribute = instanceContext.Parent.Instance.GetStandardType().GetCustomAttribute<EdiAttribute>();
+                var type = instanceContext.Parent.Instance.GetStandardType();
+                var ediAttribute = type.GetCustomAttribute<EdiAttribute>();
                 if (ediAttribute == null)
                     throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
 
                 segmentName = ediAttribute.Id;
+                segmentType = type;
             }
 
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            var result = new SegmentErrorContext(segmentName, segmentIndex, segmentType);
             var errorContext = new DataElementErrorContext(name, inSegmentIndex, errorCode, inCompositeIndex, repIndex, value);
             result.Add(errorContext);
             return result;

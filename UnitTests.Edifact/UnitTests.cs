@@ -173,6 +173,8 @@ namespace EdiFabric.UnitTests.Edifact
             var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.All(e => e.SpecType == null));
             Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
             Assert.IsNull(ediItems.OfType<UNE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
@@ -578,6 +580,8 @@ namespace EdiFabric.UnitTests.Edifact
             var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.SpecType != null));
             Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
 
             MessageErrorContext mec;
@@ -609,6 +613,8 @@ namespace EdiFabric.UnitTests.Edifact
             var error = ediItems.OfType<TSINVOIC>().SingleOrDefault();
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.SpecType != null));
             Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
 
             MessageErrorContext mec;
@@ -741,6 +747,8 @@ namespace EdiFabric.UnitTests.Edifact
             var error = ediItems.OfType<TSINVOIC>().SingleOrDefault(m => m.HasErrors);
             Assert.IsNotNull(error);
             Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.All(e => e.SpecType == null));
         }
 
         [TestMethod]
@@ -1099,7 +1107,7 @@ namespace EdiFabric.UnitTests.Edifact
             Assert.IsNotNull(ediItems.OfType<UNZ>().SingleOrDefault());
             var errors = ediItems.OfType<Rules.EDIFACT_D00A.Rep.TSINVOICSplit>().Where(m => m.HasErrors).ToList();
             Assert.IsTrue(errors.Count() == 1);
-
+           
             foreach (var err in errors)
             {
                 Assert.IsTrue(err.MessagePart > 0);

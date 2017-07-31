@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
@@ -13,7 +14,8 @@ namespace EdiFabric.Rules.HIPAA_005010X222A1_837
             var result = new List<SegmentErrorContext>();
 
             if (All_NM1_2 != null)
-                result.Add(new SegmentErrorContext("CustomValidationSegment", segmentIndex, SegmentErrorCode.LoopExceedsMaximumUse,
+                result.Add(new SegmentErrorContext("CustomValidationSegment", segmentIndex,
+                    instanceContext.GetType().GetTypeInfo(), SegmentErrorCode.LoopExceedsMaximumUse,
                     "This is custom validation."));
 
             return result;

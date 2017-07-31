@@ -43,6 +43,7 @@ namespace EdiFabric.UnitTests
 
             var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
             Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.SpecType != null);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
             var dErr1 = sErr1.Errors.First();
@@ -52,9 +53,10 @@ namespace EdiFabric.UnitTests
             Assert.IsTrue(dErr1.RepetitionPosition == 0);
             Assert.IsTrue(dErr1.Value == null);
             Assert.IsTrue(dErr1.Code == DataElementErrorCode.RequiredDataElementMissing);
-
+            
             var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "PCD" && r.Position == 14);
             Assert.IsNotNull(sErr2);
+            Assert.IsTrue(sErr2.SpecType != null);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
             var dErr2 = sErr2.Errors.First();
@@ -67,24 +69,28 @@ namespace EdiFabric.UnitTests
 
             var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "UNS" && r.Position == 32);
             Assert.IsNotNull(sErr3);
+            Assert.IsTrue(sErr3.SpecType != null);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
             var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "MOA" && r.Position == 32);
             Assert.IsNotNull(sErr4);
+            Assert.IsTrue(sErr4.SpecType != null);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
             Assert.IsTrue(sErr4.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
             var sErr5 = result.Errors.SingleOrDefault(r => r.Name == "PAI" && r.Position == 4);
             Assert.IsNotNull(sErr5);
+            Assert.IsTrue(sErr5.SpecType != null);
             Assert.IsTrue(sErr5.Codes.Count == 1);
             Assert.IsTrue(sErr5.Errors.Count == 0);
             Assert.IsTrue(sErr5.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
 
             var sErr6 = result.Errors.SingleOrDefault(r => r.Name == "UNT" && r.Position == 4);
             Assert.IsNotNull(sErr6);
+            Assert.IsTrue(sErr6.SpecType != null);
             Assert.IsTrue(sErr6.Codes.Count == 1);
             Assert.IsTrue(sErr6.Errors.Count == 0);
             Assert.IsTrue(sErr6.Codes.Contains(SegmentErrorCode.RequiredSegmentMissing));
@@ -115,6 +121,7 @@ namespace EdiFabric.UnitTests
 
             var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.SpecType != null);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
             var dErr1 = sErr1.Errors.First();
@@ -127,6 +134,7 @@ namespace EdiFabric.UnitTests
 
             var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "COM" && r.Position == 15);
             Assert.IsNotNull(sErr2);
+            Assert.IsTrue(sErr2.SpecType != null);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
             var dErr2 = sErr2.Errors.First();
@@ -139,12 +147,14 @@ namespace EdiFabric.UnitTests
 
             var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 10);
             Assert.IsNotNull(sErr3);
+            Assert.IsTrue(sErr3.SpecType != null);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentExceedsMaximumUse));
 
             var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 25);
             Assert.IsNotNull(sErr4);
+            Assert.IsTrue(sErr4.SpecType != null);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
             Assert.IsTrue(sErr4.Codes.Contains(SegmentErrorCode.LoopExceedsMaximumUse));
@@ -175,6 +185,7 @@ namespace EdiFabric.UnitTests
 
             var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.SpecType != null);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
             var dErr1 = sErr1.Errors.First();
@@ -187,6 +198,7 @@ namespace EdiFabric.UnitTests
 
             var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "COM" && r.Position == 10);
             Assert.IsNotNull(sErr2);
+            Assert.IsTrue(sErr2.SpecType != null);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 1);
             var dErr2 = sErr2.Errors.First();
@@ -199,12 +211,14 @@ namespace EdiFabric.UnitTests
 
             var sErr3 = result.Errors.SingleOrDefault(r => r.Name == "ALI" && r.Position == 6);
             Assert.IsNotNull(sErr3);
+            Assert.IsTrue(sErr3.SpecType != null);
             Assert.IsTrue(sErr3.Codes.Count == 1);
             Assert.IsTrue(sErr3.Errors.Count == 0);
             Assert.IsTrue(sErr3.Codes.Contains(SegmentErrorCode.SegmentBelowMinimumUse));
 
             var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "TAX" && r.Position == 16);
             Assert.IsNotNull(sErr4);
+            Assert.IsTrue(sErr4.SpecType != null);
             Assert.IsTrue(sErr4.Codes.Count == 1);
             Assert.IsTrue(sErr4.Errors.Count == 0);
             Assert.IsTrue(sErr4.Codes.Contains(SegmentErrorCode.LoopBelowMinimumUse));
@@ -257,6 +271,7 @@ namespace EdiFabric.UnitTests
 
             var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "UNH" && r.Position == 1);
             Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.SpecType != null);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
             var dErr1 = sErr1.Errors.First();
@@ -269,6 +284,7 @@ namespace EdiFabric.UnitTests
 
             var sErr2 = result.Errors.SingleOrDefault(r => r.Name == "BGM" && r.Position == 2);
             Assert.IsNotNull(sErr2);
+            Assert.IsTrue(sErr2.SpecType != null);
             Assert.IsTrue(sErr2.Codes.Count == 0);
             Assert.IsTrue(sErr2.Errors.Count == 2);
             var dErr2 = sErr2.Errors.First();
@@ -288,6 +304,7 @@ namespace EdiFabric.UnitTests
 
             var sErr4 = result.Errors.SingleOrDefault(r => r.Name == "MOA" && r.Position == 16);
             Assert.IsNotNull(sErr4);
+            Assert.IsTrue(sErr4.SpecType != null);
             Assert.IsTrue(sErr4.Codes.Count == 0);
             Assert.IsTrue(sErr4.Errors.Count == 1);
             var dErr4 = sErr4.Errors.First();
@@ -346,6 +363,7 @@ namespace EdiFabric.UnitTests
 
             var sErr1 = result.Errors.SingleOrDefault(r => r.Name == "CTA" && r.Position == 8);
             Assert.IsNotNull(sErr1);
+            Assert.IsTrue(sErr1.SpecType != null);
             Assert.IsTrue(sErr1.Codes.Count == 0);
             Assert.IsTrue(sErr1.Errors.Count == 1);
             var dErr1 = sErr1.Errors.First();
@@ -528,6 +546,7 @@ namespace EdiFabric.UnitTests
 
             //  ASSERT
             Assert.IsTrue(!result.Any());
+            Assert.IsTrue(result.All(s => s.SpecType != null));
         }
 
         [TestMethod]
@@ -548,6 +567,7 @@ namespace EdiFabric.UnitTests
 
             //  ASSERT
             Assert.IsTrue(!result.Any());
+            Assert.IsTrue(result.All(s => s.SpecType != null));
         }
     }
 }

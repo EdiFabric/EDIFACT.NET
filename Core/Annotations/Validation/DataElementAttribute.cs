@@ -97,19 +97,25 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? instanceContext.Parent.GetId()
                 : instanceContext.Parent.GetDeclaringTypeId();
 
+            var segmentType = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
+                ? instanceContext.Parent.GetStandardType()
+                : instanceContext.Parent.Property.GetStandardDeclaringType();
+
             if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
             {
-                var ediAttribute = instanceContext.Parent.Instance.GetStandardType().GetCustomAttribute<EdiAttribute>();
+                var type = instanceContext.Parent.Instance.GetStandardType();
+                var ediAttribute = type.GetCustomAttribute<EdiAttribute>();
                 if(ediAttribute == null)
                     throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
 
                 segmentName = ediAttribute.Id;
+                segmentType = type;
             }
 
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            var result = new SegmentErrorContext(segmentName, segmentIndex, segmentType);
             var errorContext = new DataElementErrorContext(name, inSegmentIndex, DataElementErrorCode.InvalidCodeValue,
                 inCompositeIndex, repetitionIndex,
                 value);

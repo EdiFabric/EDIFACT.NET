@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using EdiFabric.Core.ErrorCodes;
 
 namespace EdiFabric.Core.Model.Edi.ErrorContexts
@@ -36,6 +37,11 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         public string Value { get; private set; }
 
+        /// <summary>
+        /// The segment type in the spec.
+        /// </summary>
+        public TypeInfo SpecType { get; private set; }
+
         private readonly List<SegmentErrorCode> _codes = new List<SegmentErrorCode>();
         /// <summary>
         /// The syntax error codes.
@@ -59,7 +65,8 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
-        public SegmentErrorContext(string name, int position)
+        /// <param name="specType">The segment type in the spec.</param>
+        public SegmentErrorContext(string name, int position, TypeInfo specType)
             : base(null)
         {
             if (string.IsNullOrEmpty(name))
@@ -67,6 +74,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             
             Name = name;
             Position = position;
+            SpecType = specType;
         }
         
         /// <summary>
@@ -74,9 +82,10 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
+        /// <param name="specType">The segment type in the spec.</param>
         /// <param name="value">The segment line.</param>
         /// <param name="message">The message.</param>
-        public SegmentErrorContext(string name, int position, string value, string message = null)
+        public SegmentErrorContext(string name, int position, TypeInfo specType, string value, string message = null)
             : base(message)
         {
             if (string.IsNullOrEmpty(name))
@@ -84,6 +93,7 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
             
             Name = name;
             Position = position;
+            SpecType = specType;
             Value = value;
         }
 
@@ -92,11 +102,12 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
+        /// <param name="specType">The segment type in the spec.</param>
         /// <param name="value">The segment line.</param>
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The message.</param>
-        public SegmentErrorContext(string name, int position, string value, SegmentErrorCode errorCode, string message = null)
-            : this(name, position, message)
+        public SegmentErrorContext(string name, int position, TypeInfo specType, string value, SegmentErrorCode errorCode, string message = null)
+            : this(name, position, specType, message)
         {
             Value = value;
             Add(errorCode);
@@ -107,10 +118,11 @@ namespace EdiFabric.Core.Model.Edi.ErrorContexts
         /// </summary>
         /// <param name="name">The segment ID.</param>
         /// <param name="position">The segment position.</param>
+        /// <param name="specType">The segment type in the spec.</param>
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The message.</param>
-        public SegmentErrorContext(string name, int position, SegmentErrorCode errorCode, string message = null)
-            : this(name, position, message)
+        public SegmentErrorContext(string name, int position, TypeInfo specType, SegmentErrorCode errorCode, string message = null)
+            : this(name, position, specType, message)
         {
             Add(errorCode);
         }

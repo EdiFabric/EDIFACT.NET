@@ -89,28 +89,30 @@ namespace EdiFabric.Core.Annotations.Validation
         {
             var result = new List<SegmentErrorContext>();
 
-            var mandatoryNames =
-                    instanceContext.Property.GetGenericType()
-                        .GetProperties()
-                        .Where(p => p.GetCustomAttribute<RequiredAttribute>() != null)
-                        .Select(s => s.GetGenericType().GetCustomAttribute<EdiAttribute>().Id);
+            var mandatoryItems =
+                instanceContext.Property.GetGenericType()
+                    .GetProperties()
+                    .Where(p => p.GetCustomAttribute<RequiredAttribute>() != null)
+                    .Select(s => s.GetGenericType());
 
             result.AddRange(
-                mandatoryNames.Select(
-                    name => new SegmentErrorContext(name, segmentIndex + 1, SegmentErrorCode.RequiredSegmentMissing)));
+                mandatoryItems.Select(
+                    item =>
+                        new SegmentErrorContext(item.GetCustomAttribute<EdiAttribute>().Id, segmentIndex + 1, item,
+                            SegmentErrorCode.RequiredSegmentMissing)));
 
             return result;
         }
 
         private SegmentErrorContext ValidateGroup(InstanceContext instanceContext, int segmentIndex)
         {
-            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex + 1,
+            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex + 1, instanceContext.GetStandardType(),
                 SegmentErrorCode.RequiredSegmentMissing);
         }
 
         private SegmentErrorContext ValidateSegment(InstanceContext instanceContext, int segmentIndex)
         {
-            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex + 1,
+            return new SegmentErrorContext(instanceContext.GetId(), segmentIndex + 1, instanceContext.GetStandardType(),
                 SegmentErrorCode.RequiredSegmentMissing);
         }
 
@@ -121,7 +123,7 @@ namespace EdiFabric.Core.Annotations.Validation
                 throw new Exception(string.Format("Parent of composite {0} must be a segment.",
                     instanceContext.Property.Name));
 
-            var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex);
+            var result = new SegmentErrorContext(instanceContext.Parent.GetId(), segmentIndex, instanceContext.Parent.GetStandardType());
             var errorContext = new DataElementErrorContext(instanceContext.GetId(), inSegmentIndex,
                 DataElementErrorCode.RequiredDataElementMissing, 0, 0, null);
             result.Add(errorContext);
@@ -140,19 +142,25 @@ namespace EdiFabric.Core.Annotations.Validation
                 ? instanceContext.Parent.GetId()
                 : instanceContext.Parent.GetDeclaringTypeId();
 
+            var segmentType = instanceContext.Parent.IsPropertyOfType<SegmentAttribute>()
+                ? instanceContext.Parent.GetStandardType()
+                : instanceContext.Parent.Property.GetStandardDeclaringType();
+
             if (string.IsNullOrEmpty(segmentName) && instanceContext.Parent.Instance != null)
             {
-                var ediAttribute = instanceContext.Parent.Instance.GetStandardType().GetCustomAttribute<EdiAttribute>();
+                var type = instanceContext.Parent.Instance.GetStandardType();
+                var ediAttribute = type.GetCustomAttribute<EdiAttribute>();
                 if (ediAttribute == null)
                     throw new Exception(string.Format("Can't find segment name for {0}", GetType().Name));
 
                 segmentName = ediAttribute.Id;
+                segmentType = type;
             }
 
             var dataElementAttr = instanceContext.Property.GetCustomAttribute<DataElementAttribute>();
             var name = dataElementAttr == null ? "" : dataElementAttr.Code;
 
-            var result = new SegmentErrorContext(segmentName, segmentIndex);
+            var result = new SegmentErrorContext(segmentName, segmentIndex, segmentType);
             var errorContext = new DataElementErrorContext(name, inSegmentIndex,
                 DataElementErrorCode.RequiredDataElementMissing, inCompositeIndex, 0, null);
             result.Add(errorContext);

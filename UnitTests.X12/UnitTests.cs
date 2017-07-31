@@ -179,6 +179,8 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
             Assert.IsNotNull(error.ErrorContext.Errors.Any(e => e.Codes.Contains(SegmentErrorCode.UnrecognizedSegment)));
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.All(e => e.SpecType == null));
             Assert.IsNotNull(ediItems.OfType<GE>().SingleOrDefault());
             Assert.IsNotNull(ediItems.OfType<IEA>().SingleOrDefault());
         }
@@ -383,6 +385,8 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsNotNull(error);
             Assert.IsTrue(error.HasErrors);
             Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyDataElements)));
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.SpecType != null));
 
             MessageErrorContext mec;
             Assert.IsFalse(error.IsValid(out mec));
@@ -415,6 +419,8 @@ namespace EdiFabric.UnitTests.X12
             Assert.IsTrue(error.HasErrors);
             Assert.IsNotNull(error);
             Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.Errors.Any(d => d.Code == DataElementErrorCode.TooManyComponents)));
+            Assert.IsNotNull(error.ErrorContext);
+            Assert.IsTrue(error.ErrorContext.Errors.Any(e => e.SpecType != null));
 
             MessageErrorContext mec;
             Assert.IsFalse(error.IsValid(out mec));
