@@ -9,17 +9,22 @@ namespace EdiFabric.Rules.Vda
     }
 
     [Serializable()]
-    public class VDA_A
+    public class VDA_DT
     {
     }
 
     [Serializable()]
-    public class VDA_DT
+    public class VDA_TM
     {
     }
     
     [Serializable()]
     public class VDA_N0
+    {
+    }
+
+    [Serializable()]
+    public class VDA_N3
     {
     }
     
@@ -37,6 +42,18 @@ namespace EdiFabric.Rules.Vda
     [Serializable()]
     [EdiCodes(",02,")]
     public class VDA_ID_V2
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",03,")]
+    public class VDA_ID_V3
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",04,")]
+    public class VDA_ID_V4
     {
     } 
     
@@ -85,6 +102,108 @@ namespace EdiFabric.Rules.Vda
     [Serializable()]
     [EdiCodes(",519,")]
     public class VDA_ID_519_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",711,")]
+    public class VDA_ID_711_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",712,")]
+    public class VDA_ID_712_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",713,")]
+    public class VDA_ID_713_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",714,")]
+    public class VDA_ID_714_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",715,")]
+    public class VDA_ID_715_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",716,")]
+    public class VDA_ID_716_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",718,")]
+    public class VDA_ID_718_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",719,")]
+    public class VDA_ID_719_01
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",01,02,03,04,05,99,")]
+    public class VDA_ID_712_10
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",01,02,06,07,08,09,10,11,")]
+    public class VDA_ID_712_14
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",1,2,")]
+    public class VDA_ID_712_16
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",01,02,03,04,05,06,07,08,09,10,11,20,")]
+    public class VDA_ID_713_06
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",30,32,33,35,36,40,")]
+    public class VDA_ID_713_09
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",G,KG,KM,L,M,M2,M3,MM,PA,SA,SD,ST,T,TG,")]
+    public class VDA_ID_714_07
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",G,KG,KM,L,M,M2,M3,MM,PA,SA,SD,ST,T,TG,")]
+    public class VDA_ID_714_09
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",C,F,G,I,N,O,S,W,X,")]
+    public class VDA_ID_714_17
+    {
+    }
+
+    [Serializable()]
+    [EdiCodes(",G,M,S,")]
+    public class VDA_ID_715_13
     {
     }
 }
