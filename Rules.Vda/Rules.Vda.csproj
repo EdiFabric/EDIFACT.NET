@@ -40,8 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF_VDA_Codes.cs" />
-    <Compile Include="EF_VDA_TS4913.cs" />
-    <Compile Include="EF_VDA_TS49051.cs" />
+    <Compile Include="EF_VDA_TS4905.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
