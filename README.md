@@ -1,7 +1,7 @@
 <h3>One reference to bring them in, One line to parse them,<br>
 One framework to find them all and in Object bind them.</h3>
 
-# Everything you need to deliver great EDI applications.
+# This reporsitory is not supported
 
 ### Our EDI Document Object Model lets you to dynamically read, manipulate and write EDI files
 
