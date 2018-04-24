@@ -3,7 +3,7 @@ The last version of EdiFabric Framework before it was rewritten from scratch.
 
 It's been a long way. We started this project back on CodePlex, when it was still alive and kicking. Then moved it to GitHub, full of 
 enthusiasm, and ready to help developers to easily adopt EDI. It was a mixed bag and unfortunately we had to abandon it 
-due to the lack of interest and active contributors. It's hard to maintain something as broad as EDI with limited resources. 
+due to the lack of interest and active contributors. We only had 5 contributors, to which we are very grateful. It's hard to maintain something as broad as EDI with limited resources. 
 
 We have since worked on a commercial version of the framework that allowed us to entirely rework the code base and to
 build a viable community around it. Surprisingly, we now have more active contributors than we ever had here. 
