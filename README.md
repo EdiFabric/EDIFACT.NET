@@ -4,7 +4,7 @@
 #### [Quickstart - Translate EDI file](https://support.edifabric.com/hc/en-us/articles/360000280532)
 #### [Benchmark](https://support.edifabric.com/hc/en-us/articles/360002327372-EDI-Parser-Benchmark)
 #### [Documentation](https://support.edifabric.com/hc/en-us)
-
+----
 
 With the EDI Tools for .NET you can:
 
