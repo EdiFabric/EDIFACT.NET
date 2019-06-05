@@ -1,0 +1,1535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="TSORDERS" nillable="true" type="TSORDERS" />
+  <xs:complexType name="TSORDERS">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EdiMessage">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="UNH" type="UNH" />
+          <xs:element minOccurs="0" maxOccurs="1" name="BGM" type="BGM" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PAI" type="PAI" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ALI" type="ArrayOfALI" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IMD" type="IMD" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FTX" type="ArrayOfFTX" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RFFLoop" type="ArrayOfLoop_RFF_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="NADLoop" type="ArrayOfLoop_NAD_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TAXLoop" type="ArrayOfLoop_TAX_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CUXLoop" type="ArrayOfLoop_CUX_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PATLoop" type="ArrayOfLoop_PAT_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TDTLoop" type="ArrayOfLoop_TDT_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TODLoop" type="ArrayOfLoop_TOD_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PACLoop" type="ArrayOfLoop_PAC_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="EQDLoop" type="ArrayOfLoop_EQD_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SCCLoop" type="ArrayOfLoop_SCC_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="APRLoop" type="ArrayOfLoop_APR_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ALCLoop" type="ArrayOfLoop_ALC_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RCSLoop" type="ArrayOfLoop_RCS_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LINLoop" type="ArrayOfLoop_LIN_ORDERS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UNS" type="UNS" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="ArrayOfMOA" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CNT" type="ArrayOfCNT" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ALCLoop2" type="ArrayOfLoop_ALC_ORDERS_2" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UNT" type="UNT" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EdiMessage" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ErrorContext" type="MessageErrorContext" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageErrorContext">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ErrorContext">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ControlNumber" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Version" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Codes" type="ArrayOfMessageErrorCode" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Errors" type="ArrayOfSegmentErrorContext" />
+          <xs:element minOccurs="1" maxOccurs="1" name="HasErrors" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ErrorContext" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DataElementErrorContext">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ErrorContext">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Position" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Code" type="DataElementErrorCode" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ComponentPosition" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="RepetitionPosition" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="DataElementErrorCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RequiredDataElementMissing" />
+      <xs:enumeration value="ConditionalRequiredDataElementMissing" />
+      <xs:enumeration value="TooManyDataElements" />
+      <xs:enumeration value="DataElementTooShort" />
+      <xs:enumeration value="DataElementTooLong" />
+      <xs:enumeration value="InvalidCharacterInDataElement" />
+      <xs:enumeration value="InvalidCodeValue" />
+      <xs:enumeration value="InvalidDate" />
+      <xs:enumeration value="InvalidTime" />
+      <xs:enumeration value="ExclusionConditionViolated" />
+      <xs:enumeration value="TooManyRepetitions" />
+      <xs:enumeration value="TooManyComponents" />
+      <xs:enumeration value="TooFewRepetitions" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SegmentErrorContext">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ErrorContext">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Position" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Value" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Codes" type="ArrayOfSegmentErrorCode" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Errors" type="ArrayOfDataElementErrorContext" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfSegmentErrorCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SegmentErrorCode" type="SegmentErrorCode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SegmentErrorCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UnrecognizedSegment" />
+      <xs:enumeration value="RequiredSegmentMissing" />
+      <xs:enumeration value="LoopExceedsMaximumUse" />
+      <xs:enumeration value="SegmentExceedsMaximumUse" />
+      <xs:enumeration value="SegmentNotInProperSequence" />
+      <xs:enumeration value="LoopBelowMinimumUse" />
+      <xs:enumeration value="SegmentBelowMinimumUse" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfDataElementErrorContext">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DataElementErrorContext" nillable="true" type="DataElementErrorContext" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfMessageErrorCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MessageErrorCode" type="MessageErrorCode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="MessageErrorCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TransactionSetNotSupported" />
+      <xs:enumeration value="MessageTrailerMissing" />
+      <xs:enumeration value="ControlNumberNotMatching" />
+      <xs:enumeration value="SegmentsCountNotMatching" />
+      <xs:enumeration value="MessageWithErrors" />
+      <xs:enumeration value="MissingOrInvalidTransactionSet" />
+      <xs:enumeration value="MissingOrInvalidControlNumber" />
+      <xs:enumeration value="DuplicateMessageControlNumber" />
+      <xs:enumeration value="FunctionalGroupVersionNotSupported" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfSegmentErrorContext">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SegmentErrorContext" nillable="true" type="SegmentErrorContext" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UNH">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageReferenceNumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageIdentifier_02" type="S009" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CommonAccessReference_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StatusoftheTransfer_04" type="S010" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageSubsetIdentification_05" type="S016" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageImplementationGuidelineIdentification_06" type="S017" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ScenarioIdentification_07" type="S018" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="S009">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageType_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageVersionNumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageReleaseNumber_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ControllingAgencyCoded_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AssociationAssignedCode_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CodelistDirectoryVersionNumber_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageTypeSubfunctionIdentification_07" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="S010">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SequenceMessageTransferNumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FirstLastSequenceMessageTransferIndication_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="S016">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageSubsetIdentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageSubsetVersionNumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageSubsetReleaseNumber_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ControllingAgencyCoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="S017">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageImplementationGuidelineIdentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageImplementationGuidelineVersionNumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageImplementationGuidelineReleaseNumber_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ControllingAgencyCoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="S018">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ScenarioIdentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ScenarioVersionNumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ScenarioReleaseNumber_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ControllingAgencyCoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BGM">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DOCUMENTMESSAGENAME_01" type="C002" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagenumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Messagefunctioncoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Responsetypecoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C002">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagenamecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagename_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfDTM">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DTM" nillable="true" type="DTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DTM">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DATETIMEPERIOD_01" type="C507" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C507">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Datetimeperiodqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Datetimeperiod_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Datetimeperiodformatqualifier_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PAI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PAYMENTINSTRUCTIONDETAILS_01" type="C534" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C534">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymentconditionscoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymentguaranteecoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymentmeanscoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymentchannelcoded_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfALI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ALI" nillable="true" type="ALI" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ALI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Countryoforigincoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofdutyregimecoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialconditionscoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialconditionscoded_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialconditionscoded_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialconditionscoded_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialconditionscoded_07" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IMD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemdescriptiontypecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemcharacteristiccoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMDESCRIPTION_03" type="C273" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Surfacelayerindicatorcoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C273">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemdescriptionidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemdescription_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemdescription_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Languagecoded_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfFTX">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FTX" nillable="true" type="FTX" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FTX">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Textsubjectqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Textfunctioncoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TEXTREFERENCE_03" type="C107" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TEXTLITERAL_04" type="C108" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Languagecoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C107">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetextcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C108">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetext_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetext_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetext_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetext_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Freetext_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_RFF_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_RFF_ORDERS" nillable="true" type="Loop_RFF_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_RFF_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RFF" type="RFF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RFF">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="REFERENCE_01" type="C506" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C506">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Referencequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Referencenumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Linenumber_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Referenceversionnumber_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_NAD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_NAD_ORDERS" nillable="true" type="Loop_NAD_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_NAD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="NAD" type="NAD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="ArrayOfLOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FII" type="ArrayOfFII" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFFLoop" type="ArrayOfLoop_RFF_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DOCLoop" type="ArrayOfLoop_DOC_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CTALoop" type="ArrayOfLoop_CTA_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NAD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PARTYIDENTIFICATIONDETAILS_02" type="C082" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NAMEANDADDRESS_03" type="C058" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PARTYNAME_04" type="C080" />
+      <xs:element minOccurs="0" maxOccurs="1" name="STREET_05" type="C059" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Cityname_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Countrysubentityidentification_07" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Postcodeidentification_08" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Countrycoded_09" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C082">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyididentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C058">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Nameandaddressline_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Nameandaddressline_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Nameandaddressline_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Nameandaddressline_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Nameandaddressline_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C080">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyname_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyname_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyname_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyname_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyname_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partynameformatcoded_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C059">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Streetandnumberpobox_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Streetandnumberpobox_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Streetandnumberpobox_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Streetandnumberpobox_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLOC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LOC" nillable="true" type="LOC" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LOC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Placelocationqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOCATIONIDENTIFICATION_02" type="C517" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RELATEDLOCATIONONEIDENTIFICATION_03" type="C519" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RELATEDLOCATIONTWOIDENTIFICATION_04" type="C553" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Relationcoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C517">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Placelocationidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Placelocation_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C519">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Relatedplacelocationoneidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Relatedplacelocationone_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C553">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Relatedplacelocationtwoidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Relatedplacelocationtwo_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfFII">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FII" nillable="true" type="FII" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FII">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Partyqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ACCOUNTIDENTIFICATION_02" type="C078" />
+      <xs:element minOccurs="0" maxOccurs="1" name="INSTITUTIONIDENTIFICATION_03" type="C088" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Countrycoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C078">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Accountholdernumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Accountholdername_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Accountholdername_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencycoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C088">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Institutionnameidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Institutionbranchnumber_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Institutionname_07" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Institutionbranchplace_08" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_DOC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_DOC_ORDERS" nillable="true" type="Loop_DOC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_DOC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DOC" type="DOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DOC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="DOCUMENTMESSAGENAME_01" type="C002" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DOCUMENTMESSAGEDETAILS_02" type="C503" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Communicationchannelidentifiercoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numberofcopiesofdocumentrequired_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numberoforiginalsofdocumentrequired_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C503">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagenumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagestatuscoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Documentmessagesource_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Languagecoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_CTA_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_CTA_ORDERS" nillable="true" type="Loop_CTA_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_CTA_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CTA" type="CTA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="COM" type="ArrayOfCOM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CTA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Contactfunctioncoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DEPARTMENTOREMPLOYEEDETAILS_02" type="C056" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C056">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Departmentoremployeeidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Departmentoremployee_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfCOM">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="COM" nillable="true" type="COM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="COM">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="COMMUNICATIONCONTACT_01" type="C076" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C076">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Communicationnumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Communicationchannelqualifier_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_TAX_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_TAX_ORDERS" nillable="true" type="Loop_TAX_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_TAX_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TAX" type="TAX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="MOA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="ArrayOfLOC" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TAX">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeefunctionqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DUTYTAXFEETYPE_02" type="C241" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DUTYTAXFEEACCOUNTDETAIL_03" type="C533" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeeassessmentbasis_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DUTYTAXFEEDETAIL_05" type="C243" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeecategorycoded_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Partytaxidentificationnumber_07" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C241">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeetypecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeetype_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C533">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeeaccountidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C243">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeerateidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeerate_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Dutytaxfeeratebasisidentification_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_07" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MOA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MONETARYAMOUNT_01" type="C516" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C516">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Monetaryamounttypequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Monetaryamount_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencyqualifier_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Statuscoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_CUX_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_CUX_ORDERS" nillable="true" type="Loop_CUX_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_CUX_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CUX" type="CUX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCD" type="ArrayOfPCD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CUX">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CURRENCYDETAILS_01" type="C504" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CURRENCYDETAILS_02" type="C504" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rateofexchange_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencymarketexchangecoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C504">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencydetailsqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencycoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencyqualifier_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currencyratebase_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPCD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PCD" nillable="true" type="PCD" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PCD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PERCENTAGEDETAILS_01" type="C501" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C501">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Percentagequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Percentage_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Percentagebasiscoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_PAT_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_PAT_ORDERS" nillable="true" type="Loop_PAT_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PAT_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PAT" type="PAT" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCD" type="PCD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="MOA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PAT">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymenttermstypequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PAYMENTTERMS_02" type="C110" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TERMSTIMEINFORMATION_03" type="C112" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C110">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofpaymentidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofpayment_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofpayment_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C112">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Paymenttimereferencecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Timerelationcoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofperiodcoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numberofperiods_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_TDT_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_TDT_ORDERS" nillable="true" type="Loop_TDT_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_TDT_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TDT" type="TDT" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOCLoop" type="ArrayOfLoop_LOC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDT">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Transportstagequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Conveyancereferencenumber_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MODEOFTRANSPORT_03" type="C220" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TRANSPORTMEANS_04" type="C228" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CARRIER_05" type="C040" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Transitdirectioncoded_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EXCESSTRANSPORTATIONINFORMATION_07" type="C401" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TRANSPORTIDENTIFICATION_08" type="C222" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Transportownershipcoded_09" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C220">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Modeoftransportcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Modeoftransport_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C228">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofmeansoftransportidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofmeansoftransport_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C040">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Carrieridentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Carriername_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C401">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Excesstransportationreasoncoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Excesstransportationresponsibilitycoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Customerauthorizationnumber_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C222">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Idofmeansoftransportidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Idofthemeansoftransport_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Nationalityofmeansoftransportcoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_LOC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_LOC_ORDERS" nillable="true" type="Loop_LOC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_LOC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="LOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_TOD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_TOD_ORDERS" nillable="true" type="Loop_TOD_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_TOD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TOD" type="TOD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="ArrayOfLOC" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofdeliveryortransportfunctioncoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Transportchargesmethodofpaymentcoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TERMSOFDELIVERYORTRANSPORT_03" type="C100" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C100">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofdeliveryortransportcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofdeliveryortransport_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Termsofdeliveryortransport_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_PAC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_PAC_ORDERS" nillable="true" type="Loop_PAC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PAC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PAC" type="PAC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEA" type="ArrayOfMEA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCILoop" type="ArrayOfLoop_PCI_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PAC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Numberofpackages_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PACKAGINGDETAILS_02" type="C531" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PACKAGETYPE_03" type="C202" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PACKAGETYPEIDENTIFICATION_04" type="C402" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RETURNABLEPACKAGEDETAILS_05" type="C532" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C531">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Packaginglevelcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Packagingrelatedinformationcoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Packagingtermsandconditionscoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C202">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofpackagesidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofpackages_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C402">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemdescriptiontypecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofpackages_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemnumbertypecoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofpackages_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemnumbertypecoded_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C532">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Returnablepackagefreightpaymentresponsibilitycoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Returnablepackageloadcontentscoded_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfMEA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MEA" nillable="true" type="MEA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MEA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementapplicationqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEASUREMENTDETAILS_02" type="C502" />
+      <xs:element minOccurs="0" maxOccurs="1" name="VALUERANGE_03" type="C174" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Surfacelayerindicatorcoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C502">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementdimensioncoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementsignificancecoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementattributecoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementattribute_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C174">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measurementvalue_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rangeminimum_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rangemaximum_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Significantdigits_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_PCI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_PCI_ORDERS" nillable="true" type="Loop_PCI_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PCI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PCI" type="PCI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFF" type="RFF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GIN" type="ArrayOfGIN" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PCI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Markinginstructionscoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MARKSLABELS_02" type="C210" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Containerpackagestatuscoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TYPEOFMARKING_04" type="C827" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C210">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_06" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_07" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_08" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_09" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Shippingmarks_10" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C827">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Typeofmarkingcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfGIN">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GIN" nillable="true" type="GIN" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GIN">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Identitynumberqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTITYNUMBERRANGE_02" type="C208" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTITYNUMBERRANGE_03" type="C208" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTITYNUMBERRANGE_04" type="C208" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTITYNUMBERRANGE_05" type="C208" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTITYNUMBERRANGE_06" type="C208" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C208">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Identitynumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Identitynumber_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_EQD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_EQD_ORDERS" nillable="true" type="Loop_EQD_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_EQD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EQD" type="EQD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HAN" type="ArrayOfHAN" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEA" type="ArrayOfMEA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FTX" type="ArrayOfFTX" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EQD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EQUIPMENTIDENTIFICATION_02" type="C237" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EQUIPMENTSIZEANDTYPE_03" type="C224" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentsuppliercoded_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentstatuscoded_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Fullemptyindicatorcoded_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C237">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentidentificationnumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Countrycoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C224">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentsizeandtypeidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Equipmentsizeandtype_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfHAN">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="HAN" nillable="true" type="HAN" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HAN">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="HANDLINGINSTRUCTIONS_01" type="C524" />
+      <xs:element minOccurs="0" maxOccurs="1" name="HAZARDOUSMATERIAL_02" type="C218" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C524">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Handlinginstructionscoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Handlinginstructions_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C218">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Hazardousmaterialclasscodeidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_SCC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_SCC_ORDERS" nillable="true" type="Loop_SCC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_SCC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SCC" type="SCC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FTX" type="ArrayOfFTX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFF" type="ArrayOfRFF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTYLoop" type="ArrayOfLoop_QTY_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SCC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Deliveryplanstatusindicatorcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Deliveryrequirementscoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PATTERNDESCRIPTION_03" type="C329" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C329">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Frequencycoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Despatchpatterncoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Despatchpatterntimingcoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfRFF">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RFF" nillable="true" type="RFF" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_QTY_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_QTY_ORDERS" nillable="true" type="Loop_QTY_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_QTY_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="QTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="QTY">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="QUANTITYDETAILS_01" type="C186" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C186">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Quantityqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Quantity_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_APR_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_APR_ORDERS" nillable="true" type="Loop_APR_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_APR_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="APR" type="APR" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="APR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Classoftradecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PRICEMULTIPLIERINFORMATION_02" type="C138" />
+      <xs:element minOccurs="0" maxOccurs="1" name="REASONFORCHANGE_03" type="C960" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C138">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Pricemultiplier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Pricemultiplierqualifier_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C960">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Changereasoncoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Changereason_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RNG">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Rangetypequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RANGE_02" type="C280" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C280">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rangeminimum_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rangemaximum_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_ALC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_ALC_ORDERS" nillable="true" type="Loop_ALC_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_ALC_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ALC" type="ALC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ALI" type="ArrayOfALI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTYLoop" type="Loop_QTY_ORDERS_2" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCDLoop" type="Loop_PCD_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOALoop" type="ArrayOfLoop_MOA_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RTELoop" type="Loop_RTE_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TAXLoop" type="ArrayOfLoop_TAX_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ALC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Allowanceorchargequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ALLOWANCECHARGEINFORMATION_02" type="C552" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Settlementcoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Calculationsequenceindicatorcoded_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SPECIALSERVICESIDENTIFICATION_05" type="C214" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C552">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Allowanceorchargenumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Chargeallowancedescriptioncoded_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C214">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialservicescoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialservice_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Specialservice_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_QTY_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="QTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PCD_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PCD" type="PCD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_MOA_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_MOA_ORDERS" nillable="true" type="Loop_MOA_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_MOA_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="MOA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_RTE_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RTE" type="RTE" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RTE">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RATEDETAILS_01" type="C128" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C128">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Ratetypequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Rateperunit_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Unitpricebasis_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_TAX_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_TAX_ORDERS_2" nillable="true" type="Loop_TAX_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_TAX_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TAX" type="TAX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="MOA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_RCS_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_RCS_ORDERS" nillable="true" type="Loop_RCS_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_RCS_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RCS" type="RCS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFF" type="ArrayOfRFF" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FTX" type="ArrayOfFTX" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RCS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Sectorsubjectidentificationqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="REQUIREMENTCONDITIONIDENTIFICATION_02" type="C550" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Actionrequestnotificationcoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C550">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Requirementconditionidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Requirementorcondition_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_LIN_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_LIN_ORDERS" nillable="true" type="Loop_LIN_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_LIN_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="LIN" type="LIN" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PIA" type="ArrayOfPIA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IMD" type="ArrayOfIMD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEA" type="ArrayOfMEA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="ArrayOfQTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCD" type="ArrayOfPCD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ALI" type="ArrayOfALI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="ArrayOfMOA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GIN" type="ArrayOfGIN" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GIR" type="ArrayOfGIR" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QVR" type="QVR" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DOC" type="ArrayOfDOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PAI" type="PAI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="FTX" type="ArrayOfFTX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CCILoop" type="ArrayOfLoop_CCI_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PATLoop" type="ArrayOfLoop_PAT_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PRILoop" type="ArrayOfLoop_PRI_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFFLoop" type="ArrayOfLoop_RFF_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PACLoop" type="ArrayOfLoop_PAC_ORDERS_2" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOCLoop" type="ArrayOfLoop_LOC_ORDERS_2" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TAXLoop" type="ArrayOfLoop_TAX_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NADLoop" type="ArrayOfLoop_NAD_ORDERS_2" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ALCLoop" type="ArrayOfLoop_ALC_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TDTLoop" type="ArrayOfLoop_TDT_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TODLoop" type="ArrayOfLoop_TOD_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EQDLoop" type="ArrayOfLoop_EQD_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SCCLoop" type="ArrayOfLoop_SCC_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RCSLoop" type="ArrayOfLoop_RCS_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="STGLoop" type="ArrayOfLoop_STG_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LIN">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Lineitemnumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Actionrequestnotificationcoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_03" type="C212" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SUBLINEINFORMATION_04" type="C829" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Configurationlevel_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Configurationcoded_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C212">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemnumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Itemnumbertypecoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_04" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C829">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Sublineindicatorcoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Lineitemnumber_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPIA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PIA" nillable="true" type="PIA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PIA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Productidfunctionqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_02" type="C212" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_03" type="C212" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_04" type="C212" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_05" type="C212" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ITEMNUMBERIDENTIFICATION_06" type="C212" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfIMD">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="IMD" nillable="true" type="IMD" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfQTY">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QTY" nillable="true" type="QTY" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfMOA">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MOA" nillable="true" type="MOA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfGIR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GIR" nillable="true" type="GIR" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GIR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Setidentificationqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTIFICATIONNUMBER_02" type="C206" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTIFICATIONNUMBER_03" type="C206" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTIFICATIONNUMBER_04" type="C206" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTIFICATIONNUMBER_05" type="C206" />
+      <xs:element minOccurs="0" maxOccurs="1" name="IDENTIFICATIONNUMBER_06" type="C206" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C206">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Identitynumber_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Identitynumberqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Statuscoded_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="QVR">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="QUANTITYDIFFERENCEINFORMATION_01" type="C279" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Discrepancycoded_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="REASONFORCHANGE_03" type="C960" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C279">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Quantitydifference_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Quantityqualifier_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfDOC">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DOC" nillable="true" type="DOC" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_CCI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_CCI_ORDERS" nillable="true" type="Loop_CCI_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_CCI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CCI" type="CCI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CAV" type="ArrayOfCAV" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEA" type="ArrayOfMEA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CCI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Propertyclasscoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEASUREMENTDETAILS_02" type="C502" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PRODUCTCHARACTERISTIC_03" type="C240" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C240">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristicidentification_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristic_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristic_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfCAV">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CAV" nillable="true" type="CAV" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CAV">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CHARACTERISTICVALUE_01" type="C889" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C889">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristicvaluecoded_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistqualifier_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Codelistresponsibleagencycoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristicvalue_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Characteristicvalue_05" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_PRI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_PRI_ORDERS" nillable="true" type="Loop_PRI_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PRI_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PRI" type="PRI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CUX" type="CUX" />
+      <xs:element minOccurs="0" maxOccurs="1" name="APR" type="APR" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RNG" type="RNG" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PRI">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PRICEINFORMATION_01" type="C509" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Sublinepricechangecoded_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C509">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Pricequalifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Price_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Pricetypecoded_03" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Pricetypequalifier_04" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Unitpricebasis_05" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_06" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_PAC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_PAC_ORDERS_2" nillable="true" type="Loop_PAC_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_PAC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="PAC" type="PAC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MEA" type="ArrayOfMEA" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="ArrayOfQTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFFLoop" type="Loop_RFF_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PCILoop" type="ArrayOfLoop_PCI_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_LOC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_LOC_ORDERS_2" nillable="true" type="Loop_LOC_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_LOC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="LOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="QTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DTM" type="ArrayOfDTM" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_NAD_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_NAD_ORDERS_2" nillable="true" type="Loop_NAD_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_NAD_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="NAD" type="NAD" />
+      <xs:element minOccurs="0" maxOccurs="1" name="LOC" type="ArrayOfLOC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RFFLoop" type="ArrayOfLoop_RFF_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DOCLoop" type="ArrayOfLoop_DOC_ORDERS" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CTALoop" type="ArrayOfLoop_CTA_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_STG_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_STG_ORDERS" nillable="true" type="Loop_STG_ORDERS" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_STG_ORDERS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="STG" type="STG" />
+      <xs:element minOccurs="0" maxOccurs="1" name="QTYLoop" type="ArrayOfLoop_QTY_ORDERS_3" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="STG">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Stagesqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Numberofstages_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Actualstagecount_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_QTY_ORDERS_3">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_QTY_ORDERS_3" nillable="true" type="Loop_QTY_ORDERS_3" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_QTY_ORDERS_3">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="QTY" type="QTY" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="MOA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UNS">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Sectionidentification_01" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfCNT">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CNT" nillable="true" type="CNT" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CNT">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CONTROL_01" type="C270" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="C270">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Controlqualifier_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Controlvalue_02" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Measureunitqualifier_03" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLoop_ALC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Loop_ALC_ORDERS_2" nillable="true" type="Loop_ALC_ORDERS_2" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Loop_ALC_ORDERS_2">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ALC" type="ALC" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ALI" type="ALI" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MOA" type="ArrayOfMOA" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UNT">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="NumberofSegmentsinaMessage_01" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MessageReferenceNumber_02" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

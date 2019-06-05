@@ -1,0 +1,542 @@
+<TSORDERS xmlns="http://schemas.datacontract.org/2004/07/EdiFabric.Templates.EdifactD96A" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ErrorContext xmlns="http://schemas.datacontract.org/2004/07/EdiFabric.Core.Model.Edi" xmlns:a="http://schemas.datacontract.org/2004/07/EdiFabric.Core.Model.Edi.ErrorContexts">
+    <a:Message i:nil="true" />
+    <a:Codes xmlns:b="http://schemas.datacontract.org/2004/07/EdiFabric.Core.ErrorCodes" />
+    <a:ControlNumber>000000101</a:ControlNumber>
+    <a:Errors />
+    <a:Name>ORDERS</a:Name>
+    <a:Version>D96A</a:Version>
+  </ErrorContext>
+  <Template xmlns="http://schemas.datacontract.org/2004/07/EdiFabric.Core.Model.Edi">EdiFabric.Templates.EdifactD96A.TSORDERS, EdiFabric.Examples.EDIFACT.Templates.D96A, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Template>
+  <ALCLoop i:nil="true" />
+  <ALCLoop2 i:nil="true" />
+  <ALI i:nil="true" />
+  <APRLoop i:nil="true" />
+  <BGM>
+    <DOCUMENTMESSAGENAME_01>
+      <Codelistqualifier_02 i:nil="true" />
+      <Codelistresponsibleagencycoded_03 i:nil="true" />
+      <Documentmessagename_04 i:nil="true" />
+      <Documentmessagenamecoded_01>220</Documentmessagenamecoded_01>
+    </DOCUMENTMESSAGENAME_01>
+    <Documentmessagenumber_02>128576</Documentmessagenumber_02>
+    <Messagefunctioncoded_03>9</Messagefunctioncoded_03>
+    <Responsetypecoded_04 i:nil="true" />
+  </BGM>
+  <CNT>
+    <CNT>
+      <CONTROL_01>
+        <Controlqualifier_01>2</Controlqualifier_01>
+        <Controlvalue_02>1</Controlvalue_02>
+        <Measureunitqualifier_03 i:nil="true" />
+      </CONTROL_01>
+    </CNT>
+  </CNT>
+  <CUXLoop>
+    <Loop_CUX_ORDERS>
+      <CUX>
+        <CURRENCYDETAILS_01>
+          <Currencycoded_02>GBP</Currencycoded_02>
+          <Currencydetailsqualifier_01>2</Currencydetailsqualifier_01>
+          <Currencyqualifier_03>9</Currencyqualifier_03>
+          <Currencyratebase_04 i:nil="true" />
+        </CURRENCYDETAILS_01>
+        <CURRENCYDETAILS_02>
+          <Currencycoded_02>EUR</Currencycoded_02>
+          <Currencydetailsqualifier_01>3</Currencydetailsqualifier_01>
+          <Currencyqualifier_03>4</Currencyqualifier_03>
+          <Currencyratebase_04 i:nil="true" />
+        </CURRENCYDETAILS_02>
+        <Currencymarketexchangecoded_04 i:nil="true" />
+        <Rateofexchange_03>1.67</Rateofexchange_03>
+      </CUX>
+      <DTM>
+        <DTM>
+          <DATETIMEPERIOD_01>
+            <Datetimeperiod_02>2002080120020831</Datetimeperiod_02>
+            <Datetimeperiodformatqualifier_03>718</Datetimeperiodformatqualifier_03>
+            <Datetimeperiodqualifier_01>134</Datetimeperiodqualifier_01>
+          </DATETIMEPERIOD_01>
+        </DTM>
+      </DTM>
+      <PCD i:nil="true" />
+    </Loop_CUX_ORDERS>
+  </CUXLoop>
+  <DTM>
+    <DTM>
+      <DATETIMEPERIOD_01>
+        <Datetimeperiod_02>20020830</Datetimeperiod_02>
+        <Datetimeperiodformatqualifier_03>102</Datetimeperiodformatqualifier_03>
+        <Datetimeperiodqualifier_01>137</Datetimeperiodqualifier_01>
+      </DATETIMEPERIOD_01>
+    </DTM>
+  </DTM>
+  <EQDLoop i:nil="true" />
+  <FTX>
+    <FTX>
+      <Languagecoded_05 i:nil="true" />
+      <TEXTLITERAL_04 i:nil="true" />
+      <TEXTREFERENCE_03>
+        <Codelistqualifier_02 i:nil="true" />
+        <Codelistresponsibleagencycoded_03>91</Codelistresponsibleagencycoded_03>
+        <Freetextcoded_01>001</Freetextcoded_01>
+      </TEXTREFERENCE_03>
+      <Textfunctioncoded_02>1</Textfunctioncoded_02>
+      <Textsubjectqualifier_01>ZZZ</Textsubjectqualifier_01>
+    </FTX>
+  </FTX>
+  <IMD i:nil="true" />
+  <LINLoop>
+    <Loop_LIN_ORDERS>
+      <ALCLoop i:nil="true" />
+      <ALI i:nil="true" />
+      <CCILoop i:nil="true" />
+      <DOC i:nil="true" />
+      <DTM i:nil="true" />
+      <EQDLoop i:nil="true" />
+      <FTX i:nil="true" />
+      <GIN i:nil="true" />
+      <GIR i:nil="true" />
+      <IMD>
+        <IMD>
+          <ITEMDESCRIPTION_03>
+            <Codelistqualifier_02 i:nil="true" />
+            <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+            <Itemdescription_04 i:nil="true" />
+            <Itemdescription_05 i:nil="true" />
+            <Itemdescriptionidentification_01>TU</Itemdescriptionidentification_01>
+            <Languagecoded_06 i:nil="true" />
+          </ITEMDESCRIPTION_03>
+          <Itemcharacteristiccoded_02 i:nil="true" />
+          <Itemdescriptiontypecoded_01>C</Itemdescriptiontypecoded_01>
+          <Surfacelayerindicatorcoded_04 i:nil="true" />
+        </IMD>
+      </IMD>
+      <LIN>
+        <Actionrequestnotificationcoded_02 i:nil="true" />
+        <Configurationcoded_06 i:nil="true" />
+        <Configurationlevel_05 i:nil="true" />
+        <ITEMNUMBERIDENTIFICATION_03>
+          <Codelistqualifier_03 i:nil="true" />
+          <Codelistresponsibleagencycoded_04 i:nil="true" />
+          <Itemnumber_01>4000862141404</Itemnumber_01>
+          <Itemnumbertypecoded_02>SRS</Itemnumbertypecoded_02>
+        </ITEMNUMBERIDENTIFICATION_03>
+        <Lineitemnumber_01>1</Lineitemnumber_01>
+        <SUBLINEINFORMATION_04 i:nil="true" />
+      </LIN>
+      <LOCLoop>
+        <Loop_LOC_ORDERS_2>
+          <DTM>
+            <DTM>
+              <DATETIMEPERIOD_01>
+                <Datetimeperiod_02>20020915</Datetimeperiod_02>
+                <Datetimeperiodformatqualifier_03>102</Datetimeperiodformatqualifier_03>
+                <Datetimeperiodqualifier_01>2</Datetimeperiodqualifier_01>
+              </DATETIMEPERIOD_01>
+            </DTM>
+          </DTM>
+          <LOC>
+            <LOCATIONIDENTIFICATION_02>
+              <Codelistqualifier_02 i:nil="true" />
+              <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+              <Placelocation_04 i:nil="true" />
+              <Placelocationidentification_01>3312345502000</Placelocationidentification_01>
+            </LOCATIONIDENTIFICATION_02>
+            <Placelocationqualifier_01>7</Placelocationqualifier_01>
+            <RELATEDLOCATIONONEIDENTIFICATION_03 i:nil="true" />
+            <RELATEDLOCATIONTWOIDENTIFICATION_04 i:nil="true" />
+            <Relationcoded_05 i:nil="true" />
+          </LOC>
+          <QTY>
+            <QUANTITYDETAILS_01>
+              <Measureunitqualifier_03 i:nil="true" />
+              <Quantity_02>24</Quantity_02>
+              <Quantityqualifier_01>11</Quantityqualifier_01>
+            </QUANTITYDETAILS_01>
+          </QTY>
+        </Loop_LOC_ORDERS_2>
+        <Loop_LOC_ORDERS_2>
+          <DTM>
+            <DTM>
+              <DATETIMEPERIOD_01>
+                <Datetimeperiod_02>20020913</Datetimeperiod_02>
+                <Datetimeperiodformatqualifier_03>102</Datetimeperiodformatqualifier_03>
+                <Datetimeperiodqualifier_01>2</Datetimeperiodqualifier_01>
+              </DATETIMEPERIOD_01>
+            </DTM>
+          </DTM>
+          <LOC>
+            <LOCATIONIDENTIFICATION_02>
+              <Codelistqualifier_02 i:nil="true" />
+              <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+              <Placelocation_04 i:nil="true" />
+              <Placelocationidentification_01>3312345501003</Placelocationidentification_01>
+            </LOCATIONIDENTIFICATION_02>
+            <Placelocationqualifier_01>7</Placelocationqualifier_01>
+            <RELATEDLOCATIONONEIDENTIFICATION_03 i:nil="true" />
+            <RELATEDLOCATIONTWOIDENTIFICATION_04 i:nil="true" />
+            <Relationcoded_05 i:nil="true" />
+          </LOC>
+          <QTY>
+            <QUANTITYDETAILS_01>
+              <Measureunitqualifier_03 i:nil="true" />
+              <Quantity_02>24</Quantity_02>
+              <Quantityqualifier_01>11</Quantityqualifier_01>
+            </QUANTITYDETAILS_01>
+          </QTY>
+        </Loop_LOC_ORDERS_2>
+      </LOCLoop>
+      <MEA i:nil="true" />
+      <MOA>
+        <MOA>
+          <MONETARYAMOUNT_01>
+            <Currencycoded_03 i:nil="true" />
+            <Currencyqualifier_04 i:nil="true" />
+            <Monetaryamount_02>699.84</Monetaryamount_02>
+            <Monetaryamounttypequalifier_01>203</Monetaryamounttypequalifier_01>
+            <Statuscoded_05 i:nil="true" />
+          </MONETARYAMOUNT_01>
+        </MOA>
+      </MOA>
+      <NADLoop i:nil="true" />
+      <PACLoop>
+        <Loop_PAC_ORDERS_2>
+          <DTM i:nil="true" />
+          <MEA i:nil="true" />
+          <PAC>
+            <Numberofpackages_01>2</Numberofpackages_01>
+            <PACKAGETYPEIDENTIFICATION_04 i:nil="true" />
+            <PACKAGETYPE_03>
+              <Codelistqualifier_02 i:nil="true" />
+              <Codelistresponsibleagencycoded_03 i:nil="true" />
+              <Typeofpackages_04 i:nil="true" />
+              <Typeofpackagesidentification_01>CS</Typeofpackagesidentification_01>
+            </PACKAGETYPE_03>
+            <PACKAGINGDETAILS_02>
+              <Packaginglevelcoded_01 i:nil="true" />
+              <Packagingrelatedinformationcoded_02>51</Packagingrelatedinformationcoded_02>
+              <Packagingtermsandconditionscoded_03 i:nil="true" />
+            </PACKAGINGDETAILS_02>
+            <RETURNABLEPACKAGEDETAILS_05 i:nil="true" />
+          </PAC>
+          <PCILoop>
+            <Loop_PCI_ORDERS>
+              <DTM i:nil="true" />
+              <GIN i:nil="true" />
+              <PCI>
+                <Containerpackagestatuscoded_03 i:nil="true" />
+                <MARKSLABELS_02 i:nil="true" />
+                <Markinginstructionscoded_01>14</Markinginstructionscoded_01>
+                <TYPEOFMARKING_04 i:nil="true" />
+              </PCI>
+              <RFF i:nil="true" />
+            </Loop_PCI_ORDERS>
+          </PCILoop>
+          <QTY i:nil="true" />
+          <RFFLoop i:nil="true" />
+        </Loop_PAC_ORDERS_2>
+      </PACLoop>
+      <PAI i:nil="true" />
+      <PATLoop i:nil="true" />
+      <PCD i:nil="true" />
+      <PIA>
+        <PIA>
+          <ITEMNUMBERIDENTIFICATION_02>
+            <Codelistqualifier_03 i:nil="true" />
+            <Codelistresponsibleagencycoded_04 i:nil="true" />
+            <Itemnumber_01>ABC1234</Itemnumber_01>
+            <Itemnumbertypecoded_02>IN</Itemnumbertypecoded_02>
+          </ITEMNUMBERIDENTIFICATION_02>
+          <ITEMNUMBERIDENTIFICATION_03 i:nil="true" />
+          <ITEMNUMBERIDENTIFICATION_04 i:nil="true" />
+          <ITEMNUMBERIDENTIFICATION_05 i:nil="true" />
+          <ITEMNUMBERIDENTIFICATION_06 i:nil="true" />
+          <Productidfunctionqualifier_01>1</Productidfunctionqualifier_01>
+        </PIA>
+      </PIA>
+      <PRILoop>
+        <Loop_PRI_ORDERS>
+          <APR i:nil="true" />
+          <CUX i:nil="true" />
+          <DTM i:nil="true" />
+          <PRI>
+            <PRICEINFORMATION_01>
+              <Measureunitqualifier_06>KGM</Measureunitqualifier_06>
+              <Price_02>14.58</Price_02>
+              <Pricequalifier_01>AAA</Pricequalifier_01>
+              <Pricetypecoded_03>CT</Pricetypecoded_03>
+              <Pricetypequalifier_04>AAE</Pricetypequalifier_04>
+              <Unitpricebasis_05>1</Unitpricebasis_05>
+            </PRICEINFORMATION_01>
+            <Sublinepricechangecoded_02 i:nil="true" />
+          </PRI>
+          <RNG i:nil="true" />
+        </Loop_PRI_ORDERS>
+      </PRILoop>
+      <QTY>
+        <QTY>
+          <QUANTITYDETAILS_01>
+            <Measureunitqualifier_03 i:nil="true" />
+            <Quantity_02>48</Quantity_02>
+            <Quantityqualifier_01>21</Quantityqualifier_01>
+          </QUANTITYDETAILS_01>
+        </QTY>
+      </QTY>
+      <QVR i:nil="true" />
+      <RCSLoop i:nil="true" />
+      <RFFLoop>
+        <Loop_RFF_ORDERS>
+          <DTM>
+            <DTM>
+              <DATETIMEPERIOD_01>
+                <Datetimeperiod_02>20020801</Datetimeperiod_02>
+                <Datetimeperiodformatqualifier_03>102</Datetimeperiodformatqualifier_03>
+                <Datetimeperiodqualifier_01>171</Datetimeperiodqualifier_01>
+              </DATETIMEPERIOD_01>
+            </DTM>
+          </DTM>
+          <RFF>
+            <REFERENCE_01>
+              <Linenumber_03 i:nil="true" />
+              <Referencenumber_02>AUG93RNG04</Referencenumber_02>
+              <Referencequalifier_01>PL</Referencequalifier_01>
+              <Referenceversionnumber_04 i:nil="true" />
+            </REFERENCE_01>
+          </RFF>
+        </Loop_RFF_ORDERS>
+      </RFFLoop>
+      <SCCLoop i:nil="true" />
+      <STGLoop i:nil="true" />
+      <TAXLoop>
+        <Loop_TAX_ORDERS>
+          <LOC i:nil="true" />
+          <MOA i:nil="true" />
+          <TAX>
+            <DUTYTAXFEEACCOUNTDETAIL_03 i:nil="true" />
+            <DUTYTAXFEEDETAIL_05>
+              <Codelistqualifier_02 i:nil="true" />
+              <Codelistqualifier_06 i:nil="true" />
+              <Codelistresponsibleagencycoded_03 i:nil="true" />
+              <Codelistresponsibleagencycoded_07 i:nil="true" />
+              <Dutytaxfeerate_04>17.5</Dutytaxfeerate_04>
+              <Dutytaxfeeratebasisidentification_05 i:nil="true" />
+              <Dutytaxfeerateidentification_01 i:nil="true" />
+            </DUTYTAXFEEDETAIL_05>
+            <DUTYTAXFEETYPE_02>
+              <Codelistqualifier_02 i:nil="true" />
+              <Codelistresponsibleagencycoded_03 i:nil="true" />
+              <Dutytaxfeetype_04 i:nil="true" />
+              <Dutytaxfeetypecoded_01>VAT</Dutytaxfeetypecoded_01>
+            </DUTYTAXFEETYPE_02>
+            <Dutytaxfeeassessmentbasis_04 i:nil="true" />
+            <Dutytaxfeecategorycoded_06>S</Dutytaxfeecategorycoded_06>
+            <Dutytaxfeefunctionqualifier_01>7</Dutytaxfeefunctionqualifier_01>
+            <Partytaxidentificationnumber_07 i:nil="true" />
+          </TAX>
+        </Loop_TAX_ORDERS>
+      </TAXLoop>
+      <TDTLoop i:nil="true" />
+      <TODLoop i:nil="true" />
+    </Loop_LIN_ORDERS>
+  </LINLoop>
+  <MOA i:nil="true" />
+  <NADLoop>
+    <Loop_NAD_ORDERS>
+      <CTALoop>
+        <Loop_CTA_ORDERS>
+          <COM>
+            <COM>
+              <COMMUNICATIONCONTACT_01>
+                <Communicationchannelqualifier_02>TE</Communicationchannelqualifier_02>
+                <Communicationnumber_01>0044715632478</Communicationnumber_01>
+              </COMMUNICATIONCONTACT_01>
+            </COM>
+          </COM>
+          <CTA>
+            <Contactfunctioncoded_01>OC</Contactfunctioncoded_01>
+            <DEPARTMENTOREMPLOYEEDETAILS_02>
+              <Departmentoremployee_02>P FORGET</Departmentoremployee_02>
+              <Departmentoremployeeidentification_01 i:nil="true" />
+            </DEPARTMENTOREMPLOYEEDETAILS_02>
+          </CTA>
+        </Loop_CTA_ORDERS>
+      </CTALoop>
+      <DOCLoop i:nil="true" />
+      <FII i:nil="true" />
+      <LOC i:nil="true" />
+      <NAD>
+        <Cityname_06 i:nil="true" />
+        <Countrycoded_09 i:nil="true" />
+        <Countrysubentityidentification_07 i:nil="true" />
+        <NAMEANDADDRESS_03 i:nil="true" />
+        <PARTYIDENTIFICATIONDETAILS_02>
+          <Codelistqualifier_02 i:nil="true" />
+          <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+          <Partyididentification_01>5412345000013</Partyididentification_01>
+        </PARTYIDENTIFICATIONDETAILS_02>
+        <PARTYNAME_04 i:nil="true" />
+        <Partyqualifier_01>BY</Partyqualifier_01>
+        <Postcodeidentification_08 i:nil="true" />
+        <STREET_05 i:nil="true" />
+      </NAD>
+      <RFFLoop>
+        <Loop_RFF_ORDERS>
+          <DTM i:nil="true" />
+          <RFF>
+            <REFERENCE_01>
+              <Linenumber_03 i:nil="true" />
+              <Referencenumber_02>87765432</Referencenumber_02>
+              <Referencequalifier_01>VA</Referencequalifier_01>
+              <Referenceversionnumber_04 i:nil="true" />
+            </REFERENCE_01>
+          </RFF>
+        </Loop_RFF_ORDERS>
+      </RFFLoop>
+    </Loop_NAD_ORDERS>
+    <Loop_NAD_ORDERS>
+      <CTALoop i:nil="true" />
+      <DOCLoop i:nil="true" />
+      <FII i:nil="true" />
+      <LOC i:nil="true" />
+      <NAD>
+        <Cityname_06 i:nil="true" />
+        <Countrycoded_09 i:nil="true" />
+        <Countrysubentityidentification_07 i:nil="true" />
+        <NAMEANDADDRESS_03 i:nil="true" />
+        <PARTYIDENTIFICATIONDETAILS_02>
+          <Codelistqualifier_02 i:nil="true" />
+          <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+          <Partyididentification_01>4012345500004</Partyididentification_01>
+        </PARTYIDENTIFICATIONDETAILS_02>
+        <PARTYNAME_04 i:nil="true" />
+        <Partyqualifier_01>SU</Partyqualifier_01>
+        <Postcodeidentification_08 i:nil="true" />
+        <STREET_05 i:nil="true" />
+      </NAD>
+      <RFFLoop>
+        <Loop_RFF_ORDERS>
+          <DTM i:nil="true" />
+          <RFF>
+            <REFERENCE_01>
+              <Linenumber_03 i:nil="true" />
+              <Referencenumber_02>56225432</Referencenumber_02>
+              <Referencequalifier_01>VA</Referencequalifier_01>
+              <Referenceversionnumber_04 i:nil="true" />
+            </REFERENCE_01>
+          </RFF>
+        </Loop_RFF_ORDERS>
+      </RFFLoop>
+    </Loop_NAD_ORDERS>
+  </NADLoop>
+  <PACLoop i:nil="true" />
+  <PAI>
+    <PAYMENTINSTRUCTIONDETAILS_01>
+      <Codelistqualifier_04 i:nil="true" />
+      <Codelistresponsibleagencycoded_05 i:nil="true" />
+      <Paymentchannelcoded_06 i:nil="true" />
+      <Paymentconditionscoded_01 i:nil="true" />
+      <Paymentguaranteecoded_02 i:nil="true" />
+      <Paymentmeanscoded_03>42</Paymentmeanscoded_03>
+    </PAYMENTINSTRUCTIONDETAILS_01>
+  </PAI>
+  <PATLoop i:nil="true" />
+  <RCSLoop i:nil="true" />
+  <RFFLoop>
+    <Loop_RFF_ORDERS>
+      <DTM>
+        <DTM>
+          <DATETIMEPERIOD_01>
+            <Datetimeperiod_02>20020825</Datetimeperiod_02>
+            <Datetimeperiodformatqualifier_03>102</Datetimeperiodformatqualifier_03>
+            <Datetimeperiodqualifier_01>171</Datetimeperiodqualifier_01>
+          </DATETIMEPERIOD_01>
+        </DTM>
+      </DTM>
+      <RFF>
+        <REFERENCE_01>
+          <Linenumber_03 i:nil="true" />
+          <Referencenumber_02>652744</Referencenumber_02>
+          <Referencequalifier_01>CT</Referencequalifier_01>
+          <Referenceversionnumber_04 i:nil="true" />
+        </REFERENCE_01>
+      </RFF>
+    </Loop_RFF_ORDERS>
+  </RFFLoop>
+  <SCCLoop i:nil="true" />
+  <TAXLoop i:nil="true" />
+  <TDTLoop>
+    <Loop_TDT_ORDERS>
+      <LOCLoop i:nil="true" />
+      <TDT>
+        <CARRIER_05 i:nil="true" />
+        <Conveyancereferencenumber_02 i:nil="true" />
+        <EXCESSTRANSPORTATIONINFORMATION_07 i:nil="true" />
+        <MODEOFTRANSPORT_03>
+          <Modeoftransport_02 i:nil="true" />
+          <Modeoftransportcoded_01>30</Modeoftransportcoded_01>
+        </MODEOFTRANSPORT_03>
+        <TRANSPORTIDENTIFICATION_08 i:nil="true" />
+        <TRANSPORTMEANS_04>
+          <Typeofmeansoftransport_02 i:nil="true" />
+          <Typeofmeansoftransportidentification_01>31</Typeofmeansoftransportidentification_01>
+        </TRANSPORTMEANS_04>
+        <Transitdirectioncoded_06 i:nil="true" />
+        <Transportownershipcoded_09 i:nil="true" />
+        <Transportstagequalifier_01>20</Transportstagequalifier_01>
+      </TDT>
+    </Loop_TDT_ORDERS>
+  </TDTLoop>
+  <TODLoop>
+    <Loop_TOD_ORDERS>
+      <LOC>
+        <LOC>
+          <LOCATIONIDENTIFICATION_02>
+            <Codelistqualifier_02 i:nil="true" />
+            <Codelistresponsibleagencycoded_03 i:nil="true" />
+            <Placelocation_04 i:nil="true" />
+            <Placelocationidentification_01>BE-BRU</Placelocationidentification_01>
+          </LOCATIONIDENTIFICATION_02>
+          <Placelocationqualifier_01>1</Placelocationqualifier_01>
+          <RELATEDLOCATIONONEIDENTIFICATION_03 i:nil="true" />
+          <RELATEDLOCATIONTWOIDENTIFICATION_04 i:nil="true" />
+          <Relationcoded_05 i:nil="true" />
+        </LOC>
+      </LOC>
+      <TOD>
+        <TERMSOFDELIVERYORTRANSPORT_03>
+          <Codelistqualifier_02>23</Codelistqualifier_02>
+          <Codelistresponsibleagencycoded_03>9</Codelistresponsibleagencycoded_03>
+          <Termsofdeliveryortransport_04 i:nil="true" />
+          <Termsofdeliveryortransport_05 i:nil="true" />
+          <Termsofdeliveryortransportcoded_01>CIF</Termsofdeliveryortransportcoded_01>
+        </TERMSOFDELIVERYORTRANSPORT_03>
+        <Termsofdeliveryortransportfunctioncoded_01>3</Termsofdeliveryortransportfunctioncoded_01>
+        <Transportchargesmethodofpaymentcoded_02 i:nil="true" />
+      </TOD>
+    </Loop_TOD_ORDERS>
+  </TODLoop>
+  <UNH xmlns:a="http://schemas.datacontract.org/2004/07/EdiFabric.Core.Model.Edi.Edifact">
+    <a:CommonAccessReference_03 i:nil="true" />
+    <a:MessageIdentifier_02>
+      <a:AssociationAssignedCode_05 i:nil="true" />
+      <a:CodelistDirectoryVersionNumber_06 i:nil="true" />
+      <a:ControllingAgencyCoded_04>UN</a:ControllingAgencyCoded_04>
+      <a:MessageReleaseNumber_03>96A</a:MessageReleaseNumber_03>
+      <a:MessageTypeSubfunctionIdentification_07 i:nil="true" />
+      <a:MessageType_01>ORDERS</a:MessageType_01>
+      <a:MessageVersionNumber_02>D</a:MessageVersionNumber_02>
+    </a:MessageIdentifier_02>
+    <a:MessageImplementationGuidelineIdentification_06 i:nil="true" />
+    <a:MessageSubsetIdentification_05 i:nil="true" />
+    <a:ScenarioIdentification_07 i:nil="true" />
+    <a:StatusoftheTransfer_04 i:nil="true" />
+  </UNH>
+  <UNS>
+    <Sectionidentification_01>S</Sectionidentification_01>
+  </UNS>
+  <UNT xmlns:a="http://schemas.datacontract.org/2004/07/EdiFabric.Core.Model.Edi.Edifact">
+    <a:MessageReferenceNumber_02>000000101</a:MessageReferenceNumber_02>
+    <a:NumberofSegmentsinaMessage_01>38</a:NumberofSegmentsinaMessage_01>
+  </UNT>
+</TSORDERS>

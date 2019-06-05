@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="PurchaseOrder" nillable="true" type="PurchaseOrder" />
+  <xs:complexType name="PurchaseOrder">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="RefNumber" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Customer" type="Customer" />
+      <xs:element minOccurs="0" maxOccurs="1" name="OrderLines" type="ArrayOfOrderLine" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Customer">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RefNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AddressLine" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="City" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PostCode" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfOrderLine">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OrderLine" nillable="true" type="OrderLine" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OrderLine">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="LineNumber" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UPCNumber" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Quantity" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Price" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UOM" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
