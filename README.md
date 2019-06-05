@@ -22,7 +22,7 @@ EDI Templates are included for the following standards:
 * [EANCOM](https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-templates-for-versions-D93A-D96A-and-D01B-)
 * [PNRGOV](https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-templates)
 
-Custom EDI Templates for US Customs ([CUSCAR](https://github.com/EdiFabric/Sdk/blob/master/EdiFabric.Sdk.Edifact.Templates.USCustoms/EF_EDIFACT_D03B_CUSCAR.cs) and [PAXLST](https://github.com/EdiFabric/Sdk/blob/master/EdiFabric.Sdk.Edifact.Templates.USCustoms/EF_EDIFACT_D03B_PAXLST.cs)) and SMDG ([BAPLIE](https://github.com/EdiFabric/Sdk/blob/master/EdiFabric.Sdk.Edifact.Templates.Smdg/EF_EDIFACT_D13B_BAPLIE.cs))
+Custom EDI Templates for US Customs ([CUSCAR](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.Templates.D03B.USCustoms/EF_EDIFACT_D03B_CUSCAR.cs) and [PAXLST](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.Templates.D03B.USCustoms/EF_EDIFACT_D03B_PAXLST.cs)) and SMDG ([BAPLIE](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.Templates.D13B.SMDG/EF_EDIFACT_D13B_BAPLIE.cs))
 
 Examples are included for the following transactions:
 
