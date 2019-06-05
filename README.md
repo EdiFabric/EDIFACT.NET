@@ -27,20 +27,20 @@ Custom EDI Templates for US Customs ([CUSCAR](https://github.com/EdiFabric/Sdk/b
 Examples are included for the following transactions:
 
 EDIFACT
-* [EDIFACT BAPLIE](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.BAPLIE)
-* [EDIFACT CUSCAR](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.CUSCAR)
-* [EDIFACT DESADV](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.DESADV)
-* [EDIFACT IFTMIN](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.IFTMIN)
-* [EDIFACT IFTSTA](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.IFTSTA)
-* [EDIFACT INVOIC](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.INVOIC)
-* [EDIFACT ORDERS](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.ORDERS)
-* [EDIFACT ORDRSP](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.ORDRSP)
-* [EDIFACT PAXLST](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.PAXLST)
-* [IATA PNRGOV](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.PNRGOV)
-* [EDIFACT PRICAT](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Edifact.PRICAT)
+* [EDIFACT BAPLIE](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.BAPLIE/Program.cs)
+* [EDIFACT CUSCAR](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.CUSCAR/Program.cs)
+* [EDIFACT DESADV](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.DESADV/Program.cs)
+* [EDIFACT IFTMIN](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.IFTMIN/Program.cs)
+* [EDIFACT IFTSTA](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.IFTSTA/Program.cs)
+* [EDIFACT INVOIC](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.INVOIC/Program.cs)
+* [EDIFACT ORDERS](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.ORDERS/Program.cs)
+* [EDIFACT ORDRSP](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.ORDRSP/Program.cs)
+* [EDIFACT PAXLST](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.PAXLST/Program.cs)
+* [IATA PNRGOV](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.PNRGOV/Program.cs)
+* [EDIFACT PRICAT](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.PRICAT/Program.cs)
 
 EANCOM
-* [EANCOM INVOIC](https://github.com/EdiFabric/Sdk/tree/master/EdiFabric.Sdk.Eancom.INVOIC)
+* [EANCOM INVOIC](https://github.com/EdiFabric/EDIFACT-Examples/blob/master/EdiFabric.Examples.EDIFACT.INVOIC.Syntax3/Program.cs)
 
 EdiFabric EDI Toolkit supports:
 
