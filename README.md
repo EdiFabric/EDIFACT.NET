@@ -2,6 +2,7 @@
 
 #### [Free Online EDI Translator](https://www.edifabric.com/edi-api.html)
 #### [Quickstart - Translate EDI file](https://support.edifabric.com/hc/en-us/articles/360000280532)
+#### [Tutorial](https://support.edifabric.com/hc/en-us/articles/360000291511-Tutorial-EDI-NET-Tools-Basics)
 #### [Benchmark](https://support.edifabric.com/hc/en-us/articles/360002327372-EDI-Parser-Benchmark)
 #### [Documentation](https://support.edifabric.com/hc/en-us)
 ----
@@ -15,7 +16,7 @@ With the EDI Tools for .NET you can:
 * Customize EDI templates per customer and comply with any format
 * Import\Export to\from XML
 * Import\Export to\from JSON
-* Use the templates as entityFramework POCOs
+* Use the templates as Entity Framework POCOs
 * Generate DB structure wiht Code First
 
 EDI Templates are included for the following standards:
@@ -52,6 +53,6 @@ EdiFabric EDI Toolkit supports:
 * .NET Standard 2.0
 * .NET Core 2.0 (trial available)
 
-The solution references the 14 day trial NuGet packages
+The examples reference the 14 day trial NuGet packages
 
 [www.edifabric.com](http://www.edifabric.com/)
