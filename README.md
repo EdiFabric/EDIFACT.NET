@@ -18,6 +18,7 @@ With the EDI Tools for .NET you can:
 * Import\Export to\from JSON
 * Use the templates as Entity Framework POCOs
 * Generate DB structure wiht Code First
+* Save to\Query DB using Entity Framework
 
 EDI Templates are included for the following standards:
 
