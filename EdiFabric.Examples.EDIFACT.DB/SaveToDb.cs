@@ -21,18 +21,17 @@ namespace EdiFabric.Examples.EDIFACT.DB
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\PurchaseOrder.txt");
+
+            List<IEdiItem> ediItems;
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A.NoValidation"))
+                ediItems = ediReader.ReadToEnd().ToList();
+
+            var purchaseOrders = ediItems.OfType<TSORDERS>();
+
             using (var db = new EDIFACTContext())
             {
-                Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\PurchaseOrder.txt");
-
-                List<IEdiItem> ediItems;
-                using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A.NoValidation"))
-                    ediItems = ediReader.ReadToEnd().ToList();
-
-                var purchaseOrders = ediItems.OfType<TSORDERS>();
-
                 db.TSORDERS.AddRange(purchaseOrders);
-
                 db.SaveChanges();
             }
         }

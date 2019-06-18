@@ -16,6 +16,10 @@
             //  Validate transactions with custom code
             ValidateEDITransationsWithCustomCode.Run();
 
+            //  Validate data element alpha and alphanumeric data types
+            ValidateDataElementTypes.Unoa();
+            ValidateDataElementTypes.Unob();
+
             //  Validate control segments, UNB and UNG
             ValidateUNBorUNG.Run();
 
