@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Sample Files", "EDIFACT Sample Files", "{93E4213A-6891-4E10-8EF1-CA0ACF1D4CB5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Files", "EDIFACT Files", "{93E4213A-6891-4E10-8EF1-CA0ACF1D4CB5}"
 	ProjectSection(SolutionItems) = preProject
 		Files\EDIFACT\Bayplan.txt = Files\EDIFACT\Bayplan.txt
 		Files\EDIFACT\CargoReport.txt = Files\EDIFACT\CargoReport.txt
@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Sample Files", "EDI
 		Files\EDIFACT\PurchaseOrders.txt = Files\EDIFACT\PurchaseOrders.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Sample Files", "EANCOM Sample Files", "{5F36FEB1-EEF5-4EF5-9FE0-A3EDA7A46694}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Files", "EANCOM Files", "{5F36FEB1-EEF5-4EF5-9FE0-A3EDA7A46694}"
 	ProjectSection(SolutionItems) = preProject
 		Files\EANCOM\DespatchAdvice.txt = Files\EANCOM\DespatchAdvice.txt
 		Files\EANCOM\Instruction.txt = Files\EANCOM\Instruction.txt
@@ -41,9 +41,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Sample Files", "EANC
 		Files\EANCOM\TransportStatus.txt = Files\EANCOM\TransportStatus.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Sample Templates", "EANCOM Sample Templates", "{450E0E52-4FBB-4BBC-ABE3-2153520A024B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Templates", "EANCOM Templates", "{450E0E52-4FBB-4BBC-ABE3-2153520A024B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Sample Templates", "EDIFACT Sample Templates", "{587E65C0-BB46-414E-BACA-4B626F035D4E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Templates", "EDIFACT Templates", "{587E65C0-BB46-414E-BACA-4B626F035D4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Templates.D96A", "EdiFabric.Examples.EDIFACT.Templates.D96A\EdiFabric.Examples.EDIFACT.Templates.D96A.csproj", "{F1000179-978C-4C35-A9B7-0EB4EA4A5066}"
 EndProject
@@ -65,9 +65,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Templates.D03B.USCustoms", "EdiFabric.Examples.EDIFACT.Templates.D03B.USCustoms\EdiFabric.Examples.EDIFACT.Templates.D03B.USCustoms.csproj", "{85ED80CF-4619-4225-BA7E-53BE5F39289D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Sample Transactions", "EANCOM Sample Transactions", "{F67A78BD-B110-405C-951D-79CBBA9828A3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EANCOM Transaction Examples", "EANCOM Transaction Examples", "{F67A78BD-B110-405C-951D-79CBBA9828A3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Sample Transactions", "EDIFACT Sample Transactions", "{35C24290-E6F5-431D-A746-53031472E425}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT Transaction Examples", "EDIFACT Transaction Examples", "{35C24290-E6F5-431D-A746-53031472E425}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.INVOIC.Syntax3", "EdiFabric.Examples.EDIFACT.INVOIC.Syntax3\EdiFabric.Examples.EDIFACT.INVOIC.Syntax3.csproj", "{FE2F9AB3-D00A-4F60-A77C-C679D3BDD3AB}"
 EndProject
