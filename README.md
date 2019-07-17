@@ -9,7 +9,7 @@
 #### [EANCOM Templates](https://sowl.co/33H66)
 ----
 
-With the EDI Tools for .NET you can:
+With EDI Tools for .NET you can:
 
 * Parse\Read\Translate any EDI file
 * Create\Write\Generate EDI files
