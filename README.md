@@ -5,6 +5,8 @@
 #### [Tutorial](https://support.edifabric.com/hc/en-us/articles/360000291511-Tutorial-EDI-NET-Tools-Basics)
 #### [Benchmark](https://support.edifabric.com/hc/en-us/articles/360002327372-EDI-Parser-Benchmark)
 #### [Documentation](https://support.edifabric.com/hc/en-us)
+#### [EDIFACT Templates](https://sowl.co/xWq30)
+#### [EANCOM Templates](https://sowl.co/33H66)
 ----
 
 With the EDI Tools for .NET you can:
