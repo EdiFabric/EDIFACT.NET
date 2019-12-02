@@ -9,10 +9,8 @@ namespace EdiFabric.Templates.EdifactD96A
 {
     public partial class Loop_LIN_ORDERS : IEdiValidator
         {
-            public List<SegmentErrorContext> ValidateEdi(ValidationContext validationContext)
+            public SegmentErrorContext ValidateEdi(ValidationContext validationContext)
             {
-                var result = new List<SegmentErrorContext>();
-
                 var position = validationContext.SegmentIndex + 1;
                 if (PIA != null)
                     position += PIA.Count;
@@ -28,10 +26,10 @@ namespace EdiFabric.Templates.EdifactD96A
                     position += ALI.Count;
 
                 if (QTY != null && DTM == null)
-                    result.Add(new SegmentErrorContext("DTM", position + 1, GetType().GetTypeInfo(), SegmentErrorCode.RequiredSegmentMissing,
-                        "DTM segment is missing."));
+                    return new SegmentErrorContext("DTM", position + 1, GetType().GetTypeInfo(), SegmentErrorCode.RequiredSegmentMissing,
+                        "DTM segment is missing.");
 
-                return result;
+                return null;
             }
         }    
 }
