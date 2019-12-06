@@ -37,7 +37,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             MessageErrorContext errorContext;
             if (!po.IsValid(out errorContext))
             {
-                var customValidation = errorContext.Errors.FirstOrDefault(e => e.Value == "DTM segment is missing.");
+                var customValidation = errorContext.Errors.FirstOrDefault(e => e.Message == "DTM segment is missing.");
                 Debug.WriteLine(customValidation.Value);
             }
         }
