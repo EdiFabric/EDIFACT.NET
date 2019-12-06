@@ -55,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidateCustomEDICodes.cs" />
     <Compile Include="ValidateDataElementTypes.cs" />
+    <Compile Include="ValidateEDITransationsAsync.cs" />
     <Compile Include="ValidateEDITransationsAfterRead.cs" />
     <Compile Include="ValidateEDITransationsBeforeWrite.cs" />
     <Compile Include="ValidateEDITransationsWithCustomCode.cs" />

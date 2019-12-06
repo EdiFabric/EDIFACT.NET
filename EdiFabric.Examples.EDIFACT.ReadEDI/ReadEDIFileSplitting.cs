@@ -33,5 +33,42 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             var linLoop = ediItems.OfType<TSORDERS>().Where(m => m.LINLoop != null).SelectMany(m => m.LINLoop);
             Debug.WriteLine(string.Format("LIN parts {0}", linLoop.Count()));
         }
+
+        /// <summary>
+        /// Copy a message and remove unwanted parts.
+        /// </summary>
+        public static void RunWithCopy()
+        {
+            Debug.WriteLine("******************************");
+            Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
+            Debug.WriteLine("******************************");
+
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderMultiLine.txt");
+
+            //  The split is driven by setting which class to split by in the template.
+            //  Set the class to inherit from EdiItem and the parser will automatically split by it.
+            List<IEdiItem> ediItems;
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+                ediItems = ediReader.ReadToEnd().ToList();
+
+            var purchaseOrders = ediItems.OfType<TSORDERS>();
+            var splitPurchaseOrders = new List<TSORDERS>();
+
+            foreach (var po in purchaseOrders)
+            {
+                foreach (var linLoop in po.LINLoop)
+                {
+                    var splitPO = po.Copy() as TSORDERS;
+                    splitPO.LINLoop.RemoveAll(l => splitPO.LINLoop.IndexOf(l) != po.LINLoop.IndexOf(linLoop));
+                    splitPurchaseOrders.Add(splitPO);
+                }
+            }
+
+            foreach (var po in purchaseOrders)
+                Debug.WriteLine(string.Format("Original: PO - LIN parts {0}", po.LINLoop.Count()));
+
+            foreach (var po in splitPurchaseOrders)
+                Debug.WriteLine(string.Format("Split: PO - LIN parts {0}", po.LINLoop.Count()));
+        }
     }
 }

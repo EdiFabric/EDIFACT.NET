@@ -17,6 +17,7 @@
 
             //  Split transactions to repeating loops
             ReadEDIFileSplitting.Run();
+            ReadEDIFileSplitting.RunWithCopy();
 
             //  Read EDI files with issues
             ReadEDIFileCorrupt.Run();
