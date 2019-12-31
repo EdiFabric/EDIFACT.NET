@@ -34,18 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EdiFabric.Core, Version=9.8.7.1, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Core.9.8.7.1\lib\net45\EdiFabric.Core.dll</HintPath>
+    <Reference Include="EdiFabric.Core, Version=9.8.7.2, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Core.9.8.7.2\lib\net45\EdiFabric.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Framework, Version=9.8.7.1, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Framework.9.8.7.1\lib\net45\EdiFabric.Framework.dll</HintPath>
+    <Reference Include="EdiFabric.Framework, Version=9.8.7.2, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Framework.9.8.7.2\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Plugins.Ack.Edifact, Version=9.8.7.1, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Plugins.Ack.Edifact.9.8.7.1\lib\net45\EdiFabric.Plugins.Ack.Edifact.dll</HintPath>
+    <Reference Include="EdiFabric.Plugins.Ack.Edifact, Version=9.8.7.2, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Plugins.Ack.Edifact.9.8.7.2\lib\net45\EdiFabric.Plugins.Ack.Edifact.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
