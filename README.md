@@ -11,7 +11,7 @@
 
 With EDI Tools for .NET you can:
 
-* Parse\Read\Translate any EDI file
+* Parse\Read\Translate EDI files
 * Create\Write\Generate EDI files
 * Validate EDI files for compliance
 * Automatically generate EDI acknowledgments
@@ -19,7 +19,7 @@ With EDI Tools for .NET you can:
 * Import\Export to\from XML
 * Import\Export to\from JSON
 * Use the templates as Entity Framework POCOs
-* Generate DB structure wiht Code First
+* Generate DB structure with Code First
 * Save to\Query DB using Entity Framework
 
 EDI Templates are included for the following standards:
@@ -55,6 +55,7 @@ EdiFabric EDI Toolkit supports:
 * .NET Standard 1.6
 * .NET Standard 2.0
 * .NET Core 2.0 (trial available)
+* .NET Core 3.0
 
 The examples reference the 14 day trial NuGet packages
 
