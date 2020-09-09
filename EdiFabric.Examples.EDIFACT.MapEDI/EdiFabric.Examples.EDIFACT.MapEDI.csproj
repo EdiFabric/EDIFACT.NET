@@ -37,11 +37,11 @@
     <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Core, Version=9.8.7.3, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Core.9.8.7.3\lib\net45\EdiFabric.Core.dll</HintPath>
+    <Reference Include="EdiFabric.Core, Version=9.8.7.4, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Core.9.8.7.4\lib\net45\EdiFabric.Core.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Framework, Version=9.8.7.3, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Framework.9.8.7.3\lib\net45\EdiFabric.Framework.dll</HintPath>
+    <Reference Include="EdiFabric.Framework, Version=9.8.7.4, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Framework.9.8.7.4\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
