@@ -6,6 +6,7 @@
         {
             //  Validate custom EDI codes
             ValidateCustomEDICodes.Run();
+            ValidateCustomEDICodes.Run2();
 
             //  Validate transactions after reading
             ValidateEDITransationsAfterRead.Run();
