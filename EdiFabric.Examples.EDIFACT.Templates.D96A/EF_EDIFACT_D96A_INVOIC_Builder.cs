@@ -10,9 +10,9 @@ namespace EdiFabric.Examples.EDIFACT.Templates.D96A
         /// Build invoice.
         /// Original from https://www.gs1.org/standards/edi-xml-gs1-eancom/eancom-invoic-s4/syntax-4
         /// </summary>
-        public static TSINVOICFull BuildInvoice(string controlNumber)
+        public static TSINVOIC BuildInvoice(string controlNumber)
         {
-            var result = new TSINVOICFull();
+            var result = new TSINVOIC();
 
             //  Message header
             result.UNH = new UNH();

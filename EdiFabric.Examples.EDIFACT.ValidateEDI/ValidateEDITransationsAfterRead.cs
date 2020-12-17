@@ -28,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = reader.ReadToEnd().ToList();
 
-            var purchaseOrders = ediItems.OfType<TSORDERSFull>();
+            var purchaseOrders = ediItems.OfType<TSORDERS>();
 
             foreach (var purchaseOrder in purchaseOrders)
             {

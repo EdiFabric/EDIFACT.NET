@@ -100,14 +100,13 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     [Serializable()]
     [DataContract()]
     [Message("EDIFACT", "D96A", "ORDERS")]
-    public class TSORDERSCustomValidation : TSORDERSFull
+    public class TSORDERSCustomValidation : TSORDERS
     {
         /// <summary>
         /// New loop for LINE ITEM
         /// The new validation attribute is applied to this loop
         /// </summary>
         [LinLoopValidation]
-        [Splitter]
         [DataMember]
         [ListCount(200000)]
         [Pos(21)]

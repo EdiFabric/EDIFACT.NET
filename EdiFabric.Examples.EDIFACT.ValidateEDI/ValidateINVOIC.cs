@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
-            var invoices = ediItems.OfType<TSINVOICFull>();
+            var invoices = ediItems.OfType<TSINVOIC>();
 
             foreach (var invoice in invoices)
             {

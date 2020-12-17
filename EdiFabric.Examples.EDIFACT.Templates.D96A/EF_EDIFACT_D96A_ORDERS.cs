@@ -1346,7 +1346,7 @@ namespace EdiFabric.Templates.EdifactD96A
     [Serializable()]
     [DataContract()]
     [Message("EDIFACT", "D96A", "ORDERS")]
-    public class TSORDERSFull : EdiMessage
+    public class TSORDERS : EdiMessage
     {
         
         [XmlIgnore]

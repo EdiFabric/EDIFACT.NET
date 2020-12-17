@@ -34,7 +34,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, mc => Assembly.GetEntryAssembly(), new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, (UNB unb, UNG ung, UNH unh) => typeof(TSORDERSPartnerC).GetTypeInfo(), new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the required transactions
