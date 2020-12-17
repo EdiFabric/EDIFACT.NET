@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Diagnostics;
@@ -22,7 +23,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\MixedTransactions.txt");
 
             //  2.  Read multiple transactions batched up in the same interchange
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
             {
                 while (ediReader.Read())
                 {

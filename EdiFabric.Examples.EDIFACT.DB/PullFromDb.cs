@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.DB
 
                 using (var stream = new MemoryStream())
                 {
-                    using (var writer = new EdifactWriter(stream))
+                    using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
                     {
                         writer.Write(SegmentBuilders.BuildUnb("1"));
                         writer.Write(po);

@@ -1298,7 +1298,7 @@ namespace EdiFabric.Templates.EdifactD96A
     [Serializable()]
     [DataContract()]
     [Message("EDIFACT", "D96A", "INVOIC")]
-    public class TSINVOIC : EdiMessage
+    public class TSINVOICFull : EdiMessage
     {
         
         [XmlIgnore]

@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             //  The split is driven by setting which class to split by in the template.
             //  Set the class to inherit from EdiItem and the parser will automatically split by it.
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { Split = true }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber, Split = true }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  Find all LIN loops, they are all separate ediItems\EdiMessages
@@ -48,7 +49,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             //  The split is driven by setting which class to split by in the template.
             //  Set the class to inherit from EdiItem and the parser will automatically split by it.
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();

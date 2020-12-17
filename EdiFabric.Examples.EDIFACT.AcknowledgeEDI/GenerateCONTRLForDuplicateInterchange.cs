@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Ack;
+using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
@@ -54,12 +55,13 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
                 },
                 // Turn on UCM for valid messages
                 GenerateForValidMessages = true,
-                InterchangeDuplicates = IsDuplicate
+                InterchangeDuplicates = IsDuplicate,
+                ValidationSettings = new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }
             };
 
             using (var ackMan = new Plugins.Acknowledgments.Edifact.AckMan(settings))
             {
-                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 {
                     while (ediReader.Read())
                         ackMan.Publish(ediReader.Item);

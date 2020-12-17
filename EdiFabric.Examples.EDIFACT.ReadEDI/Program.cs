@@ -26,9 +26,6 @@
             //  Read transaction only
             ReadEDIFileTransactionOnly.Run();
 
-            //  Read using a partner-specific template (full copy)
-            ReadEDIFileWithCustomTemplate.Run();
-
             //  Read using partner-specific template (inherited)
             ReadEDIFileWithInheritedTemplate.Run();
 

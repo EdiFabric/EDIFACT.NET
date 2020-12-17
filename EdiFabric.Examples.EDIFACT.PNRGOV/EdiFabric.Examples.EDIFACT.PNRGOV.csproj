@@ -40,6 +40,9 @@
     <Reference Include="EdiFabric.Framework, Version=9.8.7.5, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="EdiFabric.Templates.Padis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Padis.1.5.1\lib\net45\EdiFabric.Templates.Padis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,10 +64,6 @@
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj">
       <Project>{9f794065-1e15-4341-a1c9-4e1ffd856c28}</Project>
       <Name>EdiFabric.Examples.EDIFACT.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.PNRGOV\EdiFabric.Examples.EDIFACT.Templates.PNRGOV.csproj">
-      <Project>{8fe60ffd-6678-4e1d-9804-ffa12e87e705}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.PNRGOV</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

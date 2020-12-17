@@ -23,7 +23,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
             using (var stream = new MemoryStream())
             {
                 //  Set AutoTrailers to false
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { AutoTrailers = false }))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { AutoTrailers = false, SerialNumber = TrialLicense.SerialNumber }))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("1"));
                     writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));

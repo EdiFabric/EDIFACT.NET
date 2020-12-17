@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Examples.EDIFACT.Templates.D96A;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
@@ -26,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             //  Validate using EDI codes map
             MessageErrorContext errorContext;
-            if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { SkipTrailerValidation = true }))
+            if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { SkipTrailerValidation = true, SerialNumber = TrialLicense.SerialNumber }))
             {
                 //  Report it back to the sender, log, etc.
                 var errors = errorContext.Flatten();

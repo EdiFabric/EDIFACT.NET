@@ -40,8 +40,12 @@
     <Reference Include="EdiFabric.Framework, Version=9.8.7.5, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.1.5.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,7 +64,6 @@
     <Compile Include="ReadEDIFileToEnd.cs" />
     <Compile Include="ReadEDIFileToEndAsync.cs" />
     <Compile Include="ReadEDIFileTransactionOnly.cs" />
-    <Compile Include="ReadEDIFileWithCustomTemplate.cs" />
     <Compile Include="ReadEDIFileWithErrors.cs" />
     <Compile Include="ReadEDIFileWithInheritedTemplate.cs" />
     <Compile Include="ReadEDIFileWithTemplateResolution.cs" />
@@ -73,18 +76,6 @@
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj">
       <Project>{9f794065-1e15-4341-a1c9-4e1ffd856c28}</Project>
       <Name>EdiFabric.Examples.EDIFACT.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerB\EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerB.csproj">
-      <Project>{1f37b980-26a0-4e57-ad5c-b5401b2606b0}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerC\EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerC.csproj">
-      <Project>{4fb492f9-7aad-4600-ae44-21323fb5e630}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A.PartnerC</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A\EdiFabric.Examples.EDIFACT.Templates.D96A.csproj">
-      <Project>{f1000179-978c-4c35-a9b7-0eb4ea4a5066}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

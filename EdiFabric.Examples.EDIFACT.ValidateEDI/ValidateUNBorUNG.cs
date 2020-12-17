@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +20,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\Invoice.txt");
 
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
             {
                 while (ediReader.Read())
                 {

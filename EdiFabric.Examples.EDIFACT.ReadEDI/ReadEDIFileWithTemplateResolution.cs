@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
@@ -27,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, AssemblyeFactory))
+            using (var ediReader = new EdifactReader(ediStream, AssemblyeFactory, new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the purchase orders
@@ -37,7 +38,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
         public static Assembly AssemblyeFactory(MessageContext messageContext)
         {
             if (messageContext.Version == "D96A")
-                return Assembly.Load("EdiFabric.Examples.EDIFACT.Templates.D96A");
+                return Assembly.Load("EdiFabric.Templates.Edifact");
 
             throw new System.Exception(string.Format("Version {0} is not supported.", messageContext.Version));
         }
@@ -56,7 +57,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory, new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the purchase orders

@@ -24,7 +24,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
                 {
                     //  Set a custom segment separator
                     var separators = new Separators('|', Separators.Edifact.ComponentDataElement,

@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Diagnostics;
@@ -25,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2. Read item by item, that is each call to Read() 
             //  brings back either a control segment (UNB, UNG, UNE or UNZ) or a transaction
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
             {
                 while (ediReader.Read())
                 {

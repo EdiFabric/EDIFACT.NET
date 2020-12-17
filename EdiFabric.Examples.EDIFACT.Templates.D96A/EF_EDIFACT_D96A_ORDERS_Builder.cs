@@ -10,9 +10,9 @@ namespace EdiFabric.Examples.EDIFACT.Templates.D96A
         /// Build purchase order.
         /// Original from https://www.gs1.org/standards/edi-xml-gs1-eancom/eancom-orders-s4/syntax-4
         /// </summary>
-        public static TSORDERS BuildPurchaseOrder(string controlNumber)
+        public static TSORDERSFull BuildPurchaseOrder(string controlNumber)
         {
-            var result = new TSORDERS();
+            var result = new TSORDERSFull();
 
             //  Message header
             result.UNH = new UNH();

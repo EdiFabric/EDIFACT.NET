@@ -26,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.BAPLIE
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\Bayplan.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D13B.SMDG"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSBAPLIE>();
@@ -50,7 +50,7 @@ namespace EdiFabric.Examples.EDIFACT.BAPLIE
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("1"));
                     writer.Write(transaction);

@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
             {
                 var items = await ediReader.ReadToEndAsync();
                 ediItems = items.ToList();

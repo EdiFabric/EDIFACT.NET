@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.CSV
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderCSV.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

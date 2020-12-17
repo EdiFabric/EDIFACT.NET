@@ -26,7 +26,6 @@
 
             //  Validate sample transactions
             ValidateINVOIC.Run();
-            ValidateINVOICSyntax3.Run();
             ValidateORDERS.Run();
 
             //  Validate async

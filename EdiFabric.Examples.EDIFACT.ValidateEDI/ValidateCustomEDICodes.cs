@@ -1,6 +1,8 @@
-﻿using EdiFabric.Core.ErrorCodes;
+﻿using EdiFabric.Core.Annotations.Edi;
+using EdiFabric.Core.ErrorCodes;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System;
@@ -9,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 {
@@ -30,16 +33,16 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = reader.ReadToEnd().ToList();
 
-            var purchaseOrders = ediItems.OfType<TSORDERS>();
+            var purchaseOrders = ediItems.OfType<TSORDERSFull>();
 
             foreach (var purchaseOrder in purchaseOrders)
             {
                 //  Validate using EDI codes map
                 MessageErrorContext errorContext;
-                if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { DataElementTypeMap = codeSetMap }))
+                if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { DataElementTypeMap = codeSetMap, SerialNumber = TrialLicense.SerialNumber }))
                 {
                     //  Invalid code value
                     var customCodeError = errorContext.Errors.SingleOrDefault(e => e.Errors.Any(de => de.Code == DataElementErrorCode.InvalidCodeValue));
@@ -70,16 +73,16 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = reader.ReadToEnd().ToList();
 
-            var purchaseOrders = ediItems.OfType<TSORDERS>();
+            var purchaseOrders = ediItems.OfType<TSORDERSFull>();
 
             foreach (var purchaseOrder in purchaseOrders)
             {
                 //  Validate using EDI codes map
                 MessageErrorContext errorContext;
-                if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { DataElementCodesMap = codeSetMap }))
+                if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { DataElementCodesMap = codeSetMap, SerialNumber = TrialLicense.SerialNumber }))
                 {
                     //  Invalid code value
                     var customCodeError = errorContext.Errors.SingleOrDefault(e => e.Errors.Any(de => de.Code == DataElementErrorCode.InvalidCodeValue));
@@ -93,5 +96,12 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
                 }
             }
         }
+    }
+
+    [Serializable()]
+    [DataContract()]
+    [EdiCodes(",LL,PP,")]
+    public class EDIFACT_ID_1225_PartnerA
+    {
     }
 }

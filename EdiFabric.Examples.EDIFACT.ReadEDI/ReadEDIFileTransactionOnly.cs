@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  Set the NoEnvelope flag to true
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings() { NoEnvelope = true }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber, NoEnvelope = true }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var items = ediItems.OfType<EdiMessage>();

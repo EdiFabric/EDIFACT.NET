@@ -43,6 +43,9 @@
     <Reference Include="EdiFabric.Framework, Version=9.8.7.5, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.1.5.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -77,14 +80,6 @@
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj">
       <Project>{9f794065-1e15-4341-a1c9-4e1ffd856c28}</Project>
       <Name>EdiFabric.Examples.EDIFACT.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A.Common\EdiFabric.Examples.EDIFACT.Templates.D96A.Common.csproj">
-      <Project>{139008af-7f7a-4395-be3f-45f196873d1e}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A.NoValidation\EdiFabric.Examples.EDIFACT.Templates.D96A.NoValidation.csproj">
-      <Project>{6d53452c-43d7-4c30-ad4d-21f035f64211}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A.NoValidation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

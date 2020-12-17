@@ -27,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PassengerData.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, TemplateFactory))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Padis", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSPNRGOV>();
@@ -51,7 +51,7 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("13052210400995"));
                     writer.Write(SegmentBuilders.BuildUng("13052210400995", "PNRGOV"));

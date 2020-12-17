@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
@@ -18,16 +19,16 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
-            var purchaseOrders = ediItems.OfType<TSORDERS>();
+            var purchaseOrders = ediItems.OfType<TSORDERSFull>();
 
             foreach (var po in purchaseOrders)
             {
                 //  Validate
                 MessageErrorContext errorContext;
-                if (!po.IsValid(out errorContext))
+                if (!po.IsValid(out errorContext, new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }))
                 {
                     //  Report it back to the sender, log, etc.
                     var errors = errorContext.Flatten();

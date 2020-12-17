@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0BBCC313-888D-4F2E-8246-A1A1E99B86CD}</ProjectGuid>
+    <ProjectGuid>{3C13E1B1-4DF4-4207-B424-1959C792B55B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>EdiFabric.Examples.EDIFACT.ValidateEDI</RootNamespace>
-    <AssemblyName>EdiFabric.Examples.EDIFACT.ValidateEDI</AssemblyName>
+    <RootNamespace>EdiFabric.Examples.EDIFACT.Demo</RootNamespace>
+    <AssemblyName>EdiFabric.Examples.EDIFACT.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -40,9 +38,11 @@
     <Reference Include="EdiFabric.Framework, Version=9.8.7.5, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.1.5.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,30 +53,15 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidateCustomEDICodes.cs" />
-    <Compile Include="ValidateDataElementTypes.cs" />
-    <Compile Include="ValidateEDITransationsAsync.cs" />
-    <Compile Include="ValidateEDITransationsAfterRead.cs" />
-    <Compile Include="ValidateEDITransationsBeforeWrite.cs" />
-    <Compile Include="ValidateEDITransationsWithCustomCode.cs" />
-    <Compile Include="ValidateINVOIC.cs" />
-    <Compile Include="ValidateORDERS.cs" />
-    <Compile Include="ValidateUNBorUNG.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj">
       <Project>{9f794065-1e15-4341-a1c9-4e1ffd856c28}</Project>
       <Name>EdiFabric.Examples.EDIFACT.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates.D96A\EdiFabric.Examples.EDIFACT.Templates.D96A.csproj">
-      <Project>{f1000179-978c-4c35-a9b7-0eb4ea4a5066}</Project>
-      <Name>EdiFabric.Examples.EDIFACT.Templates.D96A</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

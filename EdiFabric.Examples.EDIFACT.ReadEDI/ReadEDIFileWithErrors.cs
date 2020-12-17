@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  Set the continue on error flag to true
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings() { ContinueOnError = true }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber, ContinueOnError = true }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var readerErrors = ediItems.OfType<ReaderErrorContext>();
