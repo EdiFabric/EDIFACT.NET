@@ -44,7 +44,7 @@
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
     <Reference Include="EdiFabric.Templates.Edifact, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Edifact.1.5.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.2.0.0\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

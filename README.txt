@@ -18,6 +18,7 @@ Unzip the downloaded file in the previous step. The following folders should be 
 
 edifabric-examples-edifact
 edifabric-examples-flatfile
+edifabric-examples-vda
 edifabric-examples-x12
 edifabric-trial
 
@@ -27,11 +28,11 @@ EdiFabric.Core.9.8.7.5.nupkg
 EdiFabric.Framework.9.8.7.5.nupkg
 EdiFabric.Plugins.Ack.Edifact.9.8.7.5.nupkg
 EdiFabric.Plugins.Ack.X12.9.8.7.5.nupkg
-EdiFabric.Templates.Edifact.1.5.1.nupkg
-EdiFabric.Templates.Hipaa.1.5.1.nupkg
-EdiFabric.Templates.Padis.1.5.1.nupkg
-EdiFabric.Templates.Vda.1.5.1.nupkg
-EdiFabric.Templates.X12.1.5.1.nupkg
+EdiFabric.Templates.Edifact.2.0.0.nupkg
+EdiFabric.Templates.Hipaa.2.0.0.nupkg
+EdiFabric.Templates.Padis.2.0.0.nupkg
+EdiFabric.Templates.Vda.2.0.0.nupkg
+EdiFabric.Templates.X12.2.0.0.nupkg
 
 5. Setup
 Add folder edifabric-trial as a package source in Visual Studio:
@@ -78,7 +79,8 @@ To evaluate the validation and acknowledgment functionalities, the full template
 refer to this project instead of EdiFabric.Templates.Edifact. If you need to test with a different template, please contact us.
 
 11. Trial use
-The trial assemblies are valid for 14 days and are subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Please contact us if you need the trial period extended.
+The trial assemblies are valid for 14 days and are subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Upon expiry, the trial packages will begin throwing exceptions. 
+To continue using the trial and the examples, you'll need to either request a trial extension or replace the trial packages, together with all references to the trial packages, with the full version of EdiFabric.
 
 12. Warranty
 The source code in these example projects is strictly for demonstrational purposes and is provided "AS IS" without warranty of any kind, whether expressed or implied, including but not limited to the

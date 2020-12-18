@@ -41,7 +41,7 @@
       <HintPath>..\packages\EdiFabric.Framework.9.8.7.5\lib\net45\EdiFabric.Framework.dll</HintPath>
     </Reference>
     <Reference Include="EdiFabric.Templates.Padis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Padis.1.5.1\lib\net45\EdiFabric.Templates.Padis.dll</HintPath>
+      <HintPath>..\packages\EdiFabric.Templates.Padis.2.0.0\lib\net45\EdiFabric.Templates.Padis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
