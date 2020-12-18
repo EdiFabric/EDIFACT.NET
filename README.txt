@@ -78,15 +78,39 @@ None of the trial templates in EdiFabric.Templates.Edifact and EdiFabric.Templat
 To evaluate the validation and acknowledgment functionalities, the full templates for ORDERS and INVOIC are provided in project EdiFabric.Examples.EDIFACT.Templates.D96A. All validation and acknowledgment examples
 refer to this project instead of EdiFabric.Templates.Edifact. If you need to test with a different template, please contact us.
 
-11. Trial use
+11. EDI Templates
+EdiFabric supports all EDIFACT/EANCOM/IATA versions and message types. We have an extensive library of EDI templates, howevere, if you can't find a particular transaction, please let us know. 
+The following templates are available out-of-the-box:
+
+EDIFACT
+https://support.edifabric.com/hc/en-us/articles/360000353611-EDIFACT-1911-to-D97A
+
+EANCOM
+https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-D93A-D96A-and-D01B-
+
+IATA PADIS
+https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-Templates
+
+For an interactive view of all templates go to EdiNation's EDI Webpad (no registration is required):
+
+EDIFACT
+https://www.edination.com/edi-models-edifact.html
+
+EANCOM
+https://www.edination.com/edi-models-eancom.html
+
+IATA PADIS
+https://www.edination.com/edi-models-iata.html
+
+12. Trial use
 The trial assemblies are valid for 14 days and are subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Upon expiry, the trial packages will begin throwing exceptions. 
 To continue using the trial and the examples, you'll need to either request a trial extension or replace the trial packages, together with all references to the trial packages, with the full version of EdiFabric.
 
-12. Warranty
+13. Warranty
 The source code in these example projects is strictly for demonstrational purposes and is provided "AS IS" without warranty of any kind, whether expressed or implied, including but not limited to the
 implied warranties of merchantability and/or fitness for a particular purpose.
 
-13. Additional information
+14. Additional information
 
 EdiFabric tutorial
 https://support.edifabric.com/hc/en-us/articles/360000291511-Tutorial-EDI-NET-Tools-Basics
