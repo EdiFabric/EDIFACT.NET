@@ -79,7 +79,7 @@ To evaluate the validation and acknowledgment functionalities, the full template
 refer to this project instead of EdiFabric.Templates.Edifact. If you need to test with a different template, please contact us.
 
 11. EDI Templates
-EdiFabric supports all EDIFACT/EANCOM/IATA versions and message types. We have an extensive library of EDI templates, howevere, if you can't find a particular transaction, please let us know. 
+EdiFabric supports all EDIFACT/EANCOM/IATA versions and message types. We have an extensive library of EDI templates, however, if you can't find a particular transaction, please let us know. 
 The following templates are available out-of-the-box:
 
 EDIFACT
