@@ -1,4 +1,4 @@
-# EdiFabric Examples for EDIFACT, EANCOM, and IATA PADIS
+# EdiFabric Examples for EDIFACT D96A, EANCOM D03B, and IATA PADIS
 
 Go to https://support.edifabric.com/hc/en-us/articles/360000280532-Trial-EdiFabric-Examples for the web version of this README.  
 
