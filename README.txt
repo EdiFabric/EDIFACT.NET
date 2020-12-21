@@ -1,6 +1,6 @@
 Thank you for downloading EdiFabric's EDIFACT examples
 
-Go to https://support.edifabric.com/hc/en-us/articles/360000280532-Quickstart-Translate-EDI-file for the web version of this README.
+Go to https://support.edifabric.com/hc/en-us/articles/360000280532-Trial-EdiFabric-Examples for the web version of this README.
 
 1. Overview
 The examples are organized into different projects in two logical categories: by product feature and by message type.
