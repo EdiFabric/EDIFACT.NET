@@ -80,7 +80,7 @@ EDIFACT UN ORDERS
 EDIFACT UN ORDRSP  
 EDIFACT UN PRICAT  
 
-## 10. Validation
+## 10. EDI Validation
 None of the trial templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation. They are cutdown versions of the full templates and can only be used for reading and writing.  
 To evaluate the validation and acknowledgment functionalities, the full templates for ORDERS and INVOIC are provided in project EdiFabric.Examples.EDIFACT.Templates.D96A. All validation and acknowledgment examples  
 refer to this project instead of EdiFabric.Templates.Edifact. If you need to test with a different template, please contact us.  
