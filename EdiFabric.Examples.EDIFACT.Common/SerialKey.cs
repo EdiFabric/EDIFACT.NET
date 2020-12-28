@@ -11,7 +11,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
             var serialKeyPath = @"../../../../edifabric-trial/serial.key";
 
             if (!File.Exists(serialKeyPath))
-                throw new Exception("Set the path to the serial.key file in project EdiFabric.Examples.EDIFACT.Common, file License.cs!");
+                throw new Exception("Set the path to the serial.key file in project EdiFabric.Examples.EDIFACT.Common, file SerialKey.cs!");
 
             _serialKey = File.ReadAllText(serialKeyPath).Trim(new[] {' ', '\r', '\n' });
         }
