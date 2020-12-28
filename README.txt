@@ -7,11 +7,11 @@ The examples are organized into different projects in two logical categories: by
 
 2. Requirements
 - Visual Studio, compatible with the supported .NET versions
-- .NET Framework 4.5 or .NET Core 3.1. All projects target .NET Framework 4.5, however, the Target Framework from each project's properties can be changed to .NET Core 3.1.
-- EdiFabric trial NuGet packages and serial number.
+- Minimum .NET Framework 4.5 or .NET Core 3.1. All projects target .NET Framework 4.5, however, the Target Framework from each project's properties can be changed to .NET Core 3.1.
+- EdiFabric trial NuGet package and serial number.
 
 3. Download
-The trial NuGet packages and the trial serial number can be downloaded from https://sowl.co/oApEt. 
+The trial NuGet package and the trial serial number can be downloaded from https://sowl.co/oApEt. 
 
 4. Install
 Unzip the downloaded file in the previous step. The following folders should be available at the same level:
@@ -24,15 +24,12 @@ edifabric-trial
 
 Ensure that the following packages are present in folder edifabric-trial:
 
-EdiFabric.Core.9.8.7.5.nupkg
-EdiFabric.Framework.9.8.7.5.nupkg
-EdiFabric.Plugins.Ack.Edifact.9.8.7.5.nupkg
-EdiFabric.Plugins.Ack.X12.9.8.7.5.nupkg
-EdiFabric.Templates.Edifact.2.0.0.nupkg
-EdiFabric.Templates.Hipaa.2.0.0.nupkg
-EdiFabric.Templates.Padis.2.0.0.nupkg
-EdiFabric.Templates.Vda.2.0.0.nupkg
-EdiFabric.Templates.X12.2.0.0.nupkg
+EdiFabric.Trial.10.0.0.nupkg
+EdiFabric.Templates.Edifact.2.1.0.nupkg
+EdiFabric.Templates.Hipaa.2.1.0.nupkg
+EdiFabric.Templates.Padis.2.1.0.nupkg
+EdiFabric.Templates.Vda.2.1.0.nupkg
+EdiFabric.Templates.X12.2.1.0.nupkg
 
 5. Setup
 Add folder edifabric-trial as a package source in Visual Studio:
@@ -46,9 +43,8 @@ NOTE: it is possible to also reference DLLs instead of NuGet packages. Change th
 Then uninstall the NuGet packages from each project and replace them with DLL references.
 
 6. Serial Number
-All main operations, like read, write, and validate require a valid serial number. The serial number is included in the file serial.key in folder edifabric-trial. Ensure it is there and that the file is not empty.
-The serial number is used in the file License.cs in project EdiFabric.Examples.EDIFACT.Common. Open the file and ensure that the serialKeyPath is correct.
-If the serial number is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
+The serial number is included in the file serial.key in folder edifabric-trial. Ensure it is there and that the file is not empty. The serial number is loaded in the file License.cs in project EdiFabric.Examples.EDIFACT.Common. 
+Open the file and ensure that the serialKeyPath is correct. If the serial number is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
 
 7. Gettings started
 To get started, set project EdiFabric.Examples.EDIFACT.Demo as the startup project, open Program.cs and follow the instructions there. This project allows you to quickly translate your own EDI files.
@@ -104,7 +100,7 @@ https://www.edination.com/edi-models-iata.html
 
 12. Trial use
 The trial assemblies are valid for 14 days and are subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Upon expiry, the trial packages will begin throwing exceptions. 
-To continue using the trial and the examples, you'll need to either request a trial extension or replace the trial packages, together with all references to the trial packages, with the full version of EdiFabric.
+To continue using the trial and the examples, you'll need to either request a trial extension or replace the trial packages, together with all references to the trial packages, with the purchased version of EdiFabric.
 
 13. Warranty
 The source code in these example projects is strictly for demonstrational purposes and is provided "AS IS" without warranty of any kind, whether expressed or implied, including but not limited to the
@@ -122,4 +118,4 @@ Support
 https://support.edifabric.com/hc/en-us/requests/new
 
 Last updated on December 16, 2020
-2020 © EdiFabric
+2021 © EdiFabric
