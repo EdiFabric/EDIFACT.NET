@@ -28,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, AssemblyeFactory, new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, AssemblyeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the purchase orders
@@ -57,7 +57,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, TypeFactory, new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the purchase orders

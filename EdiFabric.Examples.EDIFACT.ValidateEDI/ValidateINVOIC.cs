@@ -19,7 +19,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\Invoice.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var invoices = ediItems.OfType<TSINVOIC>();
@@ -28,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             {
                 //  Validate
                 MessageErrorContext errorContext;
-                if (!invoice.IsValid(out errorContext, new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }))
+                if (!invoice.IsValid(out errorContext))
                 {
                     //  Report it back to the sender, log, etc.
                     var errors = errorContext.Flatten();

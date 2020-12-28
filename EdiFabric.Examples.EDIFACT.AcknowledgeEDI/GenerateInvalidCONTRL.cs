@@ -49,13 +49,12 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
                     }
                 },
                 // Turn on UCM for valid messages
-                GenerateForValidMessages = true,
-                ValidationSettings = new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }
+                GenerateForValidMessages = true
             };
 
             using (var ackMan = new Plugins.Acknowledgments.Edifact.AckMan(settings))
             {
-                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
                 {
                     while (ediReader.Read())
                         ackMan.Publish(ediReader.Item);

@@ -26,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
             using (var stream = new MemoryStream())
             {
                 //  Set PreserveWhitespace flag to true
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings() { PreserveWhitespace = true, SerialNumber = TrialLicense.SerialNumber }))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings() { PreserveWhitespace = true }))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("1"));
                     writer.Write(invoice);

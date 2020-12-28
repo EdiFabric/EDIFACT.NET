@@ -22,11 +22,13 @@ namespace EdiFabric.Examples.EDIFACT.Demo
 
             //  If you need a different EDIFACT/EANCOM version or transaction, please contact us at https://support.edifabric.com/hc/en-us/requests/new, EdiFabric supports all versions and transaction for EDIFACT/EANCOM.
 
+            SerialKey.Set(TrialLicense.SerialKey);
+
             //  Change the path to point to your own file to test with
             var path = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrders.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(path, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { ContinueOnError = true, SerialNumber = TrialLicense.SerialNumber }))
+            using (var reader = new EdifactReader(path, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { ContinueOnError = true }))
                 ediItems = reader.ReadToEnd().ToList();  
             
             foreach(var message in ediItems.OfType<EdiMessage>())
@@ -36,7 +38,7 @@ namespace EdiFabric.Examples.EDIFACT.Demo
                     //  Message was successfully parsed
 
                     MessageErrorContext mec;
-                    if(message.IsValid(out mec, new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }))
+                    if(message.IsValid(out mec))
                     {
                         //  Message was successfully validated
                     }

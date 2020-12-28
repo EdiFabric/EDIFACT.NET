@@ -24,7 +24,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  Set the NoEnvelope flag to true
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber, NoEnvelope = true }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { NoEnvelope = true }))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var items = ediItems.OfType<EdiMessage>();

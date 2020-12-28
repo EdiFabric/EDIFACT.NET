@@ -14,6 +14,7 @@ namespace EdiFabric.Examples.EDIFACT.DESADV
     {
         static void Main(string[] args)
         {
+            SerialKey.Set(TrialLicense.SerialKey);
             Read();
             Write();
         }
@@ -26,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.DESADV
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Eancom\DespatchAdvice.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSDESADV>();
@@ -50,7 +51,7 @@ namespace EdiFabric.Examples.EDIFACT.DESADV
            
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var writer = new EdifactWriter(stream))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("1"));
                     writer.Write(transaction);

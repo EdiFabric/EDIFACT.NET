@@ -32,7 +32,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             List<IEdiItem> ediItems;
             //  Load the new template with the custom validation
-            using (var ediReader = new EdifactReader(ediStream, (UNB unb, UNG ung, UNH unh) => typeof(TSORDERSCustomValidation).GetTypeInfo(), new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, (UNB unb, UNG ung, UNH unh) => typeof(TSORDERSCustomValidation).GetTypeInfo()))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  Get the purchase order
@@ -40,7 +40,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             //  Check that the custom validation was triggered
             MessageErrorContext errorContext;
-            if (!po.IsValid(out errorContext, new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }))
+            if (!po.IsValid(out errorContext))
             {
                 var customValidation = errorContext.Errors.FirstOrDefault(e => e.Message == "DTM segment is missing.");
                 Debug.WriteLine(customValidation.Message);

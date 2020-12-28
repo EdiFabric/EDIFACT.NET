@@ -51,13 +51,12 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
                         // do something with the message a.Message
                         Debug.WriteLine("Message {0} with control number {1} is valid.", a.ErrorContext.Name, a.ErrorContext.ControlNumber);
                     }
-                },
-                ValidationSettings = new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }
+                }
             };
 
             using (var ackMan = new Plugins.Acknowledgments.Edifact.AckMan(settings))
             {
-                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
                 {
                     while (ediReader.Read())
                         ackMan.Publish(ediReader.Item);

@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
             using (var stream = new MemoryStream())
             {
                 //  Set the separators 
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings() { Separators = Separators.Edifact, SerialNumber = TrialLicense.SerialNumber }))
+                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings() { Separators = Separators.Edifact }))
                 {
                     writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
                     writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("2"));

@@ -24,11 +24,11 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var writer = new EdifactWriter(stream))
                 {
                     //  Set a custom segment separator
-                    var separators = new Separators('|', Separators.Edifact.ComponentDataElement,
-                        Separators.Edifact.DataElement, Separators.Edifact.RepetitionDataElement, Separators.Edifact.Escape);
+                    var separators = Separators.Edifact;
+                    separators.Segment = '|';
 
                     //  Write the UNB with the custom separator set
                     writer.Write(SegmentBuilders.BuildUnb("1"), separators);

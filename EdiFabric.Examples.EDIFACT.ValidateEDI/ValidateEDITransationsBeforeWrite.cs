@@ -27,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             //  Validate using EDI codes map
             MessageErrorContext errorContext;
-            if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { SkipTrailerValidation = true, SerialNumber = TrialLicense.SerialNumber }))
+            if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { SkipTrailerValidation = true }))
             {
                 //  Report it back to the sender, log, etc.
                 var errors = errorContext.Flatten();

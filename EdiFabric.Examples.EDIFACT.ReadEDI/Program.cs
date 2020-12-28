@@ -1,9 +1,13 @@
-﻿namespace EdiFabric.Examples.EDIFACT.ReadEDI
+﻿using EdiFabric.Examples.EDIFACT.Common;
+
+namespace EdiFabric.Examples.EDIFACT.ReadEDI
 {
     class Program
     {
         static void Main(string[] args)
         {
+            SerialKey.Set(TrialLicense.SerialKey);
+
             //  Read EDI file to the end
             ReadEDIFileToEnd.Run();
             ReadEDIFileToEndAsync.Run();

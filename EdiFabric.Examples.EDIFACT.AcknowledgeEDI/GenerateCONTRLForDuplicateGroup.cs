@@ -19,7 +19,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
         {
             Debug.WriteLine("******************************");
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
-            Debug.WriteLine("******************************");
+            Debug.WriteLine("******************************");            
 
             var edi = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\DuplicateGroup.txt");
 
@@ -48,7 +48,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
                         {
                             Debug.WriteLine(string.Format("Interchange with control number {0}", a.InterchangeHeader.InterchangeControlReference_5));
                             Debug.WriteLine(string.Format("Group with control number {0}", a.GroupHeader.GroupReferenceNumber_5));
-                            Debug.WriteLine("Message {0} with control number {1}", a.Message.Name, a.Message.GetTransactionContext().HeaderControlNumber);
+                            Debug.WriteLine("Message {0} with control number {1}", a.Message.Name, a.Message.ErrorContext.ControlNumber);
                             Debug.WriteLine("Is in duplicate group: {0}", a.InDuplicateGroup);
                             // reject message
                         }
@@ -56,13 +56,12 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
                 },
                 // Turn on UCM for valid messages
                 GenerateForValidMessages = true,
-                GroupDuplicates = true,
-                ValidationSettings = new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }
+                GroupDuplicates = true
             };
 
             using (var ackMan = new Plugins.Acknowledgments.Edifact.AckMan(settings))
             {
-                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
                 {
                     while (ediReader.Read())
                         ackMan.Publish(ediReader.Item);

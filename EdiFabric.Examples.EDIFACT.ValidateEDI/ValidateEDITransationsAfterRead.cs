@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
                 ediItems = reader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();
@@ -34,7 +34,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             {
                 //  Validate using EDI codes map
                 MessageErrorContext errorContext;
-                if (!purchaseOrder.IsValid(out errorContext, new ValidationSettings { SerialNumber = TrialLicense.SerialNumber }))
+                if (!purchaseOrder.IsValid(out errorContext))
                 {
                     //  Report it back to the sender, log, etc.
                     var errors = errorContext.Flatten();

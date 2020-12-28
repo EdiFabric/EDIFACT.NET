@@ -1,9 +1,13 @@
-﻿namespace EdiFabric.Examples.EDIFACT.XML
+﻿using EdiFabric.Examples.EDIFACT.Common;
+
+namespace EdiFabric.Examples.EDIFACT.XML
 {
     class Program
     {
         static void Main(string[] args)
         {
+            SerialKey.Set(TrialLicense.SerialKey);
+
             //  Serialize to XML
             SerializeToXml.WithXmlSerializer();
             SerializeToXml.WithDataContractSerializer();

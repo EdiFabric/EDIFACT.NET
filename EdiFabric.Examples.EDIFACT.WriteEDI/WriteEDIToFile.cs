@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
             //  2.  Write directly to a file
             //  Change the patch to a file on your machine
-            using (var writer = new EdifactWriter(@"C:\Test\Output.txt", false, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var writer = new EdifactWriter(@"C:\Test\Output.txt", false))
             {
                 writer.Write(SegmentBuilders.BuildUnb("1"));
                 writer.Write(invoice);

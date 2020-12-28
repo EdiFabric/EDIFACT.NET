@@ -25,14 +25,18 @@ namespace EdiFabric.Examples.EDIFACT.DB
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { SerialNumber = TrialLicense.SerialNumber }))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();
 
             using (var db = new EDIFACTContext())
             {
-                db.TSORDERS.AddRange(purchaseOrders);
+                foreach (var purchaseOrder in purchaseOrders)
+                {
+                    purchaseOrder.ClearCache();
+                    db.TSORDERS.Add(purchaseOrder);
+                }
                 db.SaveChanges();
             }
         }

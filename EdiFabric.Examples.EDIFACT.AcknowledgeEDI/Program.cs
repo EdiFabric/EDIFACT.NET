@@ -1,9 +1,13 @@
-﻿namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
+﻿using EdiFabric.Examples.EDIFACT.Common;
+
+namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
 {
     class Program
     {
         static void Main(string[] args)
         {
+            SerialKey.Set(TrialLicense.SerialKey);
+
             //  Generate CONTRL for valid group
             GenerateValidCONTRL.Run();
 

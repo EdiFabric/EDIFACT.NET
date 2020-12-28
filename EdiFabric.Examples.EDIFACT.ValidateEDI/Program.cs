@@ -1,9 +1,13 @@
-﻿namespace EdiFabric.Examples.EDIFACT.ValidateEDI
+﻿using EdiFabric.Examples.EDIFACT.Common;
+
+namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 {
     class Program
     {
         static void Main(string[] args)
         {
+            SerialKey.Set(TrialLicense.SerialKey);
+
             //  Validate custom EDI codes
             ValidateCustomEDICodes.Run();
             ValidateCustomEDICodes.Run2();

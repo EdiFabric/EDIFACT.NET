@@ -20,7 +20,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
             using (var stream = new MemoryStream())
             {
-                using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { SerialNumber = TrialLicense.SerialNumber }))
+                using (var writer = new EdifactWriter(stream))
                 {
                     //  1.  Write the first interchange
                     writer.Write(SegmentBuilders.BuildUnb("1"));
