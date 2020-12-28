@@ -15,7 +15,7 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(TrialLicense.SerialKey);
+            SerialKey.Set(Common.SerialKey.Get());
             Read();
             Write();
         }

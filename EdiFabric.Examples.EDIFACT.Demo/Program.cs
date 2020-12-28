@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.Demo
 
             //  If you need a different EDIFACT/EANCOM version or transaction, please contact us at https://support.edifabric.com/hc/en-us/requests/new, EdiFabric supports all versions and transaction for EDIFACT/EANCOM.
 
-            SerialKey.Set(TrialLicense.SerialKey);
+            SerialKey.Set(Common.SerialKey.Get());
 
             //  Change the path to point to your own file to test with
             var path = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrders.txt");

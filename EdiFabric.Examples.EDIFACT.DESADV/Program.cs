@@ -14,7 +14,7 @@ namespace EdiFabric.Examples.EDIFACT.DESADV
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(TrialLicense.SerialKey);
+            SerialKey.Set(Common.SerialKey.Get());
             Read();
             Write();
         }

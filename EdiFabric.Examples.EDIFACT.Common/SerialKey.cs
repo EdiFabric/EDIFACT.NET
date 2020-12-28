@@ -3,17 +3,22 @@ using System.IO;
 
 namespace EdiFabric.Examples.EDIFACT.Common
 {
-    public class TrialLicense
+    public class SerialKey
     {
-        public static string SerialKey {get; set;}
-        static TrialLicense()
+        private static string _serialKey = null;
+        static SerialKey()
         {
             var serialKeyPath = @"../../../../edifabric-trial/serial.key";
 
             if (!File.Exists(serialKeyPath))
                 throw new Exception("Set the path to the serial.key file in project EdiFabric.Examples.EDIFACT.Common, file License.cs!");
 
-            SerialKey = File.ReadAllText(serialKeyPath).Trim(new[] {' ', '\r', '\n' });
+            _serialKey = File.ReadAllText(serialKeyPath).Trim(new[] {' ', '\r', '\n' });
+        }
+
+        public static string Get()
+        {
+            return _serialKey;
         }
     }
 }

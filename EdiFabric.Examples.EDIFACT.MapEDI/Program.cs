@@ -6,7 +6,7 @@ namespace EdiFabric.Examples.EDIFACT.MapEDI
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(TrialLicense.SerialKey);
+            SerialKey.Set(Common.SerialKey.Get());
 
             //  Map using XSLT
             EDIToCustomObjectWithXslt.Run();
