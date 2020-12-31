@@ -13,10 +13,12 @@ The examples are organized into different projects in two logical categories: by
 ## 2. Requirements
 - Visual Studio, compatible with the supported .NET versions.
 - Minimum .NET Framework 4.5 or .NET Core 3.1. All projects target .NET Framework 4.5, however, the Target Framework from each project's properties can be changed to .NET Core 3.1.  
-- EdiFabric trial NuGet packages and serial number.  
+- EdiFabric trial NuGet packages and serial key.  
 
 ## 3. Download
-The trial NuGet packages and the trial serial number can be downloaded from [here](https://sowl.co/oApEt).  
+Before you use the repository, you need to download the trial NuGet packages and the serial key.  
+
+### [Download EdiFabric Trial](https://sowl.co/oApEt)  
 
 ## 4. Install
 Unzip the downloaded file in the previous step. The following folders should be available at the same level:  
