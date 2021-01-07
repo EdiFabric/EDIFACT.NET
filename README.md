@@ -26,7 +26,7 @@ var transactions = ediItems.OfType<TSORDERS>();
 - EdiFabric trial NuGet packages and serial key.  
 
 ## 3. Setup
-Rebuild the solution to install the rest of the dependencies. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.  
+Rebuild the solution to install EdiFabric Trial from nuget.org. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.  
 
 > NOTE: it is possible to also reference DLLs instead of NuGet packages. Change the .nupkg extension of the packages to .zip, unzip them, and extract the DLL files. 
 Then uninstall the NuGet packages from each project and replace them with DLL references.  
