@@ -1,5 +1,4 @@
 ﻿using EdiFabric.Examples.EDIFACT.Common;
-using EdiFabric.Examples.EDIFACT.Templates.D96A;
 using EdiFabric.Framework.Writers;
 using System;
 using System.Diagnostics;

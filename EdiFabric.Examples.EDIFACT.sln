@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Templates.D96A", "EdiFabric.Examples.EDIFACT.Templates.D96A\EdiFabric.Examples.EDIFACT.Templates.D96A.csproj", "{F1000179-978C-4C35-A9B7-0EB4EA4A5066}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Common", "EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj", "{9F794065-1E15-4341-A1C9-4E1FFD856C28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.INVOIC", "EdiFabric.Examples.EDIFACT.INVOIC\EdiFabric.Examples.EDIFACT.INVOIC.csproj", "{D0A2FAC4-8067-479B-B67A-66055907593B}"
@@ -106,10 +104,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F1000179-978C-4C35-A9B7-0EB4EA4A5066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1000179-978C-4C35-A9B7-0EB4EA4A5066}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1000179-978C-4C35-A9B7-0EB4EA4A5066}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1000179-978C-4C35-A9B7-0EB4EA4A5066}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F794065-1E15-4341-A1C9-4E1FFD856C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F794065-1E15-4341-A1C9-4E1FFD856C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F794065-1E15-4341-A1C9-4E1FFD856C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -207,7 +201,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F1000179-978C-4C35-A9B7-0EB4EA4A5066} = {52190148-7C31-42C5-9435-87B2A38E371B}
 		{D0A2FAC4-8067-479B-B67A-66055907593B} = {5E74E2F9-3214-4CD2-AD44-C9DFF7E02B19}
 		{AE5DB45E-C17C-4A9D-AC96-5A771848ED72} = {5E74E2F9-3214-4CD2-AD44-C9DFF7E02B19}
 		{DCA3C23A-BC0D-45F6-BA2C-0E96B0822F93} = {5E74E2F9-3214-4CD2-AD44-C9DFF7E02B19}

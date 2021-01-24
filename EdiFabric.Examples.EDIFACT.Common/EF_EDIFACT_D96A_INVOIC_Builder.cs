@@ -2,7 +2,7 @@
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;
 
-namespace EdiFabric.Examples.EDIFACT.Templates.D96A
+namespace EdiFabric.Examples.EDIFACT.Common
 {
     public class EF_EDIFACT_D96A_INVOIC_Builder
     {

@@ -1,6 +1,5 @@
 ﻿using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Examples.EDIFACT.Common;
-using EdiFabric.Examples.EDIFACT.Templates.D96A;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Writers;
 using System.Diagnostics;
