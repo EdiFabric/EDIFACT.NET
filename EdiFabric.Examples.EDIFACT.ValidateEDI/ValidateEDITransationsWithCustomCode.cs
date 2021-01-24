@@ -85,7 +85,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
                     //  Check if QTY exists and DTM also exist
                     if (linLoop.QTY != null && linLoop.DTM == null)
-                        return new SegmentErrorContext("DTM", position + 1, GetType().GetTypeInfo(), SegmentErrorCode.RequiredSegmentMissing,
+                        return new SegmentErrorContext("DTM", position + 1, null,  GetType().GetTypeInfo(), SegmentErrorCode.RequiredSegmentMissing,
                             "DTM segment is missing.");
                 }
             }
