@@ -61,7 +61,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
 
             using (var ackMan = new Plugins.Acknowledgments.Edifact.AckMan(settings))
             {
-                using (var ediReader = new EdifactReader(edi, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+                using (var ediReader = new EdifactReader(edi, "EdiFabric.Templates.Edifact"))
                 {
                     while (ediReader.Read())
                         ackMan.Publish(ediReader.Item);

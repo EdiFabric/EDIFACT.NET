@@ -26,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
                 ediItems = reader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();
@@ -59,7 +59,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates.D96A"))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
                 ediItems = reader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();
