@@ -1,12 +1,7 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.ErrorContexts;
 using EdiFabric.Examples.EDIFACT.Common;
-using EdiFabric.Framework.Readers;
-using EdiFabric.Templates.EdifactD96A;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace EdiFabric.Examples.EDIFACT.ValidateEDI
@@ -22,7 +17,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var purchaseOrder = EF_EDIFACT_D96A_ORDERS_Builder.BuildPurchaseOrder("1");
+            var purchaseOrder = SegmentBuilders.BuildPurchaseOrder("1");
 
             //  Validate using EDI codes map
             MessageErrorContext errorContext;

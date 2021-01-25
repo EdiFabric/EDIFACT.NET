@@ -51,8 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AckBuilders.cs" />
-    <Compile Include="EF_EDIFACT_D96A_INVOIC_Builder.cs" />
-    <Compile Include="EF_EDIFACT_D96A_ORDERS_Builder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SegmentBuilders.cs" />
     <Compile Include="SerialKey.cs" />

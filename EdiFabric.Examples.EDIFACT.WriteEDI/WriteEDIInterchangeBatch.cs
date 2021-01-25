@@ -23,12 +23,12 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
                 {
                     //  1.  Write the first interchange
                     writer.Write(SegmentBuilders.BuildUnb("1"));
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
 
                     //  2.  Write the second interchange
                     //  No need to close the previous interchange with a IEA
                     writer.Write(SegmentBuilders.BuildUnb("2"));
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
                 }
 
                 Debug.Write(stream.LoadToString());

@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
                 using (var writer = new EdifactWriter(stream, new EdifactWriterSettings { AutoTrailers = false }))
                 {
                     writer.Write(SegmentBuilders.BuildUnb("1"));
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
                     //  trailers need to be manually written   
                 }
 

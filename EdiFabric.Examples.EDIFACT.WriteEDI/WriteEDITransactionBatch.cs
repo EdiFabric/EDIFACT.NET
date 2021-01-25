@@ -24,10 +24,10 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
                     writer.Write(SegmentBuilders.BuildUnb("1"));
 
                     //  1.  Write the first invoice
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
 
                     //  2.  Write the second invoice
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("2"));
+                    writer.Write(SegmentBuilders.BuildInvoice("2"));
 
                     //  3.  Write any subsequent invoices...
                 }

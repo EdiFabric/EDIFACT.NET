@@ -23,8 +23,8 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
                 //  Set the separators 
                 using (var writer = new EdifactWriter(stream, new EdifactWriterSettings() { Separators = Separators.Edifact }))
                 {
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("2"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("2"));
                 }
 
                 Debug.Write(stream.LoadToString());

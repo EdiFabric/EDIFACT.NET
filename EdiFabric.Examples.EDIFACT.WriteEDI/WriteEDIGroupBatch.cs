@@ -25,12 +25,12 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
                     //  1.  Write the first group      
                     writer.Write(SegmentBuilders.BuildUng("1", "INVOIC"));
-                    writer.Write(EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1"));
+                    writer.Write(SegmentBuilders.BuildInvoice("1"));
 
                     //  2.  Write the second group
                     //  No need to close the previous group with a UNE
                     writer.Write(SegmentBuilders.BuildUng("2", "ORDERS"));
-                    writer.Write(EF_EDIFACT_D96A_ORDERS_Builder.BuildPurchaseOrder("1"));
+                    writer.Write(SegmentBuilders.BuildPurchaseOrder("1"));
                 }
 
                 Debug.Write(stream.LoadToString());

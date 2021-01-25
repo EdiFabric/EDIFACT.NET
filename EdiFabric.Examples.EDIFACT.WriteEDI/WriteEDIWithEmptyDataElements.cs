@@ -17,7 +17,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var invoice = EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1");
+            var invoice = SegmentBuilders.BuildInvoice("1");
 
             //  Initialize a blank property
             invoice.BGM.Responsetypecoded_04 = "";

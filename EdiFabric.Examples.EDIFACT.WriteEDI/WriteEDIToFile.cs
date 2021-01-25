@@ -17,7 +17,7 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
             Debug.WriteLine("******************************");
 
             //  1.  Construct the invoice
-            var invoice = EF_EDIFACT_D96A_INVOIC_Builder.BuildInvoice("1");
+            var invoice = SegmentBuilders.BuildInvoice("1");
 
             //  2.  Write directly to a file
             //  Change the patch to a file on your machine
