@@ -1,4 +1,4 @@
-# EdiFabric Examples for EDIFACT D96A, EANCOM D03B, and IATA PADIS
+# EdiFabric C# .NET Examples for EDIFACT D96A, EANCOM D03B, and IATA PADIS
 
 ## 1. Overview
 EdiFabric is a software development kit for .NET Framework and .NET Core, which makes it straightforward to parse, generate, validate, acknowledge, split, customize, or in other words, to programmatically manipulate EDI files. It is written in C# and is distributed as a set of NuGet packages and C# files.  
