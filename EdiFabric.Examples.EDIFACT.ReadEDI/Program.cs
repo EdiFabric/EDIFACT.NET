@@ -1,6 +1,4 @@
-﻿using EdiFabric.Examples.EDIFACT.Common;
-
-namespace EdiFabric.Examples.EDIFACT.ReadEDI
+﻿namespace EdiFabric.Examples.EDIFACT.ReadEDI
 {
     class Program
     {
@@ -36,6 +34,9 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             //  Read using dynamic template resolution
             ReadEDIFileWithTemplateResolution.RunWithAssemblyFactory();
             ReadEDIFileWithTemplateResolution.RunWithTypeFactory();
+
+            //  Read with custom UNB or UNG
+            ReadEDIFileWithCustomUNBorUNG.Run();
         }
     }
 }

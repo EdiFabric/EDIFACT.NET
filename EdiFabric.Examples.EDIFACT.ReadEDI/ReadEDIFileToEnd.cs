@@ -1,5 +1,4 @@
 ﻿using EdiFabric.Core.Model.Edi;
-using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 using System.Collections.Generic;

@@ -61,6 +61,7 @@
     <Compile Include="ReadEDIFileToEnd.cs" />
     <Compile Include="ReadEDIFileToEndAsync.cs" />
     <Compile Include="ReadEDIFileTransactionOnly.cs" />
+    <Compile Include="ReadEDIFileWithCustomUNBorUNG.cs" />
     <Compile Include="ReadEDIFileWithErrors.cs" />
     <Compile Include="ReadEDIFileWithInheritedTemplate.cs" />
     <Compile Include="ReadEDIFileWithTemplateResolution.cs" />
