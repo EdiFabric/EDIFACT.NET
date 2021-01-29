@@ -1,9 +1,9 @@
-# EdiFabric Examples for EDIFACT D96A, EANCOM D03B, and IATA PADIS
+# EdiFabric C# .NET Examples for EDIFACT D96A, EANCOM D03B, and IATA PADIS
 
 ## 1. Overview
 EdiFabric is a software development kit for .NET Framework and .NET Core, which makes it straightforward to parse, generate, validate, acknowledge, split, customize, or in other words, to programmatically manipulate EDI files. It is written in C# and is distributed as a set of NuGet packages and C# files.  
 
-It currently supports all message types for the X12 and EDIFACT EDI standards, the German automotive standard VDA, as well as custom formatted flat files (delimited, positional, or a mixture of both).  
+It currently supports all message types for the X12, EDIFACT, HL7, and NCPDP EDI standards, the German automotive standard VDA, as well as custom formatted flat files (delimited, positional, or a mixture of both).  
 
 > NOTE: EdiFabric does not provide any communication components (AS2 or SFTP, for example), has no dashboard or UI, and is not a full end-to-end EDI solution.
 The best option to get the gist of what EdiFabric is, and can do, is to play around with the trial and examples.  
@@ -60,9 +60,7 @@ EDIFACT UN ORDRSP
 EDIFACT UN PRICAT  
 
 ## 8. EDI Validation
-None of the trial templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation. They are cutdown versions of the full templates and can only be used for reading and writing.  
-To evaluate the validation and acknowledgment functionalities, the full templates for ORDERS and INVOIC are provided in project EdiFabric.Examples.EDIFACT.Templates.D96A. All validation and acknowledgment examples  
-refer to this project instead of EdiFabric.Templates.Edifact. If you need to test with a different template, please contact us.  
+All templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation.   
 
 ## 9. EDI Templates
 EdiFabric supports all EDIFACT/EANCOM/IATA versions and message types. We have an extensive library of EDI templates, however, if you can't find a particular transaction, please let us know.   
