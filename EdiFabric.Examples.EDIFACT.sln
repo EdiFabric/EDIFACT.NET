@@ -78,6 +78,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT", "EDIFACT", "{297B
 		Files\EDIFACT\PurchaseOrderCustom1.txt = Files\EDIFACT\PurchaseOrderCustom1.txt
 		Files\EDIFACT\PurchaseOrderCustom2.txt = Files\EDIFACT\PurchaseOrderCustom2.txt
 		Files\EDIFACT\PurchaseOrderInvalid.txt = Files\EDIFACT\PurchaseOrderInvalid.txt
+		Files\EDIFACT\PurchaseOrderModified.txt = Files\EDIFACT\PurchaseOrderModified.txt
 		Files\EDIFACT\PurchaseOrderMs.json = Files\EDIFACT\PurchaseOrderMs.json
 		Files\EDIFACT\PurchaseOrderMultiLine.txt = Files\EDIFACT\PurchaseOrderMultiLine.txt
 		Files\EDIFACT\PurchaseOrderNs.json = Files\EDIFACT\PurchaseOrderNs.json
@@ -97,6 +98,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EANCOM.INVOIC.Syntax3", "EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EdiFabric.Examples.EANCOM.INVOIC.Syntax3.csproj", "{FE2F9AB3-D00A-4F60-A77C-C679D3BDD3AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Demo", "EdiFabric.Examples.EDIFACT.Demo\EdiFabric.Examples.EDIFACT.Demo.csproj", "{3C13E1B1-4DF4-4207-B424-1959C792B55B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example EDI templates", "Example EDI templates", "{3B29D67F-1B57-4C02-B1E4-69D6E4D42BED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Templates", "EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj", "{62232C00-802E-4095-AB55-3F639D6913C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.ModifyTemplates", "EdiFabric.Examples.EDIFACT.ModifyTemplates\EdiFabric.Examples.EDIFACT.ModifyTemplates.csproj", "{D9AD1194-D21C-435D-8F43-C1C111ECDF91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -196,6 +203,14 @@ Global
 		{3C13E1B1-4DF4-4207-B424-1959C792B55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C13E1B1-4DF4-4207-B424-1959C792B55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C13E1B1-4DF4-4207-B424-1959C792B55B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62232C00-802E-4095-AB55-3F639D6913C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62232C00-802E-4095-AB55-3F639D6913C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62232C00-802E-4095-AB55-3F639D6913C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62232C00-802E-4095-AB55-3F639D6913C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9AD1194-D21C-435D-8F43-C1C111ECDF91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9AD1194-D21C-435D-8F43-C1C111ECDF91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9AD1194-D21C-435D-8F43-C1C111ECDF91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9AD1194-D21C-435D-8F43-C1C111ECDF91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -224,6 +239,8 @@ Global
 		{297B744C-1309-4527-AF62-54E396B4819D} = {FA770BD5-992C-4EB2-9975-8D949F0E0A86}
 		{F7245A00-B11D-4C4D-9CB0-EC2B572C67EB} = {FA770BD5-992C-4EB2-9975-8D949F0E0A86}
 		{FE2F9AB3-D00A-4F60-A77C-C679D3BDD3AB} = {5E74E2F9-3214-4CD2-AD44-C9DFF7E02B19}
+		{62232C00-802E-4095-AB55-3F639D6913C3} = {3B29D67F-1B57-4C02-B1E4-69D6E4D42BED}
+		{D9AD1194-D21C-435D-8F43-C1C111ECDF91} = {3B29D67F-1B57-4C02-B1E4-69D6E4D42BED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DE60C67-C122-4BA2-BAB8-6E359DDE8AC8}
