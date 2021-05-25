@@ -19,7 +19,10 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             ValidateEDITransationsBeforeWrite.Run();
 
             //  Validate transactions with custom code
-            ValidateEDITransationsWithCustomCode.Run();
+            ValidateEDITransationsWithCustomCode.Run1();
+
+            //  Validate date with custom code
+            ValidateEDITransationsWithCustomCode.Run2();
 
             //  Validate data element alpha and alphanumeric data types
             ValidateDataElementTypes.Unoa();
