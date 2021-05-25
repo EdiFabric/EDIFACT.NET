@@ -183,7 +183,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
         public override SegmentErrorContext ValidateEdi(ValidationContext validationContext)
         {
-            var position = validationContext.SegmentIndex + 1;
+            var position = validationContext.SegmentIndex;
 
             var c507 = validationContext.InstanceContext.Instance as C507;
             if (c507 != null)
