@@ -8,6 +8,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
         private static string _serialKey = null;
         static SerialKey()
         {
+            // To get a free serial key go to https://sowl.co/oApEt
             var serialKeyPath = @"../../../../edifabric-trial/serial.key";
 
             if (!File.Exists(serialKeyPath))
