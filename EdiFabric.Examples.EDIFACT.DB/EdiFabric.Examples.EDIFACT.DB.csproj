@@ -37,8 +37,8 @@
     <Reference Include="EdiFabric, Version=10.2.1.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Trial.10.2.1\lib\net45\EdiFabric.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact, Version=2.4.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Edifact.2.4.0\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+    <Reference Include="EdiFabric.Templates.Edifact, Version=2.4.1.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.2.4.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>

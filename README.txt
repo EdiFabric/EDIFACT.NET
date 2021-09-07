@@ -34,6 +34,7 @@ SMDG BAPLIE
 US Customs CUSCAR
 US Customs PAXLST
 IATA PNRGOV
+EDIGAS NOMINT
 EDIFACT UN DESADV
 EDIFACT UN IFTMIN
 EDIFACT UN IFTSTA
@@ -46,7 +47,7 @@ EDIFACT UN PRICAT
 All templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation. 
 
 9. EDI Templates
-EdiFabric supports all EDIFACT/EANCOM/IATA versions and message types. We have an extensive library of EDI templates, however, if you can't find a particular transaction, please let us know. 
+EdiFabric supports all EDIFACT/EANCOM/IATA/EDIGAS versions and message types. We have an extensive library of EDI templates, however, if you can't find a particular transaction, please let us know. 
 The following templates are available out-of-the-box:
 
 EDIFACT
@@ -57,6 +58,9 @@ https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-D93A-D96A-an
 
 IATA PADIS
 https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-Templates
+
+EDIGAS
+https://support.edifabric.com/hc/en-us/articles/4406831178001-EDIGAS-4-0
 
 For an interactive view of all templates go to EdiNation's EDI Webpad (no registration is required):
 
