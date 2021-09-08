@@ -51,6 +51,7 @@ SMDG BAPLIE
 US Customs CUSCAR  
 US Customs PAXLST  
 IATA PNRGOV  
+EDIGAS NOMINT  
 EDIFACT UN DESADV  
 EDIFACT UN IFTMIN  
 EDIFACT UN IFTSTA  
@@ -71,6 +72,8 @@ The following templates are available out-of-the-box:
 [EANCOM](https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-D93A-D96A-and-D01B-)
 
 [IATA PADIS](https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-Templates)
+
+[EDIGAS](https://support.edifabric.com/hc/en-us/articles/4406831178001-EDIGAS-4-0)
 
 For an interactive view of all templates go to EdiNation's EDI Webpad (no registration is required):
 
