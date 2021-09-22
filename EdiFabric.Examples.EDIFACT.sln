@@ -60,6 +60,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDIFACT", "EDIFACT", "{297B
 	ProjectSection(SolutionItems) = preProject
 		Files\EDIFACT\Bayplan.txt = Files\EDIFACT\Bayplan.txt
 		Files\EDIFACT\CargoReport.txt = Files\EDIFACT\CargoReport.txt
+		Files\EDIFACT\CONTRL.txt = Files\EDIFACT\CONTRL.txt
 		Files\EDIFACT\CorruptUnb.txt = Files\EDIFACT\CorruptUnb.txt
 		Files\EDIFACT\CorruptUnh.txt = Files\EDIFACT\CorruptUnh.txt
 		Files\EDIFACT\DuplicateGroup.txt = Files\EDIFACT\DuplicateGroup.txt

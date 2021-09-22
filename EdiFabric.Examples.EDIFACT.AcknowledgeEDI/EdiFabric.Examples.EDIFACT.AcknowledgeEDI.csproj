@@ -55,6 +55,7 @@
     <Compile Include="GenerateCONTRLForDuplicateTransaction.cs" />
     <Compile Include="GenerateCONTRLWithCustomControlNumbers.cs" />
     <Compile Include="GenerateInvalidCONTRL.cs" />
+    <Compile Include="ReadCONTRL.cs" />
     <Compile Include="GenerateValidCONTRL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

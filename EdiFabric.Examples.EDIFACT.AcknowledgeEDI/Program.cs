@@ -21,6 +21,9 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
 
             //  Generate CONTRL with explicit control numbers
             GenerateCONTRLWithCustomControlNumbers.Run();
+
+            //  Read CONTRL message
+            ReadCONTRL.Run();
         }
     }
 }
