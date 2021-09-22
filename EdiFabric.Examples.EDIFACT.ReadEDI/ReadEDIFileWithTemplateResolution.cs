@@ -28,14 +28,14 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, AssemblyeFactory))
+            using (var ediReader = new EdifactReader(ediStream, AssemblyFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             //  3.  Pull the purchase orders
             var purchaseOrders = ediItems.OfType<TSORDERS>();
         }
 
-        public static Assembly AssemblyeFactory(MessageContext messageContext)
+        public static Assembly AssemblyFactory(MessageContext messageContext)
         {
             if (messageContext.Version == "D96A")
                 return Assembly.Load("EdiFabric.Templates.Edifact");
