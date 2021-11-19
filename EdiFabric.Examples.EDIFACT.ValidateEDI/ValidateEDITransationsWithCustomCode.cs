@@ -86,7 +86,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     [AttributeUsage(AttributeTargets.Property)]
     public class LinLoopValidationAttribute : ValidationAttribute
     {
-        public LinLoopValidationAttribute() : base(10)
+        public LinLoopValidationAttribute() : base(10, ValidationLevel.InterSegment_SNIP4)
         {
         }
 
@@ -177,7 +177,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     [AttributeUsage(AttributeTargets.Property)]
     public class DtmValidationAttribute : ValidationAttribute
     {
-        public DtmValidationAttribute() : base(10)
+        public DtmValidationAttribute() : base(10, ValidationLevel.InterSegment_SNIP4)
         {
         }
 
