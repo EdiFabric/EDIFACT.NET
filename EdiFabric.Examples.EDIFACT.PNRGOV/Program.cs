@@ -8,6 +8,7 @@ using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Templates.Padis;
 using System.Reflection;
+using EdiFabric.Framework;
 
 namespace EdiFabric.Examples.EDIFACT.PNRGOV
 {
@@ -28,7 +29,7 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PassengerData.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Padis"))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSPNRGOV>();
@@ -41,6 +42,15 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
                     var errors = transaction.ErrorContext.Flatten();
                 }
             }
+        }
+
+        public static TypeInfo TypeFactory(UNB unb, UNG ung, UNH unh)
+        {
+            if (unh.MessageIdentifier_02.MessageType_01 == "PNRGOV")
+                return typeof(TSPNRGOV).GetTypeInfo();
+
+            throw new System.Exception(string.Format("Transaction {0} for version {1} is not supported.",
+                unh.MessageIdentifier_02.MessageType_01, unh.MessageIdentifier_02.MessageVersionNumber_02 + unh.MessageIdentifier_02.MessageReleaseNumber_03));
         }
 
         /// <summary>
