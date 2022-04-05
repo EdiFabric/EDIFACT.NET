@@ -7,6 +7,7 @@ using System.Linq;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Templates.EdifactD03B;
 using EdiFabric.Examples.EDIFACT.Common;
+using System.Reflection;
 
 namespace EdiFabric.Examples.EDIFACT.PAXLST
 {
@@ -27,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.PAXLST
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PassengerList.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSPAXLST>();
@@ -40,6 +41,16 @@ namespace EdiFabric.Examples.EDIFACT.PAXLST
                     var errors = transaction.ErrorContext.Flatten();
                 }
             }
+        }
+
+        public static TypeInfo TypeFactory(UNB unb, UNG ung, UNH unh)
+        {
+            if (unh.MessageIdentifier_02.MessageReleaseNumber_03 == "03B" &&
+                unh.MessageIdentifier_02.MessageType_01 == "PAXLST")
+                return typeof(TSPAXLST).GetTypeInfo();
+
+            throw new System.Exception(string.Format("Transaction {0} for version {1} is not supported.",
+                unh.MessageIdentifier_02.MessageType_01, unh.MessageIdentifier_02.MessageVersionNumber_02 + unh.MessageIdentifier_02.MessageReleaseNumber_03));
         }
 
         /// <summary>

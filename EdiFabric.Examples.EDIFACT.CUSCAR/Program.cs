@@ -7,6 +7,7 @@ using System.Linq;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Templates.EdifactD03B;
 using EdiFabric.Examples.EDIFACT.Common;
+using System.Reflection;
 
 namespace EdiFabric.Examples.EDIFACT.CUSCAR
 {
@@ -27,7 +28,7 @@ namespace EdiFabric.Examples.EDIFACT.CUSCAR
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\CargoReport.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSCUSCAR>();
@@ -40,6 +41,16 @@ namespace EdiFabric.Examples.EDIFACT.CUSCAR
                     var errors = transaction.ErrorContext.Flatten();
                 }
             }
+        }
+
+        public static TypeInfo TypeFactory(UNB unb, UNG ung, UNH unh)
+        {
+            if (unh.MessageIdentifier_02.MessageReleaseNumber_03 == "03B" &&
+                unh.MessageIdentifier_02.MessageType_01 == "CUSCAR")
+                return typeof(TSCUSCAR).GetTypeInfo();
+
+            throw new System.Exception(string.Format("Transaction {0} for version {1} is not supported.",
+                unh.MessageIdentifier_02.MessageType_01, unh.MessageIdentifier_02.MessageVersionNumber_02 + unh.MessageIdentifier_02.MessageReleaseNumber_03));
         }
 
         /// <summary>

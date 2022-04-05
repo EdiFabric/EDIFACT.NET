@@ -7,6 +7,7 @@ using EdiFabric.Templates.EancomD01B;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
 {
@@ -27,7 +28,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Eancom\Invoice.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, TypeFactory))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSINVOIC>();
@@ -40,6 +41,16 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
                     var errors = transaction.ErrorContext.Flatten();
                 }
             }
+        }
+
+        public static TypeInfo TypeFactory(UNB unb, UNG ung, UNH unh)
+        {
+            if (unh.MessageIdentifier_02.MessageReleaseNumber_03 == "01B" &&
+                unh.MessageIdentifier_02.MessageType_01 == "INVOIC")
+                return typeof(TSINVOIC).GetTypeInfo();
+
+            throw new System.Exception(string.Format("Transaction {0} for version {1} is not supported.",
+                unh.MessageIdentifier_02.MessageType_01, unh.MessageIdentifier_02.MessageVersionNumber_02 + unh.MessageIdentifier_02.MessageReleaseNumber_03));
         }
 
         /// <summary>
