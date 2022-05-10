@@ -34,6 +34,9 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
 
             //  Turn auto-trailers off
             WriteEDIWithoutAutoTrailers.Run();
+
+            //  Write with obfuscation
+            WriteEDIWithObfuscation.Run();
         }
     }
 }

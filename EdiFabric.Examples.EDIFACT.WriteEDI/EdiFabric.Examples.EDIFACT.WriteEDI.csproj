@@ -61,6 +61,7 @@
     <Compile Include="WriteEDITransactionOnly.cs" />
     <Compile Include="WriteEDIWithCustomDelimiters.cs" />
     <Compile Include="WriteEDIWithEmptyDataElements.cs" />
+    <Compile Include="WriteEDIWithObfuscation.cs" />
     <Compile Include="WriteEDIWithNewLines.cs" />
     <Compile Include="WriteEDIWithoutAutoTrailers.cs" />
   </ItemGroup>
