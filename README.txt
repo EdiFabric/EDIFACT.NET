@@ -6,18 +6,16 @@ The examples are organized into different projects in two logical categories: by
 2. Requirements
 - Visual Studio, compatible with the supported .NET versions
 - Minimum .NET Framework 4.5 or .NET Core 3.1. All projects target .NET Framework 4.5, however, the Target Framework from each project's properties can be changed to .NET Core 3.1.
-- EdiFabric trial NuGet packages and serial number.
+- EdiFabric trial DLLs and serial number.
 
-3. Setup
-Rebuild the solution to install the rest of the dependencies. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
-
-NOTE: it is possible to also reference DLLs instead of NuGet packages. Change the .nupkg extension of the packages to .zip, unzip them, and extract the DLL files. 
-Then uninstall the NuGet packages from each project and replace them with DLL references.
-
-4. Serial Key
-Download the serial key from https://sowl.co/oApEt. 
+3. Serial Key and EdiFabric trial DLLs
+Download the serial key and EdiFabric trial DLLs from https://sowl.co/oApEt. 
 The serial key is included in the file serial.key in folder edifabric-trial. Ensure it is there and that the file is not empty. The serial key is loaded in the file SerialKey.cs in project EdiFabric.Examples.EDIFACT.Common. 
 Open the file and ensure that the serialKeyPath is correct. If the serial key is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
+The trial DLLs are in folders net45 (for .NET Framework 4.5+) and netcoreapp3.1 (for .NET Core 3.1+).
+
+4. Setup
+Rebuild the solution. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
 
 5. Getting started
 To get started, set project EdiFabric.Examples.EDIFACT.Demo as the startup project, open Program.cs and follow the instructions there. This project allows you to quickly translate your own EDI files.
@@ -47,6 +45,12 @@ EDIFACT UN PRICAT
 All templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation. 
 
 9. EDI Templates
+The trial comes with the following prebuilt template assemblies:
+
+EdiFabric.Templates.Edifact.dll - EDIFACT D96A, EANCOM INVOIC D01B Syntax 3, SMDG BAPLIE D13B, USC CUSCAR and PAXLST D03B
+EdiFabric.Templates.Edigas.dll - EDIGAS 4.0
+EdiFabric.Templates.Padis.dll - IATA PADIS 12.1
+
 EdiFabric supports all EDIFACT/EANCOM/IATA/EDIGAS versions and message types. We have an extensive library of EDI templates, however, if you can't find a particular transaction, please let us know. 
 The following templates are available out-of-the-box:
 
@@ -62,16 +66,8 @@ https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-Templates
 EDIGAS
 https://support.edifabric.com/hc/en-us/articles/4406831178001-EDIGAS-4-0
 
-For an interactive view of all templates go to EdiNation's EDI Webpad (no registration is required):
-
-EDIFACT
-https://www.edination.com/edi-models-edifact.html
-
-EANCOM
-https://www.edination.com/edi-models-eancom.html
-
-IATA PADIS
-https://www.edination.com/edi-models-iata.html
+For an interactive view of all templates go to EdiNation (no registration is required):
+https://edination.com/edi-formats.html
 
 10. Trial use
 The trial assemblies are valid for 14 days and are subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Upon expiry, the trial packages will begin throwing exceptions. 
@@ -98,5 +94,5 @@ https://support.edifabric.com
 Support
 https://support.edifabric.com/hc/en-us/requests/new
 
-Last updated on January 7, 2021
-2021 © EdiFabric
+Last updated on November 22, 2022
+2022 © EdiFabric
