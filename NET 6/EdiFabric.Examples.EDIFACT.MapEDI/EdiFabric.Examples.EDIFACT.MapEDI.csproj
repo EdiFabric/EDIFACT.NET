@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\EDIToCustomObjectWithAutoMapper.cs" Link="EDIToCustomObjectWithAutoMapper.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\EDIToCustomObjectWithXslt.cs" Link="EDIToCustomObjectWithXslt.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\Program.cs" Link="Program.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\PurchaseOrder.cs" Link="PurchaseOrder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\PurchaseOrder.xsd" Link="PurchaseOrder.xsd" />
+    <None Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.MapEDI\TemplateORDERS.xsd" Link="TemplateORDERS.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
+    </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

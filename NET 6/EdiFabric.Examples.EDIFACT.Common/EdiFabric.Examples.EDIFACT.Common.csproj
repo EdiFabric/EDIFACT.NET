@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Common\AckBuilders.cs" Link="AckBuilders.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Common\SegmentBuilders.cs" Link="SegmentBuilders.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Common\SerialKey.cs" Link="SerialKey.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Common\StreamExtensions.cs" Link="StreamExtensions.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Common\XmlExtensions.cs" Link="XmlExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
+    </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

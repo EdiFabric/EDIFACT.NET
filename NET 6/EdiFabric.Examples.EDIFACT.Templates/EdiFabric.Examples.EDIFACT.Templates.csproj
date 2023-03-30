@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_Codes.cs" Link="EF_EDIFACT_D96A_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ComplexElements.cs" Link="EF_EDIFACT_D96A_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_INVOIC.cs" Link="EF_EDIFACT_D96A_INVOIC.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ORDERS _Modified.cs" Link="EF_EDIFACT_D96A_ORDERS _Modified.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ORDERS.cs" Link="EF_EDIFACT_D96A_ORDERS.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_Segments.cs" Link="EF_EDIFACT_D96A_Segments.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\Program.cs" Link="Program.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIGroupBatch.cs" Link="WriteEDIGroupBatch.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIInterchangeBatch.cs" Link="WriteEDIInterchangeBatch.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIToFile.cs" Link="WriteEDIToFile.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIToStream.cs" Link="WriteEDIToStream.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIToStreamAsync.cs" Link="WriteEDIToStreamAsync.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDITransactionBatch.cs" Link="WriteEDITransactionBatch.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDITransactionOnly.cs" Link="WriteEDITransactionOnly.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIWithCustomDelimiters.cs" Link="WriteEDIWithCustomDelimiters.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIWithEmptyDataElements.cs" Link="WriteEDIWithEmptyDataElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIWithNewLines.cs" Link="WriteEDIWithNewLines.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIWithObfuscation.cs" Link="WriteEDIWithObfuscation.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.WriteEDI\WriteEDIWithoutAutoTrailers.cs" Link="WriteEDIWithoutAutoTrailers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
+    </Reference>
+    <Reference Include="EdiFabric.Templates.Edifact">
+      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.Templates.Edifact.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
