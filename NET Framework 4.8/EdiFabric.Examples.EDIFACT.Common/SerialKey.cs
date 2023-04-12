@@ -9,12 +9,11 @@ namespace EdiFabric.Examples.EDIFACT.Common
         static SerialKey()
         {
             // To get a free serial key go to https://sowl.co/oApEt
-            var serialKeyPath = @"../../../../edifabric-trial/serial.key";
 
-            if (!File.Exists(serialKeyPath))
-                throw new Exception("Set the path to the serial.key file in project EdiFabric.Examples.EDIFACT.Common, file SerialKey.cs!");
+            if (!File.Exists(Config.SerialKeyPath))
+                throw new Exception("Set the path to the serial.key file in project EdiFabric.Examples.EDIFACT.Common, file Config.cs!");
 
-            _serialKey = File.ReadAllText(serialKeyPath).Trim(new[] {' ', '\r', '\n' });
+            _serialKey = File.ReadAllText(Config.SerialKeyPath).Trim(new[] { ' ', '\r', '\n' });
         }
 
         public static string Get()

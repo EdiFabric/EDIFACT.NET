@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var edi = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\DuplicateMessage.txt");
+            var edi = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\DuplicateMessage.txt");
 
             var settings = new AckSettings
             {

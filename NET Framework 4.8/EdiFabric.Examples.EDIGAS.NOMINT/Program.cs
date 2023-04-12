@@ -24,7 +24,7 @@ namespace EdiFabric.Examples.EDIGAS.NOMINT
         /// </summary>
         static void Read()
         {
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edigas\NOMINT.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edigas\NOMINT.txt");
 
             List<IEdiItem> ediItems;
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edigas"))

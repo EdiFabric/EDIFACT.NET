@@ -24,7 +24,7 @@ namespace EdiFabric.Examples.EDIFACT.PRICAT
         /// </summary>
         static void Read()
         {
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Eancom\PriceCatalogue.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Eancom\PriceCatalogue.txt");
 
             List<IEdiItem> ediItems;
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))

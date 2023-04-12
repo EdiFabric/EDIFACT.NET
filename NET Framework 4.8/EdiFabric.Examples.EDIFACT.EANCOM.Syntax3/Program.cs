@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
         /// </summary>
         static void Read()
         {
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Eancom\Invoice.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Eancom\Invoice.txt");
 
             List<IEdiItem> ediItems;
             using (var ediReader = new EdifactReader(ediStream, TypeFactory))

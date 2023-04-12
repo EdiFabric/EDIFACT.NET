@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,7 +21,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\MixedTransactions.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\MixedTransactions.txt");
 
             //  Use the base EdifactReaderBase instead of EdifactReader
             List<IEdiItem> ediItems;

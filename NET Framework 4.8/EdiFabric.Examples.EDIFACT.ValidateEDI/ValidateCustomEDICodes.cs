@@ -30,7 +30,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Dictionary<Type, Type> codeSetMap = new Dictionary<Type, Type>();
             codeSetMap.Add(typeof(EDIFACT_ID_1225), typeof(EDIFACT_ID_1225_PartnerA));
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
             using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
@@ -70,7 +70,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             var codeSetMap = new Dictionary<string, List<string>>();
             codeSetMap.Add("EDIFACT_ID_1001", new List<string> { "A", "B", "C", "D", "E" });
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\EDIFACT\MixedTransactions.txt");
 
             //  Ensure that the codeset map is set on the reader
             List<IEdiItem> ediItems;

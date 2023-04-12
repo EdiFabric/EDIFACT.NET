@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine("******************************");
 
             //  1.  Load to a stream 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrders.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrders.txt");
 
             //  2. Read item by item, that is each call to Read() 
             //  brings back either a control segment (UNB, UNG, UNE or UNZ) or a transaction

@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\CorruptUnh.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\CorruptUnh.txt");
 
             //  Set the continue on error flag to true
             List<IEdiItem> ediItems;

@@ -20,7 +20,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine("******************************");
 
             //  1.  Load to a stream 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\MixedTransactions.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\MixedTransactions.txt");
 
             //  2.  Read multiple transactions batched up in the same interchange
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))

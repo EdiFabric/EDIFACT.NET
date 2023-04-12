@@ -30,7 +30,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine("******************************");
 
             //  1.  Load to a stream 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderCustom2.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderCustom2.txt");
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;

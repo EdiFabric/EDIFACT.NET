@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\EDIFACT\MixedTransactions.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
             using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))

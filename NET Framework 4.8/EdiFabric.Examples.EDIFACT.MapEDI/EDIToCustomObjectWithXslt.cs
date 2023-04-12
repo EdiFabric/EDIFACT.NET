@@ -21,7 +21,7 @@ namespace EdiFabric.Examples.EDIFACT.MapEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderCSV.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderCSV.txt");
 
             List<IEdiItem> ediItems;
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
@@ -40,7 +40,7 @@ namespace EdiFabric.Examples.EDIFACT.MapEDI
                 using (XmlWriter writer = outputXml.CreateWriter())
                 {
                     XslCompiledTransform xslt = new XslCompiledTransform();
-                    xslt.Load(XmlReader.Create(File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\TemplateORDERSToPurchaseOrderMap.xslt")));
+                    xslt.Load(XmlReader.Create(File.OpenRead(Directory.GetCurrentDirectory() + Config.TestMapPath + @"TemplateORDERSToPurchaseOrderMap.xslt")));
                     xslt.Transform(xml.CreateReader(), writer);
                 }
 

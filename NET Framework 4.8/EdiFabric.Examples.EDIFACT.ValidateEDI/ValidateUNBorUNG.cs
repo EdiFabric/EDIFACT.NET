@@ -18,7 +18,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\Invoice.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\Invoice.txt");
 
             using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
             {

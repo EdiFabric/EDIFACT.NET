@@ -30,7 +30,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderInvalid.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderInvalid.txt");
 
             List<IEdiItem> ediItems;
             //  Load the new template with the custom validation
@@ -58,7 +58,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Eancom\Invoice.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Eancom\Invoice.txt");
 
             List<IEdiItem> ediItems;
             //  Load the new template with the custom validation

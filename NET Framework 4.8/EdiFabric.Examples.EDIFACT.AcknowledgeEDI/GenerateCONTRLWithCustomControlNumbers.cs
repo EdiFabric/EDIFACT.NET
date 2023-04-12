@@ -21,7 +21,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var edi = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrder.txt");
+            var edi = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrder.txt");
             int unbControlNumber = 28;
             int ungControlNumber = 35;
             Debug.WriteLine("Start interchange control number: {0}", unbControlNumber);

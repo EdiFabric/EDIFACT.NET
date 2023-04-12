@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
             Debug.WriteLine("******************************");
 
             //  1.  Load to a stream 
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\CONTRL.txt");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\CONTRL.txt");
 
             //  2.  Read all the contents
             List<IEdiItem> ediItems;

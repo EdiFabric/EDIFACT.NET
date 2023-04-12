@@ -21,7 +21,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var edi = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\DuplicateInterchange.txt");
+            var edi = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\DuplicateInterchange.txt");
 
             var settings = new AckSettings
             {

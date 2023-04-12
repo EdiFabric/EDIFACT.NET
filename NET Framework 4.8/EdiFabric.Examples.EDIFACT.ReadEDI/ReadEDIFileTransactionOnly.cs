@@ -20,7 +20,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\MixedTransactionsNoEnvelopes.txt");
+            Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\MixedTransactionsNoEnvelopes.txt");
 
             //  Set the NoEnvelope flag to true
             List<IEdiItem> ediItems;

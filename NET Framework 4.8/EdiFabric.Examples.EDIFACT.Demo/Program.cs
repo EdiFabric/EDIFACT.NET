@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.Demo
             SerialKey.Set(Common.SerialKey.Get());
 
             //  Change the path to point to your own file to test with
-            var path = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrders.txt");
+            var path = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrders.txt");
 
             List<IEdiItem> ediItems;
             using (var reader = new EdifactReader(path, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { ContinueOnError = true }))

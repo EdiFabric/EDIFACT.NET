@@ -17,7 +17,7 @@ namespace EdiFabric.Examples.EDIFACT.JSON
             Debug.WriteLine(MethodBase.GetCurrentMethod().Name);
             Debug.WriteLine("******************************");
 
-            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + @"\..\..\..\Files\Edifact\PurchaseOrderNs.json");
+            var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderNs.json");
             var transaction = Newtonsoft.Json.JsonConvert.DeserializeObject<TSORDERS>(ediStream.LoadToString());
         }
     }
