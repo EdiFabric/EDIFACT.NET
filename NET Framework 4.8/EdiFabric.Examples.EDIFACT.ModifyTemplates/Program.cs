@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.EdifactD96A;
 
@@ -17,10 +18,10 @@ namespace EdiFabric.Examples.EDIFACT.ModifyTemplates
             SerialKey.Set(Common.SerialKey.Get());
 
             // Parse ORDERS
-            ParsePO(@"\..\..\..\Files\EDIFACT\PurchaseOrder.txt");
+            ParsePO(Config.TestFilesPath + @"\EDIFACT\PurchaseOrder.txt");
 
             //  Parse modified ORDERS 
-            ParseModifiedPO(@"\..\..\..\Files\EDIFACT\PurchaseOrderModified.txt");
+            ParseModifiedPO(Config.TestFilesPath + @"\EDIFACT\PurchaseOrderModified.txt");
         }
 
         public static void ParsePO(string ediFile)
