@@ -27,7 +27,7 @@ var transactions = ediItems.OfType<TSORDERS>();
 
 ## 3. Serial Key and EdiFabric trial DLLs
 [Download the serial key](https://sowl.co/oApEt).
-The serial key is included in the file serial.key in folder edifabric. Ensure it is there and that the file is not empty. The serial key is loaded in the file SerialKey.cs in project EdiFabric.Examples.X12.Common. 
+The serial key is included in the file serial.key in folder edifabric. Ensure it is there and that the file is not empty. The serial key is loaded in the file SerialKey.cs in project EdiFabric.Examples.EDIFACT.Common. 
 Open the file and ensure that the serialKeyPath is correct. If the serial key is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
 The trial DLLs are in folders net48 (for .NET Framework 4.8+) and net6.0 (for .NET 6+).
 
