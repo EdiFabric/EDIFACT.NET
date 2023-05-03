@@ -37,15 +37,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\edifabric\net48\EdiFabric.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact, Version=2.6.7.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\edifabric\net48\EdiFabric.Templates.Edifact.dll</HintPath>
+    <Reference Include="EdiFabric.Templates.Edifact">
+      <HintPath>..\..\..\edifabric\net45\EdiFabric.Templates.Edifact.dll</HintPath>
     </Reference>
     <Reference Include="EdiFabric.Templates.Edigas">
-      <HintPath>..\..\..\edifabric\net48\EdiFabric.Templates.Edigas.dll</HintPath>
+      <HintPath>..\..\..\edifabric\net45\EdiFabric.Templates.Edigas.dll</HintPath>
     </Reference>
     <Reference Include="EdiFabric.Templates.Padis">
-      <HintPath>..\..\..\edifabric\net48\EdiFabric.Templates.Padis.dll</HintPath>
+      <HintPath>..\..\..\edifabric\net45\EdiFabric.Templates.Padis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
