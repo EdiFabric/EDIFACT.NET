@@ -5,7 +5,7 @@ The examples are organized into different projects in two logical categories: by
 
 2. Requirements
 - Visual Studio, compatible with the supported .NET versions
-- Minimum .NET Framework 4.8 or .NET 6. Downgrading to .NET Framework 4.5 is possible by changing the target framework for each project.
+- Minimum .NET Framework 4.8 or .NET 6. Downgrade to .NET Framework 4.5 is possible by changing the target framework for each project.
 - EdiFabric DLLs and a trial serial number.
 
 3. Serial Key and EdiFabric DLLs
