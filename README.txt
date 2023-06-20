@@ -6,16 +6,12 @@ The examples are organized into different projects in two logical categories: by
 2. Requirements
 - Visual Studio, compatible with the supported .NET versions
 - Minimum .NET Framework 4.8 or .NET 6. Downgrade to .NET Framework 4.5 is possible by changing the target framework for each project.
-- EdiFabric DLLs and a trial serial number.
 
 3. Serial Key and EdiFabric DLLs
-Download the serial key and EdiFabric trial DLLs from https://sowl.co/oApEt. 
-The serial key is included in the file serial.key in folder edifabric. Ensure it is there and that the file is not empty. The serial key is loaded in the file SerialKey.cs in project EdiFabric.Examples.X12.Common. 
-Open the file and ensure that the serialKeyPath is correct. If the serial key is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
-The trial DLLs are in folders net48 (for .NET Framework 4.8+) and net6.0 (for .NET 6+).
+All projects reference EdiFabric EDI Tools as NuGet packages from nuget.org. If you wish to install EdiFabric EDI Tools as DLLs, download the trial DLLs from https://sowl.co/oApEt. 
 
 4. Setup
-Rebuild the solution. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
+Rebuild the solution with Package Restore enabled. If there are any build errors, manually install the missing packages from https://www.nuget.org/packages?q=edifabric.
 
 5. Getting started
 To get started, set project EdiFabric.Examples.EDIFACT.Demo as the startup project, open Program.cs and follow the instructions there. This project allows you to quickly translate your own EDI files.
@@ -94,5 +90,5 @@ https://support.edifabric.com
 Support
 https://support.edifabric.com/hc/en-us/requests/new
 
-Last updated on April 20, 2023
+Last updated on June 20, 2023
 2023 © EdiFabric
