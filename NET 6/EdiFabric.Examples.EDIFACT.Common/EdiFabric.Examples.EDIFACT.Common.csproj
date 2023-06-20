@@ -16,12 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="EdiFabric">
-      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
-    </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact">
-      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.Templates.Edifact.dll</HintPath>
-    </Reference>
+    <PackageReference Include="EdiFabric" Version="10.5.2" />
+    <PackageReference Include="EdiFabric.Templates.Edifact" Version="2.7.1" />
   </ItemGroup>
 
 </Project>

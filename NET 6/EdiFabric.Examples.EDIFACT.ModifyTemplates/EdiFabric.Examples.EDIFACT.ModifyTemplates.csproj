@@ -12,14 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
-    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj" />
+    <PackageReference Include="EdiFabric" Version="10.5.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="EdiFabric">
-      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj" />
   </ItemGroup>
 
 </Project>

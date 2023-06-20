@@ -2,7 +2,7 @@ using System;
 using EdiFabric.Core.Annotations.Edi;
 using EdiFabric.Core.Annotations.Validation;
 
-namespace EdiFabric.Templates.EdifactD96A
+namespace EdiFabric.Templates.Edifact
 {
     /// <summary>
     /// Modified Purchase Order

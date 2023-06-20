@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EdiFabric" Version="10.5.2" />
+    <PackageReference Include="EdiFabric.Templates.Edifact" Version="2.7.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15">
@@ -18,15 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="EdiFabric">
-      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.dll</HintPath>
-    </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact">
-      <HintPath>..\..\..\edifabric\net6.0\EdiFabric.Templates.Edifact.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

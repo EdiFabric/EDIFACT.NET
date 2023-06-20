@@ -1,4 +1,4 @@
-namespace EdiFabric.Templates.EdifactD96A
+namespace EdiFabric.Templates.Edifact
 {
     using System;
     using System.Collections.Generic;
