@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="EdiFabric" Version="10.5.2" />
+    <PackageReference Include="EdiFabric" Version="10.6.0" />
     <PackageReference Include="EdiFabric.Templates.Edifact" Version="2.7.1" />
   </ItemGroup>
 
