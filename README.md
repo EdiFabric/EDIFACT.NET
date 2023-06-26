@@ -1,7 +1,7 @@
 # EdiFabric C# .NET Examples for EDIFACT D96A, EANCOM D03B, IATA PADIS, and eDIGAS
 
 ## 1. Overview
-EdiFabric is a software development kit for .NET Framework and .NET Core, which makes it straightforward to parse, generate, validate, acknowledge, split, customize, or in other words, to programmatically manipulate EDI files. It is written in C# and is distributed as a DLL file (a NuGet package is also provided) and C# files.  
+EdiFabric is a software development kit for .NET Framework and .NET Core, which makes it straightforward to parse, generate, validate, acknowledge, split, customize, or in other words, to programmatically manipulate EDI files. It is written in C# and is distributed as a DLL file and a NuGet package.  
 
 It currently supports all message types for the X12, EDIFACT, HL7, and NCPDP EDI standards, the German automotive standard VDA, as well as custom formatted flat files (delimited, positional, or a mixture of both).  
 
@@ -22,20 +22,16 @@ var transactions = ediItems.OfType<TSORDERS>();
 
 ## 2. Requirements
 - Visual Studio, compatible with the supported .NET versions. [Download Visual Studio](https://visualstudio.microsoft.com/downloads/).
-- Minimum .NET Framework 4.8 or .NET 6. 
-- EdiFabric DLLs and a trial serial number. 
+- Minimum .NET Framework 4.8 or .NET 6. Downgrading to .NET Framework 4.5 is possible by changing the target framework for each project.
 
 ## 3. Serial Key and EdiFabric trial DLLs
-[Download the serial key](https://sowl.co/oApEt).
-The serial key is included in the file serial.key in folder edifabric. Ensure it is there and that the file is not empty. The serial key is loaded in the file SerialKey.cs in project EdiFabric.Examples.EDIFACT.Common. 
-Open the file and ensure that the serialKeyPath is correct. If the serial key is invalid or the file is missing, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
-The trial DLLs are in folders net48 (for .NET Framework 4.8+) and net6.0 (for .NET 6+).
+All projects reference EdiFabric EDI Tools as NuGet packages from nuget.org. If you wish to install EdiFabric EDI Tools as DLLs, download the trial DLLs from [here](https://sowl.co/oApEt).
 
 ## 4. Setup
-Rebuild the solution. If there are any build errors, contact us at https://support.edifabric.com/hc/en-us/requests/new for assistance.
+Rebuild the solution with Package Restore enabled. If there are any build errors, manually install the missing packages from [here](https://www.nuget.org/packages?q=edifabric).
 
 ## 5. Getting started
-To get started, set project EdiFabric.Examples.EDIFACT.Demo as the startup project, open Program.cs and follow the instructions there. This project allows you to quickly translate your own EDI files.  
+To get started, set project EdiFabric.Examples.EDIFACT.Demo as the startup project, open Program.cs and follow the instructions there. This project allows you to quickly translate your own EDI files.
 
 ## 6. Examples by feature
 Explore the different features of EdiFabric, such as translating from EDI file (ReadEDI), generating EDI file (WriteEDI), validating EDI transactions (ValidateEDI), import/export from/to JSON , XML, CSV, create/save/query database (DB), generate CONTRL acknowledgments (AcknowledgeEDI) and how to map to/from an EDI template using Automapper and XSLT (MapEDI).  
@@ -97,5 +93,5 @@ implied warranties of merchantability and/or fitness for a particular purpose.*
 
 [Support](https://support.edifabric.com/hc/en-us/requests/new)
 
-Last updated on April 20, 2023
+Last updated on June 20, 2023
 ### 2023 © EdiFabric
