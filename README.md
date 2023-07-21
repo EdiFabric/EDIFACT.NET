@@ -53,6 +53,8 @@ EDIFACT UN ORDERS
 EDIFACT UN ORDRSP  
 EDIFACT UN PRICAT  
 
+> **If you need to test with a message type in a different version, [install the templates for that version from EdiNation](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-start-a-new-VS-project).**
+
 ## 8. EDI Validation
 All templates in EdiFabric.Templates.Edifact and EdiFabric.Templates.Padis can be used for validation.   
 
