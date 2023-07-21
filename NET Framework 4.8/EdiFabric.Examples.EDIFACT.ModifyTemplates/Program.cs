@@ -15,7 +15,7 @@ namespace EdiFabric.Examples.EDIFACT.ModifyTemplates
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(Common.SerialKey.Get());
+            TokenFileCache.Set();
 
             // Parse ORDERS
             ParsePO(Config.TestFilesPath + @"\EDIFACT\PurchaseOrder.txt");

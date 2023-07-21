@@ -6,7 +6,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(Common.SerialKey.Get());
+            TokenFileCache.Set();
 
             //  Generate CONTRL for valid group
             GenerateValidCONTRL.Run();

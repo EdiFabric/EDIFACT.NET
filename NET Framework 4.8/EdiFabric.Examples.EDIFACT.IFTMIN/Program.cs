@@ -14,7 +14,7 @@ namespace EdiFabric.Examples.EDIFACT.IFTMIN
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(Common.SerialKey.Get());
+            TokenFileCache.Set();
             Read();
             Write();
         }

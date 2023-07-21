@@ -6,7 +6,7 @@ namespace EdiFabric.Examples.EDIFACT.JSON
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(Common.SerialKey.Get());
+            TokenFileCache.Set();
 
             //  Serialize to JSON
             SerializeToJson.Run();

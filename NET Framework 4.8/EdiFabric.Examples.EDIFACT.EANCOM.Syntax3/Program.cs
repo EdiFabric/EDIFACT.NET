@@ -15,7 +15,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(EDIFACT.Common.SerialKey.Get());
+            TokenFileCache.Set();
             Read();
             Write();
         }

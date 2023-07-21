@@ -15,7 +15,7 @@ namespace EdiFabric.Examples.EDIFACT.INVOIC
     {
         static void Main(string[] args)
         {
-            SerialKey.Set(Common.SerialKey.Get());
+            TokenFileCache.Set();
             Read();
             Write();
         }

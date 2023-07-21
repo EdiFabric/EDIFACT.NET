@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EdiFabric, Version=10.6.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.10.6.0\lib\net48\EdiFabric.dll</HintPath>
+    <Reference Include="EdiFabric, Version=10.6.3.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.10.6.3\lib\net48\EdiFabric.dll</HintPath>
     </Reference>
     <Reference Include="EdiFabric.Templates.Edifact, Version=2.7.1.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.Templates.Edifact.2.7.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
