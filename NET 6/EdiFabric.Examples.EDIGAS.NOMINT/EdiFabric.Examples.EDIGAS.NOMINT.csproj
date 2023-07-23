@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EdiFabric" Version="10.6.3" />
+    <PackageReference Include="EdiFabric" Version="10.6.4" />
     <PackageReference Include="EdiFabric.Templates.Edigas" Version="2.7.1" />
   </ItemGroup>
 
