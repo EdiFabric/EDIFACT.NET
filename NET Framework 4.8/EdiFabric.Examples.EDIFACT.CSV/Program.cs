@@ -6,7 +6,7 @@ namespace EdiFabric.Examples.EDIFACT.CSV
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
 
             //  Export to custom CSV
             ExportToCsv.Run();

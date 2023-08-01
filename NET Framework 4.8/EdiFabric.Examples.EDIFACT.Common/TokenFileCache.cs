@@ -7,7 +7,6 @@ namespace EdiFabric.Examples.EDIFACT.Common
     public class TokenFileCache
     {
         private static string _tokenFile = Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\token.txt";
-        private static string _serialKey = "c417cb9dd9d54297a55c032a74c87996";
        
         public static void Set()
         {           
@@ -65,7 +64,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
             {
                 try
                 {
-                    return SerialKey.GetToken(_serialKey);
+                    return SerialKey.GetToken(Config.TrialSerialKey);
                 }
                 catch(Exception ex)
                 {

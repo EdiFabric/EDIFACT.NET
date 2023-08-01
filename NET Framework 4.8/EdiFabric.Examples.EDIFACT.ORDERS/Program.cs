@@ -14,7 +14,7 @@ namespace EdiFabric.Examples.EDIFACT.ORDERS
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
             Read();
             Write();
         }

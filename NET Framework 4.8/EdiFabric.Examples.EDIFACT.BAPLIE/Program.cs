@@ -15,7 +15,7 @@ namespace EdiFabric.Examples.EDIFACT.BAPLIE
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
             Read();
             Write();
         }

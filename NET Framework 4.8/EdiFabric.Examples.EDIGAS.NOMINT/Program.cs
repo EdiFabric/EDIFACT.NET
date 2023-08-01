@@ -14,7 +14,7 @@ namespace EdiFabric.Examples.EDIGAS.NOMINT
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
             Read();
             Write();
         }

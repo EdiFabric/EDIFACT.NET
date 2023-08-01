@@ -16,7 +16,7 @@ namespace EdiFabric.Examples.EDIFACT.PNRGOV
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
             Read();
             Write();
         }

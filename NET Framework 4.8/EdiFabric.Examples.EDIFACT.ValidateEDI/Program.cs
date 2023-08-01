@@ -6,7 +6,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     {
         static void Main(string[] args)
         {
-            TokenFileCache.Set();
+             SerialKey.Set(Config.TrialSerialKey);
 
             //  Validate custom EDI codes
             ValidateCustomEDICodes.Run();
