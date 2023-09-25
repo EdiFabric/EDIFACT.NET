@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EdiFabric" Version="10.6.4" />
+    <PackageReference Include="EdiFabric" Version="10.6.7" />
     <PackageReference Include="EdiFabric.Templates.Edifact" Version="2.7.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using EdiFabric.Examples.EDIFACT.Common;
+using System;
 
 namespace EdiFabric.Examples.EDIFACT.WriteEDI
 {
@@ -6,7 +7,15 @@ namespace EdiFabric.Examples.EDIFACT.WriteEDI
     {
         static void Main(string[] args)
         {
-             SerialKey.Set(Config.TrialSerialKey);
+            try
+            {
+                SerialKey.Set(Config.TrialSerialKey, true);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("Can't set token"))
+                    throw new Exception("Your trial has expired! To continue using EdiFabric SDK you must purchase a plan from https://www.edifabric.com/pricing.html");
+            }
 
             //  Write EDI to stream and then to string or file
             WriteEDIToStream.Run();
