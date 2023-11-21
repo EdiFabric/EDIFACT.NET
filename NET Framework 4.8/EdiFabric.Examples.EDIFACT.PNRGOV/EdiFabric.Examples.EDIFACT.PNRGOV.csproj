@@ -37,8 +37,8 @@
     <Reference Include="EdiFabric, Version=10.6.7.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.10.6.7\lib\net48\EdiFabric.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Templates.Padis, Version=2.7.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Padis.2.7.1\lib\net45\EdiFabric.Templates.Padis.dll</HintPath>
+    <Reference Include="EdiFabric.Templates.Padis, Version=2.7.2.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Padis.2.7.2\lib\net45\EdiFabric.Templates.Padis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

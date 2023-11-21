@@ -37,8 +37,8 @@
     <Reference Include="EdiFabric, Version=10.6.7.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.10.6.7\lib\net48\EdiFabric.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact, Version=2.7.1.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Edifact.2.7.1\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
+    <Reference Include="EdiFabric.Templates.Edifact, Version=2.7.2.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EdiFabric.Templates.Edifact.2.7.2\lib\net45\EdiFabric.Templates.Edifact.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
