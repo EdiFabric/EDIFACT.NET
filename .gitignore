@@ -115,3 +115,29 @@
 /NET 6/.vs/ProjectEvaluation
 /NET 6/EdiFabric.Examples.EDIFACT.DB/Migrations
 /Files/token.txt
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.AcknowledgeEDI/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.BAPLIE/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.Common/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.CSV/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.CUSCAR/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.DB/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.Demo/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.DESADV/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.EANCOM.Syntax3/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.IFTMIN/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.IFTSTA/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.INVOIC/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.JSON/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.MapEDI/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.ModifyTemplates/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.ORDERS/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.ORDRSP/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.PAXLST/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.PNRGOV/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.PRICAT/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.ReadEDI/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.Templates/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.ValidateEDI/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.WriteEDI/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIFACT.XML/.vs
+/NET Framework 4.8/EdiFabric.Examples.EDIGAS.NOMINT/.vs
