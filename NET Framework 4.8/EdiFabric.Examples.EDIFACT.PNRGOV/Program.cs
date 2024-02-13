@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Examples.EDIFACT.Common;
-using EdiFabric.Templates.Padis;
 using System.Reflection;
 using EdiFabric.Framework;
 using System;
+using EdiFabric.Templates.Iata131;
 
 namespace EdiFabric.Examples.EDIFACT.PNRGOV
 {
