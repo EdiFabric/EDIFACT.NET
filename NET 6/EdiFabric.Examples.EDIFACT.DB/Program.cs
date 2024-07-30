@@ -1,5 +1,6 @@
 ﻿using EdiFabric.Core.Model.Edi;
 using EdiFabric.Core.Model.Edi.Edifact;
+using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Writers;
@@ -21,7 +22,7 @@ namespace EdiFabric.Examples.EFCore.Edifact.TSORDERS
         //  The connection string is in EF_EDIFACT_D96A_DbContext.cs, and is set to the local instance of SQL Server
         static void Main(string[] args)
         {
-            SerialKey.Set(GetSerial());
+            SerialKey.Set(Config.TrialSerialKey);
 
             var path = Directory.GetCurrentDirectory() + TestFilesPath + @"\EDIFACT\PurchaseOrder.txt";
             Stream ediStream = File.OpenRead(path);
@@ -86,15 +87,6 @@ namespace EdiFabric.Examples.EFCore.Edifact.TSORDERS
             }
         }
 
-        public static string GetSerial()
-        {
-            if (!File.Exists(SerialKeyPath))
-                throw new Exception("Set the correct path to the serial.key file!");
-
-            return File.ReadAllText(SerialKeyPath).Trim(new[] { ' ', '\r', '\n' });
-        }
-
         public static string TestFilesPath = @"\..\..\..\..\..\Files";
-        public static string SerialKeyPath = @"../../../../../../edifabric/serial.key";
     }
 }
