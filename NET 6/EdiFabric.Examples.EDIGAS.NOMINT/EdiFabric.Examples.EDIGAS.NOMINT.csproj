@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EdiFabric" Version="10.7.4" />
-    <PackageReference Include="EdiFabric.Templates.Edigas" Version="2.7.5" />
+    <PackageReference Include="EdiFabric" Version="10.7.5" />
+    <PackageReference Include="EdiFabric.Templates.Edigas" Version="2.7.6" />
   </ItemGroup>
 
   <ItemGroup>
