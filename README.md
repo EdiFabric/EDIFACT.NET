@@ -95,5 +95,4 @@ implied warranties of merchantability and/or fitness for a particular purpose.*
 
 [Support](https://support.edifabric.com/hc/en-us/requests/new)
 
-Last updated on June 20, 2023
-### 2023 © EdiFabric
+### 2025 © EdiFabric
