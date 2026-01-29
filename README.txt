@@ -5,10 +5,10 @@ The examples are organized into different projects in two logical categories: by
 
 2. Requirements
 - Visual Studio, compatible with the supported .NET versions
-- Minimum .NET Framework 4.8 or .NET 6. Downgrade to .NET Framework 4.5 is possible by changing the target framework for each project.
+- Minimum .NET Framework 4.8 or .NET 6. 
 
 3. Serial Key and EdiFabric DLLs
-All projects reference EdiFabric EDI Tools as NuGet packages from nuget.org. If you wish to install EdiFabric EDI Tools as DLLs, download the trial DLLs from https://sowl.co/oApEt. 
+All projects reference EdiFabric EDI Tools as NuGet packages from nuget.org. 
 
 4. Setup
 Rebuild the solution with Package Restore enabled. If there are any build errors, manually install the missing packages from https://www.nuget.org/packages?q=edifabric.
@@ -63,7 +63,7 @@ EDIGAS
 https://support.edifabric.com/hc/en-us/articles/4406831178001-EDIGAS-4-0
 
 For an interactive view of all templates go to EdiNation (no registration is required):
-https://edination.com/edi-formats.html
+https://edination.edifabric.com/edi-spec-library.html
 
 10. Trial use
 The trial serial key is valid for 14 days, and using the product with a trial license is subject to EdiFabric's license terms available at https://www.edifabric.com/files/eula.pdf. Upon expiry, the product will begin throwing exceptions. 
@@ -90,5 +90,5 @@ https://support.edifabric.com
 Support
 https://support.edifabric.com/hc/en-us/requests/new
 
-Last updated on June 20, 2023
-2023 © EdiFabric
+Last updated on January 26, 2026
+2026 © EdiFabric
