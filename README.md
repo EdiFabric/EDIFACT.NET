@@ -174,7 +174,7 @@ The examples call `License.SetSerial(Config.TrialSerialKey)`. On Developer, call
 
 The models published on NuGet, such as **EdiFabric.Templates.Edifact**, **EdiFabric.Templates.Padis**, **EdiFabric.Templates.Edigas**, and **EdiFabric.Templates.X12**, are for evaluation only. They are a Community plan limitation. These examples reference them so you can run the samples on Community.
 
-On every paid plan the EDI models are plain C# files. Add them to the solution by following [How to create EDI template projects](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-create-EDI-Template-projects).
+Paid plans provide every template as plain C# files. Add them to the solution by following [How to create EDI template projects](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-create-EDI-Template-projects). For evaluation and the Community plan, you can still download the templates in compiled form by following the same article.
 
 The same classes validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://support.edifabric.com/hc/en-us/requests/new).
 
