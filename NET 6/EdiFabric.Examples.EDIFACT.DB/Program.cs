@@ -22,7 +22,7 @@ namespace EdiFabric.Examples.EFCore.Edifact.TSORDERS
         //  The connection string is in EF_EDIFACT_D96A_DbContext.cs, and is set to the local instance of SQL Server
         static void Main(string[] args)
         {
-            SerialKey.Set(Config.TrialSerialKey);
+            License.SetSerial(Config.TrialSerialKey);
 
             var path = Directory.GetCurrentDirectory() + TestFilesPath + @"\EDIFACT\PurchaseOrder.txt";
             Stream ediStream = File.OpenRead(path);

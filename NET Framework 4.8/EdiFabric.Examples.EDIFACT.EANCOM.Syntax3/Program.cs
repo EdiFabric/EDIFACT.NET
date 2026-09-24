@@ -18,7 +18,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
         {
             try
             {
-                SerialKey.Set(Config.TrialSerialKey, true);
+                License.SetSerial(Config.TrialSerialKey);
             }
             catch (Exception ex)
             {

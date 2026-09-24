@@ -17,7 +17,7 @@ namespace EdiFabric.Examples.EDIFACT.ModifyTemplates
         {
             try
             {
-                SerialKey.Set(Config.TrialSerialKey, true);
+                License.SetSerial(Config.TrialSerialKey);
             }
             catch (Exception ex)
             {

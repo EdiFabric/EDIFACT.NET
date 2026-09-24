@@ -13,7 +13,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
             try
             {
                 var token = ReadFromCache();
-                SerialKey.SetToken(token);
+                License.SetToken(token);
 
                 //  Refresh token before expiration
                 Refresh();
@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
                 {
                     var token = GetFromApi();
                     WriteToCache(token);
-                    SerialKey.SetToken(token);
+                    License.SetToken(token);
                 }
                 catch (Exception ex)
                 {
@@ -38,10 +38,12 @@ namespace EdiFabric.Examples.EDIFACT.Common
 
         private static void Refresh()
         {
+            long days = License.GetTokenExpiration() / TimeSpan.TicksPerDay;
+
             try
             {
                 //  Refresh the token two days before it expires
-                if (SerialKey.DaysToExpiration < 3)
+                if (days < 3)
                     WriteToCache(GetFromApi());
             }
             catch (Exception ex)
@@ -49,7 +51,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
                 Debug.WriteLine(ex.Message);
                 //  If can't get a token a day before the current expires - throw an exception
                 //  Otherwise keep trying
-                if (SerialKey.DaysToExpiration <= 1)
+                if (days <= 1)
                     throw;
             }
         }
@@ -64,7 +66,7 @@ namespace EdiFabric.Examples.EDIFACT.Common
             {
                 try
                 {
-                    return SerialKey.GetToken(Config.TrialSerialKey);
+                    return License.GetToken(Config.TrialSerialKey);
                 }
                 catch(Exception ex)
                 {

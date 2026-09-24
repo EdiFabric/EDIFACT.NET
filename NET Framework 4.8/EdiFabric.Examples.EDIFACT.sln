@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33122.133
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12217.157 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.Common", "EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj", "{9F794065-1E15-4341-A1C9-4E1FFD856C28}"
 EndProject
@@ -44,11 +44,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.ValidateEDI", "EdiFabric.Examples.EDIFACT.ValidateEDI\EdiFabric.Examples.EDIFACT.ValidateEDI.csproj", "{0BBCC313-888D-4F2E-8246-A1A1E99B86CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdiFabric.Examples.EDIFACT.XML", "EdiFabric.Examples.EDIFACT.XML\EdiFabric.Examples.EDIFACT.XML.csproj", "{172C302D-3612-4385-985A-B088F855589B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Getting started", "_Getting started", "{F4906D77-3A0C-4AB5-B1BC-E07BBFE7A22E}"
-	ProjectSection(SolutionItems) = preProject
-		..\README.txt = ..\README.txt
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples by message type", "Examples by message type", "{5E74E2F9-3214-4CD2-AD44-C9DFF7E02B19}"
 EndProject
