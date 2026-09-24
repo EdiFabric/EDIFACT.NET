@@ -145,8 +145,8 @@ For another version on a paid plan, add that model as C# files. See [EDI templat
 > into `Config.TrialSerialKey`.
 >
 > One operation is one parse, generate, validate, or acknowledge call. The 250-a-day
-> quota is shared across ediFabric .NET, Native, and Cloud. If you hit it, further
-> calls fail until the next day. Upgrade at
+> quota is shared across ediFabric .NET, Native, and Cloud. If you hit it, calls
+> throw `LicenseException` with [error 639](#error-codes). Upgrade at
 > [edifabric.com/pricing](https://www.edifabric.com/pricing.html) to continue.
 >
 > Use of the product is subject to the [EULA](https://www.edifabric.com/files/eula.pdf).
@@ -169,6 +169,46 @@ License.SetToken(token);
 ```
 
 The examples call `License.SetSerial(Config.TrialSerialKey)`. On Developer, call `License.EnsureToken` instead. `TokenFileCache.Set()` in `EdiFabric.Examples.EDIFACT.Common` is the manual `GetToken` / `SetToken` cache, for when you want to store the token yourself.
+
+## Error codes
+
+License failures throw `LicenseException`. `ErrorCode` is the number below, and `Message` is the text.
+
+**Error 639** means the Community daily quota was exceeded. Upgrade your plan at [edifabric.com/pricing](https://www.edifabric.com/pricing.html) if you wish to continue.
+
+| Code | Message |
+| --- | --- |
+| 1 | The suggested output buffer size is too small |
+| 501 | Unexpected error occured. Contact support@edifabric.com for assistance |
+| 611 | The input buffer is either null or its size is nill |
+| 612 | The logger failed to log |
+| 613 | The map configuration file is invalid |
+| 614 | The output capacity must be positive |
+| 615 | Models map must be set before parsing or splitting |
+| 616 | Mode must be any of: 1 - Parse, 2 - Parse and Validate, 3 - Parse and Validate and Acknowledge |
+| 617 | Parser failed. Contact support@edifabric.com and include a sample project/file to reproduce the issue |
+| 618 | Validation failed. Contact support@edifabric.com and include a sample project/file to reproduce the issue |
+| 619 | Validation serializer failed. Contact support@edifabric.com and include a sample project/file to reproduce the issue |
+| 620 | The token is invalid. Contact support@edifabric.com for assistance |
+| 621 | The configuration file is invalid |
+| 622 | The split segment ID must not be blank |
+| 623 | Call start_split before splitting |
+| 624 | The result can't be retrieved. Contact support@edifabric.com and include a sample project/file to reproduce the issue |
+| 625 | Result buffer size mismatched |
+| 626 | Call start_merge before merging |
+| 627 | The output buffer is either null or its size is nill |
+| 628 | The serial number is missing or incorrect. GetToken doesn't work with developer license. Contact support@edifabric.com for assistance |
+| 629 | License was not installed. Contact support@edifabric.com for assistance |
+| 630 | No license to use this version. Contact support@edifabric.com for assistance |
+| 631 | The token has expired. Get and set a new token to continue. Contact support@edifabric.com for assistance |
+| 632 | The token is missing. Set token to continue. Contact support@edifabric.com for assistance |
+| 633 | Reached the maximum number of licenses. Set token to continue. Contact support@edifabric.com for assistance |
+| 634 | Environment not recognized for licensing or reached the maximum number of licenses. Contact support@edifabric.com for assistance |
+| 635 | Serial or token not found. Either set token or serial to continue. Contact support@edifabric.com for assistance |
+| 636 | The rate to get serials was exceeded for your license. Wait for 60 seconds and try again or upgrade your license. Contact support@edifabric.com for assistance |
+| 637 | Invalid JSON. Enable logging for additional details |
+| 638 | The operation is not supported by your license |
+| 639 | Your license has reached its daily call limit. Upgrade your plan at edifabric.com to continue using the product. |
 
 ## EDI templates
 
