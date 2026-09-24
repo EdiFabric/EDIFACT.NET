@@ -154,23 +154,21 @@ For another version on a paid plan, add that model as C# files. See [EDI templat
 | Plan | What works | Recommended |
 | --- | --- | --- |
 | Community | `License.SetSerial` only. Online check. 250 operations per day. Non-production. | `License.SetSerial` |
-| Developer | `License.SetSerial`, and `License.GetToken` / `License.SetToken` (cache the token; it is valid for 1 day) | `License.SetToken` with a cached token |
+| Developer | `License.SetSerial` and `License.EnsureToken` (`EnsureToken` caches the result for 1 day) | `License.EnsureToken` |
 | Enterprise | `License.SetSerial`, `License.GetToken` / `License.SetToken` | `License.SetToken` (offline tokens) |
 
 ```csharp
 // Community: authorize against the license server
 License.SetSerial(serial);
 
-// Developer: fetch a token and cache it. TokenFileCache in
-// EdiFabric.Examples.EDIFACT.Common does this and refreshes before expiry.
-var token = License.GetToken(serial);
-License.SetToken(token);
+// Developer (recommended): 1-day built-in cache; refreshes if the token expires within N seconds
+License.EnsureToken(serial, seconds: 3600);
 
 // Enterprise: set an offline token
 License.SetToken(token);
 ```
 
-The examples call `License.SetSerial(Config.TrialSerialKey)`. To use a cached token instead, comment that line out and call `TokenFileCache.Set()`, as noted in each `Program.cs`.
+The examples call `License.SetSerial(Config.TrialSerialKey)`. On Developer, call `License.EnsureToken` instead. `TokenFileCache.Set()` in `EdiFabric.Examples.EDIFACT.Common` is the manual `GetToken` / `SetToken` cache, for when you want to store the token yourself.
 
 ## EDI templates
 
