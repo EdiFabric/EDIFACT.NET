@@ -4,7 +4,7 @@
 
 EdiFabric does not include communication components (AS2 or SFTP), a dashboard, or a UI. It is a library you call from your own application.
 
-The .NET 6 projects compile the same sources as the .NET Framework 4.8 projects. Both solutions reference [EdiFabric 11.0.0](https://www.nuget.org/packages/EdiFabric) and the template packages from NuGet.
+The .NET 6 projects compile the same sources as the .NET Framework 4.8 projects. Both solutions reference [EdiFabric 11.0.0](https://www.nuget.org/packages/EdiFabric) and the template packages from NuGet. The examples target .NET 6 for backward compatibility. EdiFabric 11.0.0 also ships targets for .NET 8, .NET 9, and .NET 10. To evaluate one of those, change `TargetFramework` in the project file and rebuild.
 
 | Path | Purpose |
 | --- | --- |
@@ -17,7 +17,7 @@ The .NET 6 projects compile the same sources as the .NET Framework 4.8 projects.
 ## Requirements
 
 - Visual Studio 2022, or the .NET SDK. [Download Visual Studio](https://visualstudio.microsoft.com/downloads/).
-- .NET 6 or later for `NET 6/EdiFabric.Examples.EDIFACT.sln`.
+- .NET 6 for `NET 6/EdiFabric.Examples.EDIFACT.sln`. The projects set `<TargetFramework>net6.0</TargetFramework>` so they stay compatible with existing .NET 6 apps. EdiFabric 11.0.0 also provides `net8.0`, `net9.0`, and `net10.0`. To evaluate a later version, change that property (for example to `net8.0`) and rebuild.
 - .NET Framework 4.8 for `NET Framework 4.8/EdiFabric.Examples.EDIFACT.sln`.
 
 1. [Sign up free for **Community**](https://www.edifabric.com/pricing.html) to get an evaluation serial key. Community never expires, requires no credit card, and is limited to 250 operations per day for non-production use. After signup, retrieve your serial from [Your Account](https://support.edifabric.com/hc/en-us/articles/360007159031-Your-Account-API-key).
@@ -132,7 +132,7 @@ Each project reads a sample file and writes the same message back out.
 | `EdiFabric.Examples.EDIFACT.ORDRSP` | EDIFACT ORDRSP |
 | `EdiFabric.Examples.EDIFACT.PRICAT` | EDIFACT PRICAT |
 
-For another version, install that template from [EdiNation](https://edination.edifabric.com/edi-spec-library.html). [How to start a new Visual Studio project](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-start-a-new-VS-project).
+For another version on a paid plan, add that model as C# files. See [EDI templates](#edi-templates).
 
 ## Licensing
 
@@ -174,7 +174,11 @@ The examples call `License.SetSerial(Config.TrialSerialKey)`. To use a cached to
 
 ## EDI templates
 
-Templates in **EdiFabric.Templates.Edifact** and **EdiFabric.Templates.Padis** validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://support.edifabric.com/hc/en-us/requests/new).
+The models published on NuGet, such as **EdiFabric.Templates.Edifact**, **EdiFabric.Templates.Padis**, **EdiFabric.Templates.Edigas**, and **EdiFabric.Templates.X12**, are for evaluation only. They are a Community plan limitation. These examples reference them so you can run the samples on Community.
+
+On every paid plan the EDI models are plain C# files. Add them to the solution by following [How to create EDI template projects](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-create-EDI-Template-projects).
+
+The same classes validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://support.edifabric.com/hc/en-us/requests/new).
 
 - [EDIFACT](https://support.edifabric.com/hc/en-us/articles/360000353611-EDIFACT-1911-to-D97A)
 - [EANCOM D93A, D96A, and D01B](https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-D93A-D96A-and-D01B-)
