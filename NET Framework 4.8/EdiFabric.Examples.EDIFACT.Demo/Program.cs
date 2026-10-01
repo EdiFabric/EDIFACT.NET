@@ -23,15 +23,7 @@ namespace EdiFabric.Examples.EDIFACT.Demo
 
             //  If you need a different EDIFACT/EANCOM version or transaction, please contact us at https://support.edifabric.com/hc/en-us/requests/new, EdiFabric supports all versions and transaction for EDIFACT/EANCOM.
 
-            try
-            {
-                License.SetSerial(Config.TrialSerialKey);
-            }
-            catch(Exception ex)
-            {
-                if (ex.Message.StartsWith("Can't set token"))
-                    throw new Exception("Your trial has expired! To continue using EdiFabric SDK you must purchase a plan from https://www.edifabric.com/pricing.html");
-            }
+            License.SetSerial(Config.TrialSerialKey);
             //  Uncomment and then comment out the line above if you wish to use distributed cache for tokens
             //  TokenFileCache.Set();
 
