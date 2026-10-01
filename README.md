@@ -20,7 +20,7 @@ The .NET 6 projects compile the same sources as the .NET Framework 4.8 projects.
 - .NET 6 for `NET 6/EdiFabric.Examples.EDIFACT.sln`. The projects set `<TargetFramework>net6.0</TargetFramework>` so they stay compatible with existing .NET 6 apps. EdiFabric 11.0.0 also provides `net8.0`, `net9.0`, and `net10.0`. To evaluate a later version, change that property (for example to `net8.0`) and rebuild.
 - .NET Framework 4.8 for `NET Framework 4.8/EdiFabric.Examples.EDIFACT.sln`.
 
-1. [Sign up free for **Community**](https://www.edifabric.com/pricing.html) to get an evaluation serial key. Community never expires, requires no credit card, and is limited to 250 operations per day for non-production use. After signup, retrieve your serial from [Your Account](https://support.edifabric.com/hc/en-us/articles/360007159031-Your-Account-API-key).
+1. [Sign up free for **Community**](https://www.edifabric.com/pricing.html) to get an evaluation serial key. Community never expires, requires no credit card, and is limited to 250 operations per day for non-production use. After signup, retrieve your serial from [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html).
 2. Paste that serial into `TrialSerialKey` in `NET Framework 4.8/EdiFabric.Examples.EDIFACT.Common/Config.cs`. The .NET 6 projects link this file, so one edit covers both solutions.
 
 NuGet restore pulls **EdiFabric 11.0.0**, **EdiFabric.Templates.Edifact 3.0.0**, and, where a project needs them, **EdiFabric.Templates.Padis** and **EdiFabric.Templates.Edigas**.
@@ -141,7 +141,7 @@ For another version on a paid plan, add that model as C# files. See [EDI templat
 > to get an evaluation serial key. Community never expires, requires no credit
 > card, and is for non-production evaluation, learning, and prototyping
 > (250 operations per day). After signup, copy your serial from
-> [Your Account](https://support.edifabric.com/hc/en-us/articles/360007159031-Your-Account-API-key)
+> [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html)
 > into `Config.TrialSerialKey`.
 >
 > One operation is one parse, generate, validate, or acknowledge call. The 250-a-day
@@ -214,14 +214,14 @@ License failures throw `LicenseException`. `ErrorCode` is the number below, and 
 
 The models published on NuGet, such as **EdiFabric.Templates.Edifact**, **EdiFabric.Templates.Padis**, **EdiFabric.Templates.Edigas**, and **EdiFabric.Templates.X12**, are for evaluation only. They are a Community plan limitation. These examples reference them so you can run the samples on Community.
 
-Paid plans provide every template as plain C# files. Add them to the solution by following [How to create EDI template projects](https://support.edifabric.com/hc/en-us/articles/360016750838-How-to-create-EDI-Template-projects). For evaluation and the Community plan, you can still download the templates in compiled form by following the same article.
+Paid plans provide every template as plain C# files. Add them to the solution by following [How to create EDI template projects](https://www.edifabric.com/docs/edifabric-net/edi-templates.html). For evaluation and the Community plan, you can still download the templates in compiled form by following the same article.
 
-The same classes validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://support.edifabric.com/hc/en-us/requests/new).
+The same classes validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://www.edifabric.com/docs/index.html).
 
-- [EDIFACT](https://support.edifabric.com/hc/en-us/articles/360000353611-EDIFACT-1911-to-D97A)
-- [EANCOM D93A, D96A, and D01B](https://support.edifabric.com/hc/en-us/articles/360000349012-EANCOM-D93A-D96A-and-D01B-)
-- [IATA PADIS](https://support.edifabric.com/hc/en-us/articles/360000349592-PNRGOV-Templates)
-- [EDIGAS 4.0](https://support.edifabric.com/hc/en-us/articles/4406831178001-EDIGAS-4-0)
+- [EDIFACT](https://www.edifabric.com/docs/standards/edifact-1911-to-edifact-d97a.html)
+- [EANCOM D93A, D96A, and D01B](https://www.edifabric.com/docs/standards/eancom-d93a-d96a-and-d01b.html)
+- [IATA PADIS](https://www.edifabric.com/docs/standards/iata-padis.html)
+- [EDIGAS 4.0](https://www.edifabric.com/docs/standards/edigas-4-0.html)
 - [EdiNation spec library](https://edination.edifabric.com/edi-spec-library.html) (no registration)
 
 ## Warranty
@@ -230,13 +230,13 @@ The source code in these example projects is strictly for demonstrational purpos
 
 ## Links
 
-- [Install EdiFabric](https://support.edifabric.com/hc/en-us/articles/360016808578-Install-EdiFabric)
-- [Tutorial](https://support.edifabric.com/hc/en-us/articles/360000291511-Tutorial-EDI-NET-Tools-Basics)
-- [EDI to database](https://support.edifabric.com/hc/en-us/articles/360029265372-EDI-to-DB)
-- [Knowledge base](https://support.edifabric.com)
+- [Install EdiFabric](https://www.edifabric.com/docs/edifabric-net/install.html)
+- [Tutorial](https://www.edifabric.com/docs/edifabric-net/edi-tools-for-net-tutorial-part-1.html)
+- [EDI to database](https://www.edifabric.com/docs/edifabric-net/edi-to-db.html)
+- [Knowledge base](https://www.edifabric.com/docs/index.html)
 - [Community plan (free signup)](https://www.edifabric.com/pricing.html)
-- [Your Account](https://support.edifabric.com/hc/en-us/articles/360007159031-Your-Account-API-key)
-- [Support](https://support.edifabric.com/hc/en-us/requests/new)
+- [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html)
+- [Support](https://www.edifabric.com/docs/index.html)
 - Support: support@edifabric.com
 
 ### 2026 © EdiFabric
