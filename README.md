@@ -132,7 +132,7 @@ Each project reads a sample file and writes the same message back out.
 | `EdiFabric.Examples.EDIFACT.ORDRSP` | EDIFACT ORDRSP |
 | `EdiFabric.Examples.EDIFACT.PRICAT` | EDIFACT PRICAT |
 
-For another version on a paid plan, add that model as C# files. See [EDI templates](#edi-templates).
+For another version, download its C# template from the EDI spec library. See [EDI templates](#edi-templates).
 
 ## Licensing
 
@@ -212,17 +212,54 @@ License failures throw `LicenseException`. `ErrorCode` is the number below, and 
 
 ## EDI templates
 
-The models published on NuGet, such as **EdiFabric.Templates.Edifact**, **EdiFabric.Templates.Padis**, **EdiFabric.Templates.Edigas**, and **EdiFabric.Templates.X12**, are for evaluation only. They are a Community plan limitation. These examples reference them so you can run the samples on Community.
+These examples reference **EdiFabric.Templates.Edifact**, **EdiFabric.Templates.Padis** and **EdiFabric.Templates.Edigas** from NuGet, so they run without any setup. In your own application, use the C# templates from the [EDI spec library](https://www.edifabric.com/specs/index.html). The templates are the same on every plan, Community included. When you upgrade, you change only the serial key, and your template projects stay as they are.
 
-Paid plans provide every template as plain C# files. Add them to the solution by following [How to create EDI template projects](https://www.edifabric.com/docs/edifabric-net/edi-templates.html). For evaluation and the Community plan, you can still download the templates in compiled form by following the same article.
+### Find and download a template
 
-The same classes validate as well as parse. EdiFabric supports the EDIFACT, EANCOM, and IATA versions. If a transaction is missing, [ask for it](https://www.edifabric.com/docs/index.html).
+Every message in the [EDI spec library](https://www.edifabric.com/specs/index.html) has its template as C#, and you can download it without an account.
+
+1. Open the [EDI spec library](https://www.edifabric.com/specs/index.html), select the standard and version, for example EDIFACT D96A, and open the message, for example [ORDERS](https://www.edifabric.com/specs/edifact/d96a/orders.html).
+2. On the **ediFabric .NET** tab, select **Download C#** for the message class, `TSORDERS`, and **Common files** for the segments, composites and codes of the version. The common files are the same for every message in the version, so you download them once.
+
+![The Download C# and Common files buttons on the ediFabric .NET tab of a transaction in the EDI spec library](template.png)
+
+Class names are TS plus the message id, in a namespace for the standard and version. For example, ORDERS is `EdiFabric.Templates.EdifactD96A.TSORDERS`.
+
+### Add the templates to your solution
+
+Put one version, or one trading partner, in one class library.
+
+1. Add a class library to the solution and install EdiFabric into it with `dotnet add package EdiFabric`.
+2. On .NET Framework only, reference `System.Runtime.Serialization` and `System.Xml.Serialization`.
+3. Unzip the downloads. Add the message file, for example `EF_EDIFACT_D96A_ORDERS.cs`, and every file in the Common folder of the version.
+4. Reference the class library from your application, and pass its assembly name to the reader instead of `EdiFabric.Templates.Edifact`. If the project is `ClassLibrary1`:
+
+```csharp
+using (var ediReader = new EdifactReader(ediStream, "ClassLibrary1"))
+```
+
+It is the assembly name, not the namespace of `TSORDERS`. The full steps are in [EDI templates](https://www.edifabric.com/docs/edifabric-net/edi-templates.html).
+
+### Customize a template for a trading partner
+
+When a trading partner changes the standard, for example by making a segment mandatory, build the change in the [EDI Spec Builder](https://www.edifabric.com/spec-builder/index.html):
+
+1. Open the message in the [EDI spec library](https://www.edifabric.com/specs/index.html) and select **Customize in Spec Builder**. Name the copy, change it, and select **Update**.
+2. Select your spec in the EDI Spec Builder, open the **ediFabric .NET** tab, and select **Download C#**.
+3. Add the file to its own class library, as in [Add the templates to your solution](#add-the-templates-to-your-solution), and pass that library's assembly name to the reader.
+
+![The Download C# button on the ediFabric .NET tab of a custom spec in the EDI Spec Builder](template-builder.png)
+
+A custom template is one C# file, generated from the saved spec. It includes its own segments, composites and codes, so it doesn't need the common files. You can also change the C# of any template directly, as `EdiFabric.Examples.EDIFACT.ModifyTemplates` shows. See [How to modify EDI templates](https://www.edifabric.com/docs/edifabric-net/standardize-edi-with-templates.html#how-to-modify-edi-templates).
+
+The same classes parse, generate and validate. EdiFabric supports the EDIFACT, EANCOM, IATA PADIS and EDIGAS versions. If a message is missing, [ask for it](https://support.edifabric.com/hc/en-us/requests/new).
 
 - [EDIFACT](https://www.edifabric.com/docs/standards/edifact-1911-to-edifact-d97a.html)
 - [EANCOM D93A, D96A, and D01B](https://www.edifabric.com/docs/standards/eancom-d93a-d96a-and-d01b.html)
 - [IATA PADIS](https://www.edifabric.com/docs/standards/iata-padis.html)
 - [EDIGAS 4.0](https://www.edifabric.com/docs/standards/edigas-4-0.html)
-- [EdiNation spec library](https://edination.edifabric.com/edi-spec-library.html) (no registration)
+- [EDI spec library](https://www.edifabric.com/specs/index.html) (no registration)
+- [EDI Spec Builder](https://www.edifabric.com/spec-builder/index.html)
 
 ## Warranty
 
