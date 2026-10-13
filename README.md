@@ -20,7 +20,7 @@ The .NET 6 projects compile the same sources as the .NET Framework 4.8 projects.
 - .NET 6 for `NET 6/EdiFabric.Examples.EDIFACT.sln`. The projects set `<TargetFramework>net6.0</TargetFramework>` so they stay compatible with existing .NET 6 apps. EdiFabric 11.0.0 also provides `net8.0`, `net9.0`, and `net10.0`. To evaluate a later version, change that property (for example to `net8.0`) and rebuild.
 - .NET Framework 4.8 for `NET Framework 4.8/EdiFabric.Examples.EDIFACT.sln`.
 
-1. [Sign up free for **Community**](https://www.edifabric.com/pricing.html) to get an evaluation serial key. Community never expires, requires no credit card, and is limited to 250 operations per day for non-production use. After signup, retrieve your serial from [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html).
+1. [Sign up free for **Community**](https://www.edifabric.com/pricing.html) to get an evaluation serial key. Community never expires, requires no credit card, and is for non-production use. The first 14 days after you subscribe have unlimited operations, then the quota is 250 per day. To extend the unlimited period, ask through the [support portal](https://support.edifabric.com/hc/en-us/requests/new) or at [support@edifabric.com](mailto:support@edifabric.com). After signup, retrieve your serial from [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html).
 2. Paste that serial into `TrialSerialKey` in `NET Framework 4.8/EdiFabric.Examples.EDIFACT.Common/Config.cs`. The .NET 6 projects link this file, so one edit covers both solutions.
 
 NuGet restore pulls **EdiFabric 11.0.0**, **EdiFabric.Templates.Edifact 3.0.0**, and, where a project needs them, **EdiFabric.Templates.Padis** and **EdiFabric.Templates.Edigas**.
@@ -140,7 +140,9 @@ For another version, download its C# template from the EDI spec library. See [ED
 > Sign up free for the [Community plan](https://www.edifabric.com/pricing.html)
 > to get an evaluation serial key. Community never expires, requires no credit
 > card, and is for non-production evaluation, learning, and prototyping
-> (250 operations per day). After signup, copy your serial from
+> (unlimited operations for the first 14 days after you subscribe, then 250 per day;
+> to extend the unlimited period, ask through the [support portal](https://support.edifabric.com/hc/en-us/requests/new)
+> or at [support@edifabric.com](mailto:support@edifabric.com)). After signup, copy your serial from
 > [Your Account](https://www.edifabric.com/docs/getting-started/your-account.html)
 > into `Config.TrialSerialKey`.
 >
