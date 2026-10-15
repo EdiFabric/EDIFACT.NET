@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace EdiFabric.Examples.EDIFACT.JSON
 {
@@ -24,7 +27,7 @@ namespace EdiFabric.Examples.EDIFACT.JSON
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -32,7 +35,31 @@ namespace EdiFabric.Examples.EDIFACT.JSON
             var transactions = ediItems.OfType<TSORDERS>();
             foreach (var transaction in transactions)
             {
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(transaction);
+                var options = new JsonSerializerOptions
+                {
+                    //TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                    //{
+                    //    Modifiers =
+                    //    {
+                    //        typeInfo =>
+                    //        {
+                    //            if (typeInfo.Kind != JsonTypeInfoKind.Object)
+                    //                return;
+
+                    //            foreach (var property in typeInfo.Properties)
+                    //            {
+                    //                if (property.Name == "Id" )
+                    //                {
+                    //                    property.ShouldSerialize = (obj, value) => false;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //},
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
+
+                var json = JsonSerializer.Serialize(transaction, options);
                 Debug.WriteLine(json.ToString());
             }
         }

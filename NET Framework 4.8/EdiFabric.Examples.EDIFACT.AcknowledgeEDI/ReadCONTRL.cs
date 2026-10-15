@@ -37,7 +37,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
         public static Assembly AssemblyFactory(MessageContext messageContext)
         {
             if (messageContext.Version == "D96A")
-                return Assembly.Load("EdiFabric.Templates.Edifact");
+                return Assembly.Load("EdiFabric.Examples.EDIFACT.Templates");
 
             if (messageContext.Name == "CONTRL")
                 return Assembly.Load("EdiFabric");

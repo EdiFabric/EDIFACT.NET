@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  Use the base EdifactReaderBase instead of EdifactReader
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReaderBase<UNBCustom, UNGCustom>(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReaderBase<UNBCustom, UNGCustom>(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var unb = ediItems.OfType<UNBCustom>();

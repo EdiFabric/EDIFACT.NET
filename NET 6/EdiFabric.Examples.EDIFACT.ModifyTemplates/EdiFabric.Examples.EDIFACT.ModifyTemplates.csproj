@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.ModifyTemplates\EF_EDIFACT_D96A_ORDERS _Modified.cs" Link="EF_EDIFACT_D96A_ORDERS _Modified.cs" />
     <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.ModifyTemplates\Program.cs" Link="Program.cs" />
   </ItemGroup>
 

@@ -7,16 +7,47 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_Codes.cs" Link="EF_EDIFACT_D96A_Codes.cs" />
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ComplexElements.cs" Link="EF_EDIFACT_D96A_ComplexElements.cs" />
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_INVOIC.cs" Link="EF_EDIFACT_D96A_INVOIC.cs" />
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ORDERS _Modified.cs" Link="EF_EDIFACT_D96A_ORDERS _Modified.cs" />
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_ORDERS.cs" Link="EF_EDIFACT_D96A_ORDERS.cs" />
-    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\EF_EDIFACT_D96A_Segments.cs" Link="EF_EDIFACT_D96A_Segments.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_Codes.cs" Link="Edifact\EF_EDIFACT_D96A_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_ComplexElementInterfaces.cs" Link="Edifact\EF_EDIFACT_D96A_ComplexElementInterfaces.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_ComplexElements.cs" Link="Edifact\EF_EDIFACT_D96A_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_DESADV.cs" Link="Edifact\EF_EDIFACT_D96A_DESADV.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_IFTMIN.cs" Link="Edifact\EF_EDIFACT_D96A_IFTMIN.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_IFTSTA.cs" Link="Edifact\EF_EDIFACT_D96A_IFTSTA.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_INVOIC.cs" Link="Edifact\EF_EDIFACT_D96A_INVOIC.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_ORDERS.cs" Link="Edifact\EF_EDIFACT_D96A_ORDERS.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_ORDRSP.cs" Link="Edifact\EF_EDIFACT_D96A_ORDRSP.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_PRICAT.cs" Link="Edifact\EF_EDIFACT_D96A_PRICAT.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_SegmentInterfaces.cs" Link="Edifact\EF_EDIFACT_D96A_SegmentInterfaces.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Edifact\EF_EDIFACT_D96A_Segments.cs" Link="Edifact\EF_EDIFACT_D96A_Segments.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\ediGas\EF_EDIGAS_40_Codes.cs" Link="ediGas\EF_EDIGAS_40_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\ediGas\EF_EDIGAS_40_ComplexElements.cs" Link="ediGas\EF_EDIGAS_40_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\ediGas\EF_EDIGAS_40_NOMINT.cs" Link="ediGas\EF_EDIGAS_40_NOMINT.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\ediGas\EF_EDIGAS_40_Segments.cs" Link="ediGas\EF_EDIGAS_40_Segments.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Iata\EF_EDIFACT_131_Codes.cs" Link="Iata\EF_EDIFACT_131_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Iata\EF_EDIFACT_131_ComplexElements.cs" Link="Iata\EF_EDIFACT_131_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Iata\EF_EDIFACT_131_PNRGOV.cs" Link="Iata\EF_EDIFACT_131_PNRGOV.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Iata\EF_EDIFACT_131_Segments.cs" Link="Iata\EF_EDIFACT_131_Segments.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Smdg\EF_EDIFACT_D13B_BAPLIE.cs" Link="Smdg\EF_EDIFACT_D13B_BAPLIE.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Smdg\EF_EDIFACT_D13B_Codes.cs" Link="Smdg\EF_EDIFACT_D13B_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Smdg\EF_EDIFACT_D13B_ComplexElements.cs" Link="Smdg\EF_EDIFACT_D13B_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\Smdg\EF_EDIFACT_D13B_Segments.cs" Link="Smdg\EF_EDIFACT_D13B_Segments.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\USCustoms\EF_EDIFACT_D03B_Codes.cs" Link="USCustoms\EF_EDIFACT_D03B_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\USCustoms\EF_EDIFACT_D03B_ComplexElements.cs" Link="USCustoms\EF_EDIFACT_D03B_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\USCustoms\EF_EDIFACT_D03B_CUSCAR.cs" Link="USCustoms\EF_EDIFACT_D03B_CUSCAR.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\USCustoms\EF_EDIFACT_D03B_PAXLST.cs" Link="USCustoms\EF_EDIFACT_D03B_PAXLST.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.Templates\USCustoms\EF_EDIFACT_D03B_Segments.cs" Link="USCustoms\EF_EDIFACT_D03B_Segments.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EdiFabric" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Edifact\" />
+    <Folder Include="ediGas\" />
+    <Folder Include="Iata\" />
+    <Folder Include="USCustoms\" />
+    <Folder Include="Smdg\" />
   </ItemGroup>
 
 </Project>

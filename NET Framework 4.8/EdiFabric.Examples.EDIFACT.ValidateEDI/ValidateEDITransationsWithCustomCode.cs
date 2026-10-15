@@ -146,7 +146,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     [Serializable()]
     [DataContract()]
     [Message("EDIFACT", "D01B", "INVOIC")]
-    public class TSINVOICCustomValidation : Templates.EancomD01B.TSINVOIC
+    public class TSINVOICCustomValidation : Templates.EancomD01B.S3.TSINVOIC
     {
         [DataMember]
         [Required]

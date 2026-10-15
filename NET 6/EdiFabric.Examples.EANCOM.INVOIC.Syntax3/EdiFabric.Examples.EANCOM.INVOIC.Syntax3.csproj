@@ -8,16 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_Codes.cs" Link="EF_EANCOM_D01B_Codes.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_ComplexElementInterfaces.cs" Link="EF_EANCOM_D01B_ComplexElementInterfaces.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_ComplexElements.cs" Link="EF_EANCOM_D01B_ComplexElements.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_INVOIC.cs" Link="EF_EANCOM_D01B_INVOIC.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_SegmentInterfaces.cs" Link="EF_EANCOM_D01B_SegmentInterfaces.cs" />
+    <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\EF_EANCOM_D01B_Segments.cs" Link="EF_EANCOM_D01B_Segments.cs" />
     <Compile Include="..\..\NET Framework 4.8\EdiFabric.Examples.EDIFACT.EANCOM.Syntax3\Program.cs" Link="Program.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EdiFabric" Version="11.0.0" />
-    <PackageReference Include="EdiFabric.Templates.Edifact" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj" />
   </ItemGroup>
 
 </Project>

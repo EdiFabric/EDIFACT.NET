@@ -26,7 +26,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
 
             //  2. Read item by item, that is each call to Read() 
             //  brings back either a control segment (UNB, UNG, UNE or UNZ) or a transaction
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 while (ediReader.Read())
                 {

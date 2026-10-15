@@ -28,7 +28,7 @@ namespace EdiFabric.Examples.EDIGAS.NOMINT
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edigas\NOMINT.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edigas"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var transactions = ediItems.OfType<TSNOMINT>();

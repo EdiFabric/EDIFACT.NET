@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.DB
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\EDIFACT\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();

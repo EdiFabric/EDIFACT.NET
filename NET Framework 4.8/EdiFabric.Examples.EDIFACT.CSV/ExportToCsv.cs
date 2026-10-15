@@ -25,7 +25,7 @@ namespace EdiFabric.Examples.EDIFACT.CSV
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderCSV.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

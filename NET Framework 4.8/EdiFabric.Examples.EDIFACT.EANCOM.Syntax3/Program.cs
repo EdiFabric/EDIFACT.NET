@@ -4,6 +4,7 @@ using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Framework.Writers;
 using EdiFabric.Templates.EancomD01B;
+using EdiFabric.Templates.EancomD01B.S3;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -91,8 +92,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             result.UNH.MessageIdentifier_02.ControllingAgencyCoded_04 = "UN";
 
             //  Commercial invoice number IN432097
-            result.BGM = new BGM();
-            result.BGM.DOCUMENTMESSAGENAME_01 = new C002();
+            result.BGM = new BGM_23();
+            result.BGM.DOCUMENTMESSAGENAME_01 = new C002_32();
             result.BGM.DOCUMENTMESSAGENAME_01.Documentnamecode_01 = "380";
             result.BGM.DOCUMENTMESSAGEIDENTIFICATION_02 = new C106();
             result.BGM.DOCUMENTMESSAGEIDENTIFICATION_02.Documentidentifier_01 = "IN432097";
@@ -120,8 +121,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var rffLoop1 = new Loop_RFF_INVOIC();
 
             //  Purchase order invoiced number ORD9523
-            rffLoop1.RFF = new RFF();
-            rffLoop1.RFF.REFERENCE_01 = new C506();
+            rffLoop1.RFF = new RFF_23();
+            rffLoop1.RFF.REFERENCE_01 = new C506_23();
             rffLoop1.RFF.REFERENCE_01.Referencecodequalifier_01 = "ON";
             rffLoop1.RFF.REFERENCE_01.Referenceidentifier_02 = "ORD9523";
 
@@ -143,8 +144,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var rffLoop2 = new Loop_RFF_INVOIC();
 
             //  Price list reference number PL99523
-            rffLoop2.RFF = new RFF();
-            rffLoop2.RFF.REFERENCE_01 = new C506();
+            rffLoop2.RFF = new RFF_23();
+            rffLoop2.RFF.REFERENCE_01 = new C506_23();
             rffLoop2.RFF.REFERENCE_01.Referencecodequalifier_01 = "PL";
             rffLoop2.RFF.REFERENCE_01.Referenceidentifier_02 = "PL99523";
 
@@ -166,8 +167,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var rffLoop3 = new Loop_RFF_INVOIC();
 
             //  Reference delivery note number 53662
-            rffLoop3.RFF = new RFF();
-            rffLoop3.RFF.REFERENCE_01 = new C506();
+            rffLoop3.RFF = new RFF_23();
+            rffLoop3.RFF.REFERENCE_01 = new C506_23();
             rffLoop3.RFF.REFERENCE_01.Referencecodequalifier_01 = "DQ";
             rffLoop3.RFF.REFERENCE_01.Referenceidentifier_02 = "53662";
 
@@ -192,7 +193,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var nadLoop1 = new Loop_NAD_INVOIC();
 
             //  Buyer identified by GLN 5412345000013
-            nadLoop1.NAD = new NAD();
+            nadLoop1.NAD = new NAD_19();
             nadLoop1.NAD.Partyfunctioncodequalifier_01 = "BY";
             nadLoop1.NAD.PARTYIDENTIFICATIONDETAILS_02 = new C082();
             nadLoop1.NAD.PARTYIDENTIFICATIONDETAILS_02.Partyidentifier_01 = "5412345000013";
@@ -205,8 +206,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var rffNadLoop1 = new Loop_RFF_INVOIC_2();
 
             //  VAT reference number of the buyer 4146023 
-            rffNadLoop1.RFF = new RFF();
-            rffNadLoop1.RFF.REFERENCE_01 = new C506();
+            rffNadLoop1.RFF = new RFF_23();
+            rffNadLoop1.RFF.REFERENCE_01 = new C506_23();
             rffNadLoop1.RFF.REFERENCE_01.Referencecodequalifier_01 = "VA";
             rffNadLoop1.RFF.REFERENCE_01.Referenceidentifier_02 = "4146023";
 
@@ -220,7 +221,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var nadLoop2 = new Loop_NAD_INVOIC();
 
             //  Supplier identified by GLN 4012345500004
-            nadLoop2.NAD = new NAD();
+            nadLoop2.NAD = new NAD_19();
             nadLoop2.NAD.Partyfunctioncodequalifier_01 = "SU";
             nadLoop2.NAD.PARTYIDENTIFICATIONDETAILS_02 = new C082();
             nadLoop2.NAD.PARTYIDENTIFICATIONDETAILS_02.Partyidentifier_01 = "4012345500004";
@@ -233,8 +234,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var rffNadLoop2 = new Loop_RFF_INVOIC_2();
 
             //  VAT reference number of the supplier VR12345
-            rffNadLoop2.RFF = new RFF();
-            rffNadLoop2.RFF.REFERENCE_01 = new C506();
+            rffNadLoop2.RFF = new RFF_23();
+            rffNadLoop2.RFF.REFERENCE_01 = new C506_23();
             rffNadLoop2.RFF.REFERENCE_01.Referencecodequalifier_01 = "VA";
             rffNadLoop2.RFF.REFERENCE_01.Referenceidentifier_02 = "VR12345";
 
@@ -248,7 +249,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var nadLoop3 = new Loop_NAD_INVOIC();
 
             //  Delivery party identified by GLN 5412345678908
-            nadLoop3.NAD = new NAD();
+            nadLoop3.NAD = new NAD_19();
             nadLoop3.NAD.Partyfunctioncodequalifier_01 = "DP";
             nadLoop3.NAD.PARTYIDENTIFICATIONDETAILS_02 = new C082();
             nadLoop3.NAD.PARTYIDENTIFICATIONDETAILS_02.Partyidentifier_01 = "5412345678908";
@@ -304,8 +305,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             patLoop2.PAT.TERMSTIMEINFORMATION_03.Periodcountquantity_04 = "10";
 
             //  Percentage information for the allowances or charges 2.5 %
-            patLoop2.PCD = new PCD();
-            patLoop2.PCD.PERCENTAGEDETAILS_01 = new C501();
+            patLoop2.PCD = new PCD_3();
+            patLoop2.PCD.PERCENTAGEDETAILS_01 = new C501_3();
             patLoop2.PCD.PERCENTAGEDETAILS_01.Percentagetypecodequalifier_01 = "12";
             patLoop2.PCD.PERCENTAGEDETAILS_01.Percentage_02 = "2.5";
             patLoop2.PCD.PERCENTAGEDETAILS_01.Percentagebasisidentificationcode_03 = "13";
@@ -320,10 +321,10 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var alcLoop = new Loop_ALC_INVOIC();
 
             //  Charges to be paid by customer
-            alcLoop.ALC = new ALC();
+            alcLoop.ALC = new ALC_3();
             alcLoop.ALC.Allowanceorchargecodequalifier_01 = "C";
             alcLoop.ALC.Settlementmeanscode_03 = "6";
-            alcLoop.ALC.SPECIALSERVICESIDENTIFICATION_05 = new C214();
+            alcLoop.ALC.SPECIALSERVICESIDENTIFICATION_05 = new C214_2();
             alcLoop.ALC.SPECIALSERVICESIDENTIFICATION_05.Specialservicedescriptioncode_01 = "FC";
 
             //  Repeating MOA Groups
@@ -333,8 +334,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaAlcLoop = new Loop_MOA_INVOIC();
 
             //  Monetary amount for the charge 120 EUR to be added
-            moaAlcLoop.MOA = new MOA();
-            moaAlcLoop.MOA.MONETARYAMOUNT_01 = new C516();
+            moaAlcLoop.MOA = new MOA_3();
+            moaAlcLoop.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaAlcLoop.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "23";
             moaAlcLoop.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "120";
 
@@ -357,8 +358,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             taxAlcLoop.TAX.Dutyortaxorfeecategorycode_06 = "S";
 
             //  Tax monetary amount 22.80 EUR
-            taxAlcLoop.MOA = new MOA();
-            taxAlcLoop.MOA.MONETARYAMOUNT_01 = new C516();
+            taxAlcLoop.MOA = new MOA_3();
+            taxAlcLoop.MOA.MONETARYAMOUNT_01 = new C516_3();
             taxAlcLoop.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "124";
             taxAlcLoop.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "22.80";
 
@@ -382,11 +383,11 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             linLoop1.LIN.ITEMNUMBERIDENTIFICATION_03.Itemtypeidentificationcode_02 = "SRV";
 
             //  Repeating QTY
-            linLoop1.QTY = new List<QTY>();
+            linLoop1.QTY = new List<QTY_3>();
 
             //  Invoiced quantity 40
-            var qtyLin1 = new QTY();
-            qtyLin1.QUANTITYDETAILS_01 = new C186();
+            var qtyLin1 = new QTY_3();
+            qtyLin1.QUANTITYDETAILS_01 = new C186_3();
             qtyLin1.QUANTITYDETAILS_01.Quantitytypecodequalifier_01 = "47";
             qtyLin1.QUANTITYDETAILS_01.Quantity_02 = "40";
             linLoop1.QTY.Add(qtyLin1);
@@ -398,8 +399,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLinLoop1 = new Loop_MOA_INVOIC();
 
             //  Line item amount 2.160 EUR
-            moaLinLoop1.MOA = new MOA();
-            moaLinLoop1.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLinLoop1.MOA = new MOA_3();
+            moaLinLoop1.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLinLoop1.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "203";
             moaLinLoop1.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "2160";
 
@@ -413,8 +414,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var priLinLoop1 = new Loop_PRI_INVOIC();
 
             //  Gross calculation price of 60 which does not include any allowance or charges, from the catalogue.
-            priLinLoop1.PRI = new PRI();
-            priLinLoop1.PRI.PRICEINFORMATION_01 = new C509();
+            priLinLoop1.PRI = new PRI_6();
+            priLinLoop1.PRI.PRICEINFORMATION_01 = new C509_6();
             priLinLoop1.PRI.PRICEINFORMATION_01.Pricecodequalifier_01 = "AAB";
             priLinLoop1.PRI.PRICEINFORMATION_01.Priceamount_02 = "60";
             priLinLoop1.PRI.PRICEINFORMATION_01.Pricetypecode_03 = "CA";
@@ -438,10 +439,10 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             taxLinLoop1.TAX.Dutyortaxorfeecategorycode_06 = "S";
 
             //  Tax monetary amount 453.60 EUR 
-            taxLinLoop1.MOA = new List<MOA>();
+            taxLinLoop1.MOA = new List<MOA_3>();
 
-            var moaTax = new MOA();
-            moaTax.MONETARYAMOUNT_01 = new C516();
+            var moaTax = new MOA_3();
+            moaTax.MONETARYAMOUNT_01 = new C516_3();
             moaTax.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "124";
             moaTax.MONETARYAMOUNT_01.Monetaryamount_02 = "453.60";
             taxLinLoop1.MOA.Add(moaTax);
@@ -456,15 +457,15 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var alcLinLoop1 = new Loop_ALC_INVOIC_2();
 
             //  Allowances
-            alcLinLoop1.ALC = new ALC();
+            alcLinLoop1.ALC = new ALC_3();
             alcLinLoop1.ALC.Allowanceorchargecodequalifier_01 = "A";
 
             //  PCD Group
             alcLinLoop1.PCDLoop = new Loop_PCD_INVOIC();
 
             //  Percentage information for the allowances 10 %
-            alcLinLoop1.PCDLoop.PCD = new PCD();
-            alcLinLoop1.PCDLoop.PCD.PERCENTAGEDETAILS_01 = new C501();
+            alcLinLoop1.PCDLoop.PCD = new PCD_3();
+            alcLinLoop1.PCDLoop.PCD.PERCENTAGEDETAILS_01 = new C501_3();
             alcLinLoop1.PCDLoop.PCD.PERCENTAGEDETAILS_01.Percentagetypecodequalifier_01 = "1";
             alcLinLoop1.PCDLoop.PCD.PERCENTAGEDETAILS_01.Percentage_02 = "10";
 
@@ -485,18 +486,18 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             linLoop2.LIN.ITEMNUMBERIDENTIFICATION_03.Itemtypeidentificationcode_02 = "SRV";
 
             //  Repeating QTY
-            linLoop2.QTY = new List<QTY>();
+            linLoop2.QTY = new List<QTY_3>();
 
             //  Delivered quantity 5
-            var qtyLin2 = new QTY();
-            qtyLin2.QUANTITYDETAILS_01 = new C186();
+            var qtyLin2 = new QTY_3();
+            qtyLin2.QUANTITYDETAILS_01 = new C186_3();
             qtyLin2.QUANTITYDETAILS_01.Quantitytypecodequalifier_01 = "46";
             qtyLin2.QUANTITYDETAILS_01.Quantity_02 = "5";
             linLoop2.QTY.Add(qtyLin2);
 
             //  Invoiced quantity 12.65 Kg.
-            var qtyLin3 = new QTY();
-            qtyLin3.QUANTITYDETAILS_01 = new C186();
+            var qtyLin3 = new QTY_3();
+            qtyLin3.QUANTITYDETAILS_01 = new C186_3();
             qtyLin3.QUANTITYDETAILS_01.Quantitytypecodequalifier_01 = "47";
             qtyLin3.QUANTITYDETAILS_01.Quantity_02 = "12.65";
             qtyLin3.QUANTITYDETAILS_01.Measurementunitcode_03 = "KGM";
@@ -509,8 +510,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLinLoop2 = new Loop_MOA_INVOIC();
 
             //  Line item amount 2.530 EUR
-            moaLinLoop2.MOA = new MOA();
-            moaLinLoop2.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLinLoop2.MOA = new MOA_3();
+            moaLinLoop2.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLinLoop2.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "203";
             moaLinLoop2.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "2530";
 
@@ -524,8 +525,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var priLinLoop2 = new Loop_PRI_INVOIC();
 
             //  Net price of 200 per Kg from the catalogue, this price includes allowances and charges
-            priLinLoop2.PRI = new PRI();
-            priLinLoop2.PRI.PRICEINFORMATION_01 = new C509();
+            priLinLoop2.PRI = new PRI_6();
+            priLinLoop2.PRI.PRICEINFORMATION_01 = new C509_6();
             priLinLoop2.PRI.PRICEINFORMATION_01.Pricecodequalifier_01 = "AAA";
             priLinLoop2.PRI.PRICEINFORMATION_01.Priceamount_02 = "200";
             priLinLoop2.PRI.PRICEINFORMATION_01.Pricetypecode_03 = "CA";
@@ -551,10 +552,10 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             taxLinLoop2.TAX.Dutyortaxorfeecategorycode_06 = "S";
 
             //  Tax monetary amount 480.70 EUR
-            taxLinLoop2.MOA = new List<MOA>();
+            taxLinLoop2.MOA = new List<MOA_3>();
 
-            var moaTax2 = new MOA();
-            moaTax2.MONETARYAMOUNT_01 = new C516();
+            var moaTax2 = new MOA_3();
+            moaTax2.MONETARYAMOUNT_01 = new C516_3();
             moaTax2.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "124";
             moaTax2.MONETARYAMOUNT_01.Monetaryamount_02 = "480.70";
             taxLinLoop2.MOA.Add(moaTax2);
@@ -570,11 +571,11 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             result.UNS.Sectionidentification_01 = "S";
 
             //  Repeating CNT
-            result.CNT = new List<CNT>();
+            result.CNT = new List<CNT_9>();
 
             //  Total number of line items 2
-            var cnt = new CNT();
-            cnt.CONTROL_01 = new C270();
+            var cnt = new CNT_9();
+            cnt.CONTROL_01 = new C270_9();
             cnt.CONTROL_01.Controltotaltypecodequalifier_01 = "2";
             cnt.CONTROL_01.Controltotalvalue_02 = "2";
             result.CNT.Add(cnt);
@@ -586,8 +587,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop1 = new Loop_MOA_INVOIC_2();
 
             //  Message total monetary amount 5.767,10 EUR
-            moaLoop1.MOA = new MOA();
-            moaLoop1.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop1.MOA = new MOA_3();
+            moaLoop1.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop1.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "86";
             moaLoop1.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "5767.10";
 
@@ -598,8 +599,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop2 = new Loop_MOA_INVOIC_2();
 
             //  Message total line items amount 4.690 EUR
-            moaLoop2.MOA = new MOA();
-            moaLoop2.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop2.MOA = new MOA_3();
+            moaLoop2.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop2.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "79";
             moaLoop2.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "4690";
 
@@ -610,8 +611,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop3 = new Loop_MOA_INVOIC_2();
 
             //  Total amount subject to payment discount 5.767.10 EUR
-            moaLoop3.MOA = new MOA();
-            moaLoop3.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop3.MOA = new MOA_3();
+            moaLoop3.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop3.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "129";
             moaLoop3.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "5767.10";
 
@@ -622,8 +623,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop4 = new Loop_MOA_INVOIC_2();
 
             //  Message total taxable amount 4.810 EUR
-            moaLoop4.MOA = new MOA();
-            moaLoop4.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop4.MOA = new MOA_3();
+            moaLoop4.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop4.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "125";
             moaLoop4.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "4810";
 
@@ -634,8 +635,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop5 = new Loop_MOA_INVOIC_2();
 
             //  Message total tax amount 957,10 EUR
-            moaLoop5.MOA = new MOA();
-            moaLoop5.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop5.MOA = new MOA_3();
+            moaLoop5.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop5.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "176";
             moaLoop5.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "957.10";
 
@@ -646,8 +647,8 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var moaLoop6 = new Loop_MOA_INVOIC_2();
 
             //  Total charges/allowances 120 EUR
-            moaLoop6.MOA = new MOA();
-            moaLoop6.MOA.MONETARYAMOUNT_01 = new C516();
+            moaLoop6.MOA = new MOA_3();
+            moaLoop6.MOA.MONETARYAMOUNT_01 = new C516_3();
             moaLoop6.MOA.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "131";
             moaLoop6.MOA.MONETARYAMOUNT_01.Monetaryamount_02 = "120";
 
@@ -670,11 +671,11 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             taxLoop1.TAX.Dutyortaxorfeecategorycode_06 = "S";
 
             //  Repeating MOA
-            taxLoop1.MOA = new List<MOA>();
+            taxLoop1.MOA = new List<MOA_3>();
 
             //  Tax monetary amount 503.50 EUR
-            var moaTax1 = new MOA();
-            moaTax1.MONETARYAMOUNT_01 = new C516();
+            var moaTax1 = new MOA_3();
+            moaTax1.MONETARYAMOUNT_01 = new C516_3();
             moaTax1.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "124";
             moaTax1.MONETARYAMOUNT_01.Monetaryamount_02 = "503.50";
             taxLoop1.MOA.Add(moaTax1);
@@ -695,11 +696,11 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             taxLoop2.TAX.Dutyortaxorfeecategorycode_06 = "S";
 
             //  Repeating MOA
-            taxLoop2.MOA = new List<MOA>();
+            taxLoop2.MOA = new List<MOA_3>();
 
             //  Tax monetary amount 453.60 EUR
-            var moaTax3 = new MOA();
-            moaTax3.MONETARYAMOUNT_01 = new C516();
+            var moaTax3 = new MOA_3();
+            moaTax3.MONETARYAMOUNT_01 = new C516_3();
             moaTax3.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "124";
             moaTax3.MONETARYAMOUNT_01.Monetaryamount_02 = "453.60";
             taxLoop2.MOA.Add(moaTax3);
@@ -713,17 +714,17 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
             var alcLoop2 = new Loop_ALC_INVOIC_3();
 
             //  Freight charge 
-            alcLoop2.ALC = new ALC();
+            alcLoop2.ALC = new ALC_3();
             alcLoop2.ALC.Allowanceorchargecodequalifier_01 = "C";
-            alcLoop2.ALC.SPECIALSERVICESIDENTIFICATION_05 = new C214();
+            alcLoop2.ALC.SPECIALSERVICESIDENTIFICATION_05 = new C214_2();
             alcLoop2.ALC.SPECIALSERVICESIDENTIFICATION_05.Specialservicedescriptioncode_01 = "FC";
 
             //  Repeating MOA 
-            alcLoop2.MOA = new List<MOA>();
+            alcLoop2.MOA = new List<MOA_3>();
 
             //  Total charges 120 EUR
-            var moaAlc = new MOA();
-            moaAlc.MONETARYAMOUNT_01 = new C516();
+            var moaAlc = new MOA_3();
+            moaAlc.MONETARYAMOUNT_01 = new C516_3();
             moaAlc.MONETARYAMOUNT_01.Monetaryamounttypecodequalifier_01 = "131";
             moaAlc.MONETARYAMOUNT_01.Monetaryamount_02 = "120";
             alcLoop2.MOA.Add(moaAlc);

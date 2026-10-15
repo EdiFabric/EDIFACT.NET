@@ -24,7 +24,7 @@ namespace EdiFabric.Examples.EDIFACT.XML
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }
@@ -49,7 +49,7 @@ namespace EdiFabric.Examples.EDIFACT.XML
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrder.txt");
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 ediItems = ediReader.ReadToEnd().ToList();
             }

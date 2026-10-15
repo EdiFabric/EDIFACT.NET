@@ -37,9 +37,6 @@
     <Reference Include="EdiFabric, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
       <HintPath>..\packages\EdiFabric.11.0.0\lib\net48\EdiFabric.dll</HintPath>
     </Reference>
-    <Reference Include="EdiFabric.Templates.Edifact, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30198c5f4974e51a, processorArchitecture=MSIL">
-      <HintPath>..\packages\EdiFabric.Templates.Edifact.3.0.0\lib\net48\EdiFabric.Templates.Edifact.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +58,10 @@
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj">
       <Project>{9f794065-1e15-4341-a1c9-4e1ffd856c28}</Project>
       <Name>EdiFabric.Examples.EDIFACT.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj">
+      <Project>{62232c00-802e-4095-ab55-3f639d6913c3}</Project>
+      <Name>EdiFabric.Examples.EDIFACT.Templates</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

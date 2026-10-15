@@ -20,7 +20,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\Invoice.txt");
 
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
             {
                 while (ediReader.Read())
                 {

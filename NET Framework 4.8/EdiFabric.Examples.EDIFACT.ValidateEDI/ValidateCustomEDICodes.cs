@@ -33,7 +33,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
             Stream ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\EDIFACT\MixedTransactions.txt");
 
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
                 ediItems = reader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();
@@ -74,7 +74,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
 
             //  Ensure that the codeset map is set on the reader
             List<IEdiItem> ediItems;
-            using (var reader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact", new EdifactReaderSettings { DataElementCodesMap = codeSetMap }))
+            using (var reader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates", new EdifactReaderSettings { DataElementCodesMap = codeSetMap }))
                 ediItems = reader.ReadToEnd().ToList();
 
             var purchaseOrders = ediItems.OfType<TSORDERS>();

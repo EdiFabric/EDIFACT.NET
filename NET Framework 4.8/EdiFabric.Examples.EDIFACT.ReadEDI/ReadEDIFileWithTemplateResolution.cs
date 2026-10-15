@@ -38,7 +38,7 @@ namespace EdiFabric.Examples.EDIFACT.ReadEDI
         public static Assembly AssemblyFactory(MessageContext messageContext)
         {
             if (messageContext.Version == "D96A")
-                return Assembly.Load("EdiFabric.Templates.Edifact");
+                return Assembly.Load("EdiFabric.Examples.EDIFACT.Templates");
 
             throw new System.Exception(string.Format("Version {0} is not supported.", messageContext.Version));
         }

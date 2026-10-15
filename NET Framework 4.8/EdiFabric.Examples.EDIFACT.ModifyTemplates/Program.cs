@@ -8,6 +8,7 @@ using EdiFabric.Core.Model.Edi.Edifact;
 using EdiFabric.Examples.EDIFACT.Common;
 using EdiFabric.Framework.Readers;
 using EdiFabric.Templates.Edifact;
+using EdiFabric.Templates.EdifactD96A;
 
 namespace EdiFabric.Examples.EDIFACT.ModifyTemplates
 {

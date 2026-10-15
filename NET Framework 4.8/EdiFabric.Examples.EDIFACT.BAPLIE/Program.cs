@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EdiFabric.Core.Model.Edi.Edifact;
-using EdiFabric.Templates.EdifactD13B;
 using EdiFabric.Examples.EDIFACT.Common;
 using System.Reflection;
 using System;
+using EdiFabric.Templates.EdifactD13B;
 
 namespace EdiFabric.Examples.EDIFACT.BAPLIE
 {

@@ -3,6 +3,7 @@ using EdiFabric.Templates.EdifactD96A;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 
 namespace EdiFabric.Examples.EDIFACT.JSON
 {
@@ -18,7 +19,7 @@ namespace EdiFabric.Examples.EDIFACT.JSON
             Debug.WriteLine("******************************");
 
             var ediStream = File.OpenRead(Directory.GetCurrentDirectory() + Config.TestFilesPath + @"\Edifact\PurchaseOrderNs.json");
-            var transaction = Newtonsoft.Json.JsonConvert.DeserializeObject<TSORDERS>(ediStream.LoadToString());
+            var transaction = JsonSerializer.Deserialize<TSORDERS>(ediStream.LoadToString());
         }
     }
 }

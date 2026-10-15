@@ -13,11 +13,11 @@
 
   <ItemGroup>
     <PackageReference Include="EdiFabric" Version="11.0.0" />
-    <PackageReference Include="EdiFabric.Templates.Padis" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Common\EdiFabric.Examples.EDIFACT.Common.csproj" />
+    <ProjectReference Include="..\EdiFabric.Examples.EDIFACT.Templates\EdiFabric.Examples.EDIFACT.Templates.csproj" />
   </ItemGroup>
 
 </Project>
