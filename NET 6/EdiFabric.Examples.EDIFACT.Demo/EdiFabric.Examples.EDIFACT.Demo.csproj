@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EdiFabric" Version="11.0.0" />
-    <PackageReference Include="EdiFabric.Templates.Edifact" Version="3.0.0" />
-    <PackageReference Include="EdiFabric.Templates.Edigas" Version="3.0.0" />
-    <PackageReference Include="EdiFabric.Templates.Padis" Version="3.0.0" />
+    <PackageReference Include="EdiFabric" Version="11.1.0" />
+    <PackageReference Include="EdiFabric.Templates.Edifact" Version="3.0.1" />
+    <PackageReference Include="EdiFabric.Templates.Edigas" Version="3.0.1" />
+    <PackageReference Include="EdiFabric.Templates.Padis" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
