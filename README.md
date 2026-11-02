@@ -51,7 +51,7 @@ To translate your own file, change the path in `EdiFabric.Examples.EDIFACT.Demo/
 
 ## Usage
 
-Every example calls `License.SetSerial` before it reads or writes. On Community that is the call to use. See [Licensing](#licensing) for Developer and Enterprise.
+Every example calls `License.SetSerial` before it reads or writes. On Community that is the call to use. See [Licensing](#licensing) for Developer, Enterprise and Perpetual.
 
 ```csharp
 using EdiFabric.Core.Model.Edi;
@@ -170,7 +170,7 @@ For another version, download its C# template from the EDI spec library. See [ED
 | --- | --- | --- |
 | Community | `License.SetSerial` only. Online check. 250 operations per day. Non-production. | `License.SetSerial` |
 | Developer | `License.SetSerial` and `License.EnsureToken` (`EnsureToken` caches the result for 1 day) | `License.EnsureToken` |
-| Enterprise | `License.SetSerial`, `License.GetToken` / `License.SetToken` | `License.SetToken` (offline tokens) |
+| Enterprise and Perpetual | `License.SetSerial`, `License.GetToken` / `License.SetToken` | `License.SetToken` (offline tokens) |
 
 ```csharp
 // Community: authorize against the license server
@@ -179,11 +179,13 @@ License.SetSerial(serial);
 // Developer (recommended): 1-day built-in cache; refreshes if the token expires within N seconds
 License.EnsureToken(serial, seconds: 3600);
 
-// Enterprise: set an offline token
+// Enterprise and Perpetual: set an offline token
 License.SetToken(token);
 ```
 
 The examples call `License.SetSerial(Config.TrialSerialKey)`. On Developer, call `License.EnsureToken` instead. `TokenFileCache.Set()` in `EdiFabric.Examples.EDIFACT.Common` is the manual `GetToken` / `SetToken` cache, for when you want to store the token yourself.
+
+Self-service offline tokens last 30 days, so refresh them before they expire. If your hosts can't refresh a token, Enterprise can request a 1-year token and Perpetual a non-expiring token. Long-lived tokens are issued after the trial or evaluation period to registered companies using professional email addresses, and are non-refundable once issued. See [how to request one](https://www.edifabric.com/docs/faq/pricing-and-licensing-faqs.html#long-lived-tokens). Treat every token as a secret, and keep it out of source control.
 
 ## Error codes
 
