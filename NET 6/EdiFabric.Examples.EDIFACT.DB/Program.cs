@@ -22,13 +22,13 @@ namespace EdiFabric.Examples.EFCore.Edifact.TSORDERS
         //  The connection string is in EF_EDIFACT_D96A_DbContext.cs, and is set to the local instance of SQL Server
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
 
             var path = Directory.GetCurrentDirectory() + TestFilesPath + @"\EDIFACT\PurchaseOrder.txt";
             Stream ediStream = File.OpenRead(path);
 
             List<IEdiItem> ediItems;
-            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Templates.Edifact"))
+            using (var ediReader = new EdifactReader(ediStream, "EdiFabric.Examples.EDIFACT.Templates"))
                 ediItems = ediReader.ReadToEnd().ToList();
 
             var tran = ediItems.OfType<Templates.EdifactD96A.TSORDERS>().Single();

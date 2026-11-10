@@ -7,7 +7,7 @@ namespace EdiFabric.Examples.EDIFACT.ValidateEDI
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
 
             //  Validate custom EDI codes
             ValidateCustomEDICodes.Run();

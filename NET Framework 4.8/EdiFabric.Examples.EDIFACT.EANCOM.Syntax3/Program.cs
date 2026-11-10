@@ -17,7 +17,7 @@ namespace EdiFabric.Examples.EANCOM.INVOIC.Syntax3
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
             Read();
             Write();
         }
