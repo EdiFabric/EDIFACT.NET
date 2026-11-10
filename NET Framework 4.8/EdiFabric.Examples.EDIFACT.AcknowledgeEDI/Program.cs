@@ -7,7 +7,7 @@ namespace EdiFabric.Examples.EDIFACT.AcknowledgeEDI
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
 
             //  Generate CONTRL for valid group
             GenerateValidCONTRL.Run();

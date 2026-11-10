@@ -7,7 +7,7 @@ namespace EdiFabric.Examples.EDIFACT.JSON
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
 
             //  Serialize to JSON
             SerializeToJson.Run();

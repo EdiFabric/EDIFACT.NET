@@ -7,7 +7,7 @@ namespace EdiFabric.Examples.EDIFACT.DB
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
 
             //  Save purchase order to DB. This will automatically create a DB structure for the full D96A version the first time it is executed.
             //  NOTE: edit the connection string in app.config, by default it looks for a local SQL Server instance

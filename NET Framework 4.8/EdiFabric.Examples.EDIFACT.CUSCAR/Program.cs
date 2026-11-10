@@ -16,7 +16,7 @@ namespace EdiFabric.Examples.EDIFACT.CUSCAR
     {
         static void Main(string[] args)
         {
-            License.SetSerial(Config.TrialSerialKey);
+            License.EnsureToken(Config.TrialSerialKey, 3600);
             Read();
             Write();
         }
