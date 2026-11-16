@@ -1,4 +1,6 @@
-# EdiFabric C# .NET Examples for EDIFACT
+# EdiFabric C# .NET Examples for EDIFACT and EANCOM EDI
+
+C# examples for EdiFabric, the .NET EDIFACT parser and EDI library: read, write, validate and acknowledge **UN/EDIFACT D96A**, **EANCOM D03B**, **IATA PADIS** (PNRGOV) and **EDIGAS 4.0** files, including ORDERS, INVOIC, DESADV and CONTRL acknowledgments, and EDIFACT to JSON. Install EdiFabric from NuGet with `dotnet add package EdiFabric`; it targets .NET 6, 8, 9, 10 and .NET Framework 4.8, and runs without an account on the demo serial key.
 
 **EdiFabric 11.2.0** is a .NET SDK that parses, generates, validates, acknowledges, and splits EDI files. These examples cover **EDIFACT**, **EANCOM**, **IATA PADIS**, and **EDIGAS**.
 
